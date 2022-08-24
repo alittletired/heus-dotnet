@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+      <ProjectReference Include="..\Heus.Core\Heus.Core.csproj" />
+    </ItemGroup>
+      <ItemGroup>
+    <Using Include="Heus.Core" />
+    <Using Include="Heus.Ddd.Data" />
+    <Using Include="Heus.Ddd.Application" />
+      
+</ItemGroup>
+
+</Project>

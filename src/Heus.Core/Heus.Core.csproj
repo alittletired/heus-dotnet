@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	  <AssemblyName>Heus.Core</AssemblyName>
+	  <PackageId>Heus.Core</PackageId>
+	<RootNamespace>Heus.Core</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Include="Heus.Core" />
+</ItemGroup>
+  <ItemGroup>
+	  <PackageReference Include="Autofac" Version="6.4.0" />
+	  <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+	  <PackageReference Include="AutoMapper" Version="11.0.1" />
+	  <PackageReference Include="EFCore.NamingConventions" Version="6.0.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.8" />
+	  <PackageReference Include="System.Collections.Immutable" Version="$(MicrosoftPackageVersion)" />
+	  <PackageReference Include="Microsoft.Extensions.Localization" Version="$(MicrosoftPackageVersion)" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftPackageVersion)" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(MicrosoftPackageVersion)" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="$(MicrosoftPackageVersion)" />
+	  <PackageReference Include="Microsoft.Extensions.Options" Version="$(MicrosoftPackageVersion)" />
+	  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftPackageVersion)" />
+	  <PackageReference Include="Microsoft.Extensions.Logging" Version="$(MicrosoftPackageVersion)" />
+	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(MicrosoftPackageVersion)" />
+	  <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.19" />
+	  <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
+	  <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.2" />
+  </ItemGroup>
+
+
+</Project>

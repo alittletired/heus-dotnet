@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	  <AssemblyName>Heus.Ddd</AssemblyName>
+	  <PackageId>Heus.Ddd</PackageId>
+	  <RootNamespace>Heus.Ddd</RootNamespace>
+  </PropertyGroup>
+ 
+  <ItemGroup>
+    <ProjectReference Include="..\Heus.Core\Heus.Core.csproj" />
+  </ItemGroup>
+
+</Project>

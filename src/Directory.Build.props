@@ -1,0 +1,47 @@
+<Project>
+<PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+ <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+</PropertyGroup>
+
+  <PropertyGroup>
+    <!-- All Microsoft packages -->
+    <MicrosoftPackageVersion>6.0.0</MicrosoftPackageVersion>
+
+    <!-- Microsoft.NET.Test.Sdk https://www.nuget.org/packages/Microsoft.NET.Test.Sdk -->
+    <MicrosoftNETTestSdkPackageVersion>17.3.0</MicrosoftNETTestSdkPackageVersion>
+
+    <!-- NSubstitute  https://www.nuget.org/packages/NSubstitute -->
+    <NSubstitutePackageVersion>4.4.0</NSubstitutePackageVersion>
+
+    <!-- Shouldly https://www.nuget.org/packages/Shouldly -->
+    <ShouldlyPackageVersion>4.0.3</ShouldlyPackageVersion>
+
+    <!-- xunit https://www.nuget.org/packages/xUnit -->
+    <xUnitPackageVersion>2.4.1</xUnitPackageVersion>
+
+    <!-- xunit.extensibility.execution https://www.nuget.org/packages/xunit.extensibility.execution -->
+    <xUnitExtensibilityExecutionPackageVersion>2.4.1</xUnitExtensibilityExecutionPackageVersion>
+
+    <!-- xunit.runner.visualstudio https://www.nuget.org/packages/xunit.runner.visualstudio -->
+    <xUnitRunnerVisualstudioPackageVersion>2.4.3</xUnitRunnerVisualstudioPackageVersion>
+
+    <IsTestProject Condition="$(MSBuildProjectFullPath.Contains('test')) and ($(MSBuildProjectName.EndsWith('.Tests')) or $(MSBuildProjectName.EndsWith('.TestBase')))">true</IsTestProject>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Condition="'$(IsTestProject)' == 'true'" Include="coverlet.collector" Version="3.1.2">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
