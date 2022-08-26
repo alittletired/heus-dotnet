@@ -51,14 +51,14 @@ namespace Heus.Utils
 
             if (givenTypeInfo.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
             {
-                result.AddIfNotContains(givenType);
+                result.TryAdd(givenType);
             }
 
             foreach (var interfaceType in givenTypeInfo.GetInterfaces())
             {
                 if (interfaceType.GetTypeInfo().IsGenericType && interfaceType.GetGenericTypeDefinition() == genericType)
                 {
-                    result.AddIfNotContains(interfaceType);
+                    result.TryAdd(interfaceType);
                 }
             }
 

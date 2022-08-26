@@ -20,7 +20,7 @@ public static class CollectionExtensions
     /// <param name="item">Item to check and add</param>
     /// <typeparam name="T">Type of the items in the collection</typeparam>
     /// <returns>Returns True if added, returns False if not.</returns>
-    public static bool AddIfNotContains<T>(this ICollection<T> source, T item)
+    public static bool TryAdd<T>(this ICollection<T> source, T item)
     {
         if (source.Contains(item))
         {
@@ -32,18 +32,6 @@ public static class CollectionExtensions
     }
 
    
-    /// <summary>
-    /// Removes all items from the collection.
-    /// </summary>
-    /// <typeparam name="T">Type of the items in the collection</typeparam>
-    /// <param name="source">The collection</param>
-    /// <param name="items">Items to be removed from the list</param>
-    public static void RemoveAll<T>(this ICollection<T> source, IEnumerable<T> items)
-    {
-        foreach (var item in items)
-        {
-            source.Remove(item);
-        }
-    }
+ 
 }
 

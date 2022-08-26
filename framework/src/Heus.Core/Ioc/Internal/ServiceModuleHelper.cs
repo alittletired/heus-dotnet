@@ -25,7 +25,7 @@ namespace Heus.Ioc.Internal
             {
                 foreach (var dependedModuleType in dependsOn.DependedTypes)
                 {
-                    dependencies.AddIfNotContains(dependedModuleType);
+                    dependencies.TryAdd(dependedModuleType);
                 }
             }
 

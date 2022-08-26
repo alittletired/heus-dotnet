@@ -38,7 +38,7 @@ public class ServiceModuleDescriptor
 
     public void AddDependency(ServiceModuleDescriptor descriptor)
     {
-        _dependencies.AddIfNotContains(descriptor);
+        _dependencies.TryAdd(descriptor);
     }
 
 
