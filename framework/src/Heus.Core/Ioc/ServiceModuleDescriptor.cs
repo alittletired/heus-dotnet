@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Collections.Immutable;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Heus.Ioc;
-
 public class ServiceModuleDescriptor
 {
     public Type Type { get; }
@@ -20,10 +15,7 @@ public class ServiceModuleDescriptor
     public IReadOnlyList<ServiceModuleDescriptor> Dependencies => _dependencies.ToImmutableList();
     private readonly List<ServiceModuleDescriptor> _dependencies;
 
-    public ServiceModuleDescriptor(
-         Type type,
-         IServiceModule instance
-        )
+    public ServiceModuleDescriptor(Type type, IServiceModule instance)
     {
         if (!type.GetTypeInfo().IsAssignableFrom(instance.GetType()))
         {

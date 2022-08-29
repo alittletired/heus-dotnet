@@ -47,7 +47,7 @@ public static class StringExtensions
     /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
     /// <param name="handleAbbreviations">set true to if you want to convert 'XYZ' to 'xyz'.</param>
     /// <returns>camelCase of the string</returns>
-    public static string ToCamelCase(this string str, bool useCurrentCulture = false, bool handleAbbreviations = false)
+    public static string? ToCamelCase(this string? str, bool useCurrentCulture = false, bool handleAbbreviations = false)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -73,7 +73,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="str">String to convert.</param>
     /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
-    public static string ToKebabCase(this string str, bool useCurrentCulture = false)
+    public static string? ToKebabCase(this string? str, bool useCurrentCulture = false)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -81,10 +81,9 @@ public static class StringExtensions
         }
 
         str = str.ToCamelCase();
-
         return useCurrentCulture
-            ? Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + "-" + char.ToLower(m.Value[1]))
-            : Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + "-" + char.ToLowerInvariant(m.Value[1]));
+            ? Regex.Replace(str!, "[a-z][A-Z]", m => m.Value[0] + "-" + char.ToLower(m.Value[1]))
+            : Regex.Replace(str!, "[a-z][A-Z]", m => m.Value[0] + "-" + char.ToLowerInvariant(m.Value[1]));
     }
 
     /// <summary>
@@ -94,7 +93,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="str">String to convert.</param>
     /// <returns></returns>
-    public static string ToSnakeCase(this string str)
+    public static string? ToSnakeCase(this string? str)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -202,7 +201,7 @@ public static class StringExtensions
     /// <param name="str">String to convert</param>
     /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
     /// <returns>PascalCase of the string</returns>
-    public static string ToPascalCase(this string str, bool useCurrentCulture = false)
+    public static string? ToPascalCase(this string? str, bool useCurrentCulture = false)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -248,5 +247,28 @@ public static class StringExtensions
     public static string JoinAsString(this IEnumerable<string> strList, string separator)
     {
         return string.Join(separator, strList);
+    }
+    public static string EnsureEndsWith(this string str, char c, StringComparison comparisonType = StringComparison.Ordinal)
+    {
+
+        if (str.EndsWith(c.ToString(), comparisonType))
+        {
+            return str;
+        }
+
+        return str + c;
+    }
+    /// <summary>
+    /// Adds a char to beginning of given string if it does not starts with the char.
+    /// </summary>
+    public static string EnsureStartsWith(this string str, char c, StringComparison comparisonType = StringComparison.Ordinal)
+    {
+
+        if (str.StartsWith(c.ToString(), comparisonType))
+        {
+            return str;
+        }
+
+        return c + str;
     }
 }
