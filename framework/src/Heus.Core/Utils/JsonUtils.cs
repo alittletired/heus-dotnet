@@ -19,13 +19,17 @@ public static class JsonUtils
         ApplyDefaultSettings(Options);
     }
 
-    public static string ToJson<T>(T obj)
+    public static string ToJson<T>(T obj) 
     {
        return JsonSerializer.Serialize(obj, Options);
     }
 
-    public static T? FormJson<T>(string json)
-    {
+    public static T? FormJson<T>(string? json) {
+
+        if (string.IsNullOrEmpty(json))
+        {
+            return default!;
+        }
         return JsonSerializer.Deserialize<T>(json, Options);
     }
 }

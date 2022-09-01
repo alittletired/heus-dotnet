@@ -1,3 +1,4 @@
+using Heus.Core;
 using System.Globalization;
 namespace Heus.Utils;
 public static class CultureHelper
@@ -5,12 +6,7 @@ public static class CultureHelper
     public static IDisposable Use(string culture, string? uiCulture = null)
     {
 
-        return Use(
-            new CultureInfo(culture),
-            uiCulture == null
-                ? null
-                : new CultureInfo(uiCulture)
-        );
+        return Use(new CultureInfo(culture), uiCulture == null ? null : new CultureInfo(uiCulture));
     }
 
     public static IDisposable Use(CultureInfo culture, CultureInfo? uiCulture = null)
@@ -31,18 +27,17 @@ public static class CultureHelper
 
     public static bool IsRtl => CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft;
 
-    public static bool IsValidCultureCode(string cultureCode)
+    public static bool IsValidCultureCode(string? cultureCode)
     {
-        if (cultureCode.IsNullOrWhiteSpace())
+        if (string.IsNullOrWhiteSpace(cultureCode))
         {
             return false;
         }
 
         try
         {
-            
-           var culture= CultureInfo.GetCultureInfo(cultureCode);
-            return culture!=null;
+            var culture = CultureInfo.GetCultureInfo(cultureCode);
+            return culture != null;
         }
         catch (CultureNotFoundException)
         {

@@ -1,8 +1,6 @@
 
-using System.Reflection;
-using System.Xml;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+
 
 namespace Heus.AspNetCore.OpenApi;
 public static class OpenApiExtensions

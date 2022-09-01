@@ -1,15 +1,13 @@
-using Heus.Ddd.Data;
-using Heus.Hosting;
-using Heus.Ioc;
-using Microsoft.EntityFrameworkCore;
+
 namespace Heus.AspNetCore;
-using Heus.AspNetCore.OpenApi;
+using Heus.Core.Ioc;
 
 /// <summary>
 /// web应用
 /// </summary>
 public static class HeusWebApplication
 {
+
     /// <summary>
     /// 开启web应用
     /// </summary>
@@ -21,11 +19,12 @@ public static class HeusWebApplication
         // var assembly = Assembly.GetCallingAssembly();
         // var name = assembly.GetName().Name;
         // builder.WebHost.UseSetting(WebHostDefaults.ApplicationKey, name);
-        builder.Services.AddApplication(startModuleType, builder.Environment,builder.Configuration);
+        builder.Services.AddServiceModule(startModuleType);
         var app = builder.Build();
-        app.UseApplication();
+        //app
         app.Run();
     }
- 
-
 }
+
+
+

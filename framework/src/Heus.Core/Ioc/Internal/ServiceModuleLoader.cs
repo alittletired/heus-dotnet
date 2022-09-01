@@ -49,7 +49,7 @@ internal class ServiceModuleLoader
     {
         var sortedModules = modules.SortByDependencies(m => m.Dependencies);
         sortedModules.MoveItem(m => m.Type == startupModuleType, modules.Count - 1);
-        return sortedModules;
+        return sortedModules.Distinct().ToList();
     }
 
     protected virtual ServiceModuleDescriptor CreateModuleDescriptor(

@@ -22,7 +22,7 @@ public static class StringExtensions
     /// <summary>
     /// indicates whether this string is null, empty, or consists only of white-space characters.
     /// </summary>
-    public static bool IsNullOrWhiteSpace(this string str)
+    public static bool IsNullOrWhiteSpace(this string? str)
     {
         return string.IsNullOrWhiteSpace(str);
     }

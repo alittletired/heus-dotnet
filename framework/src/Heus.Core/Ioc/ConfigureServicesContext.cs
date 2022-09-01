@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Configuration;
+using Autofac.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -6,27 +6,23 @@ namespace Heus.Ioc;
 public class ConfigureServicesContext
 {
     public IServiceCollection Services { get; }
-    public IConfiguration Configuration { get; }
-    public IHostEnvironment Environment { get; }
-    public ConfigureServicesContext(IServiceCollection services
-        , IHostEnvironment hostEnvironment
-        ,IConfiguration configuration)
+    public IHostEnvironment Environment => Services.GetSingletonInstance<IHostEnvironment>()!;
+
+    public ConfigureServicesContext(IServiceCollection services)
     {
         Services = services;
-        Environment = hostEnvironment;
-        Configuration = configuration;
+     
     }
 }
 
 public class ConfigureContext
 {
-    public IHost Host { get; }
-    public IServiceProvider ServiceProvider => Host.Services;
+    public IServiceProvider ServiceProvider { get; }
     public IHostEnvironment Environment => ServiceProvider.GetRequiredService<IHostEnvironment>();
 
-    public ConfigureContext(IHost host)
+    public ConfigureContext(IServiceProvider serviceProvider)
     {
-        Host = host;
+        ServiceProvider = serviceProvider;
     }
 
 }

@@ -13,21 +13,20 @@ public static class ServiceCollectionCommonExtensions
     {
         return services.First(d => d.ServiceType == type).ImplementationType!;
     }
-    public static T? GetSingletonInstanceOrNull<T>(this IServiceCollection services)
-    {
-        return (T?)services
-            .FirstOrDefault(d => d.ServiceType == typeof(T))
-            ?.ImplementationInstance;
-    }
-
-    public static T GetSingletonInstance<T>(this IServiceCollection services)
-    {
-        var service = services.GetSingletonInstanceOrNull<T>();
-        if (service == null)
+    public static T? GetSingletonInstance<T>(this IServiceCollection services) {
+        T instance = default!;
+        var service = services.FirstOrDefault(d => d.ServiceType == typeof(T));
+        if ( service?.ImplementationInstance != null)
         {
-            throw new InvalidOperationException("Could not find singleton service: " + typeof(T).AssemblyQualifiedName);
+            instance = (T)service.ImplementationInstance;
         }
+        return instance;
 
-        return service;
     }
+    public static bool TryGetSingletonInstance<T>(this IServiceCollection services, out T? instance)
+    {
+        instance = GetSingletonInstance<T>(services);
+        return instance!=null;
+    }
+
 }
