@@ -6,12 +6,6 @@
 	  <PackageId>Heus.AspNetCore</PackageId>
 	  <RootNamespace>Heus.AspNetCore</RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Hosting\HostBuilder.Aspnet.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Hosting\HostBuilder.Aspnet.cs" />
-  </ItemGroup>
     <ItemGroup>
     <Using Include="Heus.Core" />
 </ItemGroup>

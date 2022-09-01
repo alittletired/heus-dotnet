@@ -15,6 +15,7 @@ public static class HeusWebApplication
     /// <param name="startModuleType"></param>
     public static void Run(string[] args, Type startModuleType)
     {
+        var builder= Host.CreateDefaultBuilder(args);
         var builder = WebApplication.CreateBuilder(args);
         // var assembly = Assembly.GetCallingAssembly();
         // var name = assembly.GetName().Name;

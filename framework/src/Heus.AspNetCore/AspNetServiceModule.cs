@@ -3,6 +3,7 @@ using Heus.AspNetCore.OpenApi;
 using Heus.Business;
 using Heus.Ioc;
 using Heus.Json;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
@@ -33,8 +34,11 @@ public class AspNetServiceModule : ServiceModuleBase
 
     public override void Configure(ConfigureContext context)
     {
-        var app =context.GetApplication();
-        if (app.Environment.IsDevelopment())
+      
+            
+
+   
+        if (context.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
             app.UseOpenApi(app.Environment);
