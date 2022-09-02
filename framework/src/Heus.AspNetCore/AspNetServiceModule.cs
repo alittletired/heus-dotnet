@@ -3,7 +3,6 @@ using Heus.AspNetCore.OpenApi;
 using Heus.Business;
 using Heus.Ioc;
 using Heus.Json;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
@@ -32,25 +31,21 @@ public class AspNetServiceModule : ServiceModuleBase
         base.ConfigureServices(context);
     }
 
-    public override void Configure(ConfigureContext context)
+public override void Configure(ConfigureContext context)
+{
+    var env = context.Environment;
+    var app = context.GetApplicationBuilder();
+    if (env.IsDevelopment())
     {
-      
-            
-
-   
-        if (context.Environment.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-            app.UseOpenApi(app.Environment);
-        }
-
-        // app.UseHttpsRedirection();
-        app.UseStaticFiles();
-        // app.UseAuthorization();
-        app.UseRouting();
-        app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller}/{action=Index}/{id?}");
-        app.MapFallbackToFile("index.html"); ;
+        app.UseDeveloperExceptionPage();
+        app.UseOpenApi(env);
     }
+
+    // app.UseHttpsRedirection();
+    app.UseStaticFiles();
+    // app.UseAuthorization();
+    app.UseRouting();
+}
+
+
 }

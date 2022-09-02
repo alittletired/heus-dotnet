@@ -11,10 +11,10 @@ public static class ServiceModuleExtensions
         manager.ConfigureServices(services);
         return services;
     }
-    public static void UseServiceModule(IHost host)
+    public static void UseServiceModule(this IHost host)
     {
         var manager = host.Services.GetRequiredService<ServiceModuleManager>();
-        manager.Configure(host);
+        manager.Configure(host.Services);
 
     }
 }

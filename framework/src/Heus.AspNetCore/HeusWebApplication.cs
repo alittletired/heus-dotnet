@@ -15,14 +15,23 @@ public static class HeusWebApplication
     /// <param name="startModuleType"></param>
     public static void Run(string[] args, Type startModuleType)
     {
-        var builder= Host.CreateDefaultBuilder(args);
-        var builder = WebApplication.CreateBuilder(args);
-        // var assembly = Assembly.GetCallingAssembly();
-        // var name = assembly.GetName().Name;
-        // builder.WebHost.UseSetting(WebHostDefaults.ApplicationKey, name);
-        builder.Services.AddServiceModule(startModuleType);
+        var builder= Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.Configure((context, app) =>
+            {
+                var serviceProvider = app.ApplicationServices;
+                var host= serviceProvider.GetRequiredService<IHost>();
+                host.UseServiceModule();
+
+            });
+
+        });
+        builder.ConfigureServices(services =>
+        {
+            services.AddServiceModule(startModuleType);
+        });
+
         var app = builder.Build();
-        //app
         app.Run();
     }
 }

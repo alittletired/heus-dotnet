@@ -1,18 +1,19 @@
-﻿using Heus.Ioc;
+﻿using Heus.Core.Ioc;
 using Heus.Ioc.Internal;
-using Microsoft.Extensions.Configuration;
+using Heus.Ioc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+
 using System.Reflection;
 
-namespace Heus.Core.Ioc
+
+namespace Heus.Core
 {
-    internal class ServiceModuleManager
+    public class CoreServices
     {
         public Type StartupModuleType { get; }
         public IReadOnlyList<ServiceModuleDescriptor> Modules { get; }
 
-        public ServiceModuleManager(Type startupModuleType)
+        public CoreServices(Type startupModuleType)
         {
 
             StartupModuleType = startupModuleType;
@@ -66,9 +67,9 @@ namespace Heus.Core.Ioc
         }
 
 
-        public void Configure(IHost host)
+        public void ConfigureApplication(IServiceProvider serviceProvider)
         {
-            var context = new ConfigureContext(host.Services);
+            var context = new ConfigureContext(serviceProvider);
             foreach (var module in Modules)
             {
                 module.Instance.Configure(context);
@@ -76,4 +77,4 @@ namespace Heus.Core.Ioc
         }
     }
 }
-
+}

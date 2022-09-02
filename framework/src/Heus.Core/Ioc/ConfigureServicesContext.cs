@@ -1,4 +1,5 @@
 using Autofac.Core;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -7,7 +8,7 @@ public class ConfigureServicesContext
 {
     public IServiceCollection Services { get; }
     public IHostEnvironment Environment => Services.GetSingletonInstance<IHostEnvironment>()!;
-
+    public IConfiguration Configuration => Services.GetSingletonInstance<IConfiguration>()!;
     public ConfigureServicesContext(IServiceCollection services)
     {
         Services = services;

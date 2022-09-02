@@ -4,11 +4,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Core;
 
-public class CoreServiceModule:ServiceModuleBase
+public class CoreServiceModule:IServiceModule
 {
-    public override void ConfigureServices(ConfigureServicesContext context)
+    public void Configure(ConfigureContext context)
+    {
+     
+    }
+
+    public  void ConfigureServices(ConfigureServicesContext context)
     {
         context.Services.AddScoped(typeof(IRepository<>),typeof(DefaultRepository<>));
-        base.ConfigureServices(context);
     }
 }
