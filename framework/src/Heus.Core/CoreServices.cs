@@ -19,7 +19,6 @@ namespace Heus.Core
             StartupModuleType = startupModuleType;
             Modules = LoadModules();
 
-
         }
         public IReadOnlyList<ServiceModuleDescriptor> LoadModules()
         {
@@ -35,7 +34,8 @@ namespace Heus.Core
             var serviceTypes = new HashSet<Type>();
             var registrar = new DefaultServiceRegistrar();
             //PreConfigureServices
-            var preConfigureServicesList = Modules.Where(m => m.Instance is IPreConfigureServices)
+            var preConfigureServicesList = Modules
+                .Where(m => m.Instance is IPreConfigureServices)
                 .Select(m => (IPreConfigureServices)m.Instance);
 
             foreach (var preConfigureServices in preConfigureServicesList)
@@ -53,8 +53,7 @@ namespace Heus.Core
                     .Where(type => !serviceTypes.Contains(type) &&
                                    type.IsClass &&
                                    !type.IsAbstract &&
-                                   !type.IsGenericType
-                    );
+                                   !type.IsGenericType);
                 foreach (var type in types)
                 {
                     registrar.Handle(services, type);
@@ -77,4 +76,4 @@ namespace Heus.Core
         }
     }
 }
-}
+

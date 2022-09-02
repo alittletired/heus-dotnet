@@ -1,7 +1,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Heus.Ioc;
+namespace Heus.Core.Ioc;
 public static class ServiceCollectionCommonExtensions
 {
     public static bool IsAdded(this IServiceCollection services, Type type)

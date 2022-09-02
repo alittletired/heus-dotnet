@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Reflection;
 
-namespace Heus.Ioc;
+namespace Heus.Core.Ioc;
 public class ServiceModuleDescriptor
 {
     public Type Type { get; }

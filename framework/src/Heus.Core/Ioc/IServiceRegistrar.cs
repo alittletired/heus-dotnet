@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Heus.Ioc;
+namespace Heus.Core.Ioc;
 public interface IServiceRegistrar
 {
 

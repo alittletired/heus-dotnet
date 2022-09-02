@@ -1,9 +1,9 @@
-﻿using Heus.Ioc;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 
 namespace Heus.Core.Ioc;
 
 public interface IPreConfigureServices
 {
-    void PreConfigureServices(ConfigureServicesContext context);
+    void PreConfigureServices(IServiceCollection context);
 }
