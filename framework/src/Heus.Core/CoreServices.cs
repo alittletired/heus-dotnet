@@ -30,7 +30,6 @@ namespace Heus.Core
         {
 
             services.AddSingleton(this);
-            var context = new ConfigureServicesContext(services);
             var serviceTypes = new HashSet<Type>();
             var registrar = new DefaultServiceRegistrar();
             //PreConfigureServices
@@ -40,7 +39,7 @@ namespace Heus.Core
 
             foreach (var preConfigureServices in preConfigureServicesList)
             {
-                preConfigureServices.PreConfigureServices(context);
+                preConfigureServices.PreConfigureServices(services);
 
             }
             //ConfigureServices
@@ -60,7 +59,7 @@ namespace Heus.Core
                     serviceTypes.Add(type);
                 }
 
-                module.Instance.ConfigureServices(context);
+                module.Instance.ConfigureServices(services);
             }
 
         }

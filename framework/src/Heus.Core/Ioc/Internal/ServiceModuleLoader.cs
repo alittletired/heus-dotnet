@@ -1,4 +1,6 @@
 ﻿
+using Heus.Core.Ioc;
+
 namespace Heus.Ioc.Internal;
 
 internal class ServiceModuleLoader
