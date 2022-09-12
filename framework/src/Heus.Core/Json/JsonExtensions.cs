@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Heus.Json;
+namespace Heus.Core.Json;
 
 public static class JsonExtensions
 {

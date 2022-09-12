@@ -1,4 +1,6 @@
-﻿namespace Heus.Core.Internal;
+﻿using Heus.Core.Ioc;
+
+namespace Heus.Core.Security.Internal;
 
 using Heus.Core.Utils;
 using System.Security.Claims;

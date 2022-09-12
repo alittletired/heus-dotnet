@@ -1,7 +1,7 @@
 ﻿
 using System.Reflection;
 
-namespace Heus.Utils
+namespace Heus.Core.Utils
 {
     //TODO: Consider to make internal
     public static class ReflectionHelper

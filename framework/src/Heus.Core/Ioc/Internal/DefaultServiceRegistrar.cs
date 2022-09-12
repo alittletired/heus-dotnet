@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using System.Reflection;
-namespace Heus.Ioc.Internal;
+namespace Heus.Core.Ioc.Internal;
 public class DefaultServiceRegistrar : IServiceRegistrar
 {
     public void Handle(IServiceCollection services, Type type)

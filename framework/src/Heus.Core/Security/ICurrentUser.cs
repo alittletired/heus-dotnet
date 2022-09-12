@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-namespace Heus.Core;
+namespace Heus.Core.Security;
 public interface ICurrentUser
 {
     bool IsAuthenticated { get; }

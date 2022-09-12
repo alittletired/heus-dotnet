@@ -1,7 +1,4 @@
-
-
 using Microsoft.Extensions.DependencyInjection;
-
 namespace Heus.Core.Ioc;
 public interface IServiceRegistrar
 {

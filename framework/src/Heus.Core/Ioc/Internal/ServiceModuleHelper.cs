@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Heus.Ioc.Internal
+namespace Heus.Core.Ioc.Internal
 {
     internal static class ServiceModuleHelper
     {

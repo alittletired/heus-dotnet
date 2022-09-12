@@ -1,5 +1,5 @@
 
-namespace Heus.Core;
+namespace Heus.Core.Ioc;
 using Microsoft.Extensions.DependencyInjection;
 
 /// <summary>

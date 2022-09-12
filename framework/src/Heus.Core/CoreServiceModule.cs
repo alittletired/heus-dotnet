@@ -1,17 +1,13 @@
+using Heus.Core.Ioc;
 using Heus.Ddd.Data;
-using Heus.Ioc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Core;
 
-public class CoreServiceModule:IServiceModule
+public class CoreServiceModule:ServiceModuleBase
 {
-    public void Configure(ConfigureContext context)
-    {
-     
-    }
-
-    public  void ConfigureServices(ConfigureServicesContext context)
+   
+    public override  void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddScoped(typeof(IRepository<>),typeof(DefaultRepository<>));
     }

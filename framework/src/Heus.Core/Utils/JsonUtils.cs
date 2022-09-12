@@ -1,8 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Heus.Json;
+using Heus.Core.Json;
 
-namespace Heus.Utils;
+namespace Heus.Core.Utils;
 
 public static class JsonUtils
 {

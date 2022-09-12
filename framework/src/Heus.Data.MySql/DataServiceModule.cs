@@ -1,10 +1,6 @@
-﻿using System.Data.Common;
-using Heus.Business;
-using Heus.Core;
+﻿using Heus.Business;
 using Heus.Core.Ddd.Data;
-using Heus.Ddd.Data;
-using Heus.DDD.Infrastructure;
-using Heus.Ioc;
+using Heus.Core.Ioc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -12,20 +8,20 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MySqlConnector;
 
 namespace Heus.Data.MySql;
 
 [DependsOn(typeof(BusinessServiceModule))]
-public class DataServiceModule : IServiceModule
+public class DataServiceModule : ServiceModuleBase
 {
-    public void ConfigureServices(ConfigureServicesContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
-     
-        context.Services.AddScoped<IDbContextProvider, DbContextProvider>();
+
+        var services = context.Services;
+        services.AddScoped<IDbContextProvider, DbContextProvider>();
         
-        context.Services.AddDbContext<ApplicationDbContext>(options =>
-        {
+        services.AddDbContext<ApplicationDbContext>(options =>
+        { 
             var connectionString = context.Configuration.GetConnectionString(nameof(ApplicationDbContext));
            var version= ServerVersionCache.GetServerVersion(connectionString);
            options.UseMySql(connectionString, version)
@@ -52,19 +48,17 @@ public class DataServiceModule : IServiceModule
     //
     //     });
     // }
-    public void Configure(ConfigureContext context)
+    public override void ConfigureApplication(ApplicationConfigurationContext context)
     {
-
         if (context.Environment.IsDevelopment())
         {
-            ConfigureDevelopment(context);
+            ConfigureDevelopment(context.ServiceProvider);
         }
-
     }
 
-    private static void ConfigureDevelopment(ConfigureContext context)
+    private static void ConfigureDevelopment(IServiceProvider serviceProvider)
     {
-        using var scope = context.ServiceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         db.Database.EnsureDeleted();
         db.Database.EnsureCreated();

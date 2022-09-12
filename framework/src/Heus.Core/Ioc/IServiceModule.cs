@@ -10,14 +10,14 @@ public interface IServiceModule
     /// <summary>
     /// 配置服务
     /// </summary>
-    /// <param name="services"></param>
-    void ConfigureServices(IServiceCollection services);
+    /// <param name="context"></param>
+    void ConfigureServices(ServiceConfigurationContext context);
 
     /// <summary>
     /// 配置应用
     /// </summary>
-    /// <param name="serviceProvider"></param>
-    void ConfigureApplication(IServiceProvider serviceProvider);
+    /// <param name="context"></param>
+    void ConfigureApplication(ApplicationConfigurationContext context);
 
 
 }

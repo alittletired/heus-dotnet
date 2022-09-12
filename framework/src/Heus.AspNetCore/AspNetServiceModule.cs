@@ -1,8 +1,8 @@
 using Heus.AspNetCore.Conventions;
 using Heus.AspNetCore.OpenApi;
 using Heus.Business;
-using Heus.Ioc;
-using Heus.Json;
+using Heus.Core.Ioc;
+using Heus.Core.Json;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
@@ -11,41 +11,38 @@ namespace Heus.AspNetCore;
 [DependsOn(typeof(CoreServiceModule))]
 public class AspNetServiceModule : ServiceModuleBase
 {
-    public override void ConfigureServices(ConfigureServicesContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        var services = context.Services;
+        services.Configure<JsonOptions>(options => { options.SerializerOptions.ApplyDefaultSettings(); });
+        services.AddControllers(options => { options.Conventions.Add(new ServiceApplicationModelConvention()); })
+            .ConfigureApplicationPartManager(p =>
+            {
+                var assemblyPart = new AssemblyPart(typeof(BusinessServiceModule).Assembly);
+                p.ApplicationParts.Add(assemblyPart);
+                p.FeatureProviders.Add(new ServiceControllerFeatureProvider());
+            });
+        services.AddOpenApi(context.Environment);
 
-        context.Services.Configure<JsonOptions>(options =>
-        {
-            options.SerializerOptions.ApplyDefaultSettings();
-        });
-        context.Services.AddControllers(options =>
-        {
-           options.Conventions.Add(new ServiceApplicationModelConvention());
-        }).ConfigureApplicationPartManager(p =>
-        {
-            var assemblyPart = new AssemblyPart(typeof(BusinessServiceModule).Assembly);
-            p.ApplicationParts.Add(assemblyPart);
-            p.FeatureProviders.Add(new ServiceControllerFeatureProvider());
-        });
-        context.Services.AddOpenApi(context.Environment);
-        base.ConfigureServices(context);
     }
 
-public override void Configure(ConfigureContext context)
-{
-    var env = context.Environment;
-    var app = context.GetApplicationBuilder();
-    if (env.IsDevelopment())
+    public override void ConfigureApplication(ApplicationConfigurationContext context)
     {
-        app.UseDeveloperExceptionPage();
-        app.UseOpenApi(env);
+        var app = context.GetApplicationBuilder();
+        if (context.Environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseOpenApi(context.Environment);
+        }
+
+        // app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        // app.UseAuthorization();
+        app.UseRouting();
     }
 
-    // app.UseHttpsRedirection();
-    app.UseStaticFiles();
-    // app.UseAuthorization();
-    app.UseRouting();
-}
+   
+
 
 
 }

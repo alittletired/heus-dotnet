@@ -1,10 +1,6 @@
 ﻿using Heus.Core.Ioc;
-using Heus.Ioc.Internal;
-using Heus.Ioc;
 using Microsoft.Extensions.DependencyInjection;
-
-using System.Reflection;
-
+using Heus.Core.Ioc.Internal;
 
 namespace Heus.Core
 {
@@ -20,30 +16,29 @@ namespace Heus.Core
             Modules = LoadModules();
 
         }
+
         public IReadOnlyList<ServiceModuleDescriptor> LoadModules()
         {
             var moduleLoader = new ServiceModuleLoader();
             return moduleLoader.LoadModules(StartupModuleType);
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(ServiceConfigurationContext context)
         {
-
-            services.AddSingleton(this);
+            context.Services.AddSingleton(this);
             var serviceTypes = new HashSet<Type>();
             var registrar = new DefaultServiceRegistrar();
-            //PreConfigureServices
             var preConfigureServicesList = Modules
-                .Where(m => m.Instance is IPreConfigureServices)
-                .Select(m => (IPreConfigureServices)m.Instance);
-
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                .Select(m =>m.Instance).OfType<IPreConfigureServices>();
             foreach (var preConfigureServices in preConfigureServicesList)
             {
-                preConfigureServices.PreConfigureServices(services);
+                preConfigureServices.PreConfigureServices(context);
 
             }
+
             //ConfigureServices
-            var assemblies = new HashSet<Assembly>();
+          
             foreach (var module in Modules)
             {
                 var assembly = module.Type.Assembly;
@@ -55,22 +50,22 @@ namespace Heus.Core
                                    !type.IsGenericType);
                 foreach (var type in types)
                 {
-                    registrar.Handle(services, type);
+                    registrar.Handle(context.Services, type);
                     serviceTypes.Add(type);
                 }
 
-                module.Instance.ConfigureServices(services);
+                module.Instance.ConfigureServices(context);
             }
 
         }
 
 
-        public void ConfigureApplication(IServiceProvider serviceProvider)
+        public void ApplicationInitialize(ApplicationConfigurationContext context)
         {
-            var context = new ConfigureContext(serviceProvider);
+
             foreach (var module in Modules)
             {
-                module.Instance.Configure(context);
+                module.Instance.ConfigureApplication(context);
             }
         }
     }

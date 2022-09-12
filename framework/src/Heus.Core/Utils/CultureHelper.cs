@@ -1,6 +1,5 @@
-using Heus.Core;
 using System.Globalization;
-namespace Heus.Utils;
+namespace Heus.Core.Utils;
 public static class CultureHelper
 {
     public static IDisposable Use(string culture, string? uiCulture = null)

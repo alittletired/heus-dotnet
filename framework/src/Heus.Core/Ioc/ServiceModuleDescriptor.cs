@@ -12,12 +12,12 @@ public class ServiceModuleDescriptor
     public IServiceModule Instance { get; }
 
 
-    public IReadOnlyList<ServiceModuleDescriptor> Dependencies => _dependencies.ToImmutableList();
+    public IEnumerable<ServiceModuleDescriptor> Dependencies => _dependencies.ToImmutableList();
     private readonly List<ServiceModuleDescriptor> _dependencies;
 
     public ServiceModuleDescriptor(Type type, IServiceModule instance)
     {
-        if (!type.GetTypeInfo().IsAssignableFrom(instance.GetType()))
+        if (!type.IsInstanceOfType(instance))
         {
             throw new ArgumentException($"Given module instance ({instance.GetType().AssemblyQualifiedName}) is not an instance of given module type: {type.AssemblyQualifiedName}");
         }

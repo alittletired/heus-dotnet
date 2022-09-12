@@ -1,5 +1,5 @@
 ﻿
-namespace Heus.Core;
+namespace Heus.Core.Security;
 public static class CurrentUserExtensions
 {
     public static string? FindClaimValue(this ICurrentUser currentUser, string claimType)

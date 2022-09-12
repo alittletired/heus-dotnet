@@ -4,14 +4,13 @@ namespace Heus.Core.Ioc;
 
 public class ServiceModuleBase:IServiceModule
 {
-   
-    public virtual void ConfigureServices(IServiceCollection services)
+    public virtual void ConfigureServices(ServiceConfigurationContext context)
     {
-     
+    
     }
 
-    public virtual  void ConfigureApplication(IServiceProvider serviceProvider)
+    public virtual void ConfigureApplication(ApplicationConfigurationContext context)
     {
-        throw new NotImplementedException();
+       
     }
 }

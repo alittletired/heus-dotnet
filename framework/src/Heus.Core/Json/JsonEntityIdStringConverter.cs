@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Heus.Ddd.Data;
 
-namespace Heus.Json;
+namespace Heus.Core.Json;
 
 internal class JsonEntityIdStringConverter:JsonConverter<EntityId>
 {

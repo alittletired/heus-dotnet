@@ -1,7 +1,6 @@
 ﻿
-using Heus.Ioc;
 
-namespace Heus.Core;
+namespace Heus.Core.Ioc;
 
 /// <summary>
 /// 依赖属性，主要用于模块加载，如业务模块需要依赖平台的模块则使用

@@ -1,44 +1,35 @@
-﻿
-using Heus.Core.Ioc;
+﻿namespace Heus.Core.Ioc.Internal;
 
-namespace Heus.Ioc.Internal;
-
-internal class ServiceModuleLoader
+internal sealed class ServiceModuleLoader
 {
-    public List<ServiceModuleDescriptor> LoadModules( Type startupModuleType)
+    public List<ServiceModuleDescriptor> LoadModules(Type startupModuleType)
     {
-
-        var modules = GetDescriptors( startupModuleType);
+        var modules = GetDescriptors(startupModuleType);
         modules = SortByDependency(modules, startupModuleType);
         return modules.ToList();
     }
 
-    private List<ServiceModuleDescriptor> GetDescriptors( Type startupModuleType)
+    private List<ServiceModuleDescriptor> GetDescriptors(Type startupModuleType)
     {
         var modules = new List<ServiceModuleDescriptor>();
-
-        FillModules(modules,  startupModuleType);
+        FillModules(modules, startupModuleType);
         SetDependencies(modules);
 
         return modules.ToList();
     }
 
-    protected virtual void FillModules(
-        List<ServiceModuleDescriptor> modules,
-       
-        Type startupModuleType)
+    private void FillModules(List<ServiceModuleDescriptor> modules, Type startupModuleType)
     {
-
         //All modules starting from the startup module
         foreach (var moduleType in ServiceModuleHelper.FindAllModuleTypes(startupModuleType))
         {
-            modules.Add(CreateModuleDescriptor( moduleType));
+            modules.Add(CreateModuleDescriptor(moduleType));
         }
 
 
     }
 
-    protected virtual void SetDependencies(List<ServiceModuleDescriptor> modules)
+    private void SetDependencies(List<ServiceModuleDescriptor> modules)
     {
         foreach (var module in modules)
         {
@@ -46,7 +37,7 @@ internal class ServiceModuleLoader
         }
     }
 
-    protected virtual List<ServiceModuleDescriptor> SortByDependency(List<ServiceModuleDescriptor> modules,
+    private List<ServiceModuleDescriptor> SortByDependency(List<ServiceModuleDescriptor> modules,
         Type startupModuleType)
     {
         var sortedModules = modules.SortByDependencies(m => m.Dependencies);
@@ -54,20 +45,20 @@ internal class ServiceModuleLoader
         return sortedModules.Distinct().ToList();
     }
 
-    protected virtual ServiceModuleDescriptor CreateModuleDescriptor(
-     Type moduleType)
+    private ServiceModuleDescriptor CreateModuleDescriptor(
+        Type moduleType)
     {
-        return new ServiceModuleDescriptor(moduleType, CreateAndRegisterModule( moduleType));
+        return new ServiceModuleDescriptor(moduleType, CreateAndRegisterModule(moduleType));
     }
 
-    protected virtual IServiceModule CreateAndRegisterModule( Type moduleType)
+    private IServiceModule CreateAndRegisterModule(Type moduleType)
     {
         var module = (IServiceModule)Activator.CreateInstance(moduleType)!;
         // services.AddSingleton(moduleType, module);
         return module;
     }
 
-    protected virtual void SetDependencies(List<ServiceModuleDescriptor> modules, ServiceModuleDescriptor module)
+    private void SetDependencies(List<ServiceModuleDescriptor> modules, ServiceModuleDescriptor module)
     {
         foreach (var dependedModuleType in ServiceModuleHelper.FindDependedModuleTypes(module.Type))
         {
@@ -75,8 +66,8 @@ internal class ServiceModuleLoader
             if (dependedModule == null)
             {
                 throw new Exception("Could not find a depended module " +
-                                        dependedModuleType.AssemblyQualifiedName + " for " +
-                                        module.Type.AssemblyQualifiedName);
+                                    dependedModuleType.AssemblyQualifiedName + " for " +
+                                    module.Type.AssemblyQualifiedName);
             }
 
             module.AddDependency(dependedModule);
