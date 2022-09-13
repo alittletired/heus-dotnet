@@ -9,5 +9,9 @@
     <Using Include="Heus.Ddd.Application" />
       
 </ItemGroup>
+      <ItemGroup>
+        <Folder Include="Auth\Entities" />
+        <Folder Include="Auth\Service" />
+      </ItemGroup>
 
 </Project>

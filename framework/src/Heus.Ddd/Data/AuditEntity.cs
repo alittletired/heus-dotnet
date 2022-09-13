@@ -1,7 +1,7 @@
 
 namespace Heus.Ddd.Data;
 
-public abstract class EntityBase:IAuditEntity
+public abstract class AuditEntity:IAuditEntity
 {
     /// <summary>
     /// 唯一主键，数据库为varchar(24)

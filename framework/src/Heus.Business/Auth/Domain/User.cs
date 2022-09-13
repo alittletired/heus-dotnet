@@ -1,35 +1,24 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Heus.Business.Auth.Domain;
 
-namespace Heus.Business.Entities;
+namespace Heus.Business.Auth.Domain;
 
 
-/// <summary>
-/// 用户状态
-/// </summary>
-public enum UserStatus
-{
-    /// <summary>
-    /// 正常
-    /// </summary>
-    Normal,
-    /// <summary>
-    /// 禁用
-    /// </summary>
-    Disabled,
-    /// <summary>
-    /// 未激活
-    /// </summary>
-    Unactivated
-}
-public class User:EntityBase
+
+[Table("auth_organ")]
+public class User:AuditEntity
 {
     /// <summary>
     /// 用户账号
     /// </summary>
+    [Required]
     public string Account { get; set; } = null!;
    /// <summary>
    /// 用户账号
    /// </summary>
+   [Required]
     public string Password { get; set; } = null!;
    /// <summary>
    /// 用户手机
