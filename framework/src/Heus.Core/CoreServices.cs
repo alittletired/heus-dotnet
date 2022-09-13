@@ -62,7 +62,6 @@ namespace Heus.Core
 
         public void ApplicationInitialize(ApplicationConfigurationContext context)
         {
-
             foreach (var module in Modules)
             {
                 module.Instance.ConfigureApplication(context);

@@ -3,12 +3,13 @@ using Heus.AspNetCore.OpenApi;
 using Heus.Business;
 using Heus.Core.Ioc;
 using Heus.Core.Json;
+using Heus.Ddd;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Heus.AspNetCore;
 
-[DependsOn(typeof(CoreServiceModule))]
+[DependsOn(typeof(DddServiceModule))]
 public class AspNetServiceModule : ServiceModuleBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)

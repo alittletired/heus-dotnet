@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
       <ProjectReference Include="..\Heus.Core\Heus.Core.csproj" />
+      <ProjectReference Include="..\Heus.Ddd\Heus.Ddd.csproj" />
     </ItemGroup>
       <ItemGroup>
     <Using Include="Heus.Core" />
