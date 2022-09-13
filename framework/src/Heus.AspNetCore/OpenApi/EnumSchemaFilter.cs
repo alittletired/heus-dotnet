@@ -22,52 +22,46 @@ using Microsoft.OpenApi.Any;
 // }
 internal class EnumSchemaFilter : ISchemaFilter
 {
-    private  readonly Dictionary<Type, Action<OpenApiSchema>> _mapper = new()
-    {
-        
-      
-        [typeof(EntityId)] = (schema) =>
-        {
-            schema.Properties.Clear();
-            schema.Type = "string";
-            schema.Example = new OpenApiString(EntityId.NewId().ToString());
 
-        }
-       
-    };
 
-  
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
-        if (_mapper.TryGetValue(context.Type,out var applySchema) )
+        if (!context.Type.IsEnum) return;
+
+        var schemaId = context.Type.Name;
+
+
+        var enums = schema.Enum;
+        schema.Properties.Clear();
+        schema.Enum = null;
+        schema.Type = "object";
+        schema.Format = "enum";
+        var fieldSummaryDict = GetEnumSummary(context.Type);
+
+
+        foreach (var enumValue in enums)
         {
-            applySchema(schema);
-        }
-        else if (context.Type.IsEnum)
-        {
-            var fieldSummaryDict = GetEnumSummary(context.Type); 
-            schema.Enum = schema.Enum.Select(enumValue =>
+            if (enumValue is not OpenApiPrimitive<int> openApiValue)
             {
-                if (enumValue is not OpenApiPrimitive<int> openApiValue)
-                {
-                    throw new Exception("枚举类型不能转化");
-                }
-                OpenApiObject apiObject = new();
-                var value = openApiValue.Value;
-                var name = Enum.GetName(context.Type, value);
-                var enumMember = context.Type.GetMember(name!).First();
-                apiObject["name"] = new OpenApiString(name);
-                apiObject["value"] = new OpenApiInteger(value);
-                if(fieldSummaryDict.TryGetValue(enumMember.Name,out var summary))
-                {
-                    apiObject["text"] = new OpenApiString(summary);
-                }
-              
-             
-                return apiObject;
-            }).Cast<IOpenApiAny>().ToList();
+                throw new Exception("枚举类型不能转化");
+            }
+
+            OpenApiSchema propSchema = new();
+            var value = openApiValue.Value;
+            var name = Enum.GetName(context.Type, value)!;
+            var enumMember = context.Type.GetMember(name).First();
+            propSchema.Default = new OpenApiInteger(value);
+
+            if (fieldSummaryDict.TryGetValue(enumMember.Name, out var summary))
+            {
+                propSchema.Description = summary;
+            }
+
+            schema.Properties[name] = propSchema;
         }
+
     }
+
     private static Dictionary<string, string> GetEnumSummary(Type type)
     {
         var dict = new Dictionary<string, string>();

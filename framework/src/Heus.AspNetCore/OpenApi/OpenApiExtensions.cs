@@ -1,4 +1,6 @@
 
+using Heus.Ddd.Data;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 
@@ -10,6 +12,9 @@ public static class OpenApiExtensions
        
         services.AddSwaggerGen(c =>
         {
+            c.MapType<EntityId>(() => new OpenApiSchema { 
+                Type = "string" 
+                ,Example =new OpenApiString(EntityId.NewId().ToString()) });
             foreach (var filePath in Directory.GetFiles(AppContext.BaseDirectory, "*.xml"))
             {
                 try

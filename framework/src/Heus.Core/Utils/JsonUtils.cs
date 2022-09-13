@@ -1,35 +1,40 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Heus.Core.Json;
 
 namespace Heus.Core.Utils;
 
 public static class JsonUtils
 {
-    public static JsonSerializerOptions Options { get; } = new ();
+    public static JsonSerializerOptions DefaultOptions { get; } = new()
+    {
+        PropertyNameCaseInsensitive=true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
     public static void ApplyDefaultSettings(this JsonSerializerOptions options)
     {
         options.PropertyNameCaseInsensitive = true;
         options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        options.Converters.Add(new JsonEntityIdStringConverter());
+        foreach (var converter in DefaultOptions.Converters)
+        {
+            options.Converters.Add(converter);    
+        }
+        
     }   
-    static JsonUtils()
+
+
+    public static string Stringify<T>(T obj) 
     {
-        ApplyDefaultSettings(Options);
+       return JsonSerializer.Serialize(obj, DefaultOptions);
     }
 
-    public static string ToJson<T>(T obj) 
-    {
-       return JsonSerializer.Serialize(obj, Options);
-    }
-
-    public static T? FormJson<T>(string? json) {
+    public static T? Parse<T>(string? json) {
 
         if (string.IsNullOrEmpty(json))
         {
             return default!;
         }
-        return JsonSerializer.Deserialize<T>(json, Options);
+        return JsonSerializer.Deserialize<T>(json, DefaultOptions);
     }
 }

@@ -2,7 +2,7 @@ using Heus.AspNetCore.Conventions;
 using Heus.AspNetCore.OpenApi;
 using Heus.Business;
 using Heus.Core.Ioc;
-using Heus.Core.Json;
+using Heus.Core.Utils;
 using Heus.Ddd;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -15,7 +15,7 @@ public class AspNetServiceModule : ServiceModuleBase
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var services = context.Services;
-        services.Configure<JsonOptions>(options => { options.SerializerOptions.ApplyDefaultSettings(); });
+        services.Configure<JsonOptions>(options => {  options.SerializerOptions.ApplyDefaultSettings(); });
         services.AddControllers(options => { options.Conventions.Add(new ServiceApplicationModelConvention()); })
             .ConfigureApplicationPartManager(p =>
             {

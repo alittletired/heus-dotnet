@@ -76,18 +76,18 @@ public struct EntityId : IComparable<EntityId>, IEquatable<EntityId>, IConvertib
     /// <summary>
     /// Gets the timestamp.
     /// </summary>
-    public int Timestamp
+    public int GetTimestamp()
     {
-        get { return _a; }
+        return _a;
     }
 
 
     /// <summary>
     /// Gets the creation time (derived from the timestamp).
     /// </summary>
-    public DateTime CreationTime
+    public DateTime GetCreationTime()
     {
-        get { return DataUtils.UnixEpoch.AddSeconds((uint)Timestamp); }
+      return DataUtils.UnixEpoch.AddSeconds((uint)GetTimestamp()); 
     }
 
     // public operators

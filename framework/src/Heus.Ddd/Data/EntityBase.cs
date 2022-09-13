@@ -21,7 +21,7 @@ public abstract class EntityBase:IAuditEntity
     /// <summary>
     /// 创建时间
     /// </summary>
-    public DateTime? CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }=DateTime.Now;
     /// <summary>
     /// 更新时间
     /// </summary>
