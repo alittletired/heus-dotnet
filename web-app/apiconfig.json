@@ -1,9 +1,0 @@
-{
-  "apis": [
-    {
-      "name": "enroll",
-      "pathSplitIndex": 1,
-      "url": "https://api.aksenglish.com/v3/api-docs/api"
-    }
-  ]
-}

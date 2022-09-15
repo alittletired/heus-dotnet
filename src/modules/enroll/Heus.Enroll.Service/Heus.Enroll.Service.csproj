@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+      <ItemGroup>
+        <Compile Remove="Auth\Entities\**" />
+        <Compile Remove="Auth\Service\**" />
+        <EmbeddedResource Remove="Auth\Entities\**" />
+        <EmbeddedResource Remove="Auth\Service\**" />
+        <None Remove="Auth\Entities\**" />
+        <None Remove="Auth\Service\**" />
+      </ItemGroup>
+      <ItemGroup>
+    <Using Include="Heus.Core" />
+    <Using Include="Heus.Ddd.Data" />
+    <Using Include="Heus.Ddd.Application" />
+      
+</ItemGroup>
+
+</Project>

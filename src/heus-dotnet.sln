@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32819.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "framework", "framework", "{CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Core", "framework\Heus.Core\Heus.Core.csproj", "{BA3E5C3A-F22B-4B8D-B5D5-63BAEB128D44}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.AspNetCore", "framework\Heus.AspNetCore\Heus.AspNetCore.csproj", "{A7987BAE-15D2-48EE-AA61-6323DF2C1161}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Ddd", "framework\Heus.Ddd\Heus.Ddd.csproj", "{F48B0E3A-702C-4B65-BDD4-9EC6A059E009}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{987702D3-75D7-4247-BE31-4DCC9462C5FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "enroll", "enroll", "{6BBC5B03-FC03-4182-A462-8928209562EA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Enroll.Service", "modules\enroll\Heus.Enroll.Service\Heus.Enroll.Service.csproj", "{C7354F5D-43E4-4959-AC50-DD8FF667A211}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA3E5C3A-F22B-4B8D-B5D5-63BAEB128D44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA3E5C3A-F22B-4B8D-B5D5-63BAEB128D44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA3E5C3A-F22B-4B8D-B5D5-63BAEB128D44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA3E5C3A-F22B-4B8D-B5D5-63BAEB128D44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7987BAE-15D2-48EE-AA61-6323DF2C1161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7987BAE-15D2-48EE-AA61-6323DF2C1161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7987BAE-15D2-48EE-AA61-6323DF2C1161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7987BAE-15D2-48EE-AA61-6323DF2C1161}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F48B0E3A-702C-4B65-BDD4-9EC6A059E009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F48B0E3A-702C-4B65-BDD4-9EC6A059E009}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F48B0E3A-702C-4B65-BDD4-9EC6A059E009}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F48B0E3A-702C-4B65-BDD4-9EC6A059E009}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7354F5D-43E4-4959-AC50-DD8FF667A211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7354F5D-43E4-4959-AC50-DD8FF667A211}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7354F5D-43E4-4959-AC50-DD8FF667A211}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7354F5D-43E4-4959-AC50-DD8FF667A211}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BA3E5C3A-F22B-4B8D-B5D5-63BAEB128D44} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
+		{A7987BAE-15D2-48EE-AA61-6323DF2C1161} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
+		{F48B0E3A-702C-4B65-BDD4-9EC6A059E009} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
+		{6BBC5B03-FC03-4182-A462-8928209562EA} = {987702D3-75D7-4247-BE31-4DCC9462C5FD}
+		{C7354F5D-43E4-4959-AC50-DD8FF667A211} = {6BBC5B03-FC03-4182-A462-8928209562EA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {734361D4-560C-4467-BE8D-95EBDCA95E53}
+	EndGlobalSection
+EndGlobal
