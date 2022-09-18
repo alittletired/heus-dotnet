@@ -15,13 +15,6 @@ public abstract class DbContextBase<TDbContext> : DbContext
       base.OnConfiguring(options);
    }
 
-   protected override void OnModelCreating(ModelBuilder modelBuilder)
-   {
-      base.OnModelCreating(modelBuilder);
-     
-   }
- 
-
    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
    {
       configurationBuilder

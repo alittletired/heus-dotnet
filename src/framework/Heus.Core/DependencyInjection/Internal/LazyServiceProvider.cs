@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using Heus.Core.Ioc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Core.DependencyInjection.Internal;

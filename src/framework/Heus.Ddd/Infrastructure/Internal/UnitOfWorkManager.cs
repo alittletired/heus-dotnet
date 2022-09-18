@@ -1,4 +1,4 @@
-using Heus.Core.Ioc;
+using Heus.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.DDD.Infrastructure.Internal;

@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Heus.Business.Auth.Domain;
 
 namespace Heus.Enroll.Service.Auth.Domain.Entities;
 [Table("app_resource")]

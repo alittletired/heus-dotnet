@@ -1,9 +1,10 @@
 using Heus.Enroll.Service.Application.Dtos;
-using Heus.Enroll.Service.Entities;
 using Heus.Core.DependencyInjection;
 using Heus.Ddd.Application.Services;
+using Heus.Enroll.Service.Auth.Domain.Entities;
 
 namespace Heus.Enroll.Service.Application;
+
 [Service]
 public class UserAppService : ICreateAppService<User, UserCreateDto>
     , IUpdateAppService<User, User>

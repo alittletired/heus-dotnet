@@ -16,8 +16,5 @@
     <ProjectReference Include="..\Heus.Core\Heus.Core.csproj" />
     <ProjectReference Include="..\Heus.Ddd\Heus.Ddd.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mvc" />
-  </ItemGroup>
 
 </Project>

@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 
 namespace Heus.Ddd.Application;
 
     public class PagedResultDto<T>
     {
-        public int TotalCount { get; set; } 
-        public IEnumerable<T> Items { get; set; }
+        public int TotalCount { get;  } 
+        public IEnumerable<T> Items { get;  }
         /// <summary>
         /// Creates a new <see cref="PagedResultDto{T}"/> object.
         /// </summary>

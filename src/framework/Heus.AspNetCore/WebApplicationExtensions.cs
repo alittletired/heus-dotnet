@@ -1,5 +1,5 @@
 
-using Heus.Core.Ioc;
+using Heus.Core.Modularity;
 
 namespace Heus.AspNetCore;
 

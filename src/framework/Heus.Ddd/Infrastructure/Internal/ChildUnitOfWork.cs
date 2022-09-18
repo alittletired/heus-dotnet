@@ -8,7 +8,6 @@ internal class ChildUnitOfWork : IUnitOfWork
 
     
     public UnitOfWorkOptions Options => _parent.Options;
-    public DbTransaction? DbTransaction { get; }
 
     public ChildUnitOfWork(IUnitOfWork parent)
     {

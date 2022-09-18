@@ -12,9 +12,6 @@ public static class UnitOfWorkHelper
         {
             return true;
         }
-
-       
-
         return false;
     }
     public static UnitOfWorkAttribute? GetUnitOfWorkAttributeOrNull(MethodInfo? methodInfo)

@@ -31,7 +31,12 @@ public static class CollectionExtensions
         return true;
     }
 
-   
+    public static void AddIfNotContains<T>(this ICollection<T> source, T item)
+    {
+        if (source.Contains(item))
+            return;
+        source.Add(item);
+    }
  
 }
 

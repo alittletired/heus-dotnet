@@ -4,7 +4,7 @@ using Heus.Core.Modularity.Internal;
 
 namespace Heus.Core
 {
-    public class CoreServices
+    public class CoreServices:IModuleContainer
     {
         public Type StartupModuleType { get; }
         public IReadOnlyList<ServiceModuleDescriptor> Modules { get; }
@@ -26,6 +26,7 @@ namespace Heus.Core
         public void ConfigureServices(ServiceConfigurationContext context)
         {
             context.Services.AddSingleton(this);
+            context.Services.AddSingleton<IModuleContainer>(this);
             var serviceTypes = new HashSet<Type>();
             var registrar = new DefaultServiceRegistrar();
             var preConfigureServicesList = Modules

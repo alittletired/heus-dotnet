@@ -2,6 +2,12 @@
       <ItemGroup>
         <Compile Remove="Auth\Entities\**" />
         <Compile Remove="Auth\Service\**" />
+        <Compile Include="Auth\Entities\Organ.cs" />
+        <Compile Include="Auth\Entities\Resource.cs" />
+        <Compile Include="Auth\Entities\Role.cs" />
+        <Compile Include="Auth\Entities\RoleResource.cs" />
+        <Compile Include="Auth\Entities\User.cs" />
+        <Compile Include="Auth\Entities\UserRole.cs" />
         <EmbeddedResource Remove="Auth\Entities\**" />
         <EmbeddedResource Remove="Auth\Service\**" />
         <None Remove="Auth\Entities\**" />
@@ -13,5 +19,8 @@
     <Using Include="Heus.Ddd.Application" />
       
 </ItemGroup>
+      <ItemGroup>
+        <ProjectReference Include="..\..\..\framework\Heus.Ddd\Heus.Ddd.csproj" />
+      </ItemGroup>
 
 </Project>
