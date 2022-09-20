@@ -8,16 +8,19 @@
     <Using Include="Heus.Core" />
 </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="Autofac" Version="6.4.0" />
 	  <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
 	  <PackageReference Include="AutoMapper" Version="11.0.1" />
 	  <PackageReference Include="EFCore.NamingConventions" Version="6.0.0" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.8" />
-	  <PackageReference Include="Microsoft.Extensions.Localization" Version="$(MicrosoftPackageVersion)" />
-	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(MicrosoftPackageVersion)" />
-	  <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.19" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.9" />
+	  <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.9" />
+	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+	  <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20" />
 	  <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 	  <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DependencyInjection\Autofac\" />
+    <Folder Include="DependencyInjection\Internal\" />
   </ItemGroup>
 
 

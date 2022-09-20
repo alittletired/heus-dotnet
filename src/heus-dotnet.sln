@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "enroll", "enroll", "{6BBC5B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Enroll.Service", "modules\enroll\Heus.Enroll.Service\Heus.Enroll.Service.csproj", "{C7354F5D-43E4-4959-AC50-DD8FF667A211}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heus.Enroll.Service.UnitTests", "modules\enroll\Heus.Enroll.Service.UnitTests\Heus.Enroll.Service.UnitTests.csproj", "{D81AD0BE-F827-4477-BBB1-0A04B39D5649}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C7354F5D-43E4-4959-AC50-DD8FF667A211}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7354F5D-43E4-4959-AC50-DD8FF667A211}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7354F5D-43E4-4959-AC50-DD8FF667A211}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D81AD0BE-F827-4477-BBB1-0A04B39D5649}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D81AD0BE-F827-4477-BBB1-0A04B39D5649}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D81AD0BE-F827-4477-BBB1-0A04B39D5649}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D81AD0BE-F827-4477-BBB1-0A04B39D5649}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +55,7 @@ Global
 		{F48B0E3A-702C-4B65-BDD4-9EC6A059E009} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
 		{6BBC5B03-FC03-4182-A462-8928209562EA} = {987702D3-75D7-4247-BE31-4DCC9462C5FD}
 		{C7354F5D-43E4-4959-AC50-DD8FF667A211} = {6BBC5B03-FC03-4182-A462-8928209562EA}
+		{D81AD0BE-F827-4477-BBB1-0A04B39D5649} = {6BBC5B03-FC03-4182-A462-8928209562EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {734361D4-560C-4467-BE8D-95EBDCA95E53}
