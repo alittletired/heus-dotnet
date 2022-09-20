@@ -1,5 +1,6 @@
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Application;
@@ -16,5 +17,5 @@ public abstract class ApplicationService:IApplicationService,IOnInstantiation
         }
     protected ICurrentUser CurrentUser => GetRequiredService<ICurrentUser>();
 
-   
+ 
 }

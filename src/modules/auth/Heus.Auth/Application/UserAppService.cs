@@ -8,6 +8,7 @@ namespace Heus.Enroll.Service.Application;
 public class UserAppService : ICreateAppService<User, UserCreateDto>
     , IUpdateAppService<User, User>
     , IDeleteAppService
+    , IDynamicQueryAppService<UserDto>
 {
     public virtual Task<User> CreateAsync(UserCreateDto createDto)
     {
@@ -15,12 +16,17 @@ public class UserAppService : ICreateAppService<User, UserCreateDto>
 
     }
 
-    public virtual Task DeleteAsync(EntityId id)
+    public async Task DeleteAsync(EntityId id)
+    {
+        await Repository.DeleteAsync(id);
+    }
+
+    public virtual Task<User> UpdateAsync(User updateDto)
     {
         throw new NotImplementedException();
     }
 
-    public virtual Task<User> UpdateAsync(User updateDto)
+    public Task<PagedResultDto<UserDto>> GetListAsync(UserDto input)
     {
         throw new NotImplementedException();
     }
