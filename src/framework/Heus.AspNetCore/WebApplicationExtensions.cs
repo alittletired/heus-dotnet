@@ -6,19 +6,29 @@ namespace Heus.AspNetCore;
 /// <summary>
 /// web应用
 /// </summary>
-public static class WebApplicationExtensions
+public static class WebApplicationHelper
 {
-    public static async Task RunAsync(string[] args, Type startModuleType)
+    public static async Task<int> RunAsync(string[] args, Type startModuleType)
     {
-        
-        var coreServices = new CoreServices(startModuleType);
-        var builder = WebApplication.CreateBuilder(args);
-        var context = new ServiceConfigurationContext(builder.Services, builder.Configuration, builder.Environment);
-        coreServices.ConfigureServices(context);     
-        var app=builder.Build();
-        var appContext = new ApplicationConfigurationContext(app);
-        coreServices.ApplicationInitialize(appContext);
-        await app.RunAsync();
+        try
+        {
+
+
+            var builder = WebApplication.CreateBuilder(args);
+            var moduleManager = new ServiceModuleManager(startModuleType);
+            var context = new ServiceConfigurationContext(builder);
+            moduleManager.ConfigureServices(context);
+            var app = builder.Build();
+            var appContext = new ApplicationConfigurationContext(app);
+            moduleManager.ApplicationInitialize(appContext);
+            await app.RunAsync();
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return 1;
+        }
     }
 
    

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,15 +10,15 @@ namespace Heus.Core.Modularity;
 /// </summary>
 public class ServiceConfigurationContext
 {
-    public ServiceConfigurationContext(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+    public  WebApplicationBuilder WebApplicationBuilder { get; }
+    public ServiceConfigurationContext(WebApplicationBuilder webApplicationBuilder)
     {
-        Services = services;
-        Configuration = configuration;
-        Environment = environment;
+        WebApplicationBuilder = webApplicationBuilder;
+        
     }
-
-    public IServiceCollection Services { get; }
-    public IConfiguration Configuration { get; }
-    public IHostEnvironment Environment { get; }
+    public IHostBuilder HostBuilder => WebApplicationBuilder.Host;
+    public IServiceCollection Services => WebApplicationBuilder.Services;
+    public IConfiguration Configuration => WebApplicationBuilder.Configuration;
+    public IHostEnvironment Environment => WebApplicationBuilder.Environment;
 
 }

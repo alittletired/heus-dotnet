@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Heus.Core.Modularity
 {
-    internal class ServiceModuleManager: IModuleContainer
+    public class ServiceModuleManager: IModuleContainer
     {
         public Type StartupModuleType { get; }
         public IReadOnlyList<ServiceModuleDescriptor> Modules { get; }
@@ -63,7 +63,6 @@ namespace Heus.Core.Modularity
             }
 
         }
-
 
         public void ApplicationInitialize(ApplicationConfigurationContext context)
         {
