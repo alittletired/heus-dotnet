@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.DDD.Infrastructure.Internal;
 
-[Service(ServiceLifetime.Singleton)]
 internal class UnitOfWorkManager:IUnitOfWorkManager
 {
     private readonly AsyncLocal<IUnitOfWork?> _currentUow= new();

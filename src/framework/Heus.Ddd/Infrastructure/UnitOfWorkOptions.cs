@@ -1,8 +1,9 @@
+using Heus.Ddd.Infrastructure;
 using System.Data;
 
 namespace Heus.DDD.Infrastructure;
 
-public class UnitOfWorkOptions
+public class UnitOfWorkOptions: IUnitOfWorkOptions
 {
     public IsolationLevel? IsolationLevel { get; set; }
     public bool? IsTransactional { get; set; }
@@ -11,12 +12,5 @@ public class UnitOfWorkOptions
     /// Milliseconds
     /// </summary>
     public int? Timeout { get; set; }
-
-    public IServiceProvider ServiceProvider { get; }
-
-    public UnitOfWorkOptions(IServiceProvider serviceProvider)
-    {
-        ServiceProvider = serviceProvider;
-    }
 
 }

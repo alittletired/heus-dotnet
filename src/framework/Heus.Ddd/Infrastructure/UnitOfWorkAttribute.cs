@@ -1,8 +1,9 @@
+using Heus.Ddd.Infrastructure;
 using System.Data;
 
 namespace Heus.DDD.Infrastructure;
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Interface)]
-public class UnitOfWorkAttribute:Attribute
+public class UnitOfWorkAttribute:Attribute, IUnitOfWorkOptions
 {
     /// <summary>
     /// Is this UOW transactional?
@@ -19,6 +20,12 @@ public class UnitOfWorkAttribute:Attribute
     /// Uses default value if not supplied.
     /// </summary>
     public IsolationLevel? IsolationLevel { get; set; }
+    /// <summary>
+    /// Used to prevent starting a unit of work for the method.
+    /// If there is already a started unit of work, this property is ignored.
+    /// Default: false.
+    /// </summary>
+    public bool IsDisabled { get; set; }
     public virtual void SetOptions(UnitOfWorkOptions options)
     {
         if (IsTransactional.HasValue)

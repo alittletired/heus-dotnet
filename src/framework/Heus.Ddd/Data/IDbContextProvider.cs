@@ -4,5 +4,5 @@ namespace Heus.Core.Ddd.Data;
 
 public interface IDbContextProvider
 {
-    DbContext GetDbContext(Type entityType);
+    Task< DbContext> GetDbContextAsync(Type entityType);
 }

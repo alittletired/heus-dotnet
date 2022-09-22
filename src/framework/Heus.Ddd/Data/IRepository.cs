@@ -1,7 +1,8 @@
 namespace Heus.Ddd.Data;
 
-public interface IRepository<TEntity> where TEntity : IEntity
+public interface IRepository<TEntity> where TEntity : class, IEntity
 {
-    IQueryable<TEntity> Query { get; }
+
     Task<int> SaveAsync(TEntity entity);
+    Task<IQueryable<TEntity>> GetQueryableAsync();
 }

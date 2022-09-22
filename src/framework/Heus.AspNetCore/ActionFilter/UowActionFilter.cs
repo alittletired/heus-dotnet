@@ -5,18 +5,28 @@ namespace Heus.AspNetCore.ActionFilter;
 
 internal class UowActionFilter:IAsyncActionFilter
 {
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+    public UowActionFilter(IUnitOfWorkManager unitOfWorkManager)
+    {
+        _unitOfWorkManager = unitOfWorkManager;
+    }
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        var methodInfo = context.ActionDescriptor.GetMethodInfo();
-        var unitOfWorkAttr = UnitOfWorkHelper.GetUnitOfWorkAttributeOrNull(methodInfo);
-        if (unitOfWorkAttr == null)
+        if (!context.ActionDescriptor.IsControllerAction())
         {
             await next();
             return;
         }
-        var unitOfWorkManager = context.HttpContext.RequestServices.GetRequiredService<IUnitOfWorkManager>();
+        var methodInfo = context.ActionDescriptor.GetMethodInfo();
+        var unitOfWorkAttr = UnitOfWorkHelper.GetUnitOfWorkAttributeOrNull(methodInfo);
+        if (unitOfWorkAttr?.IsDisabled==true)
+        {
+            await next();
+            return;
+        }
+      
         var options = CreateOptions(context, unitOfWorkAttr);
-        using var uow = unitOfWorkManager.Begin(options);
+        using var uow = _unitOfWorkManager.Begin(options);
         var result = await next();
         if (Succeed(result))
         {
@@ -27,9 +37,9 @@ internal class UowActionFilter:IAsyncActionFilter
             await uow.RollbackAsync(context.HttpContext.RequestAborted);
         }
     }
-    private UnitOfWorkOptions CreateOptions(ActionExecutingContext context, UnitOfWorkAttribute unitOfWorkAttribute)
+    private UnitOfWorkOptions CreateOptions(ActionExecutingContext context, UnitOfWorkAttribute? unitOfWorkAttribute)
     {
-        var options = new UnitOfWorkOptions(context.HttpContext.RequestServices);
+        var options = new UnitOfWorkOptions();
         unitOfWorkAttribute?.SetOptions(options);
       
         if (unitOfWorkAttribute?.IsTransactional == null)
