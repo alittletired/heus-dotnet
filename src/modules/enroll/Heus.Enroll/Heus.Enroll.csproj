@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\..\common.props" />
+      <ItemGroup>
+        <ProjectReference Include="..\..\..\framework\Heus.Ddd\Heus.Ddd.csproj" />
+      </ItemGroup>
+
+</Project>

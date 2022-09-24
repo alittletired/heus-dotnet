@@ -1,4 +1,4 @@
-using Heus.Core.Modularity;
+using Heus.Core.DependencyInjection;
 using Heus.Core.Utils;
 using Heus.Ddd.Data;
 using Heus.DDD.Infrastructure.Internal;
@@ -15,7 +15,7 @@ public class DddServiceModule : ServiceModuleBase, IPreConfigureServices
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddScoped(typeof(IRepository<>), typeof(DefaultRepository<>));
+        //context.Services.AddScoped(typeof(IRepository<>), typeof(DefaultRepository<>));
     }
 
 }

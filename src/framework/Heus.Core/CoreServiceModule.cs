@@ -1,4 +1,4 @@
-using Heus.Core.Modularity;
+using Heus.Core.DependencyInjection;
 
 namespace Heus.Core;
 

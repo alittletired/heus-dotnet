@@ -1,6 +1,6 @@
 using Heus.AspNetCore.Conventions;
 using Heus.AspNetCore.OpenApi;
-using Heus.Core.Modularity;
+using Heus.Core.DependencyInjection;
 using Heus.Core.Utils;
 using Heus.Ddd;
 using Microsoft.AspNetCore.Http.Json;

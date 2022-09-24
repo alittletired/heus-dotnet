@@ -1,12 +1,12 @@
+
+
 using Heus.AspNetCore;
 using Heus.Business;
-using Heus.Core.Ioc;
-using Heus.Data.MySql;
+using Heus.Core.DependencyInjection;
 
-namespace Heus.Web;
+namespace Heus.Enroll.Web;
 [DependsOn(typeof(AspNetServiceModule)
-    ,typeof(BusinessServiceModule)
-    ,typeof(DataServiceModule))]
+    ,typeof(EnrollServiceModule))   ]
 public class WebServiceModule:ServiceModuleBase
 {
     

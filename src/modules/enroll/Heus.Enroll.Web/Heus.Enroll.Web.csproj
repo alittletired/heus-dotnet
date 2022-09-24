@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-    <ItemGroup>
-      <ProjectReference Include="..\Heus.AspNetCore\Heus.AspNetCore.csproj" />
-      <ProjectReference Include="..\Heus.Business\Heus.Business.csproj" />
-      <ProjectReference Include="..\Heus.Core\Heus.Core.csproj" />
-      <ProjectReference Include="..\Heus.Data.MySql\Heus.Data.MySql.csproj" />
-    </ItemGroup>
-
+	<Import Project="..\..\..\common.props" />
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\framework\Heus.AspNetCore\Heus.AspNetCore.csproj" />
+	  <ProjectReference Include="..\..\..\framework\Heus.Core\Heus.Core.csproj" />
+	  <ProjectReference Include="..\Heus.Enroll\Heus.Enroll.csproj" />
+	</ItemGroup>
 </Project>

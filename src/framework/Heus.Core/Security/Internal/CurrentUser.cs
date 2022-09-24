@@ -2,7 +2,6 @@
 using Heus.Core.DependencyInjection;
 using Heus.Core.Utils;
 using System.Security.Claims;
-[Service]
 internal class CurrentUser : ICurrentUser
 {
     private static readonly AsyncLocal<ClaimsPrincipal?> CurrentPrincipal = new();

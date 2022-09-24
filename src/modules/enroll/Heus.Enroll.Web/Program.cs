@@ -1,8 +1,9 @@
 
-using Heus.Web;
 using Heus.AspNetCore;
+using Heus.Enroll.Web;
 
-await WebApplicationExtensions.RunAsync(args, typeof(WebServiceModule));
+
+await WebApplicationHelper.RunAsync(args, typeof(WebServiceModule));
     // .UseCoreService(typeof(WebServiceModule))
     // .Build()
     // .RunAsync();

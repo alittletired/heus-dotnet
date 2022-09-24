@@ -2,13 +2,9 @@ using Heus.Core.Ddd.Data;
 using Heus.Ddd.Data.ValueConversion;
 namespace Heus.Ddd.Data;
 using Microsoft.EntityFrameworkCore;
-public abstract class DbContextBase<TDbContext> : DbContext
-   where TDbContext : DbContext
+public abstract class DbContextBase: DbContext
 {
-   protected DbContextBase(DbContextOptions<TDbContext> options)
-      : base(options)
-   {
-   }
+ 
    protected override void OnConfiguring(DbContextOptionsBuilder options)
    {
       options.UseSnakeCaseNamingConvention();

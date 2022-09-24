@@ -1,6 +1,7 @@
-﻿using System.Security.Claims;
+﻿using Heus.Core.DependencyInjection;
+using System.Security.Claims;
 namespace Heus.Core.Security;
-public interface ICurrentUser
+public interface ICurrentUser:ISingletonDependency
 {
     bool IsAuthenticated { get; }
     long? UserId { get; }
