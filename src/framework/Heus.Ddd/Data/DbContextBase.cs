@@ -1,19 +1,24 @@
 using System.Data.Common;
+using Heus.Core.DependencyInjection;
 using Heus.Ddd.Data.ValueConversion;
+using Heus.DDD.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Heus.Ddd.Data;
 using Microsoft.EntityFrameworkCore;
-public abstract class DbContextBase: DbContext
+public abstract class DbContextBase: DbContext,IInitialization,IScopedDependency
 {
-   private readonly DbConnection _connection;
+   protected IUnitOfWorkManager UnitOfWorkManager { get; private set; } = null!;
 
-   protected DbContextBase(DbConnection connection)
+   public void Initialize(IServiceProvider serviceProvider)
    {
-      _connection = connection;
+      UnitOfWorkManager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
    }
 
    protected override void OnConfiguring(DbContextOptionsBuilder options)
    {
       options.UseSnakeCaseNamingConvention();
+      
       base.OnConfiguring(options);
    }
 
@@ -23,4 +28,6 @@ public abstract class DbContextBase: DbContext
          .Properties<EntityId>()
          .HaveConversion<EntityIdConverter>().HaveMaxLength(20).AreUnicode(false);
    }
+
+  
 }

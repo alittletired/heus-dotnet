@@ -5,8 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Data;
 
-public  class DefaultRepository<TEntity> : IRepository<TEntity>, IOnInstantiation where TEntity : class, IEntity
-{
+public  class DefaultRepository<TEntity> : IRepository<TEntity>, IInitialization where TEntity : class, IEntity
+{ 
+    public void Initialize(IServiceProvider serviceProvider)
+    {
+        _dbContextProvider = serviceProvider.GetRequiredService<IDbContextProvider>();
+    }
     
     private IDbContextProvider _dbContextProvider = null!;
     protected async Task<DbContext> GetDbContextAsync()
@@ -20,12 +24,7 @@ public  class DefaultRepository<TEntity> : IRepository<TEntity>, IOnInstantiatio
     }
 
 
-    public void OnInstantiation(IServiceProvider serviceProvider)
-    {
-        _dbContextProvider = serviceProvider.GetRequiredService<IDbContextProvider>();
-        //DbContext = contextProvider.GetDbContext(typeof(TEntity));
-    }
-
+   
     public Task DeleteAsync(EntityId id)
     {
         throw new NotImplementedException();
@@ -47,4 +46,5 @@ public  class DefaultRepository<TEntity> : IRepository<TEntity>, IOnInstantiatio
     }
 
 
+   
 }
