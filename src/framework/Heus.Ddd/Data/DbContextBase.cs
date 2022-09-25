@@ -1,10 +1,16 @@
-using Heus.Core.Ddd.Data;
+using System.Data.Common;
 using Heus.Ddd.Data.ValueConversion;
 namespace Heus.Ddd.Data;
 using Microsoft.EntityFrameworkCore;
 public abstract class DbContextBase: DbContext
 {
- 
+   private readonly DbConnection _connection;
+
+   protected DbContextBase(DbConnection connection)
+   {
+      _connection = connection;
+   }
+
    protected override void OnConfiguring(DbContextOptionsBuilder options)
    {
       options.UseSnakeCaseNamingConvention();

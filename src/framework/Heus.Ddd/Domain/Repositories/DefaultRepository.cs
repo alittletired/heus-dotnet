@@ -5,8 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Data;
 
-public abstract class RepositoryBase<TEntity> : IRepository<TEntity>, IOnInstantiation where TEntity : class, IEntity
+public  class DefaultRepository<TEntity> : IRepository<TEntity>, IOnInstantiation where TEntity : class, IEntity
 {
+    
     private IDbContextProvider _dbContextProvider = null!;
     protected async Task<DbContext> GetDbContextAsync()
     {
@@ -25,7 +26,12 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>, IOnInstant
         //DbContext = contextProvider.GetDbContext(typeof(TEntity));
     }
 
-    public virtual async Task<int> SaveAsync(TEntity entity)
+    public Task DeleteAsync(EntityId id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public  async Task<int> SaveAsync(TEntity entity)
     {
         var dbContext = await GetDbContextAsync();
         if (entity.Id == null)

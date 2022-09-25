@@ -5,7 +5,8 @@ using Heus.Auth.Entities;
 
 namespace Heus.Enroll.Service.Application;
 
-public class UserAppService : ICreateAppService<User, UserCreateDto>
+public class UserAppService :ApplicationService<User>
+    , ICreateAppService<User, UserCreateDto>
     , IUpdateAppService<User, User>
     , IDeleteAppService
     , IDynamicQueryAppService<UserDto>

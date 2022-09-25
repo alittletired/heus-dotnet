@@ -15,7 +15,7 @@ public class DddServiceModule : ServiceModuleBase, IPreConfigureServices
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        //context.Services.AddScoped(typeof(IRepository<>), typeof(DefaultRepository<>));
+        context.Services.AddScoped(typeof(IRepository<>), typeof(DefaultRepository<>));
     }
 
 }
