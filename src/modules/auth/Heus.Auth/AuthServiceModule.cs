@@ -1,7 +1,5 @@
-﻿using Heus.Auth.Entities;
-using Heus.Core.DependencyInjection;
+﻿using Heus.Core.DependencyInjection;
 using Heus.Ddd;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Auth

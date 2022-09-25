@@ -1,7 +1,5 @@
-using System.Data.Common;
 
-namespace Heus.DDD.Infrastructure.Internal;
-
+namespace Heus.Ddd.Uow.Internal;
 internal class ChildUnitOfWork : IUnitOfWork
 {
     private readonly IUnitOfWork _parent;
@@ -17,6 +15,11 @@ internal class ChildUnitOfWork : IUnitOfWork
     public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;
+    }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 
     public Task RollbackAsync(CancellationToken cancellationToken = default)

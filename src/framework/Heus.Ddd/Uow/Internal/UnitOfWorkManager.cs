@@ -1,7 +1,5 @@
-using Heus.Core.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Heus.DDD.Infrastructure.Internal;
+namespace Heus.Ddd.Uow.Internal;
 
 internal class UnitOfWorkManager:IUnitOfWorkManager
 {

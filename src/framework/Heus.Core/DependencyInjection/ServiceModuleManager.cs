@@ -40,7 +40,7 @@ public class ServiceModuleManager : IModuleContainer
             services.AddSingleton<IModuleContainer>(this);
             var context = new ServiceConfigurationContext(hostBuilderContext, services);
             var serviceTypes = new HashSet<Type>();
-            var registrar = new DefaultServiceRegistrar();
+           
             var preConfigureServicesList = Modules
                 // ReSharper disable once SuspiciousTypeConversion.Global
                 .Select(m => m.Instance).OfType<IPreConfigureServices>();
@@ -63,7 +63,8 @@ public class ServiceModuleManager : IModuleContainer
                                    !type.IsGenericType);
                 foreach (var type in types)
                 {
-                    registrar.Handle(context.Services, type);
+                    var chain = new ServiceRegistrarChain(context.ServiceRegistrars);
+                    chain.Next(context.Services, type);
                     serviceTypes.Add(type);
                 }
 

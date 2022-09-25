@@ -7,7 +7,7 @@ using System.Threading;
 namespace Heus.Core.DependencyInjection.Internal;
 public class DefaultServiceRegistrar : IServiceRegistrar
 {
-    public void Handle(IServiceCollection services, Type type)
+    public virtual void Handle(IServiceCollection services, Type type,ServiceRegistrarChain chain)
     {
         if (!TryGetServiceLifetime(type,out var lifeTime)) {
             return;
@@ -45,7 +45,7 @@ public class DefaultServiceRegistrar : IServiceRegistrar
         return serviceTypes;
     }
 
-    private List<Type> GetDefaultServices(Type type)
+    protected List<Type> GetDefaultServices(Type type)
     {
         var serviceTypes = new List<Type>();
 

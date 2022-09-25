@@ -1,7 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace Heus.DDD.Infrastructure;
+namespace Heus.Ddd.Uow;
 
 public static class UnitOfWorkHelper
 {

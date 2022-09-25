@@ -1,5 +1,5 @@
-namespace Heus.DDD.Infrastructure;
 
+namespace Heus.Ddd.Uow;
 public class UnitOfWorkEventArgs : EventArgs
 {
     /// <summary>

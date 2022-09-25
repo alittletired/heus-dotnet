@@ -1,7 +1,6 @@
-using Heus.Ddd.Infrastructure;
 using System.Data;
 
-namespace Heus.DDD.Infrastructure;
+namespace Heus.Ddd.Uow;
 
 public class UnitOfWorkOptions: IUnitOfWorkOptions
 {

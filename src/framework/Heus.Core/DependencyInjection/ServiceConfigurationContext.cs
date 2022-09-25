@@ -1,3 +1,4 @@
+using Heus.Core.DependencyInjection.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,8 +10,9 @@ namespace Heus.Core.DependencyInjection;
 /// </summary>
 public class ServiceConfigurationContext
 {
+    public List<IServiceRegistrar> ServiceRegistrars { get; } = new() { new DefaultServiceRegistrar() };
     private readonly HostBuilderContext _hostBuilderContext;
-    public IServiceCollection Services { get; private set; }
+    public IServiceCollection Services { get; }
 
     public ServiceConfigurationContext(HostBuilderContext hostBuilderContext, IServiceCollection services)
     {

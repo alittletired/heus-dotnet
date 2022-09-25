@@ -1,7 +1,7 @@
 using System.Data.Common;
 using Heus.Core.DependencyInjection;
 using Heus.Ddd.Data.ValueConversion;
-using Heus.DDD.Infrastructure;
+using Heus.Ddd.Uow;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Data;

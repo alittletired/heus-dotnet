@@ -1,6 +1,6 @@
 using System.Data.Common;
 
-namespace Heus.DDD.Infrastructure.Internal;
+namespace Heus.Ddd.Uow.Internal;
 
 internal class UnitOfWork : IUnitOfWork
 {
@@ -19,6 +19,11 @@ internal class UnitOfWork : IUnitOfWork
     public Task CompleteAsync(CancellationToken cancellationToken = default)
     {
         return DbTransaction == null ? Task.CompletedTask : DbTransaction.CommitAsync(cancellationToken);
+    }
+
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 
     public Task RollbackAsync(CancellationToken cancellationToken = default)

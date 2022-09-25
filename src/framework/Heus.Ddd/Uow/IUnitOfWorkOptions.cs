@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Heus.Ddd.Infrastructure
+﻿using System.Data;
+namespace Heus.Ddd.Uow
 {
     public interface IUnitOfWorkOptions
     {
