@@ -7,6 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Heus.Data.EfCore\Heus.Data.EfCore.csproj" />
       <ProjectReference Include="..\Heus.Ddd\Heus.Ddd.csproj" />
     </ItemGroup>
 

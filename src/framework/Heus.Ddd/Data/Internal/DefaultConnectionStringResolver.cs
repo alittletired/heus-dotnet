@@ -2,7 +2,7 @@
 using Heus.Core.DependencyInjection;
 
 namespace Heus.Data;
-internal class DefaultConnectionStringResolver: IConnectionStringResolver,ISingletonDependency
+internal class DefaultConnectionStringResolver: IConnectionStringResolver
 {
      
     public Task<string> ResolveAsync(string? connectionStringName = null)

@@ -11,12 +11,10 @@
 	  <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
 	  <PackageReference Include="AutoMapper" Version="11.0.1" />
 	  <PackageReference Include="EFCore.NamingConventions" Version="6.0.0" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.9" />
 	  <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.9" />
 	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 	  <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20" />
-	  <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
-	  <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.2" />
+	
   </ItemGroup>
 
 

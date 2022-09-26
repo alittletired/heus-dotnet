@@ -1,7 +1,8 @@
+using Heus.Core.DependencyInjection;
 
-namespace Heus.Data;
+namespace Heus.Ddd.Data.Filtering;
 
-public interface IDataFilter<TFilter>
+public interface IDataFilter<TFilter>: ISingletonDependency
     where TFilter : class
 {
     IDisposable Enable();

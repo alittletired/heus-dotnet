@@ -6,9 +6,7 @@
 	  <PackageId>Heus.AspNetCore</PackageId>
 	  <RootNamespace>Heus.AspNetCore</RootNamespace>
   </PropertyGroup>
-    <ItemGroup>
-    <Using Include="Heus.Core" />
-</ItemGroup>
+
   <ItemGroup>
 	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>

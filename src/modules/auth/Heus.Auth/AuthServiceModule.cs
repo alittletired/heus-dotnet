@@ -9,10 +9,7 @@ namespace Heus.Auth
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddDbContext<AuthDbContext>(option =>
-            {
-                //option.UseM
-            }); 
+          
         }
     }
 }

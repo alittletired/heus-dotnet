@@ -62,6 +62,7 @@ public class DefaultServiceRegistrar : IServiceRegistrar
             {
                 serviceTypes.Add(interfaceType);
             }
+          
         }
 
         return serviceTypes;

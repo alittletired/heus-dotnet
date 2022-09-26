@@ -1,6 +1,6 @@
-namespace Heus.Core.Ddd.Data;
+namespace Heus.Ddd.Data.Options;
 
-public enum DatabaseProvider
+public enum DbProvider
 {
     SqlServer,
     MySql,
@@ -9,5 +9,6 @@ public enum DatabaseProvider
     Sqlite,
     InMemory,
     Cosmos,
-    Firebird
+    Firebird,
+    Mongo
 }

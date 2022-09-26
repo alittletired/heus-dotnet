@@ -6,6 +6,7 @@
 public class DisposeAction : IDisposable
 {
     private readonly Action _action;
+
     private DisposeAction(Action action)
     {
         _action = action;
