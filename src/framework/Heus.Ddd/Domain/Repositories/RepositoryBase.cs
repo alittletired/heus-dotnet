@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Heus.Core;
 using Heus.Core.DependencyInjection;
 using Heus.Data;
+using Heus.Ddd.Data.Filtering;
 using Heus.Ddd.Domain;
 using Heus.Ddd.Uow;
 using Heus.Ddd.Uow.Internal;
@@ -10,12 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Data;
 
-public abstract class DefaultRepository<TEntity> : IRepository<TEntity>
+public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
     , IInitialization where TEntity : class, IEntity
 {
     protected IServiceProvider ServiceProvider { get; private set; } = null!;
 
-    public void Initialize(IServiceProvider serviceProvider)
+    public virtual void Initialize(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
 

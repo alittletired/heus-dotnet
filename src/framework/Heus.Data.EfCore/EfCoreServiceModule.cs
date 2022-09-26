@@ -12,6 +12,6 @@ public class EfCoreServiceModule:ServiceModuleBase,IPreConfigureServices
     }
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddSingleton(new DbContextOptionsManager());
+       
     }
 }
