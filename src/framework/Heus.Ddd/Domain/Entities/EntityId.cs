@@ -8,7 +8,7 @@ using System.Security;
 /// 实体主键，长度24
 /// </summary>
 [Serializable]
-public struct EntityId : IComparable<EntityId>, IEquatable<EntityId>, IConvertible
+public struct EntityId : IComparable<EntityId>, IEquatable<EntityId>
 {
     // private static fields
     private static readonly EntityId _emptyInstance = default;
@@ -446,103 +446,5 @@ public struct EntityId : IComparable<EntityId>, IEquatable<EntityId>, IConvertib
         c[23] = DataUtils.ToHexChar(_c & 0x0f);
         return new string(c);
     }
-
-    // explicit IConvertible implementation
-    TypeCode IConvertible.GetTypeCode()
-    {
-        return TypeCode.Object;
-    }
-
-    bool IConvertible.ToBoolean(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    byte IConvertible.ToByte(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    char IConvertible.ToChar(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    DateTime IConvertible.ToDateTime(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    decimal IConvertible.ToDecimal(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    double IConvertible.ToDouble(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    short IConvertible.ToInt16(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    int IConvertible.ToInt32(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    long IConvertible.ToInt64(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    sbyte IConvertible.ToSByte(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    float IConvertible.ToSingle(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    string IConvertible.ToString(IFormatProvider? provider)
-    {
-        return ToString();
-    }
-
-    object IConvertible.ToType(Type conversionType, IFormatProvider? provider)
-    {
-        switch (Type.GetTypeCode(conversionType))
-        {
-            case TypeCode.String:
-                return ((IConvertible)this).ToString(provider);
-            case TypeCode.Object:
-                if (conversionType == typeof(object) || conversionType == typeof(EntityId))
-                {
-                    return this;
-                }
-
-                break;
-        }
-
-        throw new InvalidCastException();
-    }
-
-    ushort IConvertible.ToUInt16(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    uint IConvertible.ToUInt32(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
-
-    ulong IConvertible.ToUInt64(IFormatProvider? provider)
-    {
-        throw new InvalidCastException();
-    }
+    
 }

@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 using Heus.Core.DependencyInjection;
 using Heus.Ddd.Domain;
-using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Ddd.Data;
 
@@ -106,7 +105,7 @@ public interface IRepository<TEntity> : IScopedDependency where TEntity : class,
     async Task<TEntity?> GetByIdOrDefaultAsync(EntityId id)
     {
         var query = await GetQueryableAsync();
-        return await query.FirstOrDefaultAsync(s => s.Id == id);
+        return await query.f(s => s.Id == id);
 
     }
 }
