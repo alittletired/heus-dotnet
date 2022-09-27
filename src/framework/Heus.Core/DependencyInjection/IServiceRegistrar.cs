@@ -26,6 +26,5 @@ public class ServiceRegistrarChain
 
 public interface IServiceRegistrar
 {
-
     void Handle(IServiceCollection services, Type type,ServiceRegistrarChain chain);
 }

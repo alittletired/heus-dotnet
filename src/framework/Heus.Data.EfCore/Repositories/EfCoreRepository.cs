@@ -2,18 +2,17 @@ using System.Linq.Expressions;
 using Heus.Core.Ddd.Data;
 using Heus.Ddd.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Data.EfCore.Repositories;
 
-public class EfCoreRepository<TEntity>: RepositoryBase<TEntity>, IEfCoreRepository<TEntity>
+public class EfCoreRepository<TEntity>: RepositoryBase<TEntity>
     where TEntity:class,IEntity
 {
-    private  IDbContextProvider _dbContextProvider=null!;
-    public override void Initialize(IServiceProvider serviceProvider)
+    private  readonly IDbContextProvider _dbContextProvider;
+
+    public EfCoreRepository(IDbContextProvider dbContextProvider)
     {
-        _dbContextProvider = serviceProvider.GetRequiredService<IDbContextProvider>();
-        base.Initialize(serviceProvider);
+        _dbContextProvider = dbContextProvider;
     }
 
     public override async Task<IQueryable<TEntity>> GetQueryableAsync()

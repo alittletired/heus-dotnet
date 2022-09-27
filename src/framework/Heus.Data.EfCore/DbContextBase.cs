@@ -6,9 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Data;
 using Microsoft.EntityFrameworkCore;
-public abstract class DbContextBase: DbContext,IInitialization,IScopedDependency
+public abstract class DbContextBase<TDbContext> : DbContext,IInitialization, IScopedDependency
+    where TDbContext : DbContext
 {
-   protected IUnitOfWorkManager UnitOfWorkManager { get; private set; } = null!;
+    protected DbContextBase(DbContextOptions<TDbContext> options)
+      : base(options)
+    {
+    }
+    protected IUnitOfWorkManager UnitOfWorkManager { get; private set; } = null!;
 
    public void Initialize(IServiceProvider serviceProvider)
    {
