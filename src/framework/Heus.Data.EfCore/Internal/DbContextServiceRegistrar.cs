@@ -7,25 +7,30 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Data.EfCore.Internal;
 
-internal class DbContextServiceRegistrar : IServiceRegistrar
+internal interface IDbContextServiceRegistrar: IServiceRegistrar {
+    Dictionary<Type, Type> EntityDbContextMapping { get; }
+}
+internal class DbContextServiceRegistrar : IDbContextServiceRegistrar
 {
-    public Dictionary<Type, Type> EntityDbContexts = new Dictionary<Type, Type>();
-    public void Handle(IServiceCollection services, Type dbContextType, ServiceRegistrarChain chain)
+    public Dictionary<Type, Type> EntityDbContextMapping { get; } = new ();
+    public List<IDbContextOptionsProvider> DbContextOptionsProviders { get; } = new ();
+    public void Handle(IServiceCollection services, Type type, ServiceRegistrarChain chain)
     {
-        if (!dbContextType.IsAssignableTo<DbContext>())
+        if (type.IsAssignableTo<DbContext>())
         {
-            chain.Next(services, dbContextType);
+            var addDbContext = GetType().GetRuntimeMethods().First(m => m.Name == nameof(AddDbContext));
+            var actualMethod = addDbContext.MakeGenericMethod(type);
+            actualMethod.Invoke(this, new object[] { services });
+            var entityTypes = DbContextHelper.GetEntityTypes(type);
+            foreach (var entityType in entityTypes)
+            {
+                EntityDbContextMapping.Add(entityType, type);
+            }
             return;
         }
-
-        var addDbContext = GetType().GetRuntimeMethods().First(m => m.Name == nameof(AddDbContext));
-        var actualMethod = addDbContext.MakeGenericMethod(dbContextType);
-        actualMethod.Invoke(this, new object[] { services });
-        var entityTypes = DbContextHelper.GetEntityTypes(dbContextType);
-        foreach (var entityType in entityTypes)
-        {
-            EntityDbContexts.Add(entityType, dbContextType);
-        }
+     
+        chain.Next(services, type);
+        
 
     }
 

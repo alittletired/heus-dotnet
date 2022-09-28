@@ -1,31 +1,27 @@
 ﻿using Heus.Core.Ddd.Data;
+using Heus.Ddd.Data;
 using Heus.Ddd.Uow;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Data.EfCore.Internal;
 
-internal class DefaultDbContextProvider: IDbContextProvider
+internal class DefaultDbContextProvider : IDbContextProvider
 {
-    private readonly DbContextServiceRegistrar _dbContextServiceRegistrar;
+    private readonly IDbContextServiceRegistrar _dbContextServiceRegistrar;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IEnumerable<IDbContextOptionsProvider> _dbContextOptionsProviders;
 
-    private readonly IUnitOfWorkManager _unitOfWorkManager;
-
-    public DefaultDbContextProvider(DbContextServiceRegistrar dbContextServiceRegistrar
-        , IServiceProvider serviceProvider
-        , IEnumerable<IDbContextOptionsProvider> dbContextOptionsProviders,IUnitOfWorkManager unitOfWorkManager)
+    public DefaultDbContextProvider(IDbContextServiceRegistrar dbContextServiceRegistrar
+        , IServiceProvider serviceProvider)
     {
         _dbContextServiceRegistrar = dbContextServiceRegistrar;
         _serviceProvider = serviceProvider;
-        _dbContextOptionsProviders = dbContextOptionsProviders;
-        _unitOfWorkManager= unitOfWorkManager;
+
     }
 
-    Task<DbContext> IDbContextProvider.GetDbContextAsync<TEntity>()
+    public Task<DbContext> GetDbContextAsync<TEntity>() where TEntity : class, IEntity
     {
-        var dbContextType = _dbContextServiceRegistrar.EntityDbContexts[typeof(TEntity)];
-       return    Task.FromResult((DbContext)_serviceProvider.GetRequiredService(dbContextType));
+        var dbContextType = _dbContextServiceRegistrar.EntityDbContextMapping[typeof(TEntity)];
+        return Task.FromResult((DbContext)_serviceProvider.GetRequiredService(dbContextType));
     }
 }
