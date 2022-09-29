@@ -1,6 +1,7 @@
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
-using Heus.Ddd.Data;
+using Heus.Ddd.Entities;
+using Heus.Ddd.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Application;

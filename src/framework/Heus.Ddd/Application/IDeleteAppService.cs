@@ -1,5 +1,4 @@
-
-using Heus.Ddd.Data;
+using Heus.Ddd.Entities;
 
 namespace Heus.Ddd.Application.Services;
     public interface IDeleteAppService : IApplicationService
