@@ -10,7 +10,7 @@ public class CoreServiceModule:ServiceModuleBase
    
     public override  void ConfigureServices(ServiceConfigurationContext context)
     {
-      
-        context.Services.ConfigureOptions<DbConnectionOptions>();
+
+        context.Services.Configure<DbConnectionOptions>(config => { });
     }
 }

@@ -40,16 +40,8 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
 
     }
 
-    protected virtual Task SaveChangesAsync(CancellationToken cancellationToken)
-    {
-        if (UnitOfWorkManager.Current != null)
-        {
-            return UnitOfWorkManager.Current.SaveChangesAsync(cancellationToken);
-        }
-
-        return Task.CompletedTask;
-    }
-
+    protected abstract Task SaveChangesAsync(CancellationToken cancellationToken);
+ 
     public abstract Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 
     public virtual async Task UpdateManyAsync(IEnumerable<TEntity> entities,

@@ -1,5 +1,6 @@
 ﻿using Heus.Core.Utils;
 using Heus.Ddd.Data;
+using Heus.Ddd.Entities;
 using Microsoft.EntityFrameworkCore;
 
 using System.Reflection;

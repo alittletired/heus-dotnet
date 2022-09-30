@@ -10,7 +10,7 @@ namespace Heus.Core.DependencyInjection.Autofac
 {
     internal class ServiceInjectMethodMiddleware : IResolveMiddleware
     {
-        public PipelinePhase Phase => PipelinePhase.RegistrationPipelineStart;
+        public PipelinePhase Phase => PipelinePhase.ServicePipelineEnd;
 
         public void Execute(ResolveRequestContext context, Action<ResolveRequestContext> next)
         {

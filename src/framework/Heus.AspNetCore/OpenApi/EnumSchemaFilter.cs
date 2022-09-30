@@ -1,5 +1,4 @@
 using System.Xml;
-using Heus.Ddd.Data;
 
 namespace Heus.AspNetCore.OpenApi;
 

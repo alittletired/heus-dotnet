@@ -1,4 +1,4 @@
-using Heus.Ddd.Data;
+using Heus.Ddd.Entities;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Heus.Ddd.Data.ValueConversion;

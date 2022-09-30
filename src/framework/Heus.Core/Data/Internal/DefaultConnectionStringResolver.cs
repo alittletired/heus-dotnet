@@ -11,11 +11,7 @@ internal class DefaultConnectionStringResolver: IConnectionStringResolver
     {
         _options = options;
     }
-    public Task<string> ResolveAsync(string? connectionStringName = null)
-    {
-        return Task.FromResult(ResolveInternal(connectionStringName));
-    }
-    private string ResolveInternal(string? connectionStringName)
+    public string Resolve(string? connectionStringName = null)
     {
         if (connectionStringName == null)
         {
@@ -23,7 +19,6 @@ internal class DefaultConnectionStringResolver: IConnectionStringResolver
         }
 
         return _options.Value.ConnectionStrings[connectionStringName];
-
-     
     }
+
 }

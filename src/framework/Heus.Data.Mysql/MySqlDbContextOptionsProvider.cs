@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Data.Common;
+using Heus.Core.Data.Options;
 using Heus.Data.EfCore;
-using Heus.Ddd.Data.Options;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -19,6 +19,8 @@ namespace Heus.Data.Mysql
                 mySqlOptions => { mySqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery); });
         }
 
-        public DbProvider DbProvider => DbProvider.MySql;
+
+
+        public string ProviderName => throw new NotImplementedException();
     }
 }

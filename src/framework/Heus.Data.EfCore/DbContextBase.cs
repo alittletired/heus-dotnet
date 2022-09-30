@@ -5,6 +5,8 @@ using Heus.Ddd.Uow;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Data;
+
+using Heus.Ddd.Entities;
 using Microsoft.EntityFrameworkCore;
 public abstract class DbContextBase<TDbContext> : DbContext,IInitialization, IScopedDependency
     where TDbContext : DbContext

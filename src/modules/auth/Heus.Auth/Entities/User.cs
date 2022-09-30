@@ -1,6 +1,8 @@
 using Heus.Auth.Domain;
 
 namespace Heus.Auth.Entities;
+
+using Heus.Ddd.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;

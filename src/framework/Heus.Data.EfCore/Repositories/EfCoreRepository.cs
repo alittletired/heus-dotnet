@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
-using Heus.Core.Ddd.Data;
 using Heus.Ddd.Data;
+using Heus.Ddd.Entities;
+using Heus.Ddd.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Data.EfCore.Repositories;
@@ -103,7 +104,8 @@ public class EfCoreRepository<TEntity>: RepositoryBase<TEntity>
 
     }
 
-   
-
-  
+    protected override async Task SaveChangesAsync(CancellationToken cancellationToken)
+    {
+       await  (await GetDbContextAsync()).SaveChangesAsync(cancellationToken);
+    }
 }

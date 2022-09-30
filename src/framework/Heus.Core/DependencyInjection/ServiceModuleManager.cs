@@ -60,7 +60,7 @@ public class ServiceModuleManager : IModuleContainer
                     .Where(type => !serviceTypes.Contains(type) &&
                                    type.IsClass &&
                                    !type.IsAbstract &&
-                                   !type.IsGenericType);
+                                   !type.IsGenericType).ToList();
                 foreach (var type in types)
                 {
                     var chain = new ServiceRegistrarChain(context.ServiceRegistrars);

@@ -1,9 +1,10 @@
+using Heus.Core.DependencyInjection;
 using Heus.Ddd.Uow;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Heus.AspNetCore.ActionFilter;
 
-internal class UowActionFilter:IAsyncActionFilter
+internal class UowActionFilter:IAsyncActionFilter,IScopedDependency
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
     public UowActionFilter(IUnitOfWorkManager unitOfWorkManager)

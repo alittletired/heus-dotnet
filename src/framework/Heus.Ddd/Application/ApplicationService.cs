@@ -1,4 +1,5 @@
 using Heus.Core.DependencyInjection;
+using Heus.Core.ObjectMapping;
 using Heus.Core.Security;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
@@ -9,6 +10,7 @@ namespace Heus.Ddd.Application;
 public abstract class ApplicationService<TEntity> : IApplicationService, IInitialization where TEntity : class,IEntity
 {
     protected IServiceProvider ServiceProvider { get; private set; }= null!;
+    protected IObjectMapper Mapper => GetRequiredService<IObjectMapper>();
     protected IRepository<TEntity> Repository => GetRequiredService<IRepository<TEntity>>();
     protected T GetRequiredService<T>() where T : class
     {

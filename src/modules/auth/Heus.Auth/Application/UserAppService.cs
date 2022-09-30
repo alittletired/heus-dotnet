@@ -2,6 +2,8 @@ using Heus.Enroll.Service.Application.Dtos;
 using Heus.Ddd.Application.Services;
 using Heus.Ddd.Application;
 using Heus.Auth.Entities;
+using Heus.Ddd.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Enroll.Service.Application;
 
@@ -9,7 +11,7 @@ public class UserAppService :ApplicationService<User>
     , ICreateAppService<User, UserCreateDto>
     , IUpdateAppService<User, User>
     , IDeleteAppService
-    , IDynamicQueryAppService<UserDto>
+   
 {
     public virtual Task<User> CreateAsync(UserCreateDto createDto)
     {
@@ -19,7 +21,7 @@ public class UserAppService :ApplicationService<User>
 
     public async Task DeleteAsync(EntityId id)
     {
-        await Repository.DeleteAsync(id);
+        await Repository.DeleteByIdAsync(id);
     }
 
     public virtual Task<User> UpdateAsync(User updateDto)
@@ -27,8 +29,10 @@ public class UserAppService :ApplicationService<User>
         throw new NotImplementedException();
     }
 
-    public Task<PagedResultDto<UserDto>> GetListAsync(UserDto input)
+    public async Task<IEnumerable<User>> GetListAsync(UserDto input)
     {
-        throw new NotImplementedException();
+        var query = await Repository.GetQueryableAsync();
+        return  await query.ToListAsync();
+
     }
 }

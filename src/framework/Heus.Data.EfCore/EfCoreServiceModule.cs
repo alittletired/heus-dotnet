@@ -1,6 +1,8 @@
 using Heus.Core.DependencyInjection;
 using Heus.Data.EfCore.Internal;
+using Heus.Data.EfCore.Repositories;
 using Heus.Ddd;
+using Heus.Ddd.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +18,6 @@ public class EfCoreServiceModule:ServiceModuleBase,IPreConfigureServices
     }
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-       
+        context.Services.AddScoped(typeof(IRepository<>),typeof(EfCoreRepository<>));
     }
 }

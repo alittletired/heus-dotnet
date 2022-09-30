@@ -2,6 +2,7 @@ using System.Reflection;
 
 namespace Heus.Core.Data;
 
+[AttributeUsage(AttributeTargets.Class)]
 public class ConnectionStringNameAttribute: Attribute
 {
     public ConnectionStringNameAttribute(string name)

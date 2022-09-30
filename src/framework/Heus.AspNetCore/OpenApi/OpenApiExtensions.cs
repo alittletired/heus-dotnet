@@ -1,5 +1,5 @@
 
-using Heus.Ddd.Data;
+using Heus.Ddd.Entities;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 

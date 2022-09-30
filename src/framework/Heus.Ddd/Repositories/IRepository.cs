@@ -110,4 +110,12 @@ public interface IRepository<TEntity> : IScopedDependency where TEntity : class,
         return await query.FirstOrDefaultAsync(s => s.Id == id);
 
     }
+    async Task DeleteByIdAsync(EntityId id,
+            CancellationToken cancellationToken = default) 
+    {
+        var entity = await GetByIdOrDefaultAsync(id);
+        if (entity == null) return;
+        await DeleteAsync(entity, cancellationToken);
+
+    }
 }

@@ -2,7 +2,7 @@
 	<Import Project="..\..\..\common.props" />
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\framework\Heus.AspNetCore\Heus.AspNetCore.csproj" />
-	  <ProjectReference Include="..\..\..\framework\Heus.Core\Heus.Core.csproj" />
+	  <ProjectReference Include="..\..\..\framework\Heus.Data.Mysql\Heus.Data.Mysql.csproj" />
 	  <ProjectReference Include="..\Heus.Enroll\Heus.Enroll.csproj" />
 	</ItemGroup>
 </Project>

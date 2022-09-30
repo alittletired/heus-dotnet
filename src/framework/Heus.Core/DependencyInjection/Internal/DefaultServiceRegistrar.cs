@@ -7,9 +7,10 @@ using System.Threading;
 namespace Heus.Core.DependencyInjection.Internal;
 public class DefaultServiceRegistrar : IServiceRegistrar
 {
-    public virtual void Handle(IServiceCollection services, Type type,ServiceRegistrarChain chain)
+    public virtual void Handle(IServiceCollection services, Type type, ServiceRegistrarChain chain)
     {
-        if (!TryGetServiceLifetime(type,out var lifeTime)) {
+        if (!TryGetServiceLifetime(type, out var lifeTime))
+        {
             return;
         }
         foreach (var serviceType in GetServiceTypes(type))
@@ -18,7 +19,7 @@ public class DefaultServiceRegistrar : IServiceRegistrar
             services.Add(descriptor);
         }
     }
-    protected  bool TryGetServiceLifetime(Type type,out ServiceLifetime lifeTime)
+    protected bool TryGetServiceLifetime(Type type, out ServiceLifetime lifeTime)
     {
 
         lifeTime = default;
@@ -29,7 +30,7 @@ public class DefaultServiceRegistrar : IServiceRegistrar
         }
         if (type.IsAssignableTo<IScopedDependency>())
         {
-            lifeTime= ServiceLifetime.Scoped;
+            lifeTime = ServiceLifetime.Scoped;
             return true;
         }
         return false;
@@ -38,14 +39,17 @@ public class DefaultServiceRegistrar : IServiceRegistrar
 
     protected List<Type> GetServiceTypes(Type type)
     {
-        var serviceTypes = new List<Type>();
-
-        serviceTypes.AddRange(GetDefaultServices(type));
+        var serviceTypes = GetInterfaceServices(type);
+        if (serviceTypes.Count == 0)
+        {
+            serviceTypes.Add(type);
+        }
+        serviceTypes.AddRange(serviceTypes);
 
         return serviceTypes;
     }
 
-    protected List<Type> GetDefaultServices(Type type)
+    protected List<Type> GetInterfaceServices(Type type)
     {
         var serviceTypes = new List<Type>();
 
@@ -62,7 +66,7 @@ public class DefaultServiceRegistrar : IServiceRegistrar
             {
                 serviceTypes.Add(interfaceType);
             }
-          
+
         }
 
         return serviceTypes;

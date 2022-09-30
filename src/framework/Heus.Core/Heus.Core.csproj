@@ -9,7 +9,9 @@
 </ItemGroup>
   <ItemGroup>
 	  <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
-	  <PackageReference Include="AutoMapper" Version="11.0.1" />
+	  <PackageReference Include="AutoMapper" Version="11.0.1" >
+		  <PrivateAssets>all</PrivateAssets>
+	  </PackageReference>
 	  <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.9" />
 	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 	
