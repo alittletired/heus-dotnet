@@ -1,13 +1,14 @@
 namespace Heus.Core.DependencyInjection;
-public class ServiceModuleBase : IServiceModule
+public abstract class ServiceModuleBase : IServiceModule
 {
     public virtual void ConfigureServices(ServiceConfigurationContext context)
     {
 
     }
 
-    public virtual void ConfigureApplication(ApplicationConfigurationContext context)
+    public virtual Task ConfigureApplication(ApplicationConfigurationContext context)
     {
-
+        return Task.CompletedTask;
     }
+    
 }

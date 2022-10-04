@@ -1,8 +1,8 @@
 using System.Xml;
+using Heus.Ddd.Dtos;
 
 namespace Heus.AspNetCore.OpenApi;
 
-using System.ComponentModel.DataAnnotations;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
@@ -25,11 +25,29 @@ internal class EnumSchemaFilter : ISchemaFilter
 
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
-        if (!context.Type.IsEnum) return;
+        // if (context.Type.IsGenericType && context.Type.GetGenericTypeDefinition() == typeof(DynamicQuery<>))
+        // {
+        //     var argumentType = context.Type.GetGenericArguments().First();
+        //     var argumentSchema = context.SchemaGenerator.GenerateSchema(argumentType, context.SchemaRepository);
+        //     var baseSchemaName = $"DynamicQuery<{argumentType.Name}>";
+        //     var baseSchema = new OpenApiSchema()
+        //     {
+        //         Required = new SortedSet<string>() { "type" },
+        //         Type = "object",
+        //         Properties = new Dictionary<string, OpenApiSchema>
+        //         {
+        //             { "type", argumentSchema }
+        //         }
+        //     };
+        //     context.SchemaRepository.AddDefinition(baseSchemaName, baseSchema);
+        //     schema.Properties.Clear();
+        //     // schema.Type = "object";
+        //     schema.Reference = new OpenApiReference { Id = $"{baseSchemaName}", Type = ReferenceType.Schema };
+        //     return;
+        // }
 
-        var schemaId = context.Type.Name;
-
-
+        if (!context.Type.IsEnum) 
+            return;
         var enums = schema.Enum;
         schema.Properties.Clear();
         schema.Enum = null;

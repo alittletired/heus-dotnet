@@ -3,13 +3,14 @@ using System.Data.Common;
 using Heus.Core.Data.Options;
 using Heus.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 
 
 namespace Heus.Data.Mysql
 {
     internal class MySqlDbContextOptionsProvider : IDbContextOptionsProvider
     {
-        private ConcurrentDictionary<string, ServerVersion> _serverVersions = new();
+        private readonly ConcurrentDictionary<string, ServerVersion> _serverVersions = new();
 
         public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
         {
@@ -19,8 +20,10 @@ namespace Heus.Data.Mysql
                 mySqlOptions => { mySqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery); });
         }
 
-
-
-        public string ProviderName => throw new NotImplementedException();
+        public DbProvider DbProvider => Core.Data.Options.DbProvider.MySql;
+        public DbConnection CreateDbConnection(string connectionString)
+        {
+            return new MySqlConnection(connectionString);
+        }
     }
 }

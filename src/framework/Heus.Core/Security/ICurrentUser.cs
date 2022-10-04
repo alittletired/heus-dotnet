@@ -1,10 +1,12 @@
 ﻿using Heus.Core.DependencyInjection;
 using System.Security.Claims;
+using Heus.Ddd.Entities;
+
 namespace Heus.Core.Security;
 public interface ICurrentUser:ISingletonDependency
 {
     bool IsAuthenticated { get; }
-    long? UserId { get; }
+    EntityId? UserId { get; }
     string? UserName { get; }
 
     ClaimsPrincipal? Principal { get; }

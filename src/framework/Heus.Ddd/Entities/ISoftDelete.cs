@@ -3,7 +3,7 @@ namespace Heus.Ddd.Entities;
 public interface ISoftDelete
 {
     /// <summary>
-    /// Used to mark an Entity as 'Deleted'. 
+    /// 软删除标记
     /// </summary>
     bool IsDeleted { get; set; }
 }

@@ -12,6 +12,10 @@ public class ServiceRegistrarChain
         _current = serviceRegistrars.Count;
     }
 
+    public T? FindServiceRegistrar<T>() where T : IServiceRegistrar
+    {
+        return _serviceRegistrars.OfType<T>().FirstOrDefault();
+    }
     public void Next(IServiceCollection services, Type type)
     {
         _current--;

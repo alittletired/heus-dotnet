@@ -4,13 +4,17 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Heus.Core;
+namespace System;
 /// <summary>
 /// Extension methods for String class.
 /// </summary>
 public static class StringExtensions
 {
 
+    public static bool HasText(this string? obj)
+    {
+        return !string.IsNullOrEmpty(obj);
+    }
     /// <summary>
     /// Indicates whether this string is null or an System.String.Empty string.
     /// </summary>

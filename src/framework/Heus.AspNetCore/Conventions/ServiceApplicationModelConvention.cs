@@ -1,10 +1,12 @@
+using System.Collections;
 using System.Text;
+using Heus.Core;
+using Heus.Core.Utils;
 using Heus.Ddd.Application;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-
 namespace Heus.AspNetCore.Conventions;
 
 internal class ServiceApplicationModelConvention:IApplicationModelConvention
@@ -21,29 +23,16 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
     }
     protected  void ConfigureApplicationService(ControllerModel controller )
     {
-        ConfigureApiExplorer(controller);
+      
         ConfigureSelector(controller);
         ConfigureParameters(controller);
     }
-    private void ConfigureApiExplorer(ControllerModel controller)
-    {
-        if (!controller.ApiExplorer.IsVisible.HasValue)
-        {
-            controller.ApiExplorer.IsVisible = true;
-        }
-
-        foreach (var action in controller.Actions)
-        {
-            if (!action.ApiExplorer.IsVisible.HasValue)
-            {
-                action.ApiExplorer.IsVisible = true;
-            }
-        }
-    }
+  
     private void ConfigureParameters(ControllerModel controller)
     {
         foreach (var action in controller.Actions)
         {
+            
             foreach (var parameter in action.Parameters)
             {
                 if (parameter.BindingInfo != null)
@@ -51,11 +40,12 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
                     continue;
                 }
 
-                if (parameter.ParameterType.IsClass &&
+                if ((parameter.ParameterType.IsClass|| parameter.ParameterType.IsAssignableTo(typeof(IEnumerable)) )&&
                     parameter.ParameterType != typeof(string) &&
                     parameter.ParameterType != typeof(IFormFile))
                 {
-                    var httpMethods = action.Selectors.SelectMany(temp => temp.ActionConstraints).OfType<HttpMethodActionConstraint>().SelectMany(temp => temp.HttpMethods).ToList();
+                    var httpMethods = action.Selectors.SelectMany(temp => temp.ActionConstraints)
+                        .OfType<HttpMethodActionConstraint>().SelectMany(temp => temp.HttpMethods).ToList();
                     if (httpMethods.Contains("GET") ||
                         httpMethods.Contains("DELETE") ||
                         httpMethods.Contains("TRACE") ||
@@ -80,6 +70,19 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
 
         foreach (var action in controller.Actions)
         {
+            var method = action.ActionMethod;
+            // if (!method.IsVirtual)
+            // {
+            //     throw new BusinessException(
+            //         $"{action.ActionMethod.DeclaringType?.FullName}.{action.ActionMethod.Name} 必须定义为虚方法");
+            // }
+
+            if (!method.ReturnType.IsAssignableTo(typeof(Task)))
+            {
+                throw new BusinessException(
+                    $"{action.ActionMethod.DeclaringType?.FullName}.{action.ActionMethod.Name} 必须为异步方法");
+            }
+
             ConfigureSelector(action);
         }
     }
@@ -111,19 +114,32 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
     private string CalculateRouteTemplate(ActionModel action)
     {
         var routeTemplate = new StringBuilder();
-        routeTemplate.Append("api/v1");
-
+        if (action.ActionMethod.DeclaringType?.IsAssignableTo<IManagementService>() == true)
+        {
+            routeTemplate.Append("management");
+        }
+        else
+        {
+            routeTemplate.Append("api");
+        }
         // 控制器名称部分
         var controllerName = action.Controller.ControllerName;
+        
         if (controllerName.EndsWith("ApplicationService"))
         {
-            controllerName = controllerName.Substring(0, controllerName.Length - "ApplicationService".Length);
+            controllerName = controllerName[..^"ApplicationService".Length];
         }
         else if (controllerName.EndsWith("AppService"))
         {
-            controllerName = controllerName.Substring(0, controllerName.Length - "AppService".Length);
+            controllerName = controllerName[..^"AppService".Length];
+        }else if (controllerName.EndsWith("ManagementService"))
+        {
+            controllerName = controllerName[..^"ManagementService".Length];
         }
-        controllerName += "s";
+
+       
+
+        controllerName = PluralizerHelper.Pluralize(controllerName).ToKebabCase();
         routeTemplate.Append($"/{controllerName}");
 
         // id 部分
@@ -146,6 +162,11 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
             "Delete","Remove",
             "Patch"
         };
+        if (char.IsLower(actionName[0]))
+        {
+            throw new BusinessException($"{action.Controller.ControllerName} 不符合命名规范，必须是大写字母开头");
+
+        }
         foreach (var trimPrefix in trimPrefixes)
         {
             if (actionName.StartsWith(trimPrefix))
@@ -156,7 +177,7 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
         }
         if (!string.IsNullOrEmpty(actionName))
         {
-            routeTemplate.Append($"/{actionName}");
+            routeTemplate.Append($"/{actionName.ToCamelCase()}");
         }
 
         return routeTemplate.ToString();
@@ -191,12 +212,10 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
     {
         foreach (var selector in action.Selectors)
         {
-            if (selector.AttributeRouteModel == null)
-            {
-                selector.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(CalculateRouteTemplate(action)));
-            }
+            selector.AttributeRouteModel ??= new AttributeRouteModel(new RouteAttribute(CalculateRouteTemplate(action)));
 
-            if (selector.ActionConstraints.OfType<HttpMethodActionConstraint>().FirstOrDefault()?.HttpMethods?.FirstOrDefault() == null)
+            if (selector.ActionConstraints.OfType<HttpMethodActionConstraint>()
+                    .FirstOrDefault()?.HttpMethods.FirstOrDefault() == null)
             {
                 selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { GetHttpMethod(action) }));
             }

@@ -14,7 +14,12 @@ public class ServiceConfigurationContext
     public void AddServiceRegistrar(IServiceRegistrar serviceRegistrar)
     {
         ServiceRegistrars.Add(serviceRegistrar);
-        Services.AddSingleton(serviceRegistrar);
+        var serviceTypes = DefaultServiceRegistrar.GetServiceTypes(serviceRegistrar.GetType());
+        foreach (var serviceType in serviceTypes)
+        {
+            Services.AddSingleton(serviceType, serviceRegistrar);    
+        }
+        
     }
     private readonly HostBuilderContext _hostBuilderContext;
     public IServiceCollection Services { get; }

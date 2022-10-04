@@ -18,7 +18,7 @@ public static class WebApplicationHelper
             var moduleManager = new ServiceModuleManager(startModuleType);
             moduleManager.ConfigureServices(builder.Host);
             var app = builder.Build();
-            moduleManager.ApplicationInitialize(app);
+            await moduleManager.ApplicationInitialize(app);
             await app.RunAsync();
             return 0;
         }

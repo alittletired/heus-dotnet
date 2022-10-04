@@ -16,5 +16,10 @@ public enum UserStatus
     /// <summary>
     /// 未激活
     /// </summary>
-    Unactivated
+    Unactivated,
+    
+    /// <summary>
+    /// 不存在
+    /// </summary>
+    NotFound
 }

@@ -31,6 +31,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heus.Data.Mysql", "framewor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heus.Data.EfCore", "framework\Heus.Data.EfCore\Heus.Data.EfCore.csproj", "{B689E0B4-FD42-4EBC-A7BC-E1A336824C7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heus.Auth.IntegratedTests", "modules\auth\Heus.Auth.IntegratedTests\Heus.Auth.IntegratedTests.csproj", "{BA096E99-5CE8-4E32-BAE9-F895B3FF5031}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heus.IntegratedTests", "framework\Heus.IntegratedTests\Heus.IntegratedTests.csproj", "{719ED3AF-5396-4A13-A49A-1D5838D4725F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heus.Data.Sqlite", "framework\Heus.Data.Sqlite\Heus.Data.Sqlite.csproj", "{20217119-D6AA-453A-8E0B-FAF862B1B9FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +83,18 @@ Global
 		{B689E0B4-FD42-4EBC-A7BC-E1A336824C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B689E0B4-FD42-4EBC-A7BC-E1A336824C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B689E0B4-FD42-4EBC-A7BC-E1A336824C7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA096E99-5CE8-4E32-BAE9-F895B3FF5031}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA096E99-5CE8-4E32-BAE9-F895B3FF5031}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA096E99-5CE8-4E32-BAE9-F895B3FF5031}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA096E99-5CE8-4E32-BAE9-F895B3FF5031}.Release|Any CPU.Build.0 = Release|Any CPU
+		{719ED3AF-5396-4A13-A49A-1D5838D4725F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{719ED3AF-5396-4A13-A49A-1D5838D4725F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{719ED3AF-5396-4A13-A49A-1D5838D4725F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{719ED3AF-5396-4A13-A49A-1D5838D4725F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20217119-D6AA-453A-8E0B-FAF862B1B9FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20217119-D6AA-453A-8E0B-FAF862B1B9FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20217119-D6AA-453A-8E0B-FAF862B1B9FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20217119-D6AA-453A-8E0B-FAF862B1B9FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +112,9 @@ Global
 		{C55DDD53-EDC2-4FDC-B887-91E8D4A06F23} = {6BBC5B03-FC03-4182-A462-8928209562EA}
 		{42C239C3-63A5-4E83-8B00-6C11091165DA} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
 		{B689E0B4-FD42-4EBC-A7BC-E1A336824C7B} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
+		{BA096E99-5CE8-4E32-BAE9-F895B3FF5031} = {6CCF3345-4030-4B2B-BB09-8B45BDE84EE5}
+		{719ED3AF-5396-4A13-A49A-1D5838D4725F} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
+		{20217119-D6AA-453A-8E0B-FAF862B1B9FB} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {734361D4-560C-4467-BE8D-95EBDCA95E53}

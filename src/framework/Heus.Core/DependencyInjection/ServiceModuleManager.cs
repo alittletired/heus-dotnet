@@ -70,18 +70,26 @@ public class ServiceModuleManager : IModuleContainer
 
                 module.Instance.ConfigureServices(context);
             }
+            var postConfigureServicesList = Modules
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                .Select(m => m.Instance).OfType<IPostConfigureServices>();
+            foreach (var postConfigureServices in postConfigureServicesList)
+            {
+                postConfigureServices.PostConfigureServices(context);
+
+            }
 
         });
 
 
     }
 
-    public void ApplicationInitialize(IHost host)
+    public async Task ApplicationInitialize(IHost host)
     {
         var context = new ApplicationConfigurationContext(host);
         foreach (var module in Modules)
         {
-            module.Instance.ConfigureApplication(context);
+           await module.Instance.ConfigureApplication(context);
         }
     }
 }

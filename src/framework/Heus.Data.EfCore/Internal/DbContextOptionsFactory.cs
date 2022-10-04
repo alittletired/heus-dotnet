@@ -3,8 +3,7 @@ using Heus.Core.Data;
 using Heus.Core.DependencyInjection;
 using Heus.Ddd.Uow;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Data.Common;
+
 
 namespace Heus.Data.EfCore.Internal
 {
@@ -36,17 +35,14 @@ IConnectionStringResolver connectionStringResolver)
             //todo:目前 没有处理嵌套事务,和多数据库驱动场景，后面来补
             var dbContextOptionsProvider = _dbContextOptionsProviders.First();
           
-            unitOfWork.DbConnections.GetOrAdd(connectionString, connStr =>
+            var dbConnection= unitOfWork.DbConnections.GetOrAdd(connectionString, connStr =>
             {
-                if (!DbProviderFactories.TryGetFactory(dbContextOptionsProvider.ProviderName, out var factory)){ 
-                    throw new InvalidOperationException($"无法创建数据库工厂!${connStr}");
-                }
-                var connection= factory.CreateConnection();
-                if (connection == null) throw new InvalidOperationException($"无法创建数据库连接!${connStr}");
-                connection.ConnectionString = connStr;
+                var connection = dbContextOptionsProvider.CreateDbConnection(connStr);
                 return connection;
             });
-            return null!;
+            var builder = new DbContextOptionsBuilder<TDbContext>();
+            dbContextOptionsProvider.Configure(builder,dbConnection);
+            return builder.Options;
         }
     
 

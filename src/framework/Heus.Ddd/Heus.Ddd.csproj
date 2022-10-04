@@ -9,5 +9,9 @@
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
     <ProjectReference Include="..\Heus.Core\Heus.Core.csproj" />
   </ItemGroup>
+ 
+  <ItemGroup>
+    <Folder Include="Extensions" />
+  </ItemGroup>
 
 </Project>

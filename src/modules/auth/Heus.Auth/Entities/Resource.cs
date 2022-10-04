@@ -5,7 +5,7 @@ using Heus.Ddd.Entities;
 
 namespace Heus.Auth.Entities;
 [Table("app_resource")]
-public class Resource : AuditEntity, ITreeEntity
+public class Resource : AuditEntity, ITreeEntity,ISoftDelete
 {
     /// <summary>
     /// 动作点
@@ -14,7 +14,7 @@ public class Resource : AuditEntity, ITreeEntity
     public string ActionCode { get; set; } = null!;
     [Required]
     public ResourceType Type { get; set; } = ResourceType.Menu;
-
+    public bool IsDeleted { get; set; }
     #region ITreeEntity
 
     public int Sort { get; set; }
@@ -24,4 +24,5 @@ public class Resource : AuditEntity, ITreeEntity
 
     #endregion
 
+   
 }

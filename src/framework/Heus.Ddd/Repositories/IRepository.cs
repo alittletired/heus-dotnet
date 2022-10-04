@@ -6,7 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Ddd.Repositories;
 
-public interface IRepository<TEntity> : IScopedDependency where TEntity : class, IEntity
+public interface ISupportSaveChanges
+{
+    Task SaveChangesAsync(CancellationToken cancellationToken);
+}
+public  interface  IRepository{}
+public interface IRepository<TEntity> :IRepository, IRepositoryProvider<TEntity>,IScopedDependency where TEntity : class, IEntity
 {
     /// <summary>
     /// Get a single entity by the given <paramref name="predicate"/>.
@@ -19,7 +24,6 @@ public interface IRepository<TEntity> : IScopedDependency where TEntity : class,
     /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
     Task<TEntity?> FindAsync(
         Expression<Func<TEntity, bool>> predicate,
-
         CancellationToken cancellationToken = default
     );
 
@@ -34,59 +38,6 @@ public interface IRepository<TEntity> : IScopedDependency where TEntity : class,
     /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
     Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default
     );
-    Task<IQueryable<TEntity>> GetQueryableAsync();
-
-    /// <summary>
-    /// Inserts a new entity.
-    /// </summary>
-    /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-    /// <param name="entity">Inserted entity</param>
-
-    Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Inserts multiple new entities.
-    /// </summary>
-
-    /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-    /// <param name="entities">Entities to be inserted.</param>
-    /// <returns>Awaitable <see cref="Task"/>.</returns>
-    Task InsertManyAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Updates an existing entity.
-    /// </summary>
-    /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-    /// <param name="entity">Entity</param>
-
-    Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Updates multiple entities.
-    /// </summary>
-    /// <param name="entities">Entities to be updated.</param>
-
-    /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-    /// <returns>Awaitable <see cref="Task"/>.</returns>
-    Task UpdateManyAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Deletes an entity.
-    /// </summary>
-    /// <param name="entity">Entity to be deleted</param>
-
-    /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-    Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Deletes multiple entities.
-    /// </summary>
-    /// <param name="entities">Entities to be deleted.</param>
-
-    /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-    /// <returns>Awaitable <see cref="Task"/>.</returns>
-    Task DeleteManyAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
-
     /// <summary>
     ///  Get a single entity by Id
     /// </summary>
@@ -106,8 +57,8 @@ public interface IRepository<TEntity> : IScopedDependency where TEntity : class,
 
     async Task<TEntity?> GetByIdOrDefaultAsync(EntityId id)
     {
-        var query = await GetQueryableAsync();
-        return await query.FirstOrDefaultAsync(s => s.Id == id);
+      
+        return await GetQueryable().FirstOrDefaultAsync(s => s.Id == id);
 
     }
     async Task DeleteByIdAsync(EntityId id,
@@ -118,4 +69,15 @@ public interface IRepository<TEntity> : IScopedDependency where TEntity : class,
         await DeleteAsync(entity, cancellationToken);
 
     }
+
+   async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter,
+        CancellationToken cancellationToken = default)
+    {
+        return await GetQueryable().Where(filter).ToListAsync(cancellationToken);
+    }
+
+   async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter)
+   {
+       return (await FindAsync(filter)) != null;
+   }
 }

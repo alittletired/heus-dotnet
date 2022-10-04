@@ -1,6 +1,7 @@
 using System.Reflection;
 using Heus.Core;
 using Heus.Core.DependencyInjection;
+using Heus.Ddd;
 using Heus.Ddd.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ internal class DbContextServiceRegistrar : IDbContextServiceRegistrar
     {
         if (type.IsAssignableTo<DbContext>())
         {
+            var repositoryRegistrar = chain.FindServiceRegistrar<IRepositoryRegistrar>();
             var addDbContext = GetType().GetRuntimeMethods().First(m => m.Name == nameof(AddDbContext));
             var actualMethod = addDbContext.MakeGenericMethod(type);
             actualMethod.Invoke(this, new object[] { services });
@@ -25,15 +27,14 @@ internal class DbContextServiceRegistrar : IDbContextServiceRegistrar
             foreach (var entityType in entityTypes)
             {
                 EntityDbContextMapping.Add(entityType, type);
+                repositoryRegistrar?.AddEntity(entityType);
             }
             return;
         }
      
         chain.Next(services, type);
-        
 
     }
-
     private void AddDbContext<TContext>(IServiceCollection services) where TContext : DbContext
     {
         services.AddScoped(sp => sp.GetRequiredService<DbContextOptionsFactory>().Create<TContext>());

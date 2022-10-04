@@ -1,4 +1,6 @@
-﻿namespace Heus.Core.Security.Internal;
+﻿using Heus.Ddd.Entities;
+
+namespace Heus.Core.Security.Internal;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Utils;
 using System.Security.Claims;
@@ -9,7 +11,7 @@ internal class CurrentUser : ICurrentUser
 
     public ClaimsPrincipal? Principal => CurrentPrincipal.Value;
 
-    public long? UserId => this.FindClaimValue<long>(ClaimTypes.NameIdentifier);
+    public EntityId? UserId => this.FindClaimValue<EntityId>(ClaimTypes.NameIdentifier);
 
     public string? UserName => this.FindClaimValue(ClaimTypes.Name);
     public IDisposable SetCurrent(ClaimsPrincipal principal)

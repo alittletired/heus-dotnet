@@ -11,9 +11,15 @@ namespace Heus.Core.DependencyInjection.Autofac
         public void ProvideMiddleware(Service service, IComponentRegistryServices availableServices, IResolvePipelineBuilder pipelineBuilder)
         {
             
-            if (service is IServiceWithType serviceWithType && serviceWithType.ServiceType.IsAssignableTo<IInitialization>())
+            
+            if (service is TypedService typedService)
             {
-                pipelineBuilder.Use(_middleware);
+                // && typedService.ServiceType.IsAssignableTo<IInjectServiceProvider>()
+               if( typedService.Description.Contains("Heus"))
+                {
+                    pipelineBuilder.Use(_middleware);     
+                }
+               
             }
         }
     }

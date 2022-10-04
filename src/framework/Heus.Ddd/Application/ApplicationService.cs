@@ -1,27 +1,9 @@
-using Heus.Core.DependencyInjection;
-using Heus.Core.ObjectMapping;
-using Heus.Core.Security;
-using Heus.Ddd.Entities;
-using Heus.Ddd.Repositories;
-using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Heus.Ddd.Application;
 
-public abstract class ApplicationService<TEntity> : IApplicationService, IInitialization where TEntity : class,IEntity
+public abstract class ApplicationService : ServiceBase,IApplicationService 
 {
-    protected IServiceProvider ServiceProvider { get; private set; }= null!;
-    protected IObjectMapper Mapper => GetRequiredService<IObjectMapper>();
-    protected IRepository<TEntity> Repository => GetRequiredService<IRepository<TEntity>>();
-    protected T GetRequiredService<T>() where T : class
-    {
-        return ServiceProvider.GetRequiredService<T>();
-    }
+    public override IServiceProvider ServiceProvider { get; set; } = null!;
 
-    protected ICurrentUser CurrentUser => GetRequiredService<ICurrentUser>();
-
-
-    public void Initialize(IServiceProvider serviceProvider)
-    {
-        ServiceProvider = serviceProvider;
-    }
 }

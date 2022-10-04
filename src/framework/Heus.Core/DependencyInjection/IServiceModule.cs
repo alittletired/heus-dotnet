@@ -17,7 +17,7 @@ public interface IServiceModule
     /// 配置应用
     /// </summary>
     /// <param name="context"></param>
-    void ConfigureApplication(ApplicationConfigurationContext context);
+   Task ConfigureApplication(ApplicationConfigurationContext context);
 
 
 }

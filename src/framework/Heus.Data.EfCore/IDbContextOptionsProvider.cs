@@ -10,5 +10,6 @@ namespace Heus.Data.EfCore;
 public interface IDbContextOptionsProvider : ISingletonDependency, IEnumableService
 {
     void Configure(DbContextOptionsBuilder dbContextOptions,DbConnection shareConnection);
-    string ProviderName { get; }
+    DbProvider DbProvider { get; }
+    DbConnection CreateDbConnection(string connectionString);
 }

@@ -37,19 +37,18 @@ public class DefaultServiceRegistrar : IServiceRegistrar
     }
 
 
-    protected List<Type> GetServiceTypes(Type type)
+    public static List<Type> GetServiceTypes(Type type)
     {
         var serviceTypes = GetInterfaceServices(type);
         if (serviceTypes.Count == 0)
         {
             serviceTypes.Add(type);
         }
-        serviceTypes.AddRange(serviceTypes);
-
+        
         return serviceTypes;
     }
 
-    protected List<Type> GetInterfaceServices(Type type)
+    public  static  List<Type> GetInterfaceServices(Type type)
     {
         var serviceTypes = new List<Type>();
 

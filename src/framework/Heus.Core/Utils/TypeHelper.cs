@@ -203,7 +203,7 @@ namespace Heus.Core.Utils
             if (type.IsGenericType)
             {
                 var genericType = type.GetGenericTypeDefinition();
-                return $"{genericType.FullName![genericType.FullName.IndexOf('`')]}<{type.GenericTypeArguments.Select(GetSimplifiedName).JoinAsString(",")}>";
+                return $"{genericType.Name.Substring(0,genericType.Name.IndexOf('`'))}<{type.GenericTypeArguments.Select(GetSimplifiedName).JoinAsString(",")}>";
             }
 
             if (type == typeof(string))
@@ -291,7 +291,7 @@ namespace Heus.Core.Utils
                 return "object";
             }
 
-            return type.FullName ?? type.Name;
+            return  type.Name;
         }
 
         public static object? ConvertFromString<TTargetType>(string value)

@@ -4,22 +4,13 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace Heus.AspNetCore.Conventions;
 
-internal class ServiceControllerFeatureProvider:ControllerFeatureProvider
+internal class ServiceControllerFeatureProvider : ControllerFeatureProvider
 {
-  protected override bool IsController(TypeInfo typeInfo)
-  {
-      var type = typeInfo.AsType();
-      if (typeof(IApplicationService).IsAssignableFrom(typeInfo))
-      {
-        if (!typeInfo.IsInterface &&
-            !typeInfo.IsAbstract &&
-            !typeInfo.IsGenericType &&
-            typeInfo.IsPublic)
-        {
-          return true;
-        }
-      }
-
-      return false;
-  }
+    protected override bool IsController(TypeInfo typeInfo)
+    {
+        return !typeInfo.IsInterface &&
+               !typeInfo.IsAbstract &&
+               !typeInfo.IsGenericType &&
+               typeof(IApplicationService).IsAssignableFrom(typeInfo);
+    }
 }

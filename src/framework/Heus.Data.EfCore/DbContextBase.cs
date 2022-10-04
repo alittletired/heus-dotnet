@@ -8,19 +8,15 @@ namespace Heus.Ddd.Data;
 
 using Heus.Ddd.Entities;
 using Microsoft.EntityFrameworkCore;
-public abstract class DbContextBase<TDbContext> : DbContext,IInitialization, IScopedDependency
+public abstract class DbContextBase<TDbContext> : DbContext,IInjectServiceProvider,IScopedDependency
     where TDbContext : DbContext
 {
+   public IServiceProvider ServiceProvider { get; set; } = null!;
     protected DbContextBase(DbContextOptions<TDbContext> options)
       : base(options)
     {
     }
-    protected IUnitOfWorkManager UnitOfWorkManager { get; private set; } = null!;
-
-   public void Initialize(IServiceProvider serviceProvider)
-   {
-      UnitOfWorkManager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-   }
+    protected IUnitOfWorkManager UnitOfWorkManager => ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
 
    protected override void OnConfiguring(DbContextOptionsBuilder options)
    {
@@ -35,6 +31,5 @@ public abstract class DbContextBase<TDbContext> : DbContext,IInitialization, ISc
          .Properties<EntityId>()
          .HaveConversion<EntityIdConverter>().HaveMaxLength(20).AreUnicode(false);
    }
-
   
 }

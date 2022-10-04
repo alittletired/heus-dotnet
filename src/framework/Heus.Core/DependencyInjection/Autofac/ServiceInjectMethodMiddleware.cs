@@ -15,10 +15,10 @@ namespace Heus.Core.DependencyInjection.Autofac
         public void Execute(ResolveRequestContext context, Action<ResolveRequestContext> next)
         {
             next(context);
-            if( context.Instance is IInitialization initialization)
+            if( context.Instance is IInjectServiceProvider initialization)
             {
                 var serviceProvider = context.Resolve<IServiceProvider>();
-                initialization.Initialize(serviceProvider);
+                initialization.ServiceProvider=serviceProvider;
             }
         }
     }

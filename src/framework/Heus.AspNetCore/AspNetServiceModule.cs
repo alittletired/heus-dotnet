@@ -1,12 +1,16 @@
+using System.Text;
 using Heus.AspNetCore.ActionFilter;
 using Heus.AspNetCore.Conventions;
 using Heus.AspNetCore.OpenApi;
 using Heus.Core.DependencyInjection;
+using Heus.Core.Security;
 using Heus.Core.Utils;
 using Heus.Ddd;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using static System.Net.Mime.MediaTypeNames;
+ using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Heus.AspNetCore;
 
@@ -16,20 +20,31 @@ public class AspNetServiceModule : ServiceModuleBase
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var services = context.Services;
-        services.Configure<JsonOptions>(options => {  
-            options.SerializerOptions.ApplyDefaultSettings();
-            });
+        var configuration = context.Configuration;
+        services.Configure<JsonOptions>(options => { options.SerializerOptions.ApplyDefaultSettings(); });
         services.AddMvc(options =>
         {
             options.Conventions.Add(new ServiceApplicationModelConvention());
+            options.Conventions.Add(new ApiExplorerGroupConvention());
             options.Filters.AddService(typeof(UowActionFilter));
 
         }).AddControllersAsServices();
         services.AddOpenApi(context.Environment);
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+        {
+            var jwtOptions = configuration.GetSection(JwtOptions.ConfigurationSection)
+                .Get<JwtOptions>();
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtOptions.Issuer,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SignKey))
+            };
+        });
 
     }
 
-    public override void ConfigureApplication(ApplicationConfigurationContext context)
+    public override Task ConfigureApplication(ApplicationConfigurationContext context)
     {
         var partManager = context.ServiceProvider.GetRequiredService<ApplicationPartManager>();
         partManager.FeatureProviders.Add(new ServiceControllerFeatureProvider());
@@ -64,6 +79,7 @@ public class AspNetServiceModule : ServiceModuleBase
             endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             endpoints.MapRazorPages();
         });
+        return  Task.CompletedTask;
     }
 
    
