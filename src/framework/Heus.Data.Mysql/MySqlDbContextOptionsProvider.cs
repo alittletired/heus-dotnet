@@ -17,10 +17,14 @@ namespace Heus.Data.Mysql
 
             var serverVersion = _serverVersions.GetOrAdd(shareConnection.ConnectionString, ServerVersion.AutoDetect);
             dbContextOptions.UseMySql(shareConnection, serverVersion,
-                mySqlOptions => { mySqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery); });
+                mySqlOptions =>
+                {
+                    mySqlOptions.EnableStringComparisonTranslations();
+                    mySqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                });
         }
 
-        public DbProvider DbProvider => Core.Data.Options.DbProvider.MySql;
+        public DbProvider DbProvider => DbProvider.MySql;
         public DbConnection CreateDbConnection(string connectionString)
         {
             return new MySqlConnection(connectionString);

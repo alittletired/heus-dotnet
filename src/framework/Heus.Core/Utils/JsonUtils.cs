@@ -37,4 +37,12 @@ public static class JsonUtils
         }
         return JsonSerializer.Deserialize<T>(json, DefaultOptions);
     }
+    public static object? Parse( string? json,Type type) {
+
+        if (string.IsNullOrEmpty(json))
+        {
+            return default!;
+        }
+        return JsonSerializer.Deserialize(json,type, DefaultOptions);
+    }
 }

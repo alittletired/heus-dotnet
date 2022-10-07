@@ -1,10 +1,11 @@
 using Heus.Core;
+using Heus.Core.Http;
 using Heus.Ddd.Application;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace Heus.AspNetCore.Conventions;
 
-public class ApiExplorerGroupConvention:IControllerModelConvention
+public class ApiExplorerGroupConvention : IControllerModelConvention
 {
     public void Apply(ControllerModel controller)
     {
@@ -13,8 +14,8 @@ public class ApiExplorerGroupConvention:IControllerModelConvention
         foreach (var action in controller.Actions)
         {
             action.ApiExplorer.IsVisible ??= true;
-            if (action.Controller.ControllerType.IsAssignableTo<IManagementService>())
-                action.ApiExplorer.GroupName = "management";
+            action.ApiExplorer.GroupName = HttpApiHelper.GetGroupName(action.Controller.ControllerType);
         }
     }
+
 }

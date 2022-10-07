@@ -23,13 +23,14 @@ public abstract class DbContextBase<TDbContext> : DbContext,IInjectServiceProvid
       options.UseSnakeCaseNamingConvention();
       
       base.OnConfiguring(options);
+      
    }
 
    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
    {
       configurationBuilder
          .Properties<EntityId>()
-         .HaveConversion<EntityIdConverter>().HaveMaxLength(20).AreUnicode(false);
+         .HaveConversion<EntityIdConverter>().HaveMaxLength(24).AreUnicode(false);
    }
   
 }

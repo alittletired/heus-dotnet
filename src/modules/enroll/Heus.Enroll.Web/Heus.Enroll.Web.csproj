@@ -5,4 +5,7 @@
 	  <ProjectReference Include="..\..\..\framework\Heus.Data.Mysql\Heus.Data.Mysql.csproj" />
 	  <ProjectReference Include="..\Heus.Enroll\Heus.Enroll.csproj" />
 	</ItemGroup>
+	 <ItemGroup>
+     <InternalsVisibleTo Include="Heus.Auth.IntegratedTests" />
+</ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
+using Heus.Auth.Application;
 using Heus.Auth.Dtos;
-using Heus.Enroll.Service.Application;
 using Heus.IntegratedTests;
 using Shouldly;
 using Xunit;

@@ -1,3 +1,4 @@
+using Heus.Auth.Application;
 using Heus.Auth.Dtos;
 using Heus.Auth.Entities;
 using Heus.Ddd.Application;
@@ -5,7 +6,6 @@ using Heus.Ddd.Domain;
 using Heus.Ddd.Dtos;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
-using Heus.Enroll.Service.Application;
 using Heus.IntegratedTests;
 using Shouldly;
 using Xunit;

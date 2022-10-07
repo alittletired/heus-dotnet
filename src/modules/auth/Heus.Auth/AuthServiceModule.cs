@@ -22,6 +22,9 @@ namespace Heus.Auth
             var unitOfWorkManager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
             var options = new UnitOfWorkOptions() { IsTransactional = true };
             using var unitOfWork = unitOfWorkManager.Begin(options);
+            var authDbContext = serviceProvider.GetRequiredService<AuthDbContext>();
+            await authDbContext.Database.EnsureDeletedAsync();
+            await authDbContext.Database.EnsureCreatedAsync();
             await AddUsers(serviceProvider);
             await AddRoles(serviceProvider);
             await unitOfWork.CompleteAsync();

@@ -7,3 +7,4 @@ await WebApplicationHelper.RunAsync(args, typeof(WebServiceModule));
     // .UseCoreService(typeof(WebServiceModule))
     // .Build()
     // .RunAsync();
+public partial class Program { }

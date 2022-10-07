@@ -29,6 +29,7 @@ public class AspNetServiceModule : ServiceModuleBase
             options.Filters.AddService(typeof(UowActionFilter));
 
         }).AddControllersAsServices();
+        services.AddHttpContextAccessor();
         services.AddOpenApi(context.Environment);
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {

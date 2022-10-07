@@ -1,4 +1,3 @@
-using System.Reflection;
 using Heus.AspNetCore;
 using Heus.Ddd.Application;
 using Microsoft.AspNetCore.Mvc.Testing;

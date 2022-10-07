@@ -1,22 +1,23 @@
-﻿using Heus.Ddd.Entities;
+﻿using Heus.Core.DependencyInjection;
+using Heus.Ddd.Entities;
 
 namespace Heus.Core.Security.Internal;
-using Heus.Core.DependencyInjection;
-using Heus.Core.Utils;
-using System.Security.Claims;
-internal class CurrentUser : ICurrentUser
-{
-    private static readonly AsyncLocal<ClaimsPrincipal?> CurrentPrincipal = new();
-    public bool IsAuthenticated => Principal != null;
 
-    public ClaimsPrincipal? Principal => CurrentPrincipal.Value;
+using System.Security.Claims;
+internal class CurrentUser : ICurrentUser,ISingletonDependency
+{
+    public bool IsAuthenticated => UserId.HasValue ;
+    private readonly ICurrentPrincipalAccessor _principalAccessor;
+
+    public CurrentUser(ICurrentPrincipalAccessor principalAccessor)
+    {
+        _principalAccessor = principalAccessor;
+    }
+    public ClaimsPrincipal? Principal => _principalAccessor.Principal;
 
     public EntityId? UserId => this.FindClaimValue<EntityId>(ClaimTypes.NameIdentifier);
 
     public string? UserName => this.FindClaimValue(ClaimTypes.Name);
-    public IDisposable SetCurrent(ClaimsPrincipal principal)
-    {
-        return AsyncLocalUtils.BeginScope(CurrentPrincipal, principal);
-    }
+  
 }
 

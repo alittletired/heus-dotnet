@@ -4,7 +4,7 @@ using Heus.Auth.Domain;
 using Heus.Ddd.Entities;
 
 namespace Heus.Auth.Entities;
-[Table("app_resource")]
+[Table("auth_resource")]
 public class Resource : AuditEntity, ITreeEntity,ISoftDelete
 {
     /// <summary>

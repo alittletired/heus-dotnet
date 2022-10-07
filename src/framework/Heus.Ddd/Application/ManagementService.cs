@@ -3,12 +3,7 @@ using Heus.Ddd.Dtos;
 
 namespace Heus.Ddd.Application;
 
-public interface IManagementService : IRemoteService
-{
-    
-}
-
-public interface IManagementService<in TCreateDto, in TUpdateDto, TDto> :IManagementService
+public interface IManageService<in TCreateDto, in TUpdateDto, TDto> :IManageService
     , IReadOnlyAppService<TDto>
     , ICreateAppService<TCreateDto, TDto>
     , IUpdateAppService<TUpdateDto, TDto>
@@ -20,7 +15,7 @@ public interface IManagementService<in TCreateDto, in TUpdateDto, TDto> :IManage
 /// <summary>
 /// 管理后台基类
 /// </summary>
-public abstract class ManagementService:ServiceBase,IManagementService
+public abstract class ManagementService:ServiceBase,IManageService
 {
   public override IServiceProvider ServiceProvider { get; set; } = null!;
 }

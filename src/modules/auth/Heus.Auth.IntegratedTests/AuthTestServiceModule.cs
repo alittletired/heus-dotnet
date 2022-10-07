@@ -4,7 +4,8 @@ using Heus.IntegratedTests;
 
 namespace Heus.Auth.IntegratedTests;
 
-[DependsOn(typeof(AuthServiceModule) ,typeof(IntegratedTestServiceModule))   ]
+[DependsOn(typeof(AuthServiceModule) 
+    ,typeof(IntegratedTestServiceModule))   ]
 public class AuthTestServiceModule:ServiceModuleBase
 {
  

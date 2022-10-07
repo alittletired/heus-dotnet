@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Heus.Auth.Entities;
 
-[Table("app_organ")]
+[Table("auth_organ")]
 public class Organ : AuditEntity, ITreeEntity
 {
     /// <summary>

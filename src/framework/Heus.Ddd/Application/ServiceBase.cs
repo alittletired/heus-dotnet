@@ -1,4 +1,5 @@
 using Heus.Core.DependencyInjection;
+using Heus.Core.Http;
 using Heus.Core.ObjectMapping;
 using Heus.Core.Security;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Heus.Ddd.Application;
 
-public abstract class ServiceBase : IRemoteService,IInjectServiceProvider
+public abstract class ServiceBase : IRemoteService,IInjectServiceProvider,IScopedDependency
 {
     public abstract IServiceProvider ServiceProvider { get; set; }
     protected IObjectMapper Mapper => GetRequiredService<IObjectMapper>();

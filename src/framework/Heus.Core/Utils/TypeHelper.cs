@@ -174,7 +174,8 @@ namespace Heus.Core.Utils
             return null;
         }
 
-        public static string GetFullNameDesc(Type type)
+
+        public static string GetFullNameHandlingNullableAndGenerics( Type type)
         {
 
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -185,7 +186,7 @@ namespace Heus.Core.Utils
             if (type.IsGenericType)
             {
                 var genericType = type.GetGenericTypeDefinition();
-                return $"{genericType.FullName![genericType.FullName.IndexOf('`')]}<{type.GenericTypeArguments.Select(GetFullNameDesc).JoinAsString(",")}>";
+                return $"{genericType.FullName!.Substring(0,genericType.FullName.IndexOf('`'))}<{type.GenericTypeArguments.Select(GetFullNameHandlingNullableAndGenerics).JoinAsString(",")}>";
             }
 
             return type.FullName ?? type.Name;
@@ -193,8 +194,6 @@ namespace Heus.Core.Utils
 
         public static string GetSimplifiedName(Type type)
         {
-
-
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 return GetSimplifiedName(type.GenericTypeArguments[0]) + "?";

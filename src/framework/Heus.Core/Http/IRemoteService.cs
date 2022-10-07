@@ -1,4 +1,4 @@
-namespace Heus.Ddd.Application;
+namespace Heus.Core.Http;
 
 public interface IRemoteService
 {
