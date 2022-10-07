@@ -9,8 +9,7 @@ internal class RemoteServiceProxy : DispatchProxy
     internal RemoteServiceProxyFactory ProxyFactory { get; set; } = null!;
     internal HttpClient HttpClient { get; set; } = null!;
 
-    private  readonly MethodInfo _invokeAsyncGeneric = 
-        typeof(RemoteServiceProxy).GetTypeInfo()
+    private  readonly MethodInfo _invokeAsyncGeneric = typeof(RemoteServiceProxy).GetTypeInfo()
         .DeclaredMethods.First(s => s.Name == nameof(InvokeAsync));
 
     private async Task<T?> InvokeAsync<T>(MethodInfo targetMethod, object?[]? args)

@@ -10,12 +10,13 @@ public static class HttpApiHelper
     public static string GetGroupName(Type type)
     {
         if (type.IsAssignableTo<IManageService>())
-          return  "management";
+            return "management";
         if (type.IsAssignableTo<IApplicationService>())
-            return  "api";
+            return "api";
         return "";
     }
-     public  static string CalculateRouteTemplate(MethodInfo methodInfo)
+
+    public static string CalculateRouteTemplate(MethodInfo methodInfo)
     {
         var routeTemplate = new StringBuilder();
         if (methodInfo.DeclaringType?.IsAssignableTo<IManageService>() == true)
@@ -26,9 +27,10 @@ public static class HttpApiHelper
         {
             routeTemplate.Append("api");
         }
+
         // 控制器名称部分
         var controllerName = methodInfo.DeclaringType!.Name;
-        
+
         if (controllerName.EndsWith("ApplicationService"))
         {
             controllerName = controllerName[..^"ApplicationService".Length];
@@ -36,12 +38,13 @@ public static class HttpApiHelper
         else if (controllerName.EndsWith("AppService"))
         {
             controllerName = controllerName[..^"AppService".Length];
-        }else if (controllerName.EndsWith("ManagementService"))
+        }
+        else if (controllerName.EndsWith("ManagementService"))
         {
             controllerName = controllerName[..^"ManagementService".Length];
         }
 
-       
+
 
         controllerName = PluralizerHelper.Pluralize(controllerName).ToKebabCase();
         routeTemplate.Append($"/{controllerName}");
@@ -58,12 +61,13 @@ public static class HttpApiHelper
         {
             actionName = actionName.Substring(0, actionName.Length - "Async".Length);
         }
+
         var trimPrefixes = new[]
         {
-            "GetAll","GetList","Get",
-            "Post","Create","Add","Insert",
-            "Put","Update",
-            "Delete","Remove",
+            "GetAll", "GetList", "Get",
+            "Post", "Create", "Add", "Insert",
+            "Put", "Update",
+            "Delete", "Remove",
             "Patch"
         };
         if (char.IsLower(actionName[0]))
@@ -71,12 +75,14 @@ public static class HttpApiHelper
             throw new BusinessException($"{methodInfo.DeclaringType!.Name} 不符合命名规范，必须是大写字母开头");
 
         }
+
         foreach (var trimPrefix in trimPrefixes)
         {
             if (!actionName.StartsWith(trimPrefix)) continue;
             actionName = actionName[trimPrefix.Length..];
             break;
         }
+
         if (!string.IsNullOrEmpty(actionName))
         {
             routeTemplate.Append($"/{actionName.ToCamelCase()}");
@@ -84,29 +90,30 @@ public static class HttpApiHelper
 
         return routeTemplate.ToString();
     }
-     public static HttpMethod GetHttpMethod(MethodInfo action)
-     {
-         var actionName = action.Name;
-         if ( actionName.StartsWith("Get"))
-         {
-             return HttpMethod.Get;
-         }
 
-         if (actionName.StartsWith("Put") || actionName.StartsWith("Update"))
-         {
-             return HttpMethod.Put;
-         }
+    public static HttpMethod GetHttpMethod(MethodInfo action)
+    {
+        var actionName = action.Name;
+        if (actionName.StartsWith("Get"))
+        {
+            return HttpMethod.Get;
+        }
 
-         if (actionName.StartsWith("Delete") || actionName.StartsWith("Remove"))
-         {
-             return HttpMethod.Delete;
-         }
+        if (actionName.StartsWith("Put") || actionName.StartsWith("Update"))
+        {
+            return HttpMethod.Put;
+        }
 
-         if (actionName.StartsWith("Patch"))
-         {
-             return HttpMethod.Patch ;
-         }
-       
-         return HttpMethod.Post;
-     }
+        if (actionName.StartsWith("Delete") || actionName.StartsWith("Remove"))
+        {
+            return HttpMethod.Delete;
+        }
+
+        if (actionName.StartsWith("Patch"))
+        {
+            return HttpMethod.Patch;
+        }
+
+        return HttpMethod.Post;
+    }
 }
