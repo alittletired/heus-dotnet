@@ -6,17 +6,17 @@ using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
 
 namespace Heus.Auth.Application;
-public interface IRoleManagementService:IManagementService<RoleCreateDto,RoleUpdateDto,RoleDto>
+public interface IRoleAdminAppService:IAdminApplicationService<RoleCreateDto,RoleUpdateDto,RoleDto>
 {
     Task<IEnumerable<EntityId>> GetResourceIdsAsync(EntityId id);
     Task<bool> AuthorizeResourcesAsync(EntityId id, IEnumerable<EntityId> resourceIds);
 
 }
-internal class RoleManagementService:ManagementService,IRoleManagementService
+internal class RoleAdminAppService : AdminApplicationService, IRoleAdminAppService
 {
     private readonly IRepository<RoleResource> _roleResourceRepository;
 
-    public RoleManagementService(IRepository<RoleResource> roleResourceRepository)
+    public RoleAdminAppService(IRepository<RoleResource> roleResourceRepository)
     {
         _roleResourceRepository = roleResourceRepository;
     }

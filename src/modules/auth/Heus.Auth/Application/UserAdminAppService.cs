@@ -9,18 +9,18 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Auth.Application;
-public interface IUserManagementService:IManagementService<UserCreateDto,UserUpdateDto,UserDto>
+public interface IUserAdminAppService:IAdminApplicationService<UserCreateDto,UserUpdateDto,UserDto>
 {
     Task<IEnumerable<EntityId>>  GetUserRoleIds(EntityId id);
 }
 
-internal class UserManagementService : ManagementService, IUserManagementService
+internal class UserAdminAppService : AdminApplicationService, IUserAdminAppService
 {
     private readonly IRepository<Organ> _organRepository;
     private readonly IUserRepository _userRepository;
     private readonly IRepository<UserRole> _userRoleRepository;
 
-    public UserManagementService(IRepository<Organ> organRepository, IUserRepository userRepository,
+    public UserAdminAppService(IRepository<Organ> organRepository, IUserRepository userRepository,
         IRepository<UserRole> userRoleRepository)
     {
         _organRepository = organRepository;

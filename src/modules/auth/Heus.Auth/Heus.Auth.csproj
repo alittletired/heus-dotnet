@@ -16,15 +16,19 @@
     <Generated Include="**\*.g.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Api" />
+    <Compile Remove="Api\**" />
+    <Content Remove="Api\**" />
+    <EmbeddedResource Remove="Api\**" />
+    <Generated Remove="Api\**" />
+    <None Remove="Api\**" />
   </ItemGroup>
   <Target Name="CleanGenerated">
     <Delete Files="@(Generated)" />
   </Target>
-  <Target Name="Mapster" AfterTargets="AfterBuild">
+  <!-- <Target Name="Mapster" AfterTargets="AfterBuild">
     <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tool restore" />
     <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster model -a &quot;$(TargetDir)$(ProjectName).dll&quot; -n Heus.Auth.Dtos -b Heus.Auth.Entities -o Generated/Dtos" />
     <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster extension -a &quot;$(TargetDir)$(ProjectName).dll&quot; -n Heus.Auth.Dtos -b Heus.Auth.Entities -o Generated/Mappers" />
     <Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster mapper -a &quot;$(TargetDir)$(ProjectName).dll&quot; -n Heus.Auth.Dtos -b Heus.Auth.Entities -o Generated/Mappers" />
-  </Target>
+  </Target> -->
 </Project>

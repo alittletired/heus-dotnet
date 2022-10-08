@@ -14,9 +14,7 @@ internal class RemoteServiceProxy : DispatchProxy
 
     private async Task<T?> InvokeAsync<T>(MethodInfo targetMethod, object?[]? args)
     {
-        var routeTemplate = HttpApiHelper.CalculateRouteTemplate(targetMethod);
-        var httpMethod = HttpApiHelper.GetHttpMethod(targetMethod);
-        var request = new HttpRequestMessage(httpMethod, new Uri(routeTemplate));
+        var request = HttpApiHelper.CreateHttpRequest(targetMethod, args);
         var response = await HttpClient.SendAsync(request);
        
         if (!response.IsSuccessStatusCode)

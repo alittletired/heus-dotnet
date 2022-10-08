@@ -7,7 +7,7 @@ using Heus.Ddd.Domain;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Heus.Auth.Application;
-public interface IAccountManagementService:IManagementService
+public interface IAccountAdminAppService:IAdminApplicationService
 {
     [AllowAnonymous]
     Task<AuthTokenDto> LoginAsync(LoginInput input);
@@ -17,13 +17,13 @@ public interface IAccountManagementService:IManagementService
     Task<bool> SendVerifyCodeAsync(string phone);
 }
 
-internal class AccountManagementService : IAccountManagementService
+internal class AccountAdminAppService : IAccountAdminAppService
 {
     private readonly IUserRepository _userRepository;
     private readonly UserManager _userManager;
     private readonly ITokenProvider _tokenProvider;
 
-    public AccountManagementService(IUserRepository userRepository, UserManager userManager,
+    public AccountAdminAppService(IUserRepository userRepository, UserManager userManager,
         ITokenProvider tokenProvider)
     {
         _userRepository = userRepository;

@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Heus.Core.Utils;
 using Heus.Ddd.Application;
 
@@ -9,8 +10,8 @@ public static class HttpApiHelper
 {
     public static string GetGroupName(Type type)
     {
-        if (type.IsAssignableTo<IManageService>())
-            return "management";
+        if (type.IsAssignableTo<IAdminApplicationService>())
+            return "admin";
         if (type.IsAssignableTo<IApplicationService>())
             return "api";
         return "";
@@ -19,9 +20,9 @@ public static class HttpApiHelper
     public static string CalculateRouteTemplate(MethodInfo methodInfo)
     {
         var routeTemplate = new StringBuilder();
-        if (methodInfo.DeclaringType?.IsAssignableTo<IManageService>() == true)
+        if (methodInfo.DeclaringType?.IsAssignableTo<IAdminApplicationService>() == true)
         {
-            routeTemplate.Append("management");
+            routeTemplate.Append("admin");
         }
         else
         {
@@ -35,13 +36,14 @@ public static class HttpApiHelper
         {
             controllerName = controllerName[..^"ApplicationService".Length];
         }
+      
+        else if (controllerName.EndsWith("AdminAppService"))
+        {
+            controllerName = controllerName[..^"AdminAppService".Length];
+        }
         else if (controllerName.EndsWith("AppService"))
         {
             controllerName = controllerName[..^"AppService".Length];
-        }
-        else if (controllerName.EndsWith("ManagementService"))
-        {
-            controllerName = controllerName[..^"ManagementService".Length];
         }
 
 
@@ -115,5 +117,30 @@ public static class HttpApiHelper
         }
 
         return HttpMethod.Post;
+    }
+
+   
+    public static HttpRequestMessage CreateHttpRequest(MethodInfo action, object?[]? args)
+    {
+        var routeTemplate = CalculateRouteTemplate(action);
+        var httpMethod = GetHttpMethod(action);
+        var request = new HttpRequestMessage(httpMethod, new Uri(routeTemplate));
+        var parameters=new List<KeyValuePair<string,object>>();
+        for(var i=0;i<action.GetParameters().Length ; i++)
+        {
+            var parameter = action.GetParameters()[i];
+            var value = args?[i]?? parameter.DefaultValue;
+            if(value!=null)
+            {
+                parameters.Add(new KeyValuePair<string,object>(parameter.Name!,value));
+            }
+
+        }
+        var url= Regex.Replace(routeTemplate, @"\{([^\}]+)\}", evaluator =>
+        {
+            var v= parameters.First(s => s.Key == evaluator.ToString()).Value;
+            return v.ToString()!;
+        });
+        return request;
     }
 }

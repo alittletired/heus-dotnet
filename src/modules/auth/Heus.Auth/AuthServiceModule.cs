@@ -32,7 +32,7 @@ namespace Heus.Auth
 
         private async Task AddUsers(IServiceProvider serviceProvider)
         {
-            var userService = serviceProvider.GetRequiredService<IUserManagementService>();
+            var userService = serviceProvider.GetRequiredService<IUserAdminAppService>();
             var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
             var adminUser = await userRepository.FindByAccountAsync("admin");
             if (adminUser == null)
