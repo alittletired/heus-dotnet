@@ -46,10 +46,15 @@ internal class RepositoryRegistrar : IRepositoryRegistrar
     {
         foreach (var entityType in _entityTypes)
         {
-            services.AddScoped(RepositoryType.MakeGenericType(entityType),
-                CustomRepositories.TryGetValue(entityType, out var repoType)
-                    ? repoType
-                    : DefaultRepositoryType.MakeGenericType(entityType));
+            var entityRepositoryType = RepositoryType.MakeGenericType(entityType);
+            if (!CustomRepositories.TryGetValue(entityType, out var repoType))
+            {
+                repoType = DefaultRepositoryType.MakeGenericType(entityType);
+            }
+
+            services.AddScoped(entityRepositoryType, repoType);
+
+
         }
 
     }

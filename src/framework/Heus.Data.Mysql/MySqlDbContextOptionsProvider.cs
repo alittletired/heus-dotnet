@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Data.Common;
 using Heus.Core.Data.Options;
+using Heus.Core.DependencyInjection;
 using Heus.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
@@ -8,7 +9,7 @@ using MySqlConnector;
 
 namespace Heus.Data.Mysql
 {
-    internal class MySqlDbContextOptionsProvider : IDbContextOptionsProvider
+    internal class MySqlDbContextOptionsProvider : IDbContextOptionsProvider,ISingletonDependency
     {
         private readonly ConcurrentDictionary<string, ServerVersion> _serverVersions = new();
 

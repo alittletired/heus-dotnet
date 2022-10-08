@@ -1,19 +1,34 @@
 using Heus.AspNetCore;
+using Heus.Core.Http;
 using Heus.Ddd.Application;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Heus.IntegratedTests;
 
-public abstract class IntegratedTestBase<TProgram,TService>:WebApplicationFactory<TProgram>
-    where TProgram:class where TService:IRemoteService
+public  class IntegratedTestHost<TProgram>
+    where TProgram:class 
 {
-    protected readonly HttpClient _httpClient;
-    protected readonly TService _appService;
-    public IntegratedTestBase()
+    
+    protected readonly WebApplicationFactory<TProgram> _application;
+    public IServiceProvider Services => _application.Services;
+    public T GetServiceProxy<T>(string remoteServiceName) where T : IRemoteService
     {
-      
-        _httpClient= CreateClient();
-        _appService = AppServiceHttpProxy<TService>.Create(Services,_httpClient); 
+        return  _application.Services.GetRequiredService<RemoteServiceProxyFactory>().CreateProxy<T>(remoteServiceName); 
+    }
+    public IntegratedTestHost()
+    {
+        _application = new WebApplicationFactory<TProgram>().WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                services.AddSingleton<ITestServerAccessor, TestServerAccessor>();
+                services.Replace()<ITestServerAccessor, TestServerAccessor>();
+
+            });
+        });
+        
+        _application.Services.GetRequiredService<ITestServerAccessor>().Server = _application.Server;
 
     }
 }

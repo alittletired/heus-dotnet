@@ -1,12 +1,13 @@
 using System.Data.Common;
 using Heus.Core.Data.Options;
+using Heus.Core.DependencyInjection;
 using Heus.Data.EfCore;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Data.Sqlite;
 
-internal class SqliteDbContextOptionsProvider : IDbContextOptionsProvider
+internal class SqliteDbContextOptionsProvider : IDbContextOptionsProvider,ISingletonDependency
 {
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
     {

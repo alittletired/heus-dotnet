@@ -12,23 +12,33 @@ using Xunit;
 
 namespace Heus.Auth.IntegratedTests;
 
-public class UserAppServiceTests:IntegratedTestBase<Program,IUserManagementService>
+public class UserAppServiceTests:IClassFixture<IntegratedTestHost<Program>>
+
 {
+    private readonly IntegratedTestHost<Program> _factory;
+    private readonly IUserAdminAppService _userService;
     public  const string NotExistId = "633937b08c4b912a68aa072b";
     public  const string ExistId = "333937b08c4b912a68aa072b";
-    protected IRepository<User> _userRepository => Services.GetRequiredService<IRepository<User>>();
+
+    public UserAppServiceTests(IntegratedTestHost<Program> factory )
+    {
+        _factory = factory;
+        _userService = _factory.GetServiceProxy<IUserAdminAppService>(AuthConstants.ServiceName);
+    }
+
+    protected IRepository<User> _userRepository => _factory.Services.GetRequiredService<IRepository<User>>();
     [Theory]
     [InlineData(ExistId)]
     public async Task  GetAsync(string id )
     {
-       var result= await _appService.GetAsync(EntityId.Parse(id)) ;
+       var result= await _userService.GetAsync(EntityId.Parse(id)) ;
        result.ShouldNotBeNull();
     }
     [Theory]
     [InlineData(NotExistId)]
     public  void  GetAsync_ThrowEntityNotFound(string id )
     {
-        Assert.ThrowsAsync<EntityNotFoundException>(async ()=>await _appService.GetAsync(EntityId.Parse(id)));
+        Assert.ThrowsAsync<EntityNotFoundException>(async ()=>await _userService.GetAsync(EntityId.Parse(id)));
     }
     public Task<PagedList<UserDto>> GetListAsync(DynamicQuery<UserDto> input)
     {
@@ -59,6 +69,6 @@ public class UserAppServiceTests:IntegratedTestBase<Program,IUserManagementServi
     [InlineData(ExistId)]
     public async Task DeleteAsync(string id)
     {
-        await _appService.DeleteAsync(EntityId.Parse(id));
+        await _userService.DeleteAsync(EntityId.Parse(id));
     }
 }

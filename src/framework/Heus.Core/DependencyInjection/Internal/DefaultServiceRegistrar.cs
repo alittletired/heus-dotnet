@@ -1,39 +1,50 @@
-using Heus.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-
 using System.Reflection;
-using System.Threading;
-
+using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Heus.Core.DependencyInjection.Internal;
 public class DefaultServiceRegistrar : IServiceRegistrar
 {
     public virtual void Handle(IServiceCollection services, Type type, ServiceRegistrarChain chain)
     {
-        if (!TryGetServiceLifetime(type, out var lifeTime))
+        var dependencyAttribute = type.GetCustomAttribute<DependencyAttribute>(true);
+        var lifeTime = dependencyAttribute?.Lifetime ?? GetServiceLifetime(type);
+        if (lifeTime==null)
         {
             return;
         }
         foreach (var serviceType in GetServiceTypes(type))
         {
-            var descriptor = ServiceDescriptor.Describe(serviceType, type, lifeTime!);
-            services.Add(descriptor);
+            var descriptor = ServiceDescriptor.Describe(serviceType, type, lifeTime.Value);
+            if (dependencyAttribute?.ReplaceServices == true)
+            {
+                services.Replace(descriptor);
+            }
+            else  if (dependencyAttribute?.TryRegister == true)
+            {
+                services.TryAdd(descriptor);
+
+            }else
+            {
+                services.Add(descriptor);
+            }
+          
         }
     }
-    protected bool TryGetServiceLifetime(Type type, out ServiceLifetime lifeTime)
+    protected ServiceLifetime? GetServiceLifetime(Type type)
     {
 
-        lifeTime = default;
+      
         if (type.IsAssignableTo<ISingletonDependency>())
         {
-            lifeTime = ServiceLifetime.Singleton;
-            return true;
+            return  ServiceLifetime.Singleton;
+          
         }
         if (type.IsAssignableTo<IScopedDependency>())
         {
-            lifeTime = ServiceLifetime.Scoped;
-            return true;
+            return ServiceLifetime.Scoped;
+           
         }
-        return false;
+        return default;
     }
 
 

@@ -11,7 +11,7 @@ public interface ISupportSaveChanges
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }
 public  interface  IRepository{}
-public interface IRepository<TEntity> :IRepository, IRepositoryProvider<TEntity>,IScopedDependency where TEntity : class, IEntity
+public interface IRepository<TEntity> :IRepository, IRepositoryProvider<TEntity> where TEntity : class, IEntity
 {
     /// <summary>
     /// Get a single entity by the given <paramref name="predicate"/>.

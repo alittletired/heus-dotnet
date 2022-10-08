@@ -1,10 +1,11 @@
-﻿using Heus.Ddd.Entities;
+﻿using Heus.Core.DependencyInjection;
+using Heus.Ddd.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Data.EfCore.Internal;
 
-internal class DefaultDbContextProvider : IDbContextProvider
+internal class DefaultDbContextProvider : IDbContextProvider,IScopedDependency
 {
     private readonly IDbContextServiceRegistrar _dbContextServiceRegistrar;
     private readonly IServiceProvider _serviceProvider;

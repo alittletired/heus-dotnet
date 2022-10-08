@@ -1,4 +1,5 @@
 ﻿using Heus.Core.Http;
+using Heus.Core.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
@@ -15,9 +16,11 @@ namespace Heus.AspNetCore.ApiExploring
             _descriptionProvider = descriptionProvider;
         }
 
-        public Task<ApiDescriptionGroupCollection> Index()
+        [HttpGet]
+        public Task<string> Index()
         {
-            return Task.FromResult(_descriptionProvider.ApiDescriptionGroups);
+            var d = JsonUtils.Stringify(_descriptionProvider.ApiDescriptionGroups);
+            return Task.FromResult(d);
 
         }
     }

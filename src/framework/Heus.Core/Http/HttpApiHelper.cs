@@ -10,11 +10,12 @@ public static class HttpApiHelper
 {
     public static string GetGroupName(Type type)
     {
+      
         if (type.IsAssignableTo<IAdminApplicationService>())
-            return "admin";
-        if (type.IsAssignableTo<IApplicationService>())
-            return "api";
-        return "";
+          return "admin";
+        else if (type.IsAssignableTo<IApplicationService>())
+           return  "api";
+        return "default";
     }
 
     public static string CalculateRouteTemplate(MethodInfo methodInfo)
@@ -46,6 +47,10 @@ public static class HttpApiHelper
             controllerName = controllerName[..^"AppService".Length];
         }
 
+        if (methodInfo.DeclaringType.IsInterface && controllerName.StartsWith("I"))
+        {
+            controllerName = controllerName[1..];
+        }
 
 
         controllerName = PluralizerHelper.Pluralize(controllerName).ToKebabCase();
@@ -124,23 +129,56 @@ public static class HttpApiHelper
     {
         var routeTemplate = CalculateRouteTemplate(action);
         var httpMethod = GetHttpMethod(action);
-        var request = new HttpRequestMessage(httpMethod, new Uri(routeTemplate));
-        var parameters=new List<KeyValuePair<string,object>>();
+        StringContent? content=null;
+       
+        var parameters = new Dictionary<string, object>();
         for(var i=0;i<action.GetParameters().Length ; i++)
         {
             var parameter = action.GetParameters()[i];
             var value = args?[i]?? parameter.DefaultValue;
             if(value!=null)
             {
-                parameters.Add(new KeyValuePair<string,object>(parameter.Name!,value));
+                parameters.Add(parameter.Name!,value);
             }
 
         }
+        
         var url= Regex.Replace(routeTemplate, @"\{([^\}]+)\}", evaluator =>
         {
-            var v= parameters.First(s => s.Key == evaluator.ToString()).Value;
-            return v.ToString()!;
+            var parameter= parameters[evaluator.ToString()];
+            parameters.Remove(evaluator.ToString());
+            return parameter.ToString()!;
         });
+        if (httpMethod == HttpMethod.Get  )
+        {
+            if (parameters.Count > 0)
+            {
+                var queryString = parameters.Select(ConvertToQueryString).JoinAsString("&");
+                url += "?queryString";     
+            }
+           
+        }else if (parameters.Count > 1)
+        {
+            throw new BusinessException("无法解析多个body参数");
+        }else if (parameters.Count == 1)
+        {
+           content=  new StringContent(JsonUtils.Stringify(parameters.First().Value), Encoding.UTF8, MimeTypes.Application.Json);
+        }
+        var request = new HttpRequestMessage(httpMethod, new Uri(url))
+        {
+            Content = content
+        };
         return request;
+    }
+
+    private static string ConvertToQueryString(KeyValuePair<string, object> pair)
+    {
+        var valueType = pair.Value.GetType();
+        if (valueType.IsClass && valueType != typeof(string))
+        {
+            
+        }
+
+        return $"{pair.Key}={pair.Value}";
     }
 }

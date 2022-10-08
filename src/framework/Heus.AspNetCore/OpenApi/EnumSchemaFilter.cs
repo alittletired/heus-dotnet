@@ -85,7 +85,11 @@ internal class EnumSchemaFilter : ISchemaFilter
         var fieldPrefix = $"F:{type.FullName}.";
         var fileName = type.Assembly.Location;
         var xmlFile = fileName.Substring(0, fileName.Length - 4) + ".xml";
-      
+        if (!File.Exists(xmlFile))
+        {
+            Console.WriteLine($"{xmlFile} not exists");
+            return dict;
+        }
         var doc = new XmlDocument();
         doc.Load(xmlFile);
         var nodes = doc.DocumentElement!.SelectNodes("//members/member")!;

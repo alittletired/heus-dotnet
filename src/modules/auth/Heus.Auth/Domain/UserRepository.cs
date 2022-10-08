@@ -8,7 +8,7 @@ public interface IUserRepository : IRepository<User>
    Task<User?> FindByAccountAsync(string account);
 
 }
-internal class UserRepository:DefaultRepository<User>,IUserRepository
+internal class UserRepository:RepositoryBase<User>,IUserRepository
 {
    public async Task<User?> FindByAccountAsync(string account)
    {

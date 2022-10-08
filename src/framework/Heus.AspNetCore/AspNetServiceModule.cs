@@ -1,6 +1,7 @@
 using System.Text;
 using Heus.AspNetCore.ActionFilter;
 using Heus.AspNetCore.Conventions;
+using Heus.AspNetCore.ExceptionHandling;
 using Heus.AspNetCore.OpenApi;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
  using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Heus.AspNetCore;
@@ -42,6 +44,12 @@ public class AspNetServiceModule : ServiceModuleBase
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SignKey))
             };
         });
+        services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+        });
 
     }
 
@@ -72,8 +80,10 @@ public class AspNetServiceModule : ServiceModuleBase
 
         // app.UseHttpsRedirection();
         app.UseStaticFiles();
-        // app.UseAuthorization();
         app.UseRouting();
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");

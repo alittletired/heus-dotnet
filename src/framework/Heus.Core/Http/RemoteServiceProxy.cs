@@ -7,7 +7,8 @@ namespace Heus.Core.Http;
 internal class RemoteServiceProxy : DispatchProxy
 {
     internal RemoteServiceProxyFactory ProxyFactory { get; set; } = null!;
-    internal HttpClient HttpClient { get; set; } = null!;
+    internal string RemoteServiceName{ get; set; } = null!;
+    internal HttpClient HttpClient => ProxyFactory.GetHttpClient(RemoteServiceName);
 
     private  readonly MethodInfo _invokeAsyncGeneric = typeof(RemoteServiceProxy).GetTypeInfo()
         .DeclaredMethods.First(s => s.Name == nameof(InvokeAsync));
@@ -40,7 +41,8 @@ internal class RemoteServiceProxy : DispatchProxy
     {
         ArgumentNullException.ThrowIfNull(targetMethod);
         var returnType = targetMethod.ReturnType;
-        if (returnType!.IsGenericType ||
+        ArgumentNullException.ThrowIfNull(returnType);
+        if (!returnType.IsGenericType ||
             returnType.GetGenericTypeDefinition() != typeof(Task<>))
         {
             throw new BusinessException($"{targetMethod}必须是异步Task方法，并且有返回值");

@@ -1,3 +1,4 @@
+using Heus.Core.DependencyInjection;
 using Heus.Ddd.Application.Services;
 using Heus.Ddd.Dtos;
 
