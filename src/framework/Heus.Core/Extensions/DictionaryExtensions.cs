@@ -26,7 +26,11 @@ public static class DictionaryExtensions
         return false;
     }
 
-
+    public static TValue? GetOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) where TValue:class where TKey:notnull
+    {
+        TValue? obj;
+        return dictionary.TryGetValue(key, out obj) ? obj : default;
+    }
 
 
     /// <summary>

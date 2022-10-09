@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Cryptography;
@@ -274,5 +275,62 @@ public static class StringExtensions
         }
 
         return c + str;
+    }
+
+    public static string RemovePostFix(this string str, params string[] postFixes)
+    {
+        return str.RemovePostFix(StringComparison.Ordinal, postFixes);
+    }
+
+
+    public static string RemovePostFix(this string str, StringComparison comparisonType, params string[] postFixes)
+    {
+        if (str.IsNullOrEmpty())
+        {
+            return str;
+        }
+
+        if (postFixes.IsNullOrEmpty())
+        {
+            return str;
+        }
+
+        foreach (var postFix in postFixes)
+        {
+            if (str.EndsWith(postFix, comparisonType))
+            {
+                return str[..^postFix.Length];
+            }
+        }
+
+        return str;
+    }
+    public static string RemovePreFix(this string str, params string[] preFixes)
+    {
+        return str.RemovePreFix(StringComparison.Ordinal, preFixes);
+    }
+
+    
+    public static string RemovePreFix(this string str, StringComparison comparisonType, params string[] preFixes)
+    {
+        if (str.IsNullOrEmpty())
+        {
+            return str;
+        }
+
+        if (preFixes.IsNullOrEmpty())
+        {
+            return str;
+        }
+
+        foreach (var preFix in preFixes)
+        {
+            if (str.StartsWith(preFix, comparisonType))
+            {
+                return str[^preFix.Length..];
+            }
+        }
+
+        return str;
     }
 }

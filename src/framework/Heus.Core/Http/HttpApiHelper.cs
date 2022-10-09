@@ -10,11 +10,11 @@ public static class HttpApiHelper
 {
     public static string GetGroupName(Type type)
     {
-      
+
         if (type.IsAssignableTo<IAdminApplicationService>())
-          return "admin";
+            return "admin";
         else if (type.IsAssignableTo<IApplicationService>())
-           return  "api";
+            return "api";
         return "default";
     }
 
@@ -37,7 +37,7 @@ public static class HttpApiHelper
         {
             controllerName = controllerName[..^"ApplicationService".Length];
         }
-      
+
         else if (controllerName.EndsWith("AdminAppService"))
         {
             controllerName = controllerName[..^"AdminAppService".Length];
@@ -98,73 +98,51 @@ public static class HttpApiHelper
         return routeTemplate.ToString();
     }
 
-    public static HttpMethod GetHttpMethod(MethodInfo action)
-    {
-        var actionName = action.Name;
-        if (actionName.StartsWith("Get"))
-        {
-            return HttpMethod.Get;
-        }
 
-        if (actionName.StartsWith("Put") || actionName.StartsWith("Update"))
-        {
-            return HttpMethod.Put;
-        }
 
-        if (actionName.StartsWith("Delete") || actionName.StartsWith("Remove"))
-        {
-            return HttpMethod.Delete;
-        }
 
-        if (actionName.StartsWith("Patch"))
-        {
-            return HttpMethod.Patch;
-        }
-
-        return HttpMethod.Post;
-    }
-
-   
     public static HttpRequestMessage CreateHttpRequest(MethodInfo action, object?[]? args)
     {
         var routeTemplate = CalculateRouteTemplate(action);
-        var httpMethod = GetHttpMethod(action);
-        StringContent? content=null;
-       
+        var httpMethod = HttpMethodHelper.GetHttpMethod(action);
+        StringContent? content = null;
+
         var parameters = new Dictionary<string, object>();
-        for(var i=0;i<action.GetParameters().Length ; i++)
+        for (var i = 0; i < action.GetParameters().Length; i++)
         {
             var parameter = action.GetParameters()[i];
-            var value = args?[i]?? parameter.DefaultValue;
-            if(value!=null)
+            var value = args?[i] ?? parameter.DefaultValue;
+            if (value != null)
             {
-                parameters.Add(parameter.Name!,value);
+                parameters.Add(parameter.Name!, value);
             }
 
         }
-        
-        var url= Regex.Replace(routeTemplate, @"\{([^\}]+)\}", evaluator =>
+
+        var url = Regex.Replace(routeTemplate, @"\{([^\}]+)\}", evaluator =>
         {
-            var parameter= parameters[evaluator.ToString()];
+            var parameter = parameters[evaluator.ToString()];
             parameters.Remove(evaluator.ToString());
             return parameter.ToString()!;
         });
-        if (httpMethod == HttpMethod.Get  )
+        if (httpMethod == HttpMethod.Get)
         {
             if (parameters.Count > 0)
             {
                 var queryString = parameters.Select(ConvertToQueryString).JoinAsString("&");
-                url += "?queryString";     
+                url += "?queryString";
             }
-           
-        }else if (parameters.Count > 1)
+
+        }
+        else if (parameters.Count > 1)
         {
             throw new BusinessException("无法解析多个body参数");
-        }else if (parameters.Count == 1)
-        {
-           content=  new StringContent(JsonUtils.Stringify(parameters.First().Value), Encoding.UTF8, MimeTypes.Application.Json);
         }
-        var request = new HttpRequestMessage(httpMethod, new Uri(url))
+        else if (parameters.Count == 1)
+        {
+            content = new StringContent(JsonUtils.Stringify(parameters.First().Value), Encoding.UTF8, MimeTypes.Application.Json);
+        }
+        var request = new HttpRequestMessage(httpMethod, new Uri(url,UriKind.Relative))
         {
             Content = content
         };
@@ -176,7 +154,7 @@ public static class HttpApiHelper
         var valueType = pair.Value.GetType();
         if (valueType.IsClass && valueType != typeof(string))
         {
-            
+
         }
 
         return $"{pair.Key}={pair.Value}";

@@ -12,15 +12,15 @@ using Xunit;
 
 namespace Heus.Auth.IntegratedTests;
 
-public class UserAppServiceTests:IClassFixture<IntegratedTestHost<Program>>
+public class UserAppServiceTests:IClassFixture<TestWebApplicationFactory<Program>>
 
 {
-    private readonly IntegratedTestHost<Program> _factory;
+    private readonly TestWebApplicationFactory<Program> _factory;
     private readonly IUserAdminAppService _userService;
     public  const string NotExistId = "633937b08c4b912a68aa072b";
     public  const string ExistId = "333937b08c4b912a68aa072b";
 
-    public UserAppServiceTests(IntegratedTestHost<Program> factory )
+    public UserAppServiceTests(TestWebApplicationFactory<Program> factory )
     {
         _factory = factory;
         _userService = _factory.GetServiceProxy<IUserAdminAppService>(AuthConstants.ServiceName);

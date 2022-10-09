@@ -3,7 +3,7 @@ using Heus.IntegratedTests;
 
 namespace Heus.Auth.IntegratedTests;
 
-public class RoleAppServiceTests : IClassFixture<IntegratedTestHost<Program>>
+public class RoleAppServiceTests : IClassFixture<TestWebApplicationFactory<Program>>
 {
 
 }

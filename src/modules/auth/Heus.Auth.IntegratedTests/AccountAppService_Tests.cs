@@ -1,16 +1,14 @@
 using Heus.Auth.Application;
 using Heus.Auth.Dtos;
 using Heus.IntegratedTests;
-using Shouldly;
-using Xunit;
 
 namespace Heus.Auth.IntegratedTests;
 
-public class AccountAppServiceTests:IClassFixture<IntegratedTestHost<Program>>
+public class AccountAppServiceTests:IClassFixture<TestWebApplicationFactory<Program>>
 {
-    private readonly IntegratedTestHost<Program> _factory;
+    private readonly TestWebApplicationFactory<Program> _factory;
     private readonly IAccountAdminAppService _accountService;
-    public AccountAppServiceTests(IntegratedTestHost<Program> factory)
+    public AccountAppServiceTests(TestWebApplicationFactory<Program> factory)
     {
         _factory = factory;
         _accountService = _factory.GetServiceProxy<IAccountAdminAppService>(AuthConstants.ServiceName);

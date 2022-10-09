@@ -100,7 +100,7 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
     }
     private void AddApplicationServiceSelector(ActionModel action)
     {
-        var httpMethod = HttpApiHelper.GetHttpMethod(action.ActionMethod);
+        var httpMethod = HttpMethodHelper.GetHttpMethod(action.ActionMethod);
         var routeTemplate = HttpApiHelper.CalculateRouteTemplate(action.ActionMethod);
         var routeAttr = new RouteAttribute(routeTemplate);
         var selector =  new SelectorModel
@@ -123,7 +123,7 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
             if (selector.ActionConstraints.OfType<HttpMethodActionConstraint>()
                     .FirstOrDefault()?.HttpMethods.FirstOrDefault() == null)
             {
-                selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { HttpApiHelper.GetHttpMethod(action.ActionMethod).ToString() }));
+                selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { HttpMethodHelper.GetHttpMethod(action.ActionMethod).ToString() }));
             }
         }
     }
