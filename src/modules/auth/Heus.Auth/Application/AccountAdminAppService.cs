@@ -9,15 +9,15 @@ using Microsoft.AspNetCore.Authorization;
 namespace Heus.Auth.Application;
 public interface IAccountAdminAppService:IAdminApplicationService
 {
-    [AllowAnonymous]
+   
     Task<AuthTokenDto> LoginAsync(LoginInput input);
     Task<AuthTokenDto> RefreshTokenAsync(AuthTokenDto input);
 
-    [AllowAnonymous]
+ 
     Task<bool> SendVerifyCodeAsync(string phone);
 }
 
-internal class AccountAdminAppService : IAccountAdminAppService
+internal class AccountAdminAppService :AdminApplicationService,  IAccountAdminAppService
 {
     private readonly IUserRepository _userRepository;
     private readonly UserManager _userManager;
@@ -30,7 +30,7 @@ internal class AccountAdminAppService : IAccountAdminAppService
         _userManager = userManager;
         _tokenProvider = tokenProvider;
     }
-
+    [AllowAnonymous]
     public async Task<AuthTokenDto> LoginAsync(LoginInput input)
     {
         var user = await _userRepository.FindByAccountAsync(input.Account);
@@ -68,7 +68,7 @@ internal class AccountAdminAppService : IAccountAdminAppService
     {
         throw new NotImplementedException();
     }
-
+    [AllowAnonymous]
     public Task<bool> SendVerifyCodeAsync(string phone)
     {
         throw new NotImplementedException();

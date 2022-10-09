@@ -29,18 +29,22 @@ public class AspNetServiceModule : ServiceModuleBase
             options.Conventions.Add(new ServiceApplicationModelConvention());
             options.Conventions.Add(new ApiExplorerGroupConvention());
             options.Filters.AddService(typeof(UowActionFilter));
+            options.Filters.AddService(typeof(ApiResultActionFilter));
 
         }).AddControllersAsServices();
         services.AddHttpContextAccessor();
         services.AddOpenApi(context.Environment);
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-        {
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+            
+            
             var jwtOptions = configuration.GetSection(JwtOptions.ConfigurationSection)
-                .Get<JwtOptions>();
+                .Get<JwtOptions>()??new JwtOptions();
             options.TokenValidationParameters = new TokenValidationParameters()
             {
                 ValidateIssuer = true,
-                ValidIssuer = jwtOptions.Issuer,
+                 ValidIssuer =jwtOptions.Issuer,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SignKey))
             };
         });
@@ -81,7 +85,7 @@ public class AspNetServiceModule : ServiceModuleBase
         // app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
+        // app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseEndpoints(endpoints =>

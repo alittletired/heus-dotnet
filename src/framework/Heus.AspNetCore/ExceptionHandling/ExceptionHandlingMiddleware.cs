@@ -1,4 +1,5 @@
 using Heus.Core;
+using Heus.Core.DependencyInjection;
 using Heus.Core.Utils;
 using Microsoft.Net.Http.Headers;
 

@@ -6,6 +6,12 @@ namespace Heus.IntegratedTests;
 public class TestWebApplicationFactory<TStartup>
 : WebApplicationFactory<TStartup> where TStartup : class
 {
+    public TestWebApplicationFactory()
+    {
+        Services.GetRequiredService<ITestServerAccessor>().Server = Server;
+
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");

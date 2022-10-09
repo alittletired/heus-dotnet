@@ -18,9 +18,9 @@ internal  class JwtTokenProvider : ITokenProvider
     public string CreateToken(Dictionary<string,string> payload,int expirationMinutes=30)
     {
         var claims =new List<Claim>(){
-            new Claim(JwtRegisteredClaimNames.Sub, _jwtOptions.Value.Subject),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Iat,DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()),
+            new (JwtRegisteredClaimNames.Sub, _jwtOptions.Value.Subject),
+            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new (JwtRegisteredClaimNames.Iat,DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()),
             // new Claim("UserId",userId),
          
         };

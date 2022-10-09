@@ -10,7 +10,7 @@ public abstract class ApiResult
     {
         return new ApiResult<object>() { Message = ex.Message, Code = 500 };
     }
-    public static ApiResult<T> Ok<T>(T data)
+    public static ApiResult<T> Ok<T>(T? data)
     {
         return new ApiResult<T>() { Data = data};
     }

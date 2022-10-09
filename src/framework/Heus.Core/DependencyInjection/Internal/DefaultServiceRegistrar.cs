@@ -32,8 +32,6 @@ public class DefaultServiceRegistrar : IServiceRegistrar
     }
     protected ServiceLifetime? GetServiceLifetime(Type type)
     {
-
-      
         if (type.IsAssignableTo<ISingletonDependency>())
         {
             return  ServiceLifetime.Singleton;
@@ -51,11 +49,7 @@ public class DefaultServiceRegistrar : IServiceRegistrar
     public static List<Type> GetServiceTypes(Type type)
     {
         var serviceTypes = GetInterfaceServices(type);
-        if (serviceTypes.Count == 0)
-        {
-            serviceTypes.Add(type);
-        }
-        
+        serviceTypes.Add(type);
         return serviceTypes;
     }
 
