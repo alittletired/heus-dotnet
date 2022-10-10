@@ -34,9 +34,9 @@ namespace Heus.Core.DependencyInjection.Internal
         }
         internal static void CheckSeriveModuleType(Type moduleType)
         {
-            if (!IsSeriveModule(moduleType))
+            if (!IsModuleInitializer(moduleType))
             {
-                throw new ArgumentException("Given type is not an ABP module: " + moduleType.AssemblyQualifiedName);
+                throw new ArgumentException("Given type is not an ModuleInitializer: " + moduleType.AssemblyQualifiedName);
             }
         }
         //  public IEnumerable<Type> Scan()
@@ -50,7 +50,7 @@ namespace Heus.Core.DependencyInjection.Internal
         //         }
         //     }
 
-        public static bool IsSeriveModule(Type type)
+        public static bool IsModuleInitializer(Type type)
         {
             var typeInfo = type.GetTypeInfo();
 
@@ -58,7 +58,7 @@ namespace Heus.Core.DependencyInjection.Internal
                 typeInfo.IsClass &&
                 !typeInfo.IsAbstract &&
                 !typeInfo.IsGenericType &&
-                typeof(IServiceModule).GetTypeInfo().IsAssignableFrom(type);
+                typeof(IModuleInitializer).GetTypeInfo().IsAssignableFrom(type);
         }
         private static void AddModuleAndDependenciesRecursively(
             List<Type> moduleTypes,

@@ -53,9 +53,9 @@ internal sealed class ServiceModuleLoader
         return new ServiceModuleDescriptor(moduleType, CreateAndRegisterModule(moduleType));
     }
 
-    private IServiceModule CreateAndRegisterModule(Type moduleType)
+    private ModuleInitializerBase CreateAndRegisterModule(Type moduleType)
     {
-        var module = (IServiceModule)Activator.CreateInstance(moduleType)!;
+        var module = (ModuleInitializerBase)Activator.CreateInstance(moduleType)!;
         // services.AddSingleton(moduleType, module);
         return module;
     }

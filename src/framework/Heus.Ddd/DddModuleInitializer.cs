@@ -4,11 +4,11 @@ using Heus.Ddd.JsonConverters;
 
 namespace Heus.Ddd;
 
-[DependsOn(typeof(CoreServiceModule))]
-public class DddServiceModule : ServiceModuleBase, IPreConfigureServices,IPostConfigureServices
+[DependsOn(typeof(CoreModuleInitializer))]
+public class DddModuleInitializer : ModuleInitializerBase
 {
     private readonly RepositoryRegistrar _repositoryRegistrar = new();
-    public void PreConfigureServices(ServiceConfigurationContext context)
+    public override void PreConfigureServices(ServiceConfigurationContext context)
     {
       context.AddServiceRegistrar(_repositoryRegistrar);
     }
@@ -18,7 +18,7 @@ public class DddServiceModule : ServiceModuleBase, IPreConfigureServices,IPostCo
         JsonUtils.DefaultOptions.Converters.Add(new JsonEntityIdStringConverter());
     }
 
-    public void PostConfigureServices(ServiceConfigurationContext context)
+    public override void PostConfigureServices(ServiceConfigurationContext context)
     {
         _repositoryRegistrar.RegisterDefaultRepositories(context.Services);
     }

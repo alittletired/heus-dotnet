@@ -4,8 +4,8 @@ using Heus.Ddd;
 
 namespace Heus.Data.Mysql;
 
-[DependsOn(typeof(DddServiceModule), typeof(EfCoreServiceModule))]
-public class MysqlServiceModule:ServiceModuleBase
+[DependsOn(typeof(EfCoreModuleInitializer))]
+public class MysqlModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {

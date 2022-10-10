@@ -2,22 +2,9 @@
 namespace Heus.Core.Security;
 public static class CurrentUserExtensions
 {
-    public static string? FindClaimValue(this ICurrentUser currentUser, string claimType)
+    public static bool IsAuthenticated(this ICurrentUser currentUser)
     {
-        return currentUser.FindClaim(claimType)?.Value;
+        return currentUser.Id.HasValue ;
     }
-
-    public static T FindClaimValue<T>(this ICurrentUser currentUser, string claimType)
-     where T : struct
-    {
-        var value = currentUser.FindClaimValue(claimType);
-        if (value == null)
-        {
-            return default;
-        }
-
-        return value.ConvertTo<T>();
-    }
-
 }
 

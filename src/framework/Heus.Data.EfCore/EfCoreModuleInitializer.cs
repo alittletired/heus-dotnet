@@ -6,11 +6,10 @@ using Heus.Ddd.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Data.EfCore;
-[DependsOn(typeof(DddServiceModule))]
-public class EfCoreServiceModule:ServiceModuleBase,IPreConfigureServices
-{
+[DependsOn(typeof(DddModuleInitializer))]
+public class EfCoreModuleInitializer :ModuleInitializerBase {
     private readonly DbContextServiceRegistrar _dbContextServiceRegistrar = new ();
-    public void PreConfigureServices(ServiceConfigurationContext context)
+    public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         context.AddServiceRegistrar(_dbContextServiceRegistrar);
     }

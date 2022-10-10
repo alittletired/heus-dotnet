@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace Heus.Core.Security;
 
@@ -38,5 +37,10 @@ internal  class JwtTokenProvider : ITokenProvider
             signingCredentials: signIn);
 
        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public AuthToken CreateToken(ICurrentUser user, TokenType tokenType)
+    {
+        throw new NotImplementedException();
     }
 }

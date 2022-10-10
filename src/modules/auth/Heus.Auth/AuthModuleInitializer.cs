@@ -7,15 +7,15 @@ using Heus.Ddd.Uow;
 
 namespace Heus.Auth
 {
-    [DependsOn(typeof(DddServiceModule))]
-    public class AuthServiceModule : ServiceModuleBase
+    [DependsOn(typeof(DddModuleInitializer))]
+    public class AuthModuleInitializer : ModuleInitializerBase
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
 
         }
 
-        public override async Task ConfigureApplication(ApplicationConfigurationContext context)
+        public override async Task Configure(ApplicationConfigurationContext context)
         {
             using var scope = context.ServiceProvider.CreateScope();
             var serviceProvider = scope.ServiceProvider;

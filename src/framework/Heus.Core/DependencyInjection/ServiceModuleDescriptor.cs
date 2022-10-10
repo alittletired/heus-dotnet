@@ -8,13 +8,13 @@ public class ServiceModuleDescriptor
 
     public Assembly Assembly { get; }
 
-    public IServiceModule Instance { get; }
+    public IModuleInitializer Instance { get; }
 
 
     public IEnumerable<ServiceModuleDescriptor> Dependencies => _dependencies.ToImmutableList();
     private readonly List<ServiceModuleDescriptor> _dependencies;
 
-    public ServiceModuleDescriptor(Type type, IServiceModule instance)
+    public ServiceModuleDescriptor(Type type, IModuleInitializer instance)
     {
         if (!type.IsInstanceOfType(instance))
         {

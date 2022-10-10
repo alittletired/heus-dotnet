@@ -41,12 +41,9 @@ public class ServiceModuleManager : IModuleContainer
             var context = new ServiceConfigurationContext(hostBuilderContext, services);
             var serviceTypes = new HashSet<Type>();
            
-            var preConfigureServicesList = Modules
-                // ReSharper disable once SuspiciousTypeConversion.Global
-                .Select(m => m.Instance).OfType<IPreConfigureServices>();
-            foreach (var preConfigureServices in preConfigureServicesList)
+            foreach (var preConfigureServices in Modules)
             {
-                preConfigureServices.PreConfigureServices(context);
+                preConfigureServices.Instance.PreConfigureServices(context);
 
             }
 
@@ -70,12 +67,10 @@ public class ServiceModuleManager : IModuleContainer
 
                 module.Instance.ConfigureServices(context);
             }
-            var postConfigureServicesList = Modules
-                // ReSharper disable once SuspiciousTypeConversion.Global
-                .Select(m => m.Instance).OfType<IPostConfigureServices>();
-            foreach (var postConfigureServices in postConfigureServicesList)
+         
+            foreach (var postConfigureServices in Modules)
             {
-                postConfigureServices.PostConfigureServices(context);
+                postConfigureServices.Instance.PostConfigureServices(context);
 
             }
 
@@ -89,7 +84,7 @@ public class ServiceModuleManager : IModuleContainer
         var context = new ApplicationConfigurationContext(host);
         foreach (var module in Modules)
         {
-           await module.Instance.ConfigureApplication(context);
+           await module.Instance.Configure(context);
         }
     }
 }

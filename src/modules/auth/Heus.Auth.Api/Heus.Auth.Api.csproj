@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 <Import Project="..\..\..\common.props" />
 <ItemGroup>
-  <Folder Include="Application" />
-  <Folder Include="Dtos" />
+
 </ItemGroup>
 </Project>

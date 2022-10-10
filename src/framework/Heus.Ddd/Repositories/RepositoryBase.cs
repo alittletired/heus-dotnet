@@ -39,7 +39,7 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
         if (entity is AuditEntity auditEntity)
         {
             auditEntity.CreatedDate = DateTime.UtcNow;
-            auditEntity.CreatedBy = CurrentUser.UserId;
+            auditEntity.CreatedBy = CurrentUser.Id;
             BeforeUpdate(entity);
         }
     }
@@ -48,7 +48,7 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
     {
         if (entity is AuditEntity auditEntity)
         {
-            auditEntity.UpdateBy = CurrentUser.UserId;
+            auditEntity.UpdateBy = CurrentUser.Id;
             auditEntity.UpdateDate = DateTime.UtcNow;
         }
     }

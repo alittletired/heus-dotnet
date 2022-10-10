@@ -4,6 +4,6 @@ namespace Heus.Core.Security;
 
 public interface ITokenProvider:IScopedDependency
 {
-    string CreateToken(Dictionary<string, string> payload, int expirationMinutes = 30);
+    AuthToken CreateToken(ICurrentUser user, TokenType tokenType );
 
 }

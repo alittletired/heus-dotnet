@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Core;
 
-public class CoreServiceModule : ServiceModuleBase
+public class CoreModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {

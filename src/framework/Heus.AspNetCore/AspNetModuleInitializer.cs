@@ -1,7 +1,6 @@
 using System.Text;
 using Heus.AspNetCore.ActionFilter;
 using Heus.AspNetCore.Conventions;
-using Heus.AspNetCore.ExceptionHandling;
 using Heus.AspNetCore.OpenApi;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
@@ -9,15 +8,14 @@ using Heus.Core.Utils;
 using Heus.Ddd;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
- using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Heus.AspNetCore;
 
-[DependsOn(typeof(DddServiceModule))]
-public class AspNetServiceModule : ServiceModuleBase
+[DependsOn(typeof(DddModuleInitializer))]
+public class AspNetModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
@@ -57,7 +55,7 @@ public class AspNetServiceModule : ServiceModuleBase
 
     }
 
-    public override Task ConfigureApplication(ApplicationConfigurationContext context)
+    public override Task Configure(ApplicationConfigurationContext context)
     {
         var partManager = context.ServiceProvider.GetRequiredService<ApplicationPartManager>();
         partManager.FeatureProviders.Add(new ServiceControllerFeatureProvider());
