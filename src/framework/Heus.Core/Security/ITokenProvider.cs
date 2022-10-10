@@ -1,9 +1,10 @@
+using System.Security.Claims;
 using Heus.Core.DependencyInjection;
 
 namespace Heus.Core.Security;
 
-public interface ITokenProvider : IScopedDependency
+public interface ITokenProvider 
 {
-    AuthToken CreateToken(ICurrentUser user, TokenType tokenType);
-
+    ClaimsPrincipal CreatePrincipal(ICurrentUser user, TokenType tokenType, bool rememberMe=false);
+    string CreateToken(ClaimsPrincipal principal);
 }

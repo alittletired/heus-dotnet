@@ -1,6 +1,4 @@
 using Heus.Core.DependencyInjection;
-using Heus.Core.Utils;
-using Heus.Ddd.JsonConverters;
 
 namespace Heus.Ddd;
 
@@ -15,7 +13,7 @@ public class DddModuleInitializer : ModuleInitializerBase
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        JsonUtils.DefaultOptions.Converters.Add(new JsonEntityIdStringConverter());
+    
     }
 
     public override void PostConfigureServices(ServiceConfigurationContext context)

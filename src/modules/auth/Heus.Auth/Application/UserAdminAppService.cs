@@ -2,6 +2,7 @@ using Heus.Auth.Domain;
 using Heus.Auth.Dtos;
 using Heus.Ddd.Application;
 using Heus.Auth.Entities;
+using Heus.Core.Security;
 using Heus.Ddd.Dtos;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
@@ -14,7 +15,7 @@ public interface IUserAdminAppService:IAdminApplicationService<UserCreateDto,Use
     Task<IEnumerable<EntityId>>  GetUserRoleIds(EntityId id);
 }
 
-internal class UserAdminAppService : AdminApplicationService, IUserAdminAppService
+internal class UserAdminAppService : AdminApplicationService, IUserAdminAppService,IUserService
 {
     private readonly IRepository<Organ> _organRepository;
     private readonly IUserRepository _userRepository;
@@ -78,4 +79,9 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
         return true;
     }
 
+    public async Task<ICurrentUser?> FindByNameAsync(string name)
+    {
+      var user=  await  _userRepository.FindByAccountAsync(name);
+      return user;
+    }
 }

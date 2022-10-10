@@ -8,4 +8,5 @@ public class JwtOptions
     public string Subject{ get; set; } = "JWTToken";
     public string Issuer { get; set; } = "JWTHeusAuth";
     public int ExpirationMinutes = 30;
+    
 }

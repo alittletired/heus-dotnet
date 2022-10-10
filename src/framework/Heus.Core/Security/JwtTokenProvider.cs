@@ -1,12 +1,14 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Heus.Core.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Heus.Core.Security;
 
-internal  class JwtTokenProvider : ITokenProvider
+internal class JwtTokenProvider : ITokenProvider, IScopedDependency
 {
     private readonly IOptions<JwtOptions> _jwtOptions;
 
@@ -14,33 +16,43 @@ internal  class JwtTokenProvider : ITokenProvider
     {
         _jwtOptions = jwtOptions;
     }
-    public string CreateToken(Dictionary<string,string> payload,int expirationMinutes=30)
+
+    public ClaimsPrincipal CreatePrincipal(ICurrentUser user, TokenType tokenType, bool rememberMe=false)
     {
-        var claims =new List<Claim>(){
-            new (JwtRegisteredClaimNames.Sub, _jwtOptions.Value.Subject),
-            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new (JwtRegisteredClaimNames.Iat,DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()),
-            // new Claim("UserId",userId),
-         
-        };
-        foreach (var pair in payload)
+        var expirationMinutes = _jwtOptions.Value.ExpirationMinutes;
+        if (rememberMe)
         {
-            claims.Add(new Claim(pair.Key,pair.Value) );
+            expirationMinutes *= 10;
         }
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.SignKey) );
+
+        var unixTimestamp = (long)DateTime.Now.AddMinutes(expirationMinutes).Subtract(DateTime.UnixEpoch).TotalMilliseconds;
+        var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Sub, _jwtOptions.Value.Subject),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()),
+            new(SecurityClaimNames.UserId, user.Id?.ToString()!),
+            new(SecurityClaimNames.TokenType, tokenType.ToString()),
+            new(SecurityClaimNames.Expiration, unixTimestamp.ToString()),
+
+        };
+
+        var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
+        return new ClaimsPrincipal(claimsIdentity);
+
+    }
+
+    public string CreateToken(ClaimsPrincipal principal)
+    {
+        var unixTimestamp = principal.FindClaimValue<long>(SecurityClaimNames.Expiration);
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.SignKey));
         var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
             _jwtOptions.Value.Subject,
             _jwtOptions.Value.Subject,
-            claims,
-            expires: DateTime.UtcNow.AddMinutes(expirationMinutes),
+            principal.Claims,
+            expires: DateTime.UnixEpoch.AddMilliseconds(unixTimestamp),
             signingCredentials: signIn);
-
-       return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
-    public AuthToken CreateToken(ICurrentUser user, TokenType tokenType)
-    {
-        throw new NotImplementedException();
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

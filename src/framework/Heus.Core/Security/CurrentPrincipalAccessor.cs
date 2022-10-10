@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Heus.Core.Utils;
 
-namespace Heus.Core.Security.Internal;
+namespace Heus.Core.Security;
 
 public abstract class CurrentPrincipalAccessorBase:ICurrentPrincipalAccessor
 {

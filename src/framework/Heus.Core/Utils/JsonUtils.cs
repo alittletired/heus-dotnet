@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Heus.Core.JsonConverters;
 
 namespace Heus.Core.Utils;
 
@@ -9,8 +10,15 @@ public static class JsonUtils
     {
         PropertyNameCaseInsensitive=true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+      NumberHandling = JsonNumberHandling.WriteAsString
     };
+
+    static JsonUtils()
+    {
+        DefaultOptions.Converters.Add(new JsonEntityIdStringConverter());
+    }
+
     public static void ApplyDefaultSettings(this JsonSerializerOptions options)
     {
         options.PropertyNameCaseInsensitive = true;

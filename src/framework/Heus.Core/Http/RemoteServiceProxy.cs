@@ -16,12 +16,14 @@ internal class RemoteServiceProxy : DispatchProxy
     private async Task<T?> InvokeAsync<T>(MethodInfo targetMethod, object?[]? args)
     {
         var request = HttpApiHelper.CreateHttpRequest(targetMethod, args);
+        await ProxyFactory.PopulateRequestHeaders(request);
         var response = await HttpClient.SendAsync(request);
-       
+
         if (!response.IsSuccessStatusCode)
         {
             throw new BusinessException($"请求失败! request:{request},response:{response}");
         }
+
         var content = await response.Content.ReadAsStringAsync();
         var data = JsonUtils.Parse<ApiResult<T>>(content);
         if (data == null)

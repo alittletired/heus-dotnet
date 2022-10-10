@@ -17,26 +17,11 @@ internal class CurrentUser : ICurrentUser,ISingletonDependency
         _principalAccessor = principalAccessor;
     }
     public ClaimsPrincipal? Principal => _principalAccessor.Principal;
-    public  string? FindClaimValue( string claimType)
-    {
-        return FindClaim(claimType)?.Value;
-    }
+  
 
-    public  T FindClaimValue<T>( string claimType)
-        where T : struct
-    {
-        var value = FindClaimValue(claimType);
-        if (value == null)
-        {
-            return default;
-        }
+    public EntityId? Id => Principal.FindClaimValue<EntityId>(ClaimTypes.NameIdentifier);
 
-        return value.ConvertTo<T>();
-    }
-
-    public EntityId? Id => FindClaimValue<EntityId>(ClaimTypes.NameIdentifier);
-
-    public string? Name => this.FindClaimValue(ClaimTypes.Name);
+    public string? Name => Principal.FindClaimValue(ClaimTypes.Name);
   
 }
 

@@ -21,7 +21,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
     {
         var services = context.Services;
         var configuration = context.Configuration;
-        services.Configure<JsonOptions>(options => { options.SerializerOptions.ApplyDefaultSettings(); });
+     
         services.AddMvc(options =>
         {
             options.Conventions.Add(new ServiceApplicationModelConvention());
@@ -29,7 +29,10 @@ public class AspNetModuleInitializer : ModuleInitializerBase
             options.Filters.AddService(typeof(UowActionFilter));
             options.Filters.AddService(typeof(ApiResultActionFilter));
 
-        }).AddControllersAsServices();
+        }).AddControllersAsServices().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ApplyDefaultSettings();
+        });
         services.AddHttpContextAccessor();
         services.AddOpenApi(context.Environment);
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

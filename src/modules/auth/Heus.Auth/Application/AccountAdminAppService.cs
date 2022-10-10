@@ -4,18 +4,12 @@ using Heus.Auth.Entities;
 using Heus.Core.Security;
 using Heus.Ddd.Application;
 using Heus.Ddd.Domain;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-
 namespace Heus.Auth.Application;
 public interface IAccountAdminAppService:IAdminApplicationService
 {
-   
     Task<AuthTokenDto> LoginAsync(LoginInput input);
     Task<AuthTokenDto> RefreshTokenAsync(AuthTokenDto input);
-
- 
     Task<bool> SendVerifyCodeAsync(string phone);
 }
 
@@ -37,6 +31,7 @@ internal class AccountAdminAppService :AdminApplicationService,  IAccountAdminAp
 
 
     }
+
     [AllowAnonymous]
     public async Task<AuthTokenDto> LoginAsync(LoginInput input)
     {
@@ -45,41 +40,17 @@ internal class AccountAdminAppService :AdminApplicationService,  IAccountAdminAp
         {
             throw EntityNotFoundException.Create(user, nameof(User.Account), input.Account);
         }
-        var principal = CreateIdentity(user, input.RememberMe);
-        _currentPrincipalAccessor.Change(principal);
-
-         AuthTokenDto authToken = await CreateAuthToken(user, input.RememberMe);
-        return authToken;
-    }
-    private ClaimsPrincipal CreateIdentity(User user, bool rememberMe)
-    {
-        //var identity = new ClaimsIdentity(JwtOptions.AuthenticationScheme);
-        //identity.AddClaim(new Claim(nameof(User.Id), user.Id!.ToString()));
-        //identity.AddClaim(new Claim(nameof(User.Name), user.Name));
-        throw new NotImplementedException();
-    }
-    private Task<AuthTokenDto> CreateAuthToken(User user, bool rememberMe)
-    {
         var (_, err) = _userManager.CheckUserState(user);
         if (err.HasText())
         {
             throw new BusinessException(err);
         }
-
-        //var expiration = rememberMe ? 60 * 8 : 60 * 24 * 7;
-        //var payload = new Dictionary<string, string>
-        //{
-        //    { nameof(user.Id), user.Id.ToString()! }
-
-        //};
-        //var accessToken = _tokenProvider.CreateToken(payload, expiration);
-        //var refreshToken = _tokenProvider.CreateToken(payload, 60 * 24 * 60);
-
-        //AuthTokenDto authToken = new AuthTokenDto(accessToken, expiration, refreshToken);
-        //return Task.FromResult<AuthTokenDto>(authToken);
-        throw new NotImplementedException();
+        var principal = _tokenProvider.CreatePrincipal(user, TokenType.Admin, input.RememberMe);
+        _currentPrincipalAccessor.Change(principal);
+        var unixTimestamp = principal.FindClaimValue<long>(SecurityClaimNames.Expiration);
+        AuthTokenDto authToken = new(user.Id!.Value, _tokenProvider.CreateToken(principal), unixTimestamp);
+        return authToken;
     }
-
     public Task<AuthTokenDto> RefreshTokenAsync(AuthTokenDto input)
     {
         throw new NotImplementedException();
@@ -89,4 +60,6 @@ internal class AccountAdminAppService :AdminApplicationService,  IAccountAdminAp
     {
         throw new NotImplementedException();
     }
+
+   
 }

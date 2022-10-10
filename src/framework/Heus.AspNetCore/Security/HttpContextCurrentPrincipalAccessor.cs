@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Heus.Core.DependencyInjection;
+using Heus.Core.Security;
 using Heus.Core.Security.Internal;
 
 namespace Heus.AspNetCore.Security;

@@ -2,6 +2,7 @@
 using Heus.Auth.Domain;
 using Heus.Auth.Entities;
 using Heus.Core.DependencyInjection;
+using Heus.Core.Security;
 using Heus.Ddd.Repositories;
 using Heus.Ddd.Uow;
 
@@ -12,7 +13,7 @@ namespace Heus.Auth
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-
+            context.Services.AddSingleton<IUserService, UserAdminAppService>();
         }
 
         public override async Task Configure(ApplicationConfigurationContext context)
@@ -40,6 +41,7 @@ namespace Heus.Auth
                 adminUser = new User()
                 {
                     Account = "admin",
+                    Name = "超级管理员",
                     Phone = "13900000000"
 
                 };
