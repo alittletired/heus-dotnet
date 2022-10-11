@@ -4,26 +4,26 @@ using Heus.Core.DependencyInjection;
 using Heus.Ddd.Uow;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
+using Microsoft.Extensions.Options;
 
 namespace Heus.Data.EfCore.Internal
 {
     internal class DbContextOptionsFactory : ISingletonDependency
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IEnumerable<IDbContextOptionsProvider> _dbContextOptionsProviders;
         private readonly IConnectionStringResolver  _connectionStringResolver;
         private readonly ILogger<DbContextOptionsFactory> _logger;
+        private readonly IOptions<DbContextConfigurationOptions> _options;
 
         public DbContextOptionsFactory(IUnitOfWorkManager unitOfWorkManager
-            , IEnumerable<IDbContextOptionsProvider> dbContextOptionsProviders
             , IConnectionStringResolver connectionStringResolver
-            , ILogger<DbContextOptionsFactory> logger)
+            , ILogger<DbContextOptionsFactory> logger
+            , IOptions<DbContextConfigurationOptions> options)
         {
             _unitOfWorkManager = unitOfWorkManager;
-            _dbContextOptionsProviders = dbContextOptionsProviders;
             _connectionStringResolver = connectionStringResolver;
             _logger = logger;
+            _options= options;
         }
 
         public DbContextOptions<TDbContext> Create<TDbContext>() where TDbContext : DbContext
@@ -35,9 +35,8 @@ namespace Heus.Data.EfCore.Internal
             }
             var connectionStringName = ConnectionStringNameAttribute.GetConnStringName<TDbContext>();
             var connectionString = _connectionStringResolver.Resolve(connectionStringName);
-            //todo:目前 没有处理嵌套事务,和多数据库，多db的切换驱动场景，后面来补
-            var dbContextOptionsProvider = _dbContextOptionsProviders.First();
-          
+            var dbProvider = _options.Value.DefaultDbProvider;
+            var dbContextOptionsProvider = _options.Value.DbContextOptionsProviders.First(p=>p.DbProvider== dbProvider);
             var dbConnection= unitOfWork.DbConnections.GetOrAdd(connectionString, connStr =>
             {
                 var connection = dbContextOptionsProvider.CreateDbConnection(connStr);
@@ -45,6 +44,7 @@ namespace Heus.Data.EfCore.Internal
             });
             var builder = new DbContextOptionsBuilder<TDbContext>();
             _logger.LogDebug($" connectionString:{dbConnection.ConnectionString},DbContext:{typeof(TDbContext).Name}");
+            _options.Value.ConfigureActions.ForEach(action => action(builder));
             dbContextOptionsProvider.Configure(builder,dbConnection);
             return builder.Options;
         }

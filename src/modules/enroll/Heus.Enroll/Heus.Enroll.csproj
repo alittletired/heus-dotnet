@@ -2,6 +2,7 @@
 	<Import Project="..\..\..\common.props" />
       <ItemGroup>
         <ProjectReference Include="..\..\..\framework\Heus.Data.EfCore\Heus.Data.EfCore.csproj" />
+        <ProjectReference Include="..\..\..\framework\Heus.Data.Sqlite\Heus.Data.Sqlite.csproj" />
         <ProjectReference Include="..\..\..\framework\Heus.Ddd\Heus.Ddd.csproj" />
         <ProjectReference Include="..\..\auth\Heus.Auth\Heus.Auth.csproj" />
       </ItemGroup>

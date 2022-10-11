@@ -12,6 +12,6 @@ internal class UserRepository:RepositoryBase<User>,IUserRepository
 {
    public async Task<User?> FindByAccountAsync(string account)
    {
-      return await FindAsync(s => string.Equals(s.Account, account, StringComparison.OrdinalIgnoreCase));
+      return await FindAsync(s => string.Equals(s.UserName, account, StringComparison.OrdinalIgnoreCase));
    }
 }

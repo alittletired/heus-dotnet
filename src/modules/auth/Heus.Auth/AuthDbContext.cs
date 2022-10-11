@@ -1,10 +1,12 @@
 ﻿using Heus.Auth.Entities;
 using Heus.Ddd.Data;
+using Heus.Ddd.Data.ValueConversion;
+using Heus.Ddd.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Auth
 {
-    internal class AuthDbContext:DbContextBase<AuthDbContext>
+    internal class AuthDbContext : DbContextBase<AuthDbContext>
     {
         public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
         {
@@ -12,10 +14,16 @@ namespace Heus.Auth
 
         public DbSet<Organ> Organs => Set<Organ>();
         public DbSet<Resource> Resources => Set<Resource>();
-        public DbSet<Role> Roles => Set<Role>();
+
         public DbSet<RoleResource> RoleResources => Set<RoleResource>();
 
-        public DbSet<User> Users => Set<User>();
-        public DbSet<UserRole> UserRoles => Set<UserRole>();
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            configurationBuilder
+        .Properties<EntityId>()
+        .HaveConversion<EntityIdConverter>().HaveMaxLength(24).AreUnicode(false);
+            base.ConfigureConventions(configurationBuilder);
+        }
     }
 }

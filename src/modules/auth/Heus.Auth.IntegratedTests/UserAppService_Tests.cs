@@ -60,7 +60,7 @@ public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>
             Phone = phone
 
         };
-        var user = await _userRepository.FindAsync(s=>s.Phone==phone);
+        var user = await _userRepository.FindAsync(s=>s.Phone == phone);
         user.ShouldNotBeNull();
         user.Id.ToString().ShouldBe(id);
     }

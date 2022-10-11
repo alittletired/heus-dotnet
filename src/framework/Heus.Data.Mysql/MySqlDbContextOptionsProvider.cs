@@ -9,7 +9,7 @@ using MySqlConnector;
 
 namespace Heus.Data.Mysql
 {
-    internal class MySqlDbContextOptionsProvider : IDbContextOptionsProvider,ISingletonDependency
+    internal class MySqlDbContextOptionsProvider : IDbContextOptionsProvider
     {
         private readonly ConcurrentDictionary<string, ServerVersion> _serverVersions = new();
 

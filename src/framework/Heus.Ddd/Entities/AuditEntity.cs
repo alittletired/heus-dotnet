@@ -6,7 +6,7 @@ public abstract class AuditEntity:IAuditEntity
     /// <summary>
     /// 唯一主键，数据库为varchar(24)
     /// </summary>
-    public EntityId? Id { get; set; }
+    public EntityId Id { get; set; }
     
     /// <summary>
     /// 创建人
@@ -21,9 +21,9 @@ public abstract class AuditEntity:IAuditEntity
     /// <summary>
     /// 创建时间
     /// </summary>
-    public DateTime CreatedDate { get; set; }=DateTime.Now;
+    public DateTimeOffset CreatedDate { get; set; }=DateTime.Now;
     /// <summary>
     /// 更新时间
     /// </summary>
-    public DateTime? UpdateDate { get; set; }
+    public DateTimeOffset UpdateDate { get; set; } = DateTime.Now;
 }

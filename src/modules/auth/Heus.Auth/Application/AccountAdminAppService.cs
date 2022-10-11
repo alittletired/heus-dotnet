@@ -38,7 +38,7 @@ internal class AccountAdminAppService :AdminApplicationService,  IAccountAdminAp
         var user = await _userRepository.FindByAccountAsync(input.Account);
         if (user == null)
         {
-            throw EntityNotFoundException.Create(user, nameof(User.Account), input.Account);
+            throw EntityNotFoundException.Create(user, nameof(User.UserName), input.Account);
         }
         var (_, err) = _userManager.CheckUserState(user);
         if (err.HasText())
@@ -48,7 +48,7 @@ internal class AccountAdminAppService :AdminApplicationService,  IAccountAdminAp
         var principal = _tokenProvider.CreatePrincipal(user, TokenType.Admin, input.RememberMe);
         _currentPrincipalAccessor.Change(principal);
         var unixTimestamp = principal.FindClaimValue<long>(SecurityClaimNames.Expiration);
-        AuthTokenDto authToken = new(user.Id!.Value, _tokenProvider.CreateToken(principal), unixTimestamp);
+        AuthTokenDto authToken = new(user.Id, _tokenProvider.CreateToken(principal), unixTimestamp);
         return authToken;
     }
     public Task<AuthTokenDto> RefreshTokenAsync(AuthTokenDto input)

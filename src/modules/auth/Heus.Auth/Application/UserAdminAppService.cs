@@ -39,7 +39,7 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
     {
         var query = from u in _userRepository.GetQueryable()
             from o in _organRepository.GetQueryable()
-            where u.Id != null
+        
             select u;
         // var b= query..ProjectToType<UserDto>()
         var data = query.ToList();
@@ -74,7 +74,7 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
     public async Task<bool> ResetPassword(RestPasswordDto dto)
     {
         var user = await _userRepository.GetByIdAsync(dto.UserId);
-        user.SetPassword(dto.NewPassword);
+        //user.SetPassword(dto.NewPassword);
         await _userRepository.UpdateAsync(user);
         return true;
     }
@@ -82,6 +82,10 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
     public async Task<ICurrentUser?> FindByNameAsync(string name)
     {
       var user=  await  _userRepository.FindByAccountAsync(name);
+        if (user == null)
+        {
+            return null;
+        }
       return user;
     }
 }

@@ -16,7 +16,7 @@ public class User : AuditEntity, ICurrentUser
     /// 用户账号
     /// </summary>
     [Required]
-    public string Account { get; set; } = null!;
+    public string UserName { get; set; } = null!;
     /// <summary>
     /// 用户账号
     /// </summary>
@@ -26,7 +26,7 @@ public class User : AuditEntity, ICurrentUser
     /// 用户手机
     /// </summary>
     public string Phone { get; set; } = null!;
-    public string Name { get; set; } = null!;
+    public string NickName { get; set; } = null!;
     [JsonIgnore]
     public string Salt { get; private set; } = null!;
     /// <summary>

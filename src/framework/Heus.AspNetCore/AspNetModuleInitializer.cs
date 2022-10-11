@@ -35,20 +35,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
         });
         services.AddHttpContextAccessor();
         services.AddOpenApi(context.Environment);
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-            
-            
-            var jwtOptions = configuration.GetSection(JwtOptions.ConfigurationSection)
-                .Get<JwtOptions>()??new JwtOptions();
-            options.TokenValidationParameters = new TokenValidationParameters()
-            {
-                ValidateIssuer = true,
-                 ValidIssuer =jwtOptions.Issuer,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SignKey))
-            };
-        });
+       
         services.AddAuthorization(options =>
         {
             options.FallbackPolicy = new AuthorizationPolicyBuilder()

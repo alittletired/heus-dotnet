@@ -6,7 +6,7 @@ namespace Heus.Core.Security.Internal;
 using System.Security.Claims;
 internal class CurrentUser : ICurrentUser,ISingletonDependency
 {
-    public bool IsAuthenticated => Id.HasValue ;
+    public bool IsAuthenticated => Id!=default ;
     private readonly ICurrentPrincipalAccessor _principalAccessor;
     public virtual Claim? FindClaim(string claimType)
     {
@@ -19,9 +19,9 @@ internal class CurrentUser : ICurrentUser,ISingletonDependency
     public ClaimsPrincipal? Principal => _principalAccessor.Principal;
   
 
-    public EntityId? Id => Principal.FindClaimValue<EntityId>(ClaimTypes.NameIdentifier);
+    public EntityId Id => Principal.FindClaimValue<EntityId>(ClaimTypes.NameIdentifier);
 
-    public string? Name => Principal.FindClaimValue(ClaimTypes.Name);
+    public string UserName => Principal.FindClaimValue(ClaimTypes.Name)!;
   
 }
 

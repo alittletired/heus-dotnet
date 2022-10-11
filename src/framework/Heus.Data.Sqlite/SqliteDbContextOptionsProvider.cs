@@ -7,13 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Data.Sqlite;
 
-internal class SqliteDbContextOptionsProvider : IDbContextOptionsProvider,ISingletonDependency
+internal class SqliteDbContextOptionsProvider : IDbContextOptionsProvider
 {
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
     {
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        var path = Environment.GetFolderPath(folder);
-        var dbPath = System.IO.Path.Join(path, "blogging.db");
+        var folder = AppContext.BaseDirectory;
+        var dbPath = Path.Join(folder, "heus.db");
         dbContextOptions.UseSqlite($"Data Source={dbPath}");
     }
 

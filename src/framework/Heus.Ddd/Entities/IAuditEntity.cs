@@ -5,6 +5,6 @@ public interface IAuditEntity:IEntity
 {
     EntityId? CreatedBy { get; set; }
     EntityId? UpdateBy { get; set; }
-    DateTime CreatedDate { get; set; }
-    DateTime? UpdateDate{ get; set; }
+    DateTimeOffset CreatedDate { get; set; }
+    DateTimeOffset UpdateDate{ get; set; }
 }

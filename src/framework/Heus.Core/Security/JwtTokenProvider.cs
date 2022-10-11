@@ -31,7 +31,7 @@ internal class JwtTokenProvider : ITokenProvider, IScopedDependency
             new(JwtRegisteredClaimNames.Sub, _jwtOptions.Value.Subject),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()),
-            new(SecurityClaimNames.UserId, user.Id?.ToString()!),
+            new(SecurityClaimNames.UserId, user.Id.ToString()!),
             new(SecurityClaimNames.TokenType, tokenType.ToString()),
             new(SecurityClaimNames.Expiration, unixTimestamp.ToString()),
 

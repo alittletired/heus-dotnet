@@ -14,6 +14,7 @@ namespace Heus.Auth
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             context.Services.AddSingleton<IUserService, UserAdminAppService>();
+
         }
 
         public override async Task Configure(ApplicationConfigurationContext context)
@@ -40,12 +41,12 @@ namespace Heus.Auth
             {
                 adminUser = new User()
                 {
-                    Account = "admin",
-                    Name = "超级管理员",
+                    UserName = "admin",
+                    NickName = "超级管理员",
                     Phone = "13900000000"
 
                 };
-                adminUser.SetPassword("1");
+                //adminUser.SetPassword("1");
                 await userRepository.InsertAsync(adminUser);
             }
 

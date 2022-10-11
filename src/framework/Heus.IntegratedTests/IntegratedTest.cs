@@ -1,4 +1,5 @@
 ﻿using Heus.Core.Http;
+using Heus.Data.EfCore;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Heus.IntegratedTests;
@@ -16,6 +17,9 @@ public class IntegratedTest<TStartup>
                 services.AddSingleton<IProxyHttpClientFactory, TestProxyHttpClientFactory>();
                 services.AddSingleton<IRemoteServiceProxyContributor, TestRemoteServiceProxyContributor>();
 
+                services.Configure<DbContextConfigurationOptions>(options => {
+                    options.DefaultDbProvider = Core.Data.Options.DbProvider.Sqlite;
+                    });
 
             });
         });
