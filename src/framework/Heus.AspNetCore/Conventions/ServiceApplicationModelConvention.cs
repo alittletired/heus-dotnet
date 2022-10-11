@@ -101,7 +101,7 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
     private void AddApplicationServiceSelector(ActionModel action)
     {
         var httpMethod = HttpMethodHelper.GetHttpMethod(action.ActionMethod);
-        var routeTemplate = HttpApiHelper.CalculateRouteTemplate(action.ActionMethod);
+        var routeTemplate = HttpApiHelper.CalculateRouteTemplate(action.Controller.ControllerType, action.ActionMethod);
         var routeAttr = new RouteAttribute(routeTemplate);
         var selector =  new SelectorModel
         {
@@ -117,7 +117,7 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
     {
         foreach (var selector in action.Selectors)
         {
-            var routeTemplate = HttpApiHelper.CalculateRouteTemplate(action.ActionMethod);
+            var routeTemplate = HttpApiHelper.CalculateRouteTemplate(action.Controller.ControllerType,action.ActionMethod);
             selector.AttributeRouteModel ??= new AttributeRouteModel(new RouteAttribute( routeTemplate));
 
             if (selector.ActionConstraints.OfType<HttpMethodActionConstraint>()

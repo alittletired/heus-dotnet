@@ -11,9 +11,8 @@ internal class SqliteDbContextOptionsProvider : IDbContextOptionsProvider
 {
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
     {
-        var folder = AppContext.BaseDirectory;
-        var dbPath = Path.Join(folder, "heus.db");
-        dbContextOptions.UseSqlite($"Data Source={dbPath}");
+     
+        dbContextOptions.UseSqlite(shareConnection);
     }
 
     public DbProvider DbProvider { get; } = DbProvider.Sqlite;

@@ -27,16 +27,19 @@ namespace Heus.Auth
             var authDbContext = serviceProvider.GetRequiredService<AuthDbContext>();
             await authDbContext.Database.EnsureDeletedAsync();
             await authDbContext.Database.EnsureCreatedAsync();
+         
+            await unitOfWork.CompleteAsync();
+            using var unitOfWork1 = unitOfWorkManager.Begin(options);
             await AddUsers(serviceProvider);
             await AddRoles(serviceProvider);
-            await unitOfWork.CompleteAsync();
+            await unitOfWork1.CompleteAsync();
         }
 
         private async Task AddUsers(IServiceProvider serviceProvider)
         {
             var userService = serviceProvider.GetRequiredService<IUserAdminAppService>();
             var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
-            var adminUser = await userRepository.FindByAccountAsync("admin");
+            var adminUser = await userRepository.FindByUserNameAsync("admin");
             if (adminUser == null)
             {
                 adminUser = new User()
@@ -46,7 +49,7 @@ namespace Heus.Auth
                     Phone = "13900000000"
 
                 };
-                //adminUser.SetPassword("1");
+                adminUser.SetPassword("1");
                 await userRepository.InsertAsync(adminUser);
             }
 

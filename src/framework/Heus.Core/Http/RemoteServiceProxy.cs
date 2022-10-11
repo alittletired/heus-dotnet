@@ -7,6 +7,7 @@ namespace Heus.Core.Http;
 internal class RemoteServiceProxy : DispatchProxy
 {
     internal RemoteServiceProxyFactory ProxyFactory { get; set; } = null!;
+    internal Type ProxyType { get; set; } = null!;
     internal string RemoteServiceName{ get; set; } = null!;
     internal HttpClient HttpClient => ProxyFactory.GetHttpClient(RemoteServiceName);
 
@@ -15,7 +16,7 @@ internal class RemoteServiceProxy : DispatchProxy
 
     private async Task<T?> InvokeAsync<T>(MethodInfo targetMethod, object?[]? args)
     {
-        var request = HttpApiHelper.CreateHttpRequest(targetMethod, args);
+        var request = HttpApiHelper.CreateHttpRequest(ProxyType,targetMethod, args);
         await ProxyFactory.PopulateRequestHeaders(request);
         var response = await HttpClient.SendAsync(request);
 

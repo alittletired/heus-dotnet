@@ -2,14 +2,14 @@ namespace Heus.Auth.Dtos;
 
 public class LoginInput
 {
-    public LoginInput(string account, string password, bool rememberMe)
+    public LoginInput(string userName, string password, bool rememberMe)
     {
-        Account = account;
+        UserName = userName;
         Password = password;
         RememberMe = rememberMe;
     }
 
-    public string Account { get; set; }
+    public string UserName { get; set; }
     public string Password { get; set; }
     public bool RememberMe { get; set; }
     

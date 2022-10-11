@@ -28,7 +28,7 @@ internal class JwtTokenProvider : ITokenProvider, IScopedDependency
         var unixTimestamp = (long)DateTime.Now.AddMinutes(expirationMinutes).Subtract(DateTime.UnixEpoch).TotalMilliseconds;
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, _jwtOptions.Value.Subject),
+            new(JwtRegisteredClaimNames.Sub, user.UserName),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()),
             new(SecurityClaimNames.UserId, user.Id.ToString()!),
@@ -48,8 +48,8 @@ internal class JwtTokenProvider : ITokenProvider, IScopedDependency
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.SignKey));
         var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
-            _jwtOptions.Value.Subject,
-            _jwtOptions.Value.Subject,
+            _jwtOptions.Value.Issuer,
+            _jwtOptions.Value.Audience,
             principal.Claims,
             expires: DateTime.UnixEpoch.AddMilliseconds(unixTimestamp),
             signingCredentials: signIn);

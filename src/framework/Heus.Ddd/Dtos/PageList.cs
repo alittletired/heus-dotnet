@@ -2,8 +2,8 @@
 namespace Heus.Ddd.Dtos;
 public class PagedList<T>
 {
-    public int Total { get; }
-    public IEnumerable<T> Items { get; }
+    public int Count { get; set; }
+    public IEnumerable<T> Items { get; set; }=new List<T>();
 
     /// <summary>
     /// Creates a new <see cref="PagedList{T}"/> object.
@@ -12,7 +12,8 @@ public class PagedList<T>
     /// <param name="items">List of items in current page</param>
     public PagedList(int total, IEnumerable<T> items)
     {
-        Total = total;
+        Count = total;
         Items = items;
     }
+    public PagedList() { }
 }

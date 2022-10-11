@@ -18,10 +18,10 @@ public static class HttpApiHelper
         return "default";
     }
 
-    public static string CalculateRouteTemplate(MethodInfo methodInfo)
+    public static string CalculateRouteTemplate(Type targetType, MethodInfo methodInfo)
     {
         var routeTemplate = new StringBuilder();
-        if (methodInfo.DeclaringType?.IsAssignableTo<IAdminApplicationService>() == true)
+        if (targetType.IsAssignableTo<IAdminApplicationService>() == true)
         {
             routeTemplate.Append("admin");
         }
@@ -31,8 +31,14 @@ public static class HttpApiHelper
         }
 
         // 控制器名称部分
-        var controllerName = methodInfo.DeclaringType!.Name;
-
+        var controllerName = targetType.Name;
+        if (targetType.IsInterface && controllerName.StartsWith("I"))
+        {
+            controllerName = controllerName.Substring(1);
+            if (targetType.IsGenericType) {
+                throw new InvalidOperationException($"不支持泛型控制器,{targetType.FullName}");
+                }
+        }
         if (controllerName.EndsWith("ApplicationService"))
         {
             controllerName = controllerName[..^"ApplicationService".Length];
@@ -46,12 +52,6 @@ public static class HttpApiHelper
         {
             controllerName = controllerName[..^"AppService".Length];
         }
-
-        if (methodInfo.DeclaringType.IsInterface && controllerName.StartsWith("I"))
-        {
-            controllerName = controllerName[1..];
-        }
-
 
         controllerName = PluralizerHelper.Pluralize(controllerName).ToKebabCase();
         routeTemplate.Append($"/{controllerName}");
@@ -101,9 +101,9 @@ public static class HttpApiHelper
 
 
 
-    public static HttpRequestMessage CreateHttpRequest(MethodInfo action, object?[]? args)
+    public static HttpRequestMessage CreateHttpRequest(Type targetType, MethodInfo action, object?[]? args)
     {
-        var routeTemplate = CalculateRouteTemplate(action);
+        var routeTemplate = CalculateRouteTemplate(targetType,action);
         var httpMethod = HttpMethodHelper.GetHttpMethod(action);
         StringContent? content = null;
 
@@ -130,7 +130,7 @@ public static class HttpApiHelper
             if (parameters.Count > 0)
             {
                 var queryString = parameters.Select(ConvertToQueryString).JoinAsString("&");
-                url += "?queryString";
+                url += $"?{queryString}";
             }
 
         }

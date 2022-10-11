@@ -61,7 +61,9 @@ public class RemoteServiceProxyFactory : ISingletonDependency
             var proxy = DispatchProxy.Create<T, RemoteServiceProxy>();
             var serviceProxy = proxy as RemoteServiceProxy ?? throw new InvalidCastException("无法创建代理");
             serviceProxy.ProxyFactory = this;
-            
+            serviceProxy.ProxyType= typeof(T);
+
+
             return proxy;
         });
         return (T)proxy;

@@ -40,9 +40,11 @@ public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>
     {
         Assert.ThrowsAsync<EntityNotFoundException>(async ()=>await _userService.GetAsync(EntityId.Parse(id)));
     }
-    public Task<PagedList<UserDto>> GetListAsync(DynamicQuery<UserDto> input)
+    [Fact]
+    public async Task GetListAsync()
     {
-        throw new NotImplementedException();
+        var result = await _userService.GetListAsync(new DynamicQuery<UserDto>());
+        result.Count.ShouldBeGreaterThan(0);
     }
 
     public Task<UserDto> CreateAsync(UserCreateDto createDto)

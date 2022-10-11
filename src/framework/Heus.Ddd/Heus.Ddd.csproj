@@ -4,11 +4,6 @@
 	  <PackageId>Heus.Ddd</PackageId>
 	  <RootNamespace>Heus.Ddd</RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Extensions\**" />
-    <EmbeddedResource Remove="Extensions\**" />
-    <None Remove="Extensions\**" />
-  </ItemGroup>
  
   <ItemGroup>
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />

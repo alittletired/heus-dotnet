@@ -13,5 +13,5 @@ namespace Heus.Enroll.Web;
     , typeof(SqliteModuleInitializer))]
 public class WebModuleInitializer : ModuleInitializerBase
 {
-
+    
 }

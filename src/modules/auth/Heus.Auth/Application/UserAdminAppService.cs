@@ -8,6 +8,7 @@ using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Heus.Ddd.Extensions;
 
 namespace Heus.Auth.Application;
 public interface IUserAdminAppService:IAdminApplicationService<UserCreateDto,UserUpdateDto,UserDto>
@@ -35,15 +36,17 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
         return Mapper.Map<UserDto>(user);
     }
 
-    public Task<PagedList<UserDto>> GetListAsync(DynamicQuery<UserDto> input)
+    public async Task<PagedList<UserDto>> GetListAsync(DynamicQuery<UserDto> input)
     {
         var query = from u in _userRepository.GetQueryable()
             from o in _organRepository.GetQueryable()
         
-            select u;
+            select new { u, o };
         // var b= query..ProjectToType<UserDto>()
-        var data = query.ToList();
-        throw new NotImplementedException();
+        var data =await query.ToPageListAsync(input);
+        return data;
+
+
     }
 
 
@@ -79,9 +82,9 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
         return true;
     }
 
-    public async Task<ICurrentUser?> FindByNameAsync(string name)
+    public async Task<ICurrentUser?> FindByUserNameAsync(string name)
     {
-      var user=  await  _userRepository.FindByAccountAsync(name);
+      var user=  await  _userRepository.FindByUserNameAsync(name);
         if (user == null)
         {
             return null;
