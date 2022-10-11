@@ -1,5 +1,6 @@
 using System.Text;
 using Heus.AspNetCore.ActionFilter;
+using Heus.AspNetCore.Authorization;
 using Heus.AspNetCore.Conventions;
 using Heus.AspNetCore.OpenApi;
 using Heus.Core.DependencyInjection;
@@ -38,8 +39,6 @@ public class AspNetModuleInitializer : ModuleInitializerBase
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-
-
                 var jwtOptions = configuration.GetSection(JwtOptions.ConfigurationSection)
                     .Get<JwtOptions>() ?? new JwtOptions();
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -88,6 +87,10 @@ public class AspNetModuleInitializer : ModuleInitializerBase
         // app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
+        // if (context.Environment.IsDevelopment())
+        // {
+        //     app.UseMiddleware<DevAuthenticationMiddleware>();
+        // }
         // app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseAuthentication();
         app.UseAuthorization();

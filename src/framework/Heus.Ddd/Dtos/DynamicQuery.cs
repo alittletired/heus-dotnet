@@ -7,7 +7,7 @@ public class DynamicQuery<T>
     public int PageIndex { get; set; } = 1;
     public int PageSize { get; set; } = 10;
     public string? OrderBy { get; set; }
-
+    public Dictionary<string,object?> Filters { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public Expression<Func<TEntity, TEntity2, bool>> IsSatisfied<TEntity, TEntity2>(TEntity entity, TEntity2 entity2)
     {
         var p0 = Expression.Parameter(typeof(TEntity), "p0");

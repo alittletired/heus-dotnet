@@ -39,14 +39,17 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
     public async Task<PagedList<UserDto>> GetListAsync(DynamicQuery<UserDto> input)
     {
         var query = from u in _userRepository.GetQueryable()
-            from o in _organRepository.GetQueryable()
-        
-            select new { u, o };
-        // var b= query..ProjectToType<UserDto>()
-        var data =await query.ToPageListAsync(input);
-        return data;
-
-
+            select  u;
+        var data1 = await query.ToPageListAsync(input);
+        return data1;
+        // var query1 = from u in _userRepository.GetQueryable()
+        //      from b in _userRoleRepository.GetQueryable()
+        //        where b.UserId==u.Id
+        //  
+        //     select  new {u,b};
+        // // var b= query..ProjectToType<UserDto>()
+        // var data = await query1.ToPageListAsync(input);
+        // return data;
     }
 
 
