@@ -8,12 +8,11 @@ using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Heus.Ddd.Extensions;
 
 namespace Heus.Auth.Application;
 public interface IUserAdminAppService:IAdminApplicationService<UserCreateDto,UserUpdateDto,UserDto>
 {
-    Task<IEnumerable<EntityId>>  GetUserRoleIds(EntityId id);
+    Task<IEnumerable<EntityId>>  GetUserRoleIdsAsync(EntityId id);
 }
 
 internal class UserAdminAppService : AdminApplicationService, IUserAdminAppService,IUserService
@@ -71,13 +70,13 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
         return Mapper.Map<UserDto>(user);
     }
 
-    public async Task<IEnumerable<EntityId>> GetUserRoleIds(EntityId id)
+    public async Task<IEnumerable<EntityId>> GetUserRoleIdsAsync(EntityId id)
     {
         return await _userRoleRepository.GetQueryable().Where(s => s.UserId == id).Select(s => s.RoleId)
             .ToListAsync();
     }
 
-    public async Task<bool> ResetPassword(RestPasswordDto dto)
+    public async Task<bool> ResetPasswordAsync(RestPasswordDto dto)
     {
         var user = await _userRepository.GetByIdAsync(dto.UserId);
         //user.SetPassword(dto.NewPassword);

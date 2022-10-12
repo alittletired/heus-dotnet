@@ -1,9 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Heus.Core.DependencyInjection.Internal;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
 using Heus.Core.DependencyInjection.Autofac;
 
 namespace Heus.Core.DependencyInjection;

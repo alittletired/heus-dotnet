@@ -4,32 +4,17 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Heus.IntegratedTests;
 
-public class IntegratedTest<TStartup>
+public class IntegratedTest<TStartup>: WebApplicationFactory<TStartup>
  where TStartup : class
 {
-    private WebApplicationFactory<TStartup> _factory =
-        new WebApplicationFactory<TStartup>().WithWebHostBuilder(builder =>
-        {
-            builder.UseEnvironment("Testing");
-            builder.ConfigureServices(services => {
-                services.AddSingleton<ITestServerAccessor, TestServerAccessor>();
-                services.Remove(services.First(s => s.ServiceType == typeof(IProxyHttpClientFactory)));
-                services.AddSingleton<IProxyHttpClientFactory, TestProxyHttpClientFactory>();
-                services.AddSingleton<IRemoteServiceProxyContributor, TestRemoteServiceProxyContributor>();
-
-                services.Configure<DbContextConfigurationOptions>(options => {
-                    //options.DefaultDbProvider = Core.Data.Options.DbProvider.Sqlite;
-                    });
-
-            });
-        });
-    public IntegratedTest()
+  
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        Services.GetRequiredService<ITestServerAccessor>().Server = _factory.Server;
-
+        builder.UseEnvironment("Testing");
+        base.ConfigureWebHost(builder);
     }
-
-    public IServiceProvider Services => _factory.Services;
+ 
+ 
    
     public T GetServiceProxy<T>(string remoteServiceName) where T : IRemoteService
     {

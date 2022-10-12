@@ -51,6 +51,13 @@ public static class DictionaryExtensions
 
         return dictionary[key] = factory(key);
     }
-
+    public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue)
+    {
+        if (dictionary.TryGetValue(key, out var obj))
+        {
+            return obj!;
+        }
+        return defaultValue;
+    }
 
 }

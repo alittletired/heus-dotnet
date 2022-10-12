@@ -5,7 +5,7 @@ using Heus.IntegratedTests;
 namespace Heus.Auth.IntegratedTests;
 
 [DependsOn(typeof(AuthModuleInitializer) 
-    ,typeof(IntegratedTestModuleInitializer))   ]
+    ,typeof(IntegratedTestModuleInitializer))    ]
 public class AuthTestModuleInitializer : ModuleInitializerBase
 {
  

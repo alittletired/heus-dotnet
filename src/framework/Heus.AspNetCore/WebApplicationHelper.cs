@@ -12,8 +12,6 @@ public static class WebApplicationHelper
     {
         try
         {
-
-
             var builder = WebApplication.CreateBuilder(args);
             var moduleManager = new ServiceModuleManager(startModuleType);
             moduleManager.ConfigureServices(builder.Host);

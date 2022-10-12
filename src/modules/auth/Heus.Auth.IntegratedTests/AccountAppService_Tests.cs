@@ -12,7 +12,7 @@ public class AccountAppServiceTests:IClassFixture<IntegratedTest<Program>>
     public AccountAppServiceTests(IntegratedTest<Program> factory)
     {
         _factory = factory;
-      
+        var server = _factory.Server;
     }
 
     [Theory]

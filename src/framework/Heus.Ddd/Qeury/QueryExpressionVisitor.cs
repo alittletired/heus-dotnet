@@ -1,24 +1,23 @@
 ﻿
+using Heus.Ddd.Dtos;
 using System.Diagnostics.CodeAnalysis;
 
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Heus.Ddd.Dtos.Qeury;
+namespace Heus.Ddd.Qeury;
 
-namespace Heus.Ddd.Dtos;
-
-internal class DynamicExpressionVisitor<T> : ExpressionVisitor
+internal class QueryExpressionVisitor<T> : ExpressionVisitor 
 {
-    private readonly DynamicQuery<T> _data;
-    private DynamicMapping _dynamicMapping = null!;
+    private readonly IQueryDto<T> _queryDto;
+    private FilterMapping _filterMapping = null!;
 
     private static readonly MethodInfo WhereMethod = typeof(Queryable).GetRuntimeMethods()
         .First(s => s.Name == nameof(Queryable.Where) && s.GetParameters().Length == 2);
 
-    public DynamicExpressionVisitor(DynamicQuery<T> data)
+    public QueryExpressionVisitor(IQueryDto<T> data)
     {
-        _data = data;
+        _queryDto = data;
     }
 
     [return: NotNullIfNotNull("node")]
@@ -28,9 +27,7 @@ internal class DynamicExpressionVisitor<T> : ExpressionVisitor
             return null;
         if (node is MethodCallExpression methodCall)
         {
-
             var obj = Visit(methodCall.Object);
-            
             var paras = methodCall.Arguments.ToArray();
             paras[^1] = TranslateSelect((UnaryExpression)paras[^1]!);
             paras = paras.Select(Visit).ToArray()!;
@@ -47,7 +44,7 @@ internal class DynamicExpressionVisitor<T> : ExpressionVisitor
 
     protected override Expression VisitExtension(Expression node)
     {
-        if (node.Type.IsGenericType &&   node.Type.GetGenericTypeDefinition()==typeof(IQueryable<>))
+        if (node.Type.IsGenericType && node.Type.GetGenericTypeDefinition() == typeof(IQueryable<>))
         {
             var type = node.Type.GenericTypeArguments[0];
             var whereExpr = GetWhereException(type);
@@ -66,15 +63,15 @@ internal class DynamicExpressionVisitor<T> : ExpressionVisitor
     public Expression TranslateSelect(UnaryExpression expression)
     {
         var lambda = (LambdaExpression)expression.Operand;
-        _dynamicMapping = DynamicMappingsHelper.GetDynamicMappings(typeof(T), lambda.Parameters);
-        var parameters = lambda.Parameters.Select(p=>(ParameterExpression)Visit(p)).ToList()!;
-        var express = GetSelectExpression(_dynamicMapping, parameters);
+        _filterMapping = QueryFilterHelper.GetDynamicMappings(typeof(T), lambda.Parameters);
+        var parameters = lambda.Parameters.Select(p => (ParameterExpression)Visit(p)).ToList()!;
+        var express = GetSelectExpression(_filterMapping, parameters);
         var newLambda = Expression.Lambda(express, parameters);
         return Expression.Quote(newLambda);
     }
 
- 
-    private static Expression GetSelectExpression(DynamicMapping mapping, IEnumerable<ParameterExpression> parameters)
+
+    private static Expression GetSelectExpression(FilterMapping mapping, IEnumerable<ParameterExpression> parameters)
     {
         var memberBindings = new List<MemberBinding>();
         var parameterList = parameters.ToList();
@@ -97,23 +94,23 @@ internal class DynamicExpressionVisitor<T> : ExpressionVisitor
         }
 
         return Expression.MemberInit(Expression.New(mapping.DtoType), memberBindings);
-
     }
 
-    
 
-   
+
 
     public Expression? GetWhereException(Type entityType)
     {
+        var queryFilters = QueryFilterHelper.GetQueryFilterItems(_queryDto);
         var paramExpr = Expression.Parameter(entityType, "p");
         var filters = new List<Expression>();
-        foreach (var pair in _data.Filters)
+        foreach (var queryFilter in queryFilters)
         {
-            if (pair.Value == null)
+            var val = queryFilter.Value;
+            if (val == null)
                 continue;
-            var val = pair.Value;
-            if (_dynamicMapping.Mappings.TryGetValue(pair.Key, out var mappingItem))
+          
+            if (_filterMapping.Mappings.TryGetValue(queryFilter.PropertyName, out var mappingItem))
             {
                 if (mappingItem.EntityType != entityType)
                 {
@@ -122,7 +119,6 @@ internal class DynamicExpressionVisitor<T> : ExpressionVisitor
                 if (mappingItem.EntityProperty.PropertyType != val.GetType())
                 {
                     val = Convert.ChangeType(val, mappingItem.EntityProperty.PropertyType);
-
                 }
 
                 var memberExpr = Expression.Property(paramExpr, mappingItem.EntityProperty);
