@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
 
-namespace Heus.Ddd.Uow.Internal;
+namespace Heus.Core.Uow;
 
 internal class UnitOfWork : IUnitOfWork
 {
@@ -9,12 +9,12 @@ internal class UnitOfWork : IUnitOfWork
     private bool _isDisposed = false;
     private readonly ILogger<UnitOfWork> _logger;
 
-    public UnitOfWork(UnitOfWorkOptions options,ILogger<UnitOfWork> logger)
+    public UnitOfWork(UnitOfWorkOptions options, ILogger<UnitOfWork> logger)
     {
         Options = options;
         _logger = logger;
     }
-    
+
     public Dictionary<string, DbTransaction> DbTransactions { get; } = new();
     public event EventHandler<UnitOfWorkEventArgs>? Disposed;
     public UnitOfWorkOptions Options { get; }
@@ -36,7 +36,7 @@ internal class UnitOfWork : IUnitOfWork
             {
                 await dbTran.Value.RollbackAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, $"{nameof(RollbackAsync)}  Fail :{dbTran.Key}");
             }
@@ -69,7 +69,7 @@ internal class UnitOfWork : IUnitOfWork
         if (_isDisposed) return;
         _isDisposed = true;
         DisposeTransactions();
-       
+
         Disposed?.Invoke(this, new UnitOfWorkEventArgs(this));
     }
 }

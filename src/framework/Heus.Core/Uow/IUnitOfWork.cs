@@ -1,7 +1,6 @@
 
-using System.Data.Common;
 
-namespace Heus.Ddd.Uow;
+namespace Heus.Core.Uow;
 public interface IUnitOfWork :  IDisposable
 {
   

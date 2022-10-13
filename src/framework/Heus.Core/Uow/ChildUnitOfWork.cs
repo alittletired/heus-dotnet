@@ -1,11 +1,11 @@
 
 using System.Data.Common;
 
-namespace Heus.Ddd.Uow.Internal;
+namespace Heus.Core.Uow;
 internal class ChildUnitOfWork : IUnitOfWork
 {
     private readonly IUnitOfWork _parent;
-    
+
     public UnitOfWorkOptions Options => _parent.Options;
 
 

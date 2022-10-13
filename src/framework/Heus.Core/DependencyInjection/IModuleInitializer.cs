@@ -20,5 +20,7 @@ public interface IModuleInitializer
     /// <param name="app"></param>
     void Configure(IApplicationBuilder app);
 
+    Task InitializeAsync(IServiceProvider serviceProvider);
+
 
 }

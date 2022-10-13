@@ -19,4 +19,9 @@ public abstract class ModuleInitializerBase : IModuleInitializer
     {
         
     }
+
+    public virtual Task InitializeAsync(IServiceProvider serviceProvider)
+    {
+        return Task.CompletedTask;
+    }
 }

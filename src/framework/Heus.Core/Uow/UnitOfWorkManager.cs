@@ -1,16 +1,14 @@
 
-using Microsoft.Extensions.Logging;
+namespace Heus.Core.Uow;
 
-namespace Heus.Ddd.Uow.Internal;
-
-internal class UnitOfWorkManager:IUnitOfWorkManager
+internal class UnitOfWorkManager : IUnitOfWorkManager
 {
-    private readonly AsyncLocal<IUnitOfWork?> _currentUow= new();
+    private readonly AsyncLocal<IUnitOfWork?> _currentUow = new();
     public IUnitOfWork? Current => _currentUow.Value;
     private readonly ILoggerFactory _loggerFactory;
-    public UnitOfWorkManager( ILoggerFactory loggerFactory)
+    public UnitOfWorkManager(ILoggerFactory loggerFactory)
     {
-       
+
         _loggerFactory = loggerFactory;
     }
 
@@ -23,11 +21,11 @@ internal class UnitOfWorkManager:IUnitOfWorkManager
         }
         var unitOfWork = new UnitOfWork(options, _loggerFactory.CreateLogger<UnitOfWork>());
         _currentUow.Value = unitOfWork;
-        unitOfWork.Disposed+=  (_, _) =>
+        unitOfWork.Disposed += (_, _) =>
         {
             _currentUow.Value = currentUow;
         };
         return unitOfWork;
-        
+
     }
 }
