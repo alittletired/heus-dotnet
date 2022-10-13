@@ -36,7 +36,7 @@ internal class RoleAdminAppService : AdminApplicationService, IRoleAdminAppServi
         throw new NotImplementedException();
     }
 
-    public Task<RoleDto> UpdateAsync(EntityId id, RoleUpdateDto updateDto)
+    public Task<RoleDto> UpdateAsync(RoleUpdateDto updateDto)
     {
         throw new NotImplementedException();
     }

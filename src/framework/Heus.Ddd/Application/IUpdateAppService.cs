@@ -6,6 +6,6 @@ namespace Heus.Ddd.Application.Services
     public interface IUpdateAppService<  in TUpdateInput,TUpdateOutput>
         : IApplicationService
     {
-        Task<TUpdateOutput> UpdateAsync(EntityId id, TUpdateInput updateDto);
+        Task<TUpdateOutput> UpdateAsync( TUpdateInput updateDto);
     }
 }

@@ -64,7 +64,7 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
         await _userRepository.DeleteByIdAsync(id);
     }
 
-    public async Task<UserDto> UpdateAsync(EntityId id, UserUpdateDto updateDto)
+    public async Task<UserDto> UpdateAsync(UserUpdateDto updateDto)
     {
         var user = await _userRepository.GetByIdAsync(updateDto.Id);
         return Mapper.Map<UserDto>(user);

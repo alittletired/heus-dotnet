@@ -57,10 +57,10 @@ public static class HttpApiHelper
         routeTemplate.Append($"/{controllerName}");
 
         // id 部分
-        if (methodInfo.GetParameters().Any(temp => temp.Name == "id"))
-        {
-            routeTemplate.Append("/{id}");
-        }
+        // if (methodInfo.GetParameters().Any(temp => temp.Name == "id"))
+        // {
+        //     routeTemplate.Append("/{id}");
+        // }
 
         // Action 名称部分
         var actionName = methodInfo.Name;
@@ -69,26 +69,26 @@ public static class HttpApiHelper
             actionName = actionName.Substring(0, actionName.Length - "Async".Length);
         }
 
-        var trimPrefixes = new[]
-        {
-            "GetAll", "GetList", "Get",
-            "Post", "Create", "Add", "Insert",
-            "Put", "Update",
-            "Delete", "Remove",
-            "Patch"
-        };
-        if (char.IsLower(actionName[0]))
-        {
-            throw new BusinessException($"{methodInfo.DeclaringType!.Name} 不符合命名规范，必须是大写字母开头");
-
-        }
-
-        foreach (var trimPrefix in trimPrefixes)
-        {
-            if (!actionName.StartsWith(trimPrefix)) continue;
-            actionName = actionName[trimPrefix.Length..];
-            break;
-        }
+        // var trimPrefixes = new[]
+        // {
+        //     "GetAll", "GetList", "Get",
+        //     "Post", "Create", "Add", "Insert",
+        //     "Put", "Update",
+        //     "Delete", "Remove",
+        //     "Patch"
+        // };
+        // if (char.IsLower(actionName[0]))
+        // {
+        //     throw new BusinessException($"{methodInfo.DeclaringType!.Name} 不符合命名规范，必须是大写字母开头");
+        //
+        // }
+        //
+        // foreach (var trimPrefix in trimPrefixes)
+        // {
+        //     if (!actionName.StartsWith(trimPrefix)) continue;
+        //     actionName = actionName[trimPrefix.Length..];
+        //     break;
+        // }
 
         if (!string.IsNullOrEmpty(actionName))
         {
