@@ -76,13 +76,13 @@ public class ServiceModuleManager : IModuleContainer
 
     }
 
-    public async Task ApplicationInitialize(IHost host)
+    public void Configure(IApplicationBuilder  applicationBuilder)
     {
-        var context = new ApplicationConfigurationContext(host);
         foreach (var module in Modules)
         {
-           await module.Instance.Configure(context);
+            module.Instance.Configure(applicationBuilder);
         }
+        
     }
 }
 

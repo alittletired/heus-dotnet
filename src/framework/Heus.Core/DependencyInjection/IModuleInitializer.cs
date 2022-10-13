@@ -17,8 +17,8 @@ public interface IModuleInitializer
     /// <summary>
     /// 配置应用
     /// </summary>
-    /// <param name="context"></param>
-   Task Configure(ApplicationConfigurationContext context);
+    /// <param name="app"></param>
+    void Configure(IApplicationBuilder app);
 
 
 }

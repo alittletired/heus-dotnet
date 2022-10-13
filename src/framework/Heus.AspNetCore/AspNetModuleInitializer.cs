@@ -59,12 +59,12 @@ public class AspNetModuleInitializer : ModuleInitializerBase
 
     }
 
-    public override Task Configure(ApplicationConfigurationContext context)
+    public override void Configure(IApplicationBuilder app)
     {
-        var partManager = context.ServiceProvider.GetRequiredService<ApplicationPartManager>();
+        var partManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
         partManager.FeatureProviders.Add(new ServiceControllerFeatureProvider());
 
-        var moduleContainer= context.ServiceProvider.GetRequiredService<IModuleContainer>();
+        var moduleContainer= app.ApplicationServices.GetRequiredService<IModuleContainer>();
        var moduleAssemblies = moduleContainer.Modules.Select(s => s.Assembly).Distinct();
        foreach (var moduleAssembly in moduleAssemblies)
        {
@@ -77,11 +77,11 @@ public class AspNetModuleInitializer : ModuleInitializerBase
            partManager.ApplicationParts.Add(new AssemblyPart(moduleAssembly));
        }
 
-       var app = context.GetApplicationBuilder();
-        if (context.Environment.IsDevelopment())
+        IWebHostEnvironment env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
+        if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseOpenApi(context.Environment);
+            app.UseOpenApi();
         }
 
         // app.UseHttpsRedirection();
@@ -100,7 +100,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
             endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             endpoints.MapRazorPages();
         });
-        return  Task.CompletedTask;
+       
     }
 
    

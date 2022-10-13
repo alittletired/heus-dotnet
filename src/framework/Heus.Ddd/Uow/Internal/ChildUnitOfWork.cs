@@ -8,7 +8,6 @@ internal class ChildUnitOfWork : IUnitOfWork
     
     public UnitOfWorkOptions Options => _parent.Options;
 
-    public Dictionary<string, DbConnection> DbConnections =>  _parent.DbConnections;
 
     public ChildUnitOfWork(IUnitOfWork parent)
     {

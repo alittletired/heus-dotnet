@@ -1,4 +1,5 @@
-﻿using Heus.Core.Data.Options;
+﻿using Heus.Core.Data;
+using Heus.Core.Data.Options;
 using Heus.Ddd.Data.ValueConversion;
 using Heus.Ddd.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ public class DbContextConfigurationOptions
     public List<Action<ModelConfigurationBuilder>> ConventionActions = new() { DefaultConventionAction };
     public DbProvider DefaultDbProvider { get; set; } = DbProvider.MySql;
 
-    public List<IDbContextOptionsProvider> DbContextOptionsProviders = new List<IDbContextOptionsProvider>();
+
    
 
 

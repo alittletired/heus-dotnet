@@ -51,7 +51,7 @@ public static class OpenApiExtensions
 
         });
     }
-    public static void UseOpenApi(this IApplicationBuilder app, IHostEnvironment env)
+    public static void UseOpenApi(this IApplicationBuilder app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(options =>

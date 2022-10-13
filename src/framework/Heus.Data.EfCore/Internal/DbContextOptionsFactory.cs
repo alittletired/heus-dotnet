@@ -14,14 +14,17 @@ namespace Heus.Data.EfCore.Internal
         private readonly IConnectionStringResolver  _connectionStringResolver;
         private readonly ILogger<DbContextOptionsFactory> _logger;
         private readonly IOptions<DbContextConfigurationOptions> _options;
+        private readonly IEnumerable<IDbConnectionProvider> _dbConnectionProviders;
 
         public DbContextOptionsFactory(IUnitOfWorkManager unitOfWorkManager
             , IConnectionStringResolver connectionStringResolver
             , ILogger<DbContextOptionsFactory> logger
+            ,IEnumerable<IDbConnectionProvider> dbConnectionProviders
             , IOptions<DbContextConfigurationOptions> options)
         {
             _unitOfWorkManager = unitOfWorkManager;
             _connectionStringResolver = connectionStringResolver;
+            _dbConnectionProviders = dbConnectionProviders;
             _logger = logger;
             _options= options;
         }
@@ -36,12 +39,8 @@ namespace Heus.Data.EfCore.Internal
             var connectionStringName = ConnectionStringNameAttribute.GetConnStringName<TDbContext>();
             var connectionString = _connectionStringResolver.Resolve(connectionStringName);
             var dbProvider = _options.Value.DefaultDbProvider;
-            var dbContextOptionsProvider = _options.Value.DbContextOptionsProviders.First(p=>p.DbProvider== dbProvider);
-            var dbConnection= unitOfWork.DbConnections.GetOrAdd(connectionString, connStr =>
-            {
-                var connection = dbContextOptionsProvider.CreateDbConnection(connStr);
-                return connection;
-            });
+            var dbContextOptionsProvider = _dbConnectionProviders.First(p=>p.DbProvider== dbProvider);
+            var dbConnection = dbContextOptionsProvider.CreateConnection(connectionString);
             var builder = new DbContextOptionsBuilder<TDbContext>();
             _logger.LogDebug($" connectionString:{dbConnection.ConnectionString},DbContext:{typeof(TDbContext).Name}");
             _options.Value.ConfigureActions.ForEach(action => action(builder));

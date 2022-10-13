@@ -1,16 +1,13 @@
-using Autofac.Core;
 using Heus.AspNetCore;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Http;
 using Heus.Data.EfCore;
-using Heus.Data.Mysql;
 using Heus.Data.Sqlite;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.TestHost;
 
 namespace Heus.IntegratedTests;
-[DependsOn(typeof(AspNetModuleInitializer)
-     , typeof(MysqlModuleInitializer)
+[DependsOn(typeof(AspNetModuleInitializer)   
     , typeof(SqliteModuleInitializer))]
 public class IntegratedTestModuleInitializer : ModuleInitializerBase
 {
@@ -28,9 +25,9 @@ public class IntegratedTestModuleInitializer : ModuleInitializerBase
         });
         base.ConfigureServices(context);
     }
-    public override Task Configure(ApplicationConfigurationContext context)
+
+    public override void Configure(IApplicationBuilder app)
     {
-        context.ServiceProvider.GetRequiredService<ITestServerAccessor>().Server =(TestServer) context.ServiceProvider.GetRequiredService<IServer>();
-        return Task.CompletedTask;
+        app.ApplicationServices.GetRequiredService<ITestServerAccessor>().Server = (TestServer)app.ApplicationServices.GetRequiredService<IServer>();
     }
 }

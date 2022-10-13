@@ -14,7 +14,6 @@ internal interface IDbContextServiceRegistrar: IServiceRegistrar {
 internal class DbContextServiceRegistrar : IDbContextServiceRegistrar
 {
     public Dictionary<Type, Type> EntityDbContextMapping { get; } = new ();
-    public List<IDbContextOptionsProvider> DbContextOptionsProviders { get; } = new ();
     public void Handle(IServiceCollection services, Type type, ServiceRegistrarChain chain)
     {
         if (type.IsAssignableTo<DbContext>())

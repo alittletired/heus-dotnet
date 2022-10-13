@@ -10,9 +10,6 @@ public class MysqlModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.Configure<DbContextConfigurationOptions>(options =>
-        {
-            options.DbContextOptionsProviders.Add(new MySqlDbContextOptionsProvider());
-        });
+     
     }
 }

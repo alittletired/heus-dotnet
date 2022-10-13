@@ -1,4 +1,6 @@
+using System.Collections.Concurrent;
 using System.Data.Common;
+using Heus.Core.Data;
 using Heus.Core.Data.Options;
 using Heus.Core.DependencyInjection;
 using Heus.Data.EfCore;
@@ -7,8 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Data.Sqlite;
 
-internal class SqliteDbContextOptionsProvider : IDbContextOptionsProvider
+// Sqlite使用内存时，只能是单例
+internal class SqliteDbContextOptionsProvider : IDbConnectionProvider,ISingletonDependency
 {
+    private readonly ConcurrentDictionary<string, DbConnection> _connections = new();
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
     {
      
@@ -16,9 +20,17 @@ internal class SqliteDbContextOptionsProvider : IDbContextOptionsProvider
     }
 
     public DbProvider DbProvider { get; } = DbProvider.Sqlite;
-    public DbConnection CreateDbConnection(string connectionString)
+    public DbConnection CreateConnection(string connectionString)
     {
-        return new SqliteConnection(connectionString);
+        return _connections.GetOrAdd(connectionString, connStr => new SqliteConnection(connectionString));
     }
 
+    public void Dispose()
+    {
+        foreach (var connection in _connections.Values)
+        {
+            connection.Dispose();
+        }
+        _connections.Clear();
+    }
 }

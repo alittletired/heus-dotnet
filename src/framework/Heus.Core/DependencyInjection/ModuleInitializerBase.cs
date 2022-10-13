@@ -15,8 +15,8 @@ public abstract class ModuleInitializerBase : IModuleInitializer
         
     }
 
-    public virtual Task Configure(ApplicationConfigurationContext context)
+    public virtual void Configure(IApplicationBuilder app)
     {
-        return Task.CompletedTask;
+        
     }
 }

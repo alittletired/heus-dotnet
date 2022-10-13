@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Data.Common;
+using Heus.Core.Data;
 using Heus.Core.Data.Options;
 using Heus.Core.DependencyInjection;
 using Heus.Data.EfCore;
@@ -9,9 +10,10 @@ using MySqlConnector;
 
 namespace Heus.Data.Mysql
 {
-    internal class MySqlDbContextOptionsProvider : IDbContextOptionsProvider
+    internal class MySqlDbContextOptionsProvider : IDbConnectionProvider,IScopedDependency
     {
-        private readonly ConcurrentDictionary<string, ServerVersion> _serverVersions = new();
+        private static readonly ConcurrentDictionary<string, ServerVersion> _serverVersions = new();
+        private readonly ConcurrentDictionary<string, DbConnection> _connections = new();
 
         public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
         {
@@ -26,9 +28,20 @@ namespace Heus.Data.Mysql
         }
 
         public DbProvider DbProvider => DbProvider.MySql;
-        public DbConnection CreateDbConnection(string connectionString)
+        public DbConnection CreateConnection(string connectionString)
         {
-            return new MySqlConnection(connectionString);
+           return  _connections.GetOrAdd(connectionString, connStr => new MySqlConnection(connectionString));
         }
+
+        public void Dispose()
+        {
+            foreach (var connection in _connections.Values)
+            {
+                connection.Dispose();
+            }
+            _connections.Clear();
+        }
+
+      
     }
 }
