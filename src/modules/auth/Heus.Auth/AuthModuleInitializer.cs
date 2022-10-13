@@ -4,7 +4,6 @@ using Heus.Auth.Entities;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
 using Heus.Ddd.Repositories;
-using Heus.Ddd.Uow;
 
 namespace Heus.Auth
 {
@@ -17,23 +16,16 @@ namespace Heus.Auth
 
         }
 
-        public override async Task Configure(ApplicationConfigurationContext context)
+        public override async Task InitializeAsync(IServiceProvider serviceProvider)
         {
-            using var scope = context.ServiceProvider.CreateScope();
-            var serviceProvider = scope.ServiceProvider;
-            var unitOfWorkManager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-            var options = new UnitOfWorkOptions() { IsTransactional = true };
-            using var unitOfWork = unitOfWorkManager.Begin(options);
             var authDbContext = serviceProvider.GetRequiredService<AuthDbContext>();
             await authDbContext.Database.EnsureDeletedAsync();
             await authDbContext.Database.EnsureCreatedAsync();
-         
-            await unitOfWork.CompleteAsync();
-            using var unitOfWork1 = unitOfWorkManager.Begin(options);
             await AddUsers(serviceProvider);
             await AddRoles(serviceProvider);
-            await unitOfWork1.CompleteAsync();
         }
+
+      
 
         private async Task AddUsers(IServiceProvider serviceProvider)
         {

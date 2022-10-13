@@ -1,11 +1,11 @@
 using System.Linq.Expressions;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
+using Heus.Core.Uow;
 using Heus.Ddd.Domain;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories.Filtering;
-using Heus.Ddd.Uow;
-using Heus.Ddd.Uow.Internal;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,7 +15,7 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
     , IInjectServiceProvider, IScopedDependency where TEntity : class, IEntity
 {
     public IServiceProvider ServiceProvider { get; set; } = null!;
-    protected IUnitOfWorkManager UnitOfWorkManager => ServiceProvider.GetRequiredService<UnitOfWorkManager>();
+    protected IUnitOfWorkManager UnitOfWorkManager => ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
     protected IDataFilter DataFilter => ServiceProvider.GetRequiredService<IDataFilter>();
 
     protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
@@ -117,7 +117,7 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
     }
 
 
-    protected virtual TQueryable ApplyDataFilters<TQueryable>(TQueryable query)
+    protected  TQueryable ApplyDataFilters<TQueryable>(TQueryable query)
         where TQueryable : IQueryable<TEntity>
     {
         return ApplyDataFilters<TQueryable, TEntity>(query);

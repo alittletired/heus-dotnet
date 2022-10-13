@@ -1,52 +1,70 @@
-﻿using Heus.Core.DependencyInjection;
+﻿
 
 namespace Heus.Core.DependencyInjection.Internal;
 
 internal sealed class ServiceModuleLoader
 {
-    public List<ServiceModuleDescriptor> LoadModules(Type startupModuleType)
+    public List<ServiceModuleDescriptor> LoadModules(Type startupModuleType, List<Type> additionalModules)
     {
-        var modules = GetDescriptors(startupModuleType);
-        modules = SortByDependency(modules, startupModuleType);
-        return modules.ToList();
-    }
-
-    private List<ServiceModuleDescriptor> GetDescriptors(Type startupModuleType)
-    {
-        var modules = new List<ServiceModuleDescriptor>();
-        FillModules(modules, startupModuleType);
-        SetDependencies(modules);
-
-        return modules.ToList();
-    }
-
-    private void FillModules(List<ServiceModuleDescriptor> modules, Type startupModuleType)
-    {
-        //All modules starting from the startup module
+        var moduleTypes = new HashSet<Type>();
+        
         foreach (var moduleType in ServiceModuleHelper.FindAllModuleTypes(startupModuleType))
         {
-            modules.Add(CreateModuleDescriptor(moduleType));
+           
+            moduleTypes.Add(moduleType);
         }
 
+        foreach (var moduleType in additionalModules)
+        {
+            foreach (var type in  ServiceModuleHelper.FindAllModuleTypes(moduleType))
+            {
+                moduleTypes.Add(type);
+            }
+        
+        }
 
+        var modules =moduleTypes.Select(CreateModuleDescriptor).ToList();
+        SetDependencies(modules);
+        Dictionary<ServiceModuleDescriptor, int> orders = new();
+        foreach (var module in modules)
+        {
+            CalcDependenciesCount(module, orders);
+        }
+      
+        modules = modules.OrderBy(s =>orders[s] ).ToList();
+        return modules;
     }
 
-    private void SetDependencies(List<ServiceModuleDescriptor> modules)
+    private int CalcDependenciesCount(ServiceModuleDescriptor descriptor,
+        Dictionary<ServiceModuleDescriptor, int> orders)
+    {
+        if (orders.TryGetValue(descriptor, out var count))
+        {
+            return count;
+        }
+
+        count = 1 + descriptor.Dependencies.Select(s => CalcDependenciesCount(s, orders)).Sum();
+        
+        orders[descriptor] = count;
+        return count;
+    }
+
+    private  void SetDependencies(List<ServiceModuleDescriptor> modules)
     {
         foreach (var module in modules)
         {
-            SetDependencies(modules, module);
+            foreach (var dependedModuleType in ServiceModuleHelper.FindDependedModuleTypes(module.Type))
+            {
+                var dependedModule = modules.FirstOrDefault(m => m.Type == dependedModuleType);
+                if (dependedModule == null)
+                {
+                    throw new Exception("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + module.Type.AssemblyQualifiedName);
+                }
+
+                module.AddDependency(dependedModule);
+            }
         }
     }
-
-    private List<ServiceModuleDescriptor> SortByDependency(List<ServiceModuleDescriptor> modules,
-        Type startupModuleType)
-    {
-        var sortedModules = modules.SortByDependencies(m => m.Dependencies);
-        sortedModules.MoveItem(m => m.Type == startupModuleType, modules.Count - 1);
-        return sortedModules.Distinct().ToList();
-    }
-
     private ServiceModuleDescriptor CreateModuleDescriptor(
         Type moduleType)
     {
@@ -60,20 +78,6 @@ internal sealed class ServiceModuleLoader
         return module;
     }
 
-    private void SetDependencies(List<ServiceModuleDescriptor> modules, ServiceModuleDescriptor module)
-    {
-        foreach (var dependedModuleType in ServiceModuleHelper.FindDependedModuleTypes(module.Type))
-        {
-            var dependedModule = modules.FirstOrDefault(m => m.Type == dependedModuleType);
-            if (dependedModule == null)
-            {
-                throw new Exception("Could not find a depended module " +
-                                    dependedModuleType.AssemblyQualifiedName + " for " +
-                                    module.Type.AssemblyQualifiedName);
-            }
-
-            module.AddDependency(dependedModule);
-        }
-    }
+   
 }
 

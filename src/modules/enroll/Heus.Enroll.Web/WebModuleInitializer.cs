@@ -10,7 +10,7 @@ namespace Heus.Enroll.Web;
 [DependsOn(typeof(AspNetModuleInitializer)
     , typeof(EnrollModuleInitializer)
     , typeof(MysqlModuleInitializer)
-    , typeof(SqliteModuleInitializer))]
+    )]
 public class WebModuleInitializer : ModuleInitializerBase
 {
     

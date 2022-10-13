@@ -5,12 +5,12 @@ using Heus.Ddd.Dtos;
 namespace Heus.Ddd.Application;
 
 public interface IAdminApplicationService<in TCreateDto, in TUpdateDto, TDto> : IAdminApplicationService
-    , IReadOnlyAppService<TDto>
+    , IGetOneAppService<TDto>
     , ICreateAppService<TCreateDto, TDto>
     , IUpdateAppService<TUpdateDto, TDto>
     , IDeleteAppService
 {
-  Task<PagedList<TDto>> GetListAsync(DynamicQuery<TDto> input);
+  Task<PagedList<TDto>> QueryAsync(DynamicQuery<TDto> input);
 }
 
 /// <summary>

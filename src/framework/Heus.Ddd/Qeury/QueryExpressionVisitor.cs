@@ -97,7 +97,15 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
     }
 
 
+    private object ChangeType(object val, Type type)
+    {
+        if (type != typeof(string))
+        {
+          return  Convert.ChangeType(val,type);
+        }
 
+        return val;
+    }
 
     public Expression? GetWhereException(Type entityType)
     {
@@ -106,23 +114,19 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
         var filters = new List<Expression>();
         foreach (var queryFilter in queryFilters)
         {
-            var val = queryFilter.Value;
-            if (val == null)
+            
+            if (queryFilter.Value == null)
                 continue;
-          
+            var val = queryFilter.Value.ToString()!;
             if (_filterMapping.Mappings.TryGetValue(queryFilter.PropertyName, out var mappingItem))
             {
                 if (mappingItem.EntityType != entityType)
                 {
                     continue;
                 }
-                if (mappingItem.EntityProperty.PropertyType != val.GetType())
-                {
-                    val = Convert.ChangeType(val, mappingItem.EntityProperty.PropertyType);
-                }
-
                 var memberExpr = Expression.Property(paramExpr, mappingItem.EntityProperty);
-                var filterExpr = Expression.Equal(memberExpr, Expression.Constant(val));
+                var constExpr = Expression.Constant(ChangeType(val, mappingItem.EntityProperty.PropertyType));
+                var filterExpr = Expression.Equal(memberExpr,constExpr);
                 filters.Add(filterExpr);
             }
         }

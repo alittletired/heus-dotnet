@@ -1,5 +1,5 @@
 using Heus.Core.DependencyInjection;
-using Heus.Ddd.Uow;
+using Heus.Core.Uow;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Heus.AspNetCore.ActionFilter;

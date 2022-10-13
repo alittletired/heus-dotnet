@@ -5,11 +5,11 @@ using Heus.Core.DependencyInjection.Autofac;
 
 namespace Heus.Core.DependencyInjection;
 
-public class ServiceModuleManager : IModuleContainer
+public class ServiceModuleManager 
 {
     public Type StartupModuleType { get; }
-    public IReadOnlyList<ServiceModuleDescriptor> Modules { get; }
-
+    public List<ServiceModuleDescriptor> Modules { get; }
+    public static List<Type> AdditionalModules { get; } = new();
     public ServiceModuleManager(Type startupModuleType)
     {
 
@@ -18,14 +18,16 @@ public class ServiceModuleManager : IModuleContainer
 
     }
 
-    public IReadOnlyList<ServiceModuleDescriptor> LoadModules()
+    public List<ServiceModuleDescriptor> LoadModules()
     {
         var moduleLoader = new ServiceModuleLoader();
-        return moduleLoader.LoadModules(StartupModuleType);
+        var modules= moduleLoader.LoadModules(StartupModuleType,AdditionalModules);
+        return modules;
     }
 
     public void ConfigureServices(IHostBuilder hostBuilder)
     {
+        
         hostBuilder.UseServiceProviderFactory(new AutofacServiceProviderFactory(containerBuilder =>
         {
             containerBuilder.RegisterServiceMiddlewareSource(new ServiceInjectMethodMiddlewareSource());
@@ -33,8 +35,9 @@ public class ServiceModuleManager : IModuleContainer
 
         hostBuilder.ConfigureServices((hostBuilderContext, services) =>
         {
+            services.AddHostedService<ModuleHostService>();
             services.AddSingleton(this);
-            services.AddSingleton<IModuleContainer>(this);
+          
             var context = new ServiceConfigurationContext(hostBuilderContext, services);
             var serviceTypes = new HashSet<Type>();
            

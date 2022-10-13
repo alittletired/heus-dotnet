@@ -21,7 +21,7 @@ public class IntegratedTestModuleInitializer : ModuleInitializerBase
 
         services.Configure<DbContextConfigurationOptions>(options =>
         {
-            //options.DefaultDbProvider = Core.Data.Options.DbProvider.Sqlite;
+            options.DefaultDbProvider = Core.Data.Options.DbProvider.Sqlite;
         });
         base.ConfigureServices(context);
     }

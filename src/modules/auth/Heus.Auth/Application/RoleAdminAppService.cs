@@ -26,7 +26,7 @@ internal class RoleAdminAppService : AdminApplicationService, IRoleAdminAppServi
         throw new NotImplementedException();
     }
 
-    public Task<PagedList<RoleDto>> GetListAsync(DynamicQuery<RoleDto> input)
+    public Task<PagedList<RoleDto>> QueryAsync(DynamicQuery<RoleDto> input)
     {
         throw new NotImplementedException();
     }

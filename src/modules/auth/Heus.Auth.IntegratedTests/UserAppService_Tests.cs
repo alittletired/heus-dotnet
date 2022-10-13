@@ -41,10 +41,10 @@ public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>
     public async Task GetListAsync()
     {
         var dynamicQuery = new DynamicQuery<UserDto>();
-        var result = await _userService.GetListAsync(dynamicQuery);
+        var result = await _userService.QueryAsync(dynamicQuery);
         result.Count.ShouldBeGreaterThan(0);
         dynamicQuery.Filters["UserName"] = "admin1";
-        var result2 = await _userService.GetListAsync(dynamicQuery);
+        var result2 = await _userService.QueryAsync(dynamicQuery);
         result2.Count.ShouldBe(0);
     }
 

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Data.Sqlite;
 
-// Sqlite使用内存时，只能是单例
-internal class SqliteDbContextOptionsProvider : IDbConnectionProvider,ISingletonDependency
+// Sqlite使锟斤拷锟节达拷时锟斤拷只锟斤拷锟角碉拷锟斤拷
+internal class SqliteDbConnectionProvider : IDbConnectionProvider,ISingletonDependency
 {
     private readonly ConcurrentDictionary<string, DbConnection> _connections = new();
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
@@ -22,7 +22,8 @@ internal class SqliteDbContextOptionsProvider : IDbConnectionProvider,ISingleton
     public DbProvider DbProvider { get; } = DbProvider.Sqlite;
     public DbConnection CreateConnection(string connectionString)
     {
-        return _connections.GetOrAdd(connectionString, connStr => new SqliteConnection(connectionString));
+        return _connections.GetOrAdd(connectionString, 
+            connStr => new SqliteConnection(connectionString));
     }
 
     public void Dispose()

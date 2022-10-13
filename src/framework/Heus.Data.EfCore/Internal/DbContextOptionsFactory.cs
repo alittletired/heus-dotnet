@@ -1,7 +1,7 @@
 ﻿using Heus.Core;
 using Heus.Core.Data;
 using Heus.Core.DependencyInjection;
-using Heus.Ddd.Uow;
+using Heus.Core.Uow;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

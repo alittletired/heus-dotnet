@@ -11,6 +11,8 @@ public class ServiceModuleDescriptor
     public IModuleInitializer Instance { get; }
 
 
+
+
     public IEnumerable<ServiceModuleDescriptor> Dependencies => _dependencies.ToImmutableList();
     private readonly List<ServiceModuleDescriptor> _dependencies;
 
@@ -33,5 +35,6 @@ public class ServiceModuleDescriptor
     }
 
 
+    
 }
 
