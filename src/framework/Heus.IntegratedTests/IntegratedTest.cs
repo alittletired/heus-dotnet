@@ -11,9 +11,14 @@ public class IntegratedTest<TStartup>: WebApplicationFactory<TStartup>
   
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        ServiceModuleManager.AdditionalModules.Add(typeof(IntegratedTestModuleInitializer));
+        builder.ConfigureServices(services =>
+        {
+            services.Configure<ModuleCreateOptions>(options =>
+            {
+                options.AdditionalModules.Add(typeof(IntegratedTestModuleInitializer));
+            });
+        });
         builder.UseEnvironment("Testing");
-       
         base.ConfigureWebHost(builder);
     }
  

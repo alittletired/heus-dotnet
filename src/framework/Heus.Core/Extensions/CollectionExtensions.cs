@@ -1,5 +1,5 @@
 
-namespace Heus.Core;
+namespace System;
 /// <summary>
 /// Extension methods for Collections.
 /// </summary>
@@ -38,6 +38,12 @@ public static class CollectionExtensions
         source.Add(item);
     }
 
- 
+    public static void ForEach<T>(this IEnumerable<T>? source, Action<T> action) {
+        if (source == null) return;
+        foreach(var item in source)
+        {
+            action(item);
+        }
+        }
 }
 

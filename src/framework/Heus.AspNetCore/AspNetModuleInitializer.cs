@@ -64,7 +64,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
         var partManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
         partManager.FeatureProviders.Add(new ServiceControllerFeatureProvider());
 
-        var moduleContainer= app.ApplicationServices.GetRequiredService<ServiceModuleManager>();
+        var moduleContainer= app.ApplicationServices.GetRequiredService<IModuleManager>();
        var moduleAssemblies = moduleContainer.Modules.Select(s => s.Assembly).Distinct();
        foreach (var moduleAssembly in moduleAssemblies)
        {

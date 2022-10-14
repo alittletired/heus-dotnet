@@ -5,14 +5,14 @@ namespace Heus.Core.DependencyInjection;
 internal class ModuleHostService : IHostedService
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ServiceModuleManager _moduleContainer;
-    public ModuleHostService(IServiceProvider serviceProvider, ServiceModuleManager moduleContainer) {
+    private readonly IModuleManager _moduleManager;
+    public ModuleHostService(IServiceProvider serviceProvider, IModuleManager moduleContainer) {
         _serviceProvider = serviceProvider;
-        _moduleContainer = moduleContainer;
+        _moduleManager = moduleContainer;
         }
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        foreach (var module in _moduleContainer.Modules)
+        foreach (var module in _moduleManager.Modules)
         {
             using var scope = _serviceProvider.CreateScope();
             var serviceProvider = scope.ServiceProvider;

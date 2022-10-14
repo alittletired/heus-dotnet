@@ -13,7 +13,7 @@ public static class WebApplicationExtensions
     {
       
 
-        var moduleManager = new ServiceModuleManager(startModuleType);
+        var moduleManager = new DefaultModuleManager(builder.Services, startModuleType);
         moduleManager.ConfigureServices(builder.Host);
         var app = builder.Build();
         moduleManager.Configure(app);

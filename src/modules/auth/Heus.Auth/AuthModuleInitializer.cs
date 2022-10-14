@@ -10,6 +10,7 @@ namespace Heus.Auth
     [DependsOn(typeof(DddModuleInitializer))]
     public class AuthModuleInitializer : ModuleInitializerBase
     {
+        public override string? Name => "Auth";
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             context.Services.AddSingleton<IUserService, UserAdminAppService>();

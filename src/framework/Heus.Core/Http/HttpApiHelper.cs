@@ -17,6 +17,10 @@ public static class HttpApiHelper
             return "api";
         return "default";
     }
+    //public static string GetAreaName(Type targetType)
+    //{
+    //    //targetType.Assembly
+    //}
 
     public static string CalculateRouteTemplate(Type targetType, MethodInfo methodInfo)
     {
@@ -97,10 +101,6 @@ public static class HttpApiHelper
 
         return routeTemplate.ToString();
     }
-
-
-
-
     public static HttpRequestMessage CreateHttpRequest(Type targetType, MethodInfo action, object?[]? args)
     {
         var routeTemplate = CalculateRouteTemplate(targetType,action);

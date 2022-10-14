@@ -1,7 +1,8 @@
 namespace Heus.Core.DependencyInjection;
 public abstract class ModuleInitializerBase : IModuleInitializer
 {
-    public virtual void PreConfigureServices(ServiceConfigurationContext context)
+    public virtual string? Name { get; } = null;
+   public virtual void PreConfigureServices(ServiceConfigurationContext context)
     {
 
     }

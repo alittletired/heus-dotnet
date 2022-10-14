@@ -1,33 +1,38 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Heus.Core.DependencyInjection.Internal;
 using Heus.Core.DependencyInjection.Autofac;
+using Heus.Core.DependencyInjection.Internal;
+using Microsoft.Extensions.Options;
 
 namespace Heus.Core.DependencyInjection;
 
-public class ServiceModuleManager 
+public class DefaultModuleManager : IModuleManager
 {
     public Type StartupModuleType { get; }
     public List<ServiceModuleDescriptor> Modules { get; }
-    public static List<Type> AdditionalModules { get; } = new();
-    public ServiceModuleManager(Type startupModuleType)
+    private ModuleCreateOptions _options = new();
+    public DefaultModuleManager(IServiceCollection services, Type startupModuleType)
     {
 
         StartupModuleType = startupModuleType;
+     
+        var builders= services.Where(s => s.ServiceType == typeof(IConfigureOptions<ModuleCreateOptions>) && s.ImplementationInstance != null)
+            .Select(s => s.ImplementationInstance as IConfigureOptions<ModuleCreateOptions>);
+        builders?.ForEach(b => b?.Configure(_options));
         Modules = LoadModules();
 
     }
-
-    public List<ServiceModuleDescriptor> LoadModules()
+     
+    private List<ServiceModuleDescriptor> LoadModules()
     {
         var moduleLoader = new ServiceModuleLoader();
-        var modules= moduleLoader.LoadModules(StartupModuleType,AdditionalModules);
+        var modules = moduleLoader.LoadModules(StartupModuleType, _options. AdditionalModules);
         return modules;
     }
 
     public void ConfigureServices(IHostBuilder hostBuilder)
     {
-        
+
         hostBuilder.UseServiceProviderFactory(new AutofacServiceProviderFactory(containerBuilder =>
         {
             containerBuilder.RegisterServiceMiddlewareSource(new ServiceInjectMethodMiddlewareSource());
@@ -36,11 +41,11 @@ public class ServiceModuleManager
         hostBuilder.ConfigureServices((hostBuilderContext, services) =>
         {
             services.AddHostedService<ModuleHostService>();
-            services.AddSingleton(this);
-          
+            services.AddSingleton<IModuleManager>(this);
+
             var context = new ServiceConfigurationContext(hostBuilderContext, services);
             var serviceTypes = new HashSet<Type>();
-           
+
             foreach (var preConfigureServices in Modules)
             {
                 preConfigureServices.Instance.PreConfigureServices(context);
@@ -67,7 +72,7 @@ public class ServiceModuleManager
 
                 module.Instance.ConfigureServices(context);
             }
-         
+
             foreach (var postConfigureServices in Modules)
             {
                 postConfigureServices.Instance.PostConfigureServices(context);
@@ -79,13 +84,13 @@ public class ServiceModuleManager
 
     }
 
-    public void Configure(IApplicationBuilder  applicationBuilder)
+    public void Configure(IApplicationBuilder applicationBuilder)
     {
         foreach (var module in Modules)
         {
             module.Instance.Configure(applicationBuilder);
         }
-        
+
     }
 }
 
