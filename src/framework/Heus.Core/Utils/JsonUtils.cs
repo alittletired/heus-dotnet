@@ -1,3 +1,4 @@
+using Heus.Core.JsonConverters;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -12,7 +13,10 @@ public static class JsonUtils
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
       NumberHandling = JsonNumberHandling.WriteAsString
     };
-
+    static JsonUtils()
+    {
+        DefaultOptions.Converters.Add(new LongJsonConverter());
+    }
     public static void ApplyDefaultSettings(this JsonSerializerOptions options)
     {
         options.PropertyNameCaseInsensitive = true;
