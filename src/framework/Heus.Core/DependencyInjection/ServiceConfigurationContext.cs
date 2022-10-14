@@ -10,27 +10,32 @@ namespace Heus.Core.DependencyInjection;
 /// </summary>
 public class ServiceConfigurationContext
 {
-    internal List<IServiceRegistrar> ServiceRegistrars { get; } = new() ;
+    internal List<IServiceRegistrar> ServiceRegistrars { get; } = new();
+
     public void AddServiceRegistrar(IServiceRegistrar serviceRegistrar)
     {
         ServiceRegistrars.Add(serviceRegistrar);
         var serviceTypes = DefaultServiceRegistrar.GetServiceTypes(serviceRegistrar.GetType());
         foreach (var serviceType in serviceTypes)
         {
-            Services.AddSingleton(serviceType, serviceRegistrar);    
+            Services.AddSingleton(serviceType, serviceRegistrar);
         }
-        
-    }
-    private readonly HostBuilderContext _hostBuilderContext;
-    public IServiceCollection Services { get; }
 
-    public ServiceConfigurationContext(HostBuilderContext hostBuilderContext, IServiceCollection services)
+    }
+
+    public IServiceCollection Services { get; }
+    public IConfiguration Configuration { get; }
+   
+    public ServiceConfigurationContext(IServiceCollection services
+        , IConfiguration configuration
+       )
     {
-        _hostBuilderContext = hostBuilderContext;
+
         Services = services;
+        Configuration = configuration;
         AddServiceRegistrar(new DefaultServiceRegistrar());
     }
-    public IConfiguration Configuration => _hostBuilderContext.Configuration;
-    public IHostEnvironment Environment => _hostBuilderContext.HostingEnvironment;
+
+  
 
 }

@@ -3,7 +3,7 @@
     public interface IModuleManager
     {
         List<ServiceModuleDescriptor> Modules { get; }
-        void ConfigureServices(IHostBuilder hostBuilder);
+        void ConfigureServices(WebApplicationBuilder hostBuilder);
         void Configure(IApplicationBuilder applicationBuilder);
 
     }

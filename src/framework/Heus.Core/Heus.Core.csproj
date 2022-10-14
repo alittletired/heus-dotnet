@@ -19,8 +19,7 @@
 	
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Ddd\Entities\" />
-    <Folder Include="Uow\Internal\" />
+   
   </ItemGroup>
 
 

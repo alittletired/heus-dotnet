@@ -363,5 +363,12 @@ namespace Heus.Core.Utils
 
             return obj.Equals(GetDefaultValue(obj.GetType()));
         }
+        public static List<TFieldType> GetFields<TFieldType>(Type type)
+        {
+            return type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                .Where(p => type.IsAssignableFrom(p.FieldType))
+                .Select(pi => (TFieldType)pi.GetValue(null)!)
+                .ToList();
+        }
     }
 }

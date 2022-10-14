@@ -35,7 +35,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
             options.JsonSerializerOptions.ApplyDefaultSettings();
         });
         services.AddHttpContextAccessor();
-        services.AddOpenApi(context.Environment);
+        services.AddOpenApi();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {

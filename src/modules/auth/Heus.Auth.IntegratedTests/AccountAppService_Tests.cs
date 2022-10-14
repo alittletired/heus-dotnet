@@ -1,6 +1,5 @@
 using Heus.Auth.Application;
 using Heus.Auth.Dtos;
-using Heus.Core.Security;
 using Heus.IntegratedTests;
 
 namespace Heus.Auth.IntegratedTests;
@@ -8,11 +7,11 @@ namespace Heus.Auth.IntegratedTests;
 public class AccountAppServiceTests:IClassFixture<IntegratedTest<Program>>
 {
     private readonly IntegratedTest<Program> _factory;
-    private  IAccountAdminAppService _accountService=>_factory.GetServiceProxy<IAccountAdminAppService>(AuthConstants.ServiceName);
+    private readonly  IAccountAdminAppService _accountService;
     public AccountAppServiceTests(IntegratedTest<Program> factory)
     {
         _factory = factory;
-        var server = _factory.Server;
+        _accountService = _factory.GetServiceProxy<IAccountAdminAppService>(AuthConstants.ServiceName);
     }
 
     [Theory]

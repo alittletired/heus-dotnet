@@ -1,4 +1,5 @@
 
+using System.Reflection;
 using Heus.Core.Utils;
 using Heus.Ddd.Dtos;
 using Heus.Ddd.Entities;
@@ -17,7 +18,7 @@ public static class OpenApiExtensions
         var name= TypeHelper.GetSimplifiedName(modelType);
         return name;
     }
-    public static void AddOpenApi(this IServiceCollection services, IHostEnvironment env)
+    public static void AddOpenApi(this IServiceCollection services)
     {
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfigureOptions>();
 
@@ -40,7 +41,8 @@ public static class OpenApiExtensions
             c.OperationFilter<ResponseContentTypeOperationFilter>();
             c.OperationFilter<FromQueryModelFilter>();
             c.SchemaFilter<EnumSchemaFilter>();
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = env.ApplicationName, Version = "v1" });
+            var name = Assembly.GetEntryAssembly()?.GetName().Name ?? "heus";
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = name, Version = "v1" });
             // var operationFilters = FindFilterDescriptors<IOperationFilter>(services);
             // c.OperationFilterDescriptors.AddRange(operationFilters);
             //

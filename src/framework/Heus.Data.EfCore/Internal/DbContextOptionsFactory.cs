@@ -37,12 +37,13 @@ namespace Heus.Data.EfCore.Internal
                 throw new BusinessException("A DbContextOptions can only be created inside a unit of work!");
             }
             var connectionStringName = ConnectionStringNameAttribute.GetConnStringName<TDbContext>();
+            
             var connectionString = _connectionStringResolver.Resolve(connectionStringName);
             var dbProvider = _options.Value.DefaultDbProvider;
             var dbContextOptionsProvider = _dbConnectionProviders.First(p=>p.DbProvider== dbProvider);
             var dbConnection = dbContextOptionsProvider.CreateConnection(connectionString);
             var builder = new DbContextOptionsBuilder<TDbContext>();
-            _logger.LogDebug($" connectionString:{dbConnection.ConnectionString},DbContext:{typeof(TDbContext).Name}");
+            _logger.LogDebug(" connectionString:{ConnectionString},DbContext:{DbContext}",connectionString,typeof(TDbContext).Name);
             _options.Value.ConfigureActions.ForEach(action => action(builder));
             dbContextOptionsProvider.Configure(builder,dbConnection);
             return builder.Options;

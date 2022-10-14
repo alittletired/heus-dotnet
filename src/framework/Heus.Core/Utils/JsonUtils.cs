@@ -15,7 +15,8 @@ public static class JsonUtils
     };
     static JsonUtils()
     {
-        DefaultOptions.Converters.Add(new LongJsonConverter());
+        DefaultOptions.Converters.Add(new LongToStringJsonConverter());
+        DefaultOptions.Converters.Add(new EnumJsonConverterFactory());
     }
     public static void ApplyDefaultSettings(this JsonSerializerOptions options)
     {

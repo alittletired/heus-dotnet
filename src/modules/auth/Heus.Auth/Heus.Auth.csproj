@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="Mapster.EFCore" Version="5.1.0" />
-
+  
   </ItemGroup>
   <ItemGroup>
     <Generated Include="**\*.g.cs" />

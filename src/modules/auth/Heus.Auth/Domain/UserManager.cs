@@ -1,7 +1,5 @@
 using Heus.Auth.Entities;
 using Heus.Core.DependencyInjection;
-using Heus.Core.Utils;
-using Heus.Ddd.Entities;
 
 namespace Heus.Auth.Domain;
 
@@ -18,7 +16,7 @@ public class UserManager:IScopedDependency
         };
         if (userStatus != UserStatus.Normal)
         {
-            return (false,"用户" + EnumHelper.GetSummary(userStatus)) ;
+            return (false,"用户" + userStatus.Name) ;
         }
 
         return (true, "");
