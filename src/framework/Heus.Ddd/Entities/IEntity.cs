@@ -2,5 +2,5 @@ namespace Heus.Ddd.Entities;
 
 public interface IEntity
 {
-    EntityId Id { get; set; } 
+    long Id { get; set; } 
 }

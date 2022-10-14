@@ -36,9 +36,8 @@ public class User : AuditEntity, ICurrentUser
 
     public void SetPassword(string newPassword)
     {
-        Salt = EntityId.NewId().ToString();
+        Salt = RandomHelper.GenerateString(10);
         var password = newPassword + Salt;
         Password = Md5Helper.ToHash(password);
-
     }
 }

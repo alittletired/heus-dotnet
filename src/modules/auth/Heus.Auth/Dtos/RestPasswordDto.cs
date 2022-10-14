@@ -4,12 +4,12 @@ namespace Heus.Auth.Dtos;
 
 public class RestPasswordDto
 {
-    public RestPasswordDto(EntityId userId, string newPassword)
+    public RestPasswordDto(long userId, string newPassword)
     {
         UserId = userId;
         NewPassword = newPassword;
     }
 
-    public EntityId UserId { get; set; }
+    public long UserId { get; set; }
     public string NewPassword{ get; set; }
 }

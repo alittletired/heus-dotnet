@@ -1,3 +1,4 @@
+using Heus.Core.Data;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +45,7 @@ internal class EfCoreRepositoryProvider<TEntity> :
             return;
         }
 
-        entity.Id = EntityId.NewId();
+        entity.Id = SnowflakeId.Default.NextId();
     }
 
     public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)

@@ -11,5 +11,5 @@ public partial class UserCreateDto
 }
 public partial class UserUpdateDto
 {
-    public EntityId Id { get; set; }
+    public long Id { get; set; }
 }

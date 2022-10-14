@@ -20,7 +20,7 @@ public class Resource : AuditEntity, ITreeEntity,ISoftDelete
     public int Sort { get; set; }
     public string TreeCode { get; set; } = null!;
     public string TreePath { get; set; } = null!;
-    public EntityId? ParentId { get; set; }
+    public long? ParentId { get; set; }
 
     #endregion
 

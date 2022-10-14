@@ -8,8 +8,8 @@ using Heus.Ddd.Repositories;
 namespace Heus.Auth.Application;
 public interface IRoleAdminAppService:IAdminApplicationService<RoleCreateDto,RoleUpdateDto,RoleDto>
 {
-    Task<IEnumerable<EntityId>> GetResourceIdsAsync(EntityId id);
-    Task<bool> AuthorizeResourcesAsync(EntityId id, IEnumerable<EntityId> resourceIds);
+    Task<IEnumerable<long>> GetResourceIdsAsync(long id);
+    Task<bool> AuthorizeResourcesAsync(long id, IEnumerable<long> resourceIds);
 
 }
 internal class RoleAdminAppService : AdminApplicationService, IRoleAdminAppService
@@ -21,7 +21,7 @@ internal class RoleAdminAppService : AdminApplicationService, IRoleAdminAppServi
         _roleResourceRepository = roleResourceRepository;
     }
 
-    public Task<RoleDto> GetAsync(EntityId id)
+    public Task<RoleDto> GetAsync(long id)
     {
         throw new NotImplementedException();
     }
@@ -41,17 +41,17 @@ internal class RoleAdminAppService : AdminApplicationService, IRoleAdminAppServi
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(EntityId id)
+    public Task DeleteAsync(long id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<EntityId>> GetResourceIdsAsync(EntityId id)
+    public Task<IEnumerable<long>> GetResourceIdsAsync(long id)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<bool> AuthorizeResourcesAsync(EntityId id, IEnumerable<EntityId> resourceIds)
+    public async Task<bool> AuthorizeResourcesAsync(long id, IEnumerable<long> resourceIds)
     {
        var roleResources=await _roleResourceRepository.GetListAsync(r => r.RoleId == id);
        var deleteItems = roleResources.Where(s => !resourceIds.Contains(s.ResourceId));

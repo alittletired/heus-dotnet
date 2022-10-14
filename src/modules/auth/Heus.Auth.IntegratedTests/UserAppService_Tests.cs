@@ -28,14 +28,14 @@ public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>
     [InlineData(ExistId)]
     public async Task  GetAsync(string id )
     {
-       var result= await _userService.GetAsync(EntityId.Parse(id)) ;
+       var result= await _userService.GetAsync(long.Parse(id)) ;
        result.ShouldNotBeNull();
     }
     [Theory]
     [InlineData(NotExistId)]
     public  void  GetAsync_ThrowEntityNotFound(string id )
     {
-        Assert.ThrowsAsync<EntityNotFoundException>(async ()=>await _userService.GetAsync(EntityId.Parse(id)));
+        Assert.ThrowsAsync<EntityNotFoundException>(async ()=>await _userService.GetAsync(long.Parse(id)));
     }
     [Fact]
     public async Task GetListAsync()
@@ -59,7 +59,7 @@ public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>
        
         User updateDto = new User()
         {
-            Id =EntityId.Parse(id) ,
+            Id =long.Parse(id) ,
             Phone = phone
 
         };
@@ -72,6 +72,6 @@ public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>
     [InlineData(ExistId)]
     public async Task DeleteAsync(string id)
     {
-        await _userService.DeleteAsync(EntityId.Parse(id));
+        await _userService.DeleteAsync(long.Parse(id));
     }
 }

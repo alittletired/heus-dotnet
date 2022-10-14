@@ -1,5 +1,4 @@
 ﻿using Heus.Core.DependencyInjection;
-using Heus.Ddd.Entities;
 
 namespace Heus.Core.Security.Internal;
 
@@ -19,7 +18,7 @@ internal class CurrentUser : ICurrentUser,ISingletonDependency
     public ClaimsPrincipal? Principal => _principalAccessor.Principal;
   
 
-    public EntityId Id => Principal.FindClaimValue<EntityId>(ClaimTypes.NameIdentifier);
+    public long Id => Principal.FindClaimValue<long>(ClaimTypes.NameIdentifier);
 
     public string UserName => Principal.FindClaimValue(ClaimTypes.Name)!;
   

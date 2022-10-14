@@ -25,9 +25,7 @@ public static class OpenApiExtensions
         {
             c.DescribeAllParametersInCamelCase();
             c.CustomSchemaIds( SchemaIdSelector);
-            c.MapType<EntityId>(() => new OpenApiSchema { 
-                Type = "string" 
-                ,Example =new OpenApiString(EntityId.NewId().ToString()) });
+          
             foreach (var filePath in Directory.GetFiles(AppContext.BaseDirectory, "*.xml"))
             {
                 try

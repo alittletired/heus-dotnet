@@ -6,17 +6,17 @@ public abstract class AuditEntity:IAuditEntity
     /// <summary>
     /// 唯一主键，数据库为varchar(24)
     /// </summary>
-    public EntityId Id { get; set; }
+    public long Id { get; set; }
     
     /// <summary>
     /// 创建人
     /// </summary>
-    public EntityId? CreatedBy { get; set; }
+    public long? CreatedBy { get; set; }
     
     /// <summary>
     /// 更新人
     /// </summary>
-    public EntityId? UpdateBy { get; set; }
+    public long? UpdateBy { get; set; }
     
     /// <summary>
     /// 创建时间

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Heus.Auth.Application;
 public interface IUserAdminAppService:IAdminApplicationService<UserCreateDto,UserUpdateDto,UserDto>
 {
-    Task<IEnumerable<EntityId>>  GetUserRoleIdsAsync(EntityId id);
+    Task<IEnumerable<long>>  GetUserRoleIdsAsync(long id);
 }
 
 internal class UserAdminAppService : AdminApplicationService, IUserAdminAppService,IUserService
@@ -29,7 +29,7 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
         _userRoleRepository = userRoleRepository;
     }
 
-    public async Task<UserDto> GetAsync(EntityId id)
+    public async Task<UserDto> GetAsync(long id)
     {
         var user = await _userRepository.GetByIdAsync(id);
         return Mapper.Map<UserDto>(user);
@@ -59,7 +59,7 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
 
     }
 
-    public async Task DeleteAsync(EntityId id)
+    public async Task DeleteAsync(long id)
     {
         await _userRepository.DeleteByIdAsync(id);
     }
@@ -70,7 +70,7 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
         return Mapper.Map<UserDto>(user);
     }
 
-    public async Task<IEnumerable<EntityId>> GetUserRoleIdsAsync(EntityId id)
+    public async Task<IEnumerable<long>> GetUserRoleIdsAsync(long id)
     {
         return await _userRoleRepository.GetQueryable().Where(s => s.UserId == id).Select(s => s.RoleId)
             .ToListAsync();

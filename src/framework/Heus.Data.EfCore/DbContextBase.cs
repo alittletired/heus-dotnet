@@ -1,6 +1,4 @@
 using Heus.Core.DependencyInjection;
-using Heus.Ddd.Data.ValueConversion;
-using Heus.Ddd.Entities;
 using Microsoft.EntityFrameworkCore;
 namespace Heus.Ddd.Data;
 public abstract class DbContextBase<TDbContext> : DbContext,IScopedDependency
@@ -15,9 +13,9 @@ public abstract class DbContextBase<TDbContext> : DbContext,IScopedDependency
 
    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
    {
-      configurationBuilder
-         .Properties<EntityId>()
-         .HaveConversion<EntityIdConverter>().HaveMaxLength(24).AreUnicode(false);
+      //configurationBuilder
+      //   .Properties<long>()
+      //   .HaveConversion<longConverter>().HaveMaxLength(24).AreUnicode(false);
    }
   
 }

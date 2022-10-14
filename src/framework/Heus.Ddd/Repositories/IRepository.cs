@@ -44,7 +44,7 @@ public interface IRepository<TEntity> :IRepository, IRepositoryProvider<TEntity>
     /// <param name="id"></param>
     /// <returns></returns>
     /// <exception cref="EntityNotFoundException"></exception>
-    async Task<TEntity> GetByIdAsync(EntityId id)
+    async Task<TEntity> GetByIdAsync(long id)
     {
         var entity = await GetByIdOrDefaultAsync(id);
         if (entity == null)
@@ -55,13 +55,13 @@ public interface IRepository<TEntity> :IRepository, IRepositoryProvider<TEntity>
         return entity;
     }
 
-    async Task<TEntity?> GetByIdOrDefaultAsync(EntityId id)
+    async Task<TEntity?> GetByIdOrDefaultAsync(long id)
     {
       
         return await GetQueryable().FirstOrDefaultAsync(s => s.Id == id);
 
     }
-    async Task DeleteByIdAsync(EntityId id,
+    async Task DeleteByIdAsync(long id,
             CancellationToken cancellationToken = default) 
     {
         var entity = await GetByIdOrDefaultAsync(id);

@@ -5,11 +5,11 @@ namespace Heus.Auth.Dtos
 {
     public partial class UserRoleCreateDto
     {
-        public EntityId UserId { get; set; }
-        public EntityId RoleId { get; set; }
-        public EntityId? Id { get; set; }
-        public EntityId? CreatedBy { get; set; }
-        public EntityId? UpdateBy { get; set; }
+        public long UserId { get; set; }
+        public long RoleId { get; set; }
+        public long? Id { get; set; }
+        public long? CreatedBy { get; set; }
+        public long? UpdateBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdateDate { get; set; }
     }

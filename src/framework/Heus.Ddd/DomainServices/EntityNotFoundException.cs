@@ -25,7 +25,7 @@ public class EntityNotFoundException:BusinessException
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.
     /// </summary>
-    public EntityNotFoundException(Type entityType, EntityId id)
+    public EntityNotFoundException(Type entityType, long id)
         : this(entityType,"id", id)
     {
 
