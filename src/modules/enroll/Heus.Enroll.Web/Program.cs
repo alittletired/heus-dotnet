@@ -1,9 +1,4 @@
-
-
 using Heus.Enroll.Web;
-
-await WebApplication.CreateBuilder(args).RunWithModuleAsync<WebModuleInitializer>();
-    // .UseCoreService(typeof(WebServiceModule))
-    // .Build()
-    // .RunAsync();
+await WebApplication.CreateBuilder(args)
+    .UseModuleAndRunAsync<WebModuleInitializer>();
 public partial class Program { }

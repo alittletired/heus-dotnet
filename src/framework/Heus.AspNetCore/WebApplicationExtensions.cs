@@ -9,20 +9,28 @@ namespace Microsoft.AspNetCore.Builder;
 /// </summary>
 public static class WebApplicationExtensions
 {
-    public static async Task RunWithModuleAsync(this WebApplicationBuilder builder, Type startModuleType)
+    public static WebApplicationBuilder AddModule(this WebApplicationBuilder builder, Type startModuleType)
     {
-      
-
         var moduleManager = new DefaultModuleManager(builder.Services, startModuleType);
         moduleManager.ConfigureServices(builder.Host);
-        var app = builder.Build();
-        moduleManager.Configure(app);
-        await app.RunAsync();
+        return builder;
     }
-
-    public static Task RunWithModuleAsync<TStartModule>(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddModule<TModule>(this WebApplicationBuilder builder)
     {
-        return builder.RunWithModuleAsync(typeof(TStartModule));
+        return builder.AddModule(typeof(TModule));
+    }
+    public static WebApplication UseModule(this WebApplication app)
+    {
+        var moduleManager = app.Services.GetRequiredService<IModuleManager>();
+        moduleManager.Configure(app);
+        return app;
+    }
+    public static async Task UseModuleAndRunAsync<TModule>(this WebApplicationBuilder builder)
+    {
+        await builder.AddModule<TModule>()
+       .Build()
+       .UseModule()
+       .RunAsync(); ;
     }
 }
 
