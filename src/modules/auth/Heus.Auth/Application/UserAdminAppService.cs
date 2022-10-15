@@ -4,9 +4,7 @@ using Heus.Ddd.Application;
 using Heus.Auth.Entities;
 using Heus.Core.Security;
 using Heus.Ddd.Dtos;
-using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Auth.Application;
@@ -91,6 +89,6 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
         {
             return null;
         }
-      return user;
+      return user.MapTo<ICurrentUser>();
     }
 }

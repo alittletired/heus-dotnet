@@ -2,10 +2,13 @@
 namespace Heus.Core.ObjectMapping;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class ObjectMapperAttribute:Attribute
+public class TwoWayMapAttribute:Attribute, IMapInfo
 {
     public Type MappingType { get; }
-    public ObjectMapperAttribute(Type type)
+
+    public MapType MapType =>MapType.TwoWay;
+
+    public TwoWayMapAttribute(Type type)
     {
         MappingType = type;
     }

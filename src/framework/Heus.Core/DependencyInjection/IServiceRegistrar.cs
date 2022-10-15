@@ -1,34 +1,16 @@
-using Microsoft.Extensions.DependencyInjection;
 namespace Heus.Core.DependencyInjection;
 
-public class ServiceRegistrarChain
-{
-    private readonly List<IServiceRegistrar> _serviceRegistrars;
-    private int _current;
+public interface IServiceRegistrar { 
 
-    public ServiceRegistrarChain(List<IServiceRegistrar> serviceRegistrars)
-    {
-        _serviceRegistrars = serviceRegistrars;
-        _current = serviceRegistrars.Count;
-    }
+    /// <summary>
+    /// 注册服务时回调
+    /// </summary>
+    /// <param name="registrationAction"></param>
+    void OnRegistred(Action<Type> registrationAction);
+    /// <summary>
+    /// 扫描所有程序集的类型时回调
+    /// </summary>
+    /// <param name="scanAction"></param>
+    void OnScan(Action<Type> scanAction);
 
-    public T? FindServiceRegistrar<T>() where T : IServiceRegistrar
-    {
-        return _serviceRegistrars.OfType<T>().FirstOrDefault();
-    }
-    public void Next(IServiceCollection services, Type type)
-    {
-        _current--;
-        if (_current < 0)
-        {
-            return;
-        }
-
-        _serviceRegistrars[_current].Handle(services, type, this);
-    }
-}
-
-public interface IServiceRegistrar
-{
-    void Handle(IServiceCollection services, Type type,ServiceRegistrarChain chain);
 }

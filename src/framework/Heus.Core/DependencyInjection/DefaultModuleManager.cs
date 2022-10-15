@@ -28,13 +28,11 @@ public class DefaultModuleManager : IModuleManager
         var modules = moduleLoader.LoadModules(StartupModuleType, _options. AdditionalModules);
         return modules;
     }
-    public void ConfigureServices(IServiceCollection services
-        , IConfiguration configuration
-        )
+    public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IModuleManager>(this);
         services.AddHostedService<ModuleHostService>();
-        var context = new ServiceConfigurationContext( services,configuration);
+        var context = new ServiceConfigurationContext(services, configuration);
         var serviceTypes = new HashSet<Type>();
 
         foreach (var preConfigureServices in Modules)

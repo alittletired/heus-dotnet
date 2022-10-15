@@ -1,11 +1,13 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Heus.Core.DependencyInjection.Internal;
-public class DefaultServiceRegistrar : IServiceRegistrar
-{
-    public virtual void Handle(IServiceCollection services, Type type, ServiceRegistrarChain chain)
+public class DefaultServiceRegistrar : IServiceRegistrar { 
+
+    public List<Action<Type>> RegistrationActions { get; } = new();
+    public List<Action<Type>> ScanActions { get; } = new();
+    public virtual void Handle(IServiceCollection services, Type type)
     {
+        ScanActions.ForEach(s => s(type));
         var dependencyAttribute = type.GetCustomAttribute<DependencyAttribute>(true);
         var lifeTime = dependencyAttribute?.Lifetime ?? GetServiceLifetime(type);
         if (lifeTime==null)
@@ -29,6 +31,7 @@ public class DefaultServiceRegistrar : IServiceRegistrar
             }
           
         }
+        RegistrationActions.ForEach(s => s(type));
     }
     protected ServiceLifetime? GetServiceLifetime(Type type)
     {
@@ -44,7 +47,6 @@ public class DefaultServiceRegistrar : IServiceRegistrar
         }
         return default;
     }
-
 
     public static List<Type> GetServiceTypes(Type type)
     {
@@ -74,5 +76,15 @@ public class DefaultServiceRegistrar : IServiceRegistrar
         }
 
         return serviceTypes;
+    }
+
+    public void OnRegistred(Action<Type> registrationAction)
+    {
+        RegistrationActions.Add(registrationAction);
+    }
+
+    public void OnScan(Action<Type> scanAction)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,6 +1,5 @@
 using System.Reflection;
 using Heus.Core.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Core.ObjectMapping;
 

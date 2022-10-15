@@ -18,7 +18,7 @@ internal class CurrentUser : ICurrentUser,ISingletonDependency
     public ClaimsPrincipal? Principal => _principalAccessor.Principal;
   
 
-    public long Id => Principal.FindClaimValue<long>(ClaimTypes.NameIdentifier);
+    public long? Id => Principal.FindClaimValue<long>(ClaimTypes.NameIdentifier);
 
     public string UserName => Principal.FindClaimValue(ClaimTypes.Name)!;
   

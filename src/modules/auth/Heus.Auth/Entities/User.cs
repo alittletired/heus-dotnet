@@ -3,6 +3,7 @@ using Heus.Core.Utils;
 
 namespace Heus.Auth.Entities;
 
+using Heus.Core.ObjectMapping;
 using Heus.Core.Security;
 using Heus.Ddd.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 [Table("auth_user")]
-public class User : AuditEntity, ICurrentUser
+[MapTo(typeof(ICurrentUser))]
+public class User : AuditEntity
 {
     /// <summary>
     /// 用户账号

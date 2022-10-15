@@ -51,7 +51,7 @@ internal class JwtTokenProvider : ITokenProvider, IScopedDependency
             _jwtOptions.Value.Issuer,
             _jwtOptions.Value.Audience,
             principal.Claims,
-            expires: DateTime.UnixEpoch.AddMilliseconds(unixTimestamp),
+            expires: DateTime.UnixEpoch.AddMilliseconds((double)unixTimestamp!),
             signingCredentials: signIn);
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

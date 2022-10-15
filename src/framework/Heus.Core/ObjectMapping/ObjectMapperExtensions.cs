@@ -1,6 +1,5 @@
 using Mapster;
 using MapsterMapper;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Core.ObjectMapping;
 
