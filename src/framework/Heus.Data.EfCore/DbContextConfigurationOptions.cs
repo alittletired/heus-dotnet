@@ -24,9 +24,7 @@ public class DbContextConfigurationOptions
 
         foreach (var propertyType in propertyTypes)
         {
-           
             var converterType = typeof(EnumValueConverter<>).MakeGenericType(propertyType);
-
             options.Properties(propertyType)
                 .HaveConversion(converterType);
         }
@@ -34,12 +32,9 @@ public class DbContextConfigurationOptions
         // .HaveConversion<longConverter>().HaveMaxLength(24).AreUnicode(false);
     };
 
-    public readonly List<Action<DbContextOptionsBuilder>> ConfigureActions = new() { DefaultConfigureAction };
+    public  List<Action<DbContextOptionsBuilder>> DbContextOptionsActions { get; }= new() { DefaultConfigureAction };
     public List<Action<ModelConfigurationBuilder>> ModelConfiguration = new() { DefaultModelConfiguration };
-    public DbProvider DefaultDbProvider { get; set; } = DbProvider.MySql;
-
-
-   
-
+    public DbProvider? DefaultDbProvider { get; set; }
+    public Dictionary<Type, Type> EntityDbContextMappings { get; } = new();
 
 }

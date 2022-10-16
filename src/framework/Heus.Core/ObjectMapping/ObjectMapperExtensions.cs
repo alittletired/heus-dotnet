@@ -12,13 +12,5 @@ public static class ObjectMapperExtensions
         services.AddScoped<IMapper, ServiceMapper>();
     }
 
-    public static void AddObjectMap(this IServiceCollection services, Type source, Type desc)
-    {
-        TypeAdapterConfig.GlobalSettings.NewConfig(source, desc);
-    }
-
-    public static void AddObjectMap<TSource, TDesc>(this IServiceCollection services)
-    {
-        TypeAdapterConfig.GlobalSettings.NewConfig<TSource, TDesc>();
-    }
+ 
 }

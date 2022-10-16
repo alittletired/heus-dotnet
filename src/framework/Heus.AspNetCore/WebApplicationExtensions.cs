@@ -13,7 +13,7 @@ public static class WebApplicationExtensions
     {
         var moduleManager = new DefaultModuleManager(builder.Services, startModuleType);
         moduleManager.ConfigureServices(builder);
-        return builder;
+        return builder;    
     }
     public static WebApplicationBuilder AddModule<TModule>(this WebApplicationBuilder builder)
     {

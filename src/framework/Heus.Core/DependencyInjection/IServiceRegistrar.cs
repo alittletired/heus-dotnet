@@ -1,16 +1,11 @@
 namespace Heus.Core.DependencyInjection;
 
-public interface IServiceRegistrar { 
+internal interface IServiceRegistrar { 
 
-    /// <summary>
-    /// 注册服务时回调
-    /// </summary>
-    /// <param name="registrationAction"></param>
-    void OnRegistred(Action<Type> registrationAction);
-    /// <summary>
-    /// 扫描所有程序集的类型时回调
-    /// </summary>
-    /// <param name="scanAction"></param>
+   
+    void OnRegistered(Action<Type> registrationAction);
+    void AddMiddlewares(IServiceRegistrarMiddleware middleware);
     void OnScan(Action<Type> scanAction);
+    void Registrar(IServiceCollection services, Type type);
 
 }

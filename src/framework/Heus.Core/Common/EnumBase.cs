@@ -2,7 +2,8 @@ using System.Runtime.CompilerServices;
 using Heus.Core.Utils;
 namespace Heus.Core;
 
-public abstract class EnumBase<TEnum> : IEquatable<EnumBase<TEnum>>
+public  interface IEnumBase{}
+public abstract class EnumBase<TEnum> :IEnumBase, IEquatable<EnumBase<TEnum>>
     , IComparable<EnumBase<TEnum>> where TEnum : EnumBase<TEnum>
 {
     protected EnumBase(string name, int value)

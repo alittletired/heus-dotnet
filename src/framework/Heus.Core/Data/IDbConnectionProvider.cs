@@ -1,6 +1,6 @@
 using Heus.Core.Data.Options;
-using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Core.Data;
 

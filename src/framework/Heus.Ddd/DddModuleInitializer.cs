@@ -1,23 +1,57 @@
+using System.Reflection;
 using Heus.Core.DependencyInjection;
+using Heus.Ddd.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Heus.Ddd;
 
 [DependsOn(typeof(CoreModuleInitializer))]
 public class DddModuleInitializer : ModuleInitializerBase
 {
-    private readonly RepositoryRegistrar _repositoryRegistrar = new();
+
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
-      context.AddServiceRegistrar(_repositoryRegistrar);
+        AutoAddEntityRepositoryR(context.Services);
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-    
+
     }
 
     public override void PostConfigureServices(ServiceConfigurationContext context)
     {
-        _repositoryRegistrar.RegisterDefaultRepositories(context.Services);
+        var options = context.Services.GetPostOption<RepositoryRegistrationOptions>();
+        foreach (var entityType in options.EntityTypes)
+        {
+            var entityRepositoryType = typeof(IRepository<>).MakeGenericType(entityType);
+            if (!options.CustomRepositories.TryGetValue(entityType, out var repoType))
+            {
+                repoType = options.DefaultRepositoryType.MakeGenericType(entityType);
+            }
+            context.Services.AddScoped(entityRepositoryType, repoType);
+        }
+    }
+
+    private static void AutoAddEntityRepositoryR(IServiceCollection services)
+    {
+        var customRepositories = new Dictionary<Type, Type>();
+        services.OnRegistered(type =>
+        {
+            var repoType = type.GetTypeInfo().GetInterfaces().FirstOrDefault(s =>
+                s.IsGenericType && s.GetGenericTypeDefinition() == typeof(IRepository<>));
+            if (repoType != null)
+            {
+                var entityType = repoType.GenericTypeArguments[0];
+
+                customRepositories.Add(entityType, type);
+            }
+        });
+        services.Configure<RepositoryRegistrationOptions>(options =>
+        {
+            options.CustomRepositories.AddRange(customRepositories);
+        });
+
     }
 }

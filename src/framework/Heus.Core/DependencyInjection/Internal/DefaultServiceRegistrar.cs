@@ -1,19 +1,33 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Heus.Core.DependencyInjection.Internal;
-public class DefaultServiceRegistrar : IServiceRegistrar { 
+internal class DefaultServiceRegistrar : IServiceRegistrar { 
 
-    public List<Action<Type>> RegistrationActions { get; } = new();
-    public List<Action<Type>> ScanActions { get; } = new();
-    public virtual void Handle(IServiceCollection services, Type type)
+    private readonly List<IServiceRegistrarMiddleware> _middlewares = new();
+    private readonly List<Action<Type>> _registrationActions = new();
+    private readonly List<Action<Type>> _scanActions = new();
+    public void OnRegistered(Action<Type> registrationAction)
     {
-        ScanActions.ForEach(s => s(type));
+        _registrationActions.Add(registrationAction);
+    }
+
+    public void AddMiddlewares(IServiceRegistrarMiddleware middleware)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Registrar(IServiceCollection services, Type type)
+    {
+        _scanActions.ForEach(s => s(type));
+
         var dependencyAttribute = type.GetCustomAttribute<DependencyAttribute>(true);
         var lifeTime = dependencyAttribute?.Lifetime ?? GetServiceLifetime(type);
-        if (lifeTime==null)
+        if (lifeTime == null)
         {
             return;
         }
+
+        
         foreach (var serviceType in GetServiceTypes(type))
         {
             var descriptor = ServiceDescriptor.Describe(serviceType, type, lifeTime.Value);
@@ -21,18 +35,22 @@ public class DefaultServiceRegistrar : IServiceRegistrar {
             {
                 services.Replace(descriptor);
             }
-            else  if (dependencyAttribute?.TryRegister == true)
+            else if (dependencyAttribute?.TryRegister == true)
             {
                 services.TryAdd(descriptor);
 
-            }else
+            }
+            else
             {
                 services.Add(descriptor);
             }
-          
+
         }
-        RegistrationActions.ForEach(s => s(type));
+
+        // _middlewares.ForEach(m => m.OnRegister(context));
+        _registrationActions.ForEach(action => action(type));
     }
+
     protected ServiceLifetime? GetServiceLifetime(Type type)
     {
         if (type.IsAssignableTo<ISingletonDependency>())
@@ -78,10 +96,9 @@ public class DefaultServiceRegistrar : IServiceRegistrar {
         return serviceTypes;
     }
 
-    public void OnRegistred(Action<Type> registrationAction)
-    {
-        RegistrationActions.Add(registrationAction);
-    }
+   
+
+ 
 
     public void OnScan(Action<Type> scanAction)
     {

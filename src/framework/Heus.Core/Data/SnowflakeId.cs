@@ -39,7 +39,7 @@ public class SnowflakeId
     /// middle 10 bit: workerId
     /// lowest 53 bit: all 0
     /// </summary>
-    private long _workerId { get; set; }
+    private  long _workerId;
 
     /// <summary>
     /// timestamp and sequence mix in one Long
@@ -49,7 +49,7 @@ public class SnowflakeId
     /// </summary>
     private long _timestampAndSequence;
 
-    private static SnowflakeId? _snowflakeId;
+    private  static  SnowflakeId? _snowflakeId;
 
     private static readonly object SLock = new object();
 
@@ -155,14 +155,15 @@ public class SnowflakeId
     /// <returns>workerId</returns>
     private static long GenerateWorkerIdBaseOnMac()
     {
-        NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+        NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
         //exclude virtual and Loopback
-        var firstUpInterface = nics.OrderByDescending(x => x.Speed).FirstOrDefault(x => !x.Description.Contains("Virtual") && x.NetworkInterfaceType != NetworkInterfaceType.Loopback && x.OperationalStatus == OperationalStatus.Up);
+        var firstUpInterface = networkInterfaces.OrderByDescending(x => x.Speed)
+            .FirstOrDefault(x => !x.Description.Contains("Virtual") && x.NetworkInterfaceType != NetworkInterfaceType.Loopback && x.OperationalStatus == OperationalStatus.Up);
         if (firstUpInterface == null)
         {
             throw new Exception("no available mac found");
         }
-        PhysicalAddress address = firstUpInterface.GetPhysicalAddress();
+        var address = firstUpInterface.GetPhysicalAddress();
         byte[] mac = address.GetAddressBytes();
 
         return ((mac[4] & 0B11) << 8) | (mac[5] & 0xFF);

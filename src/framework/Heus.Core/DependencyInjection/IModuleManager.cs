@@ -7,9 +7,10 @@
         void Configure(IApplicationBuilder applicationBuilder);
 
     }
-    public class ModuleCreateOptions
+    public static class ModuleCreateOptions
     {
-        public List<Type> AdditionalModules { get; } = new();
+        
+        public static List<Type> AdditionalModules { get; } = new();
     }
 
 }

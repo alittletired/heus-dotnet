@@ -1,10 +1,11 @@
 
-using Heus.Core.DependencyInjection;
+
 using Heus.Core.Data.Options;
+using Heus.Core.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Heus.Core.Data.Internal;
-internal class DefaultConnectionStringResolver: IConnectionStringResolver
+namespace Heus.Core.Data;
+internal class DefaultConnectionStringResolver: IConnectionStringResolver,ISingletonDependency
 {
     private readonly IOptions<DbConnectionOptions> _options;
      public DefaultConnectionStringResolver(IOptions<DbConnectionOptions> options)

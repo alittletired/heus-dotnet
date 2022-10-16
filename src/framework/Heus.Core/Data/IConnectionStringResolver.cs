@@ -1,10 +1,6 @@
-﻿
+﻿namespace Heus.Core.Data;
 
-using Heus.Core.DependencyInjection;
-
-namespace Heus.Core.Data;
-
-public interface IConnectionStringResolver: ISingletonDependency
+public interface IConnectionStringResolver
 {
     string Resolve(string? connectionStringName = null);
 }

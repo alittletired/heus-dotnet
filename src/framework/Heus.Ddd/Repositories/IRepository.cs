@@ -10,18 +10,10 @@ public interface ISupportSaveChanges
 {
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }
-public  interface  IRepository{}
-public interface IRepository<TEntity> :IRepository, IRepositoryProvider<TEntity> where TEntity : class, IEntity
+
+public interface IRepository<TEntity> : IRepositoryProvider<TEntity> where TEntity : class, IEntity
 {
-    /// <summary>
-    /// Get a single entity by the given <paramref name="predicate"/>.
-    /// <para>
-    /// It returns null if there is no entity with the given <paramref name="predicate"/>.
-    /// It throws <see cref="InvalidOperationException"/> if there are multiple entities with the given <paramref name="predicate"/>.
-    /// </para>
-    /// </summary>
-    /// <param name="predicate">A condition to find the entity</param>
-    /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
+
     Task<TEntity?> FindAsync(
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken = default

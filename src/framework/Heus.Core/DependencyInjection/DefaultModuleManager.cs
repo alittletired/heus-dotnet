@@ -10,31 +10,32 @@ public class DefaultModuleManager : IModuleManager
 {
     public Type StartupModuleType { get; }
     public List<ServiceModuleDescriptor> Modules { get; }
-    private ModuleCreateOptions _options = new();
+ 
     public DefaultModuleManager(IServiceCollection services, Type startupModuleType)
     {
 
         StartupModuleType = startupModuleType;
-     
-        var builders= services.Where(s => s.ServiceType == typeof(IConfigureOptions<ModuleCreateOptions>) && s.ImplementationInstance != null)
-            .Select(s => s.ImplementationInstance as IConfigureOptions<ModuleCreateOptions>);
-        builders?.ForEach(b => b?.Configure(_options));
+
+        
         Modules = LoadModules();
 
     }
+
     private List<ServiceModuleDescriptor> LoadModules()
     {
         var moduleLoader = new ServiceModuleLoader();
-        var modules = moduleLoader.LoadModules(StartupModuleType, _options. AdditionalModules);
+        var modules = moduleLoader.LoadModules(StartupModuleType,     ModuleCreateOptions.AdditionalModules);
         return modules;
     }
+
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IModuleManager>(this);
         services.AddHostedService<ModuleHostService>();
+        var serviceRegistrar = new DefaultServiceRegistrar();
+        services.AddSingleton<IServiceRegistrar>(serviceRegistrar);
         var context = new ServiceConfigurationContext(services, configuration);
         var serviceTypes = new HashSet<Type>();
-
         foreach (var preConfigureServices in Modules)
         {
             preConfigureServices.Instance.PreConfigureServices(context);
@@ -54,8 +55,7 @@ public class DefaultModuleManager : IModuleManager
                                !type.IsGenericType).ToList();
             foreach (var type in types)
             {
-                var chain = new ServiceRegistrarChain(context.ServiceRegistrars);
-                chain.Next(context.Services, type);
+                serviceRegistrar.Registrar(context.Services, type);
                 serviceTypes.Add(type);
             }
 
@@ -68,13 +68,14 @@ public class DefaultModuleManager : IModuleManager
 
         }
     }
+
     public void ConfigureServices(WebApplicationBuilder builder)
     {
         builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory(containerBuilder =>
         {
             containerBuilder.RegisterServiceMiddlewareSource(new ServiceInjectMethodMiddlewareSource());
         }));
-        ConfigureServices(builder.Services,builder.Configuration);
+        ConfigureServices(builder.Services, builder.Configuration);
     }
 
     public void Configure(IApplicationBuilder applicationBuilder)

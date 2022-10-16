@@ -1,5 +1,6 @@
 
 namespace System.Collections.Generic;
+
 /// <summary>
 /// Extension methods for Dictionary.
 /// </summary>
@@ -26,7 +27,8 @@ public static class DictionaryExtensions
         return false;
     }
 
-    public static TValue? GetOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key) where TValue:class where TKey:notnull
+    public static TValue? GetOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
+        where TValue : class where TKey : notnull
     {
         TValue? obj;
         return dictionary.TryGetValue(key, out obj) ? obj : default;
@@ -42,7 +44,8 @@ public static class DictionaryExtensions
     /// <typeparam name="TKey">Type of the key</typeparam>
     /// <typeparam name="TValue">Type of the value</typeparam>
     /// <returns>Value if found, default if can not found.</returns>
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> factory)
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
+        Func<TKey, TValue> factory)
     {
         if (dictionary.TryGetValue(key, out var obj))
         {
@@ -51,13 +54,26 @@ public static class DictionaryExtensions
 
         return dictionary[key] = factory(key);
     }
-    public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue)
+
+    public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
+        TValue defaultValue)
     {
         if (dictionary.TryGetValue(key, out var obj))
         {
             return obj!;
         }
+
         return defaultValue;
+    }
+
+    public static void AddRange<TKey, TValue>(this IDictionary<TKey, TValue> dictionary,
+        IDictionary<TKey, TValue> other)
+    {
+        foreach (var (key, value) in other)
+        {
+            dictionary.Add(key, value);
+        }
+
     }
 
 }
