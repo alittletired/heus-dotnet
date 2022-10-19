@@ -1,0 +1,9 @@
+{
+  "name": "auth",
+  "siteName": "惠学院-管理后台",
+  "output": {
+    "web": "/src/config"
+  },
+  "hideMenus": [],
+  "apiBaseUrl": ""
+}
