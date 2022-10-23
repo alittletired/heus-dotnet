@@ -5,23 +5,23 @@ namespace Heus.Core;
 public  interface IEnumClass{
      string Name { get; }
      int Value { get; }
-    string Display { get; }
+    string Title { get; }
 }
 
 
 public abstract class EnumClass<TEnum> : IEnumClass, IEquatable<EnumClass<TEnum>>
     , IComparable<EnumClass<TEnum>> where TEnum : EnumClass<TEnum>
 {
-    protected EnumClass(string name, int value,string display)
+    protected EnumClass(string name, int value,string title)
     {
         Name = name;
         Value = value;
-        Display = display;
+        Title = title;
     }
 
     public string Name { get; }
     public int Value { get; }
-    public string Display { get; }
+    public string Title { get; }
 
     public static TEnum[] GetEnumOptions() {
         return EnumOptions.Value;

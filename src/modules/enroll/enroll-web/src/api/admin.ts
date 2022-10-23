@@ -114,11 +114,29 @@ export interface UserDto {
 }
 
 /** 用户状态 */
-export interface UserStatus {
-  name?: string
-  value?: number
+export enum UserStatus {
+  /** 禁用 */
+  Disabled = 1,
+  /** 锁定 */
+  Locked = 3,
+  /** 正常 */
+  Normal = 0,
+  /** 不存在 */
+  NotFound = 4,
+  /** 未激活 */
+  Unactivated = 2,
 }
 
+export const userStatusOptions = [
+  { title: '禁用', value: 1 },
+  { title: '锁定', value: 3 },
+  { title: '正常', value: 0 },
+  { title: '不存在', value: 4 },
+  { title: '未激活', value: 2 },
+]
+
+export const getUserStatusTitle = (userStatus: UserStatus) =>
+  userStatusOptions.find((o) => o.value === userStatus)?.title
 export interface UserUpdateDto {
   id?: long
 }

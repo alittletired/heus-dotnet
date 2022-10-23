@@ -13,7 +13,6 @@ import fs from 'fs'
 import prettier from 'prettier'
 import SwaggerParser from './SwaggerParser'
 const httpMethods = ['get', 'post', 'put', 'delete', 'patch']
-const ENUM_FLAG = '__enum__'
 export default class ApiCodeGen {
   constructor(protected apiContext: ApiContext) {}
   generate() {
@@ -71,9 +70,6 @@ export default class ApiCodeGen {
       (a, b) => parseInt(properties[a].example) - parseInt(properties[b].example),
     )
     for (let propertyName of propNames) {
-      if (propertyName === ENUM_FLAG) {
-        continue
-      }
       let property = properties[propertyName]
       arr.push(`/** ${property.title} */`)
       arr.push(`${propertyName}=${property.default},`)
@@ -83,9 +79,6 @@ export default class ApiCodeGen {
     const enumOptionName = `${toLowerCamelCase(enumName)}Options`
     arr.push(`export const ${enumOptionName}=[\n`)
     for (let propertyName of propNames) {
-      if (propertyName === ENUM_FLAG) {
-        continue
-      }
       let property = properties[propertyName]
       arr.push(`{title:'${property.title}',value:${property.default}},`)
     }
@@ -97,55 +90,13 @@ export default class ApiCodeGen {
   }
   protected buildFile() {
     let { models, config } = this.apiContext
-    let tsContent: string[] = [
-      `
-      interface RequestConfig<D> {
-        data?: D
-        params?: any
-      }
-      
-      interface HttpClient {
-        get<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
-        post<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
-        delete<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
-        put<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
-        patch<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
-      }
-      let httpClient: HttpClient
-      export function setHttpClient(client: HttpClient) {
-        httpClient = client
-      }
-      
-      type long=string
-
-      type Operator =
-  | 'eq'
-  | 'neq'
-  | 'like'
-  | 'headLike'
-  | 'tailLike'
-  | 'in'
-  | 'notIn'
-  | 'gt'
-  | 'lt'
-  | 'gte'
-  | 'lte'
-
-      interface PageRequest {
-        pageIndex?: number
-        pageSize?: number
-        orderBy?: string
-      }
-    type DynamicQuery<T> = {
-  [P in keyof T]?: T[P] | { [key in Operator as \`$$\{key\}\`]?: T[P] | Array<T[P]> }
-} & PageRequest
-    `,
-    ]
+    var template = fs.readFileSync(__dirname + '/Template.ts').toString()
+    let tsContent: string[] = [template]
     let typeNames = Object.keys(models).sort()
     // 生成ts类型
     for (let name of typeNames) {
       let modelSchma = models[name]
-      if (typeof modelSchma.properties[ENUM_FLAG] === 'object') {
+      if (modelSchma.format == 'enum') {
         this.generateEnum(tsContent, modelSchma)
       } else {
         this.generateModel(tsContent, modelSchma)
@@ -220,11 +171,7 @@ export default class ApiCodeGen {
         pathParams.push(pathStr)
       } else if (param.in === 'query') {
         let queryStr = ''
-        if (paramName.includes(ENUM_FLAG)) {
-          let [paramName1, typeName] = paramName.split(ENUM_FLAG)
-          paramName = paramName1
-          param.type = typeName
-        }
+
         if (param.description && paramName !== param.description) {
           queryStr += `/** ${param.description} */`
         }

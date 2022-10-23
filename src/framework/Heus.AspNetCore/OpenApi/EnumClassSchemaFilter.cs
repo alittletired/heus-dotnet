@@ -32,14 +32,12 @@ internal class EnumClassSchemaFilte : ISchemaFilter
 
         foreach (var option in options!)
         {
-
             OpenApiSchema propSchema = new();
             var value = option.Value;
             var name = option.Name;
-            var enumMember = context.Type.GetMember(name).First();
             propSchema.Default = new OpenApiInteger(value);
-            propSchema.Description = option.Display;
-          
+            propSchema.Title = option.Title;
+            propSchema.Type = "integer";
             schema.Properties[name] = propSchema;
         }
 

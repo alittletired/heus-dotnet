@@ -181,6 +181,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
       description: definition.description,
       properties: {},
       name: finalName,
+      format: definition.format,
     }
 
     //先插入 防止递归引用类型

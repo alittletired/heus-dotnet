@@ -25,7 +25,7 @@ export interface ApiMethodSchma {
   summary?: string
   params: Record<string, ApiMethodParamSchema>
 }
-export type ApiClassSchma = {[key: string]: ApiMethodSchma | ApiClassSchma}
+export type ApiClassSchma = { [key: string]: ApiMethodSchma | ApiClassSchma }
 
 export interface ApiModelPropsSchma {
   name: string
@@ -40,6 +40,7 @@ export interface ApiModelSchma {
   description?: string
   properties: Record<string, ApiModelPropsSchma>
   name: string
+  format?: string
 }
 export interface ApiContext<T = any> {
   config: ApiConfig
