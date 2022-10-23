@@ -128,15 +128,15 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
     }
     return null
   }
-  protected getType(property: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject): string {
+  protected getType(
+    property: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
+    propName?: string,
+  ): string {
     if ('$ref' in property) return this.getRefType(property.$ref)
     if ('type' in property) {
       let type = property.type
       switch (type) {
         case 'integer':
-          if (property.format?.startsWith('enum:')) {
-            return this.getRefType(property.format.split(':')[1])
-          }
           if (property.format == 'int64') return 'long'
           return 'number'
         case 'number':
@@ -153,6 +153,9 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
           throw new Error(`数组解析出错${property}`)
 
         case 'object':
+          if (property.format == 'enum') {
+            return this.getRefType(`#/components/schemas/${propName}`)
+          }
           if (property.additionalProperties) return 'any'
           throw new Error(`无法识别的object类型${JSON.stringify(property)}`)
         default:
@@ -192,7 +195,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
     for (let propName in definition.properties) {
       let property = definition.properties[propName]
       try {
-        let tsType = this.getType(property)
+        let tsType = this.getType(property, propName)
         if (tsType === genericName || tsType === genericName + '[]') {
           tsType = tsType.replace(genericName, 'T')
         }
