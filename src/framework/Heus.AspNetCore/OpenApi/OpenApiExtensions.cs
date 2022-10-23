@@ -41,6 +41,7 @@ public static class OpenApiExtensions
             c.OperationFilter<ResponseContentTypeOperationFilter>();
             c.OperationFilter<FromQueryModelFilter>();
             c.SchemaFilter<EnumSchemaFilter>();
+            c.SchemaFilter<EnumClassSchemaFilte>();
             var name = Assembly.GetEntryAssembly()?.GetName().Name ?? "heus";
             c.SwaggerDoc("v1", new OpenApiInfo { Title = name, Version = "v1" });
             // var operationFilters = FindFilterDescriptors<IOperationFilter>(services);

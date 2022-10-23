@@ -18,7 +18,7 @@ public abstract class DbContextBase<TDbContext> : DbContext,IScopedDependency
        var modelBuilder = configurationBuilder.CreateModelBuilder(null);
        var propertyTypes = modelBuilder.Model.GetEntityTypes()
            .SelectMany(e => e.ClrType.GetProperties())
-           .Where(p => IsDerived(p.PropertyType, typeof(EnumBase<>)))
+           .Where(p => IsDerived(p.PropertyType, typeof(EnumClass<>)))
            .Select(p => p.PropertyType)
            .Distinct();
 

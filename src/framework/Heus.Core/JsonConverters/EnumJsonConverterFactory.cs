@@ -7,8 +7,8 @@ public class EnumJsonConverterFactory : JsonConverterFactory
 {
     public override bool CanConvert(Type typeToConvert)
     {
-        return typeToConvert.IsAssignableTo<IEnumBase>() &&
-               typeToConvert.IsAssignableTo(typeof(EnumBase<>).MakeGenericType(typeToConvert));
+        return typeToConvert.IsAssignableTo<IEnumClass>() &&
+               typeToConvert.IsAssignableTo(typeof(EnumClass<>).MakeGenericType(typeToConvert));
     }
 
     public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)

@@ -18,7 +18,7 @@ public class DbContextConfigurationOptions
         var modelBuilder = options.CreateModelBuilder(null);
         var propertyTypes = modelBuilder.Model.GetEntityTypes()
             .SelectMany(e => e.ClrType.GetProperties())
-            .Where(p =>p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition()== typeof(EnumBase<>))
+            .Where(p =>p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition()== typeof(EnumClass<>))
             .Select(p => p.PropertyType)
             .Distinct();
 

@@ -3,14 +3,14 @@ using System.Text.Json.Serialization;
 
 namespace Heus.Core.JsonConverters;
 
-public class EnumJsonConverter<T>: JsonConverter<T> where T:EnumBase<T>
+public class EnumJsonConverter<T>: JsonConverter<T> where T:EnumClass<T>
 {
     public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return reader.TokenType switch
         {
-            JsonTokenType.Number =>EnumBase<T>.FromValue(reader.GetInt32()),
-            JsonTokenType.String => EnumBase<T>.FromName(reader.GetString()!),
+            JsonTokenType.Number =>EnumClass<T>.FromValue(reader.GetInt32()),
+            JsonTokenType.String => EnumClass<T>.FromName(reader.GetString()!),
             _ => throw new InvalidCastException(reader.TokenType.ToString())
         };
     }

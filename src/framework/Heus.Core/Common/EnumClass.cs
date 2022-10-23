@@ -2,22 +2,35 @@ using System.Runtime.CompilerServices;
 using Heus.Core.Utils;
 namespace Heus.Core;
 
-public  interface IEnumBase{}
-public abstract class EnumBase<TEnum> :IEnumBase, IEquatable<EnumBase<TEnum>>
-    , IComparable<EnumBase<TEnum>> where TEnum : EnumBase<TEnum>
+public  interface IEnumClass{
+     string Name { get; }
+     int Value { get; }
+    string Display { get; }
+}
+
+
+public abstract class EnumClass<TEnum> : IEnumClass, IEquatable<EnumClass<TEnum>>
+    , IComparable<EnumClass<TEnum>> where TEnum : EnumClass<TEnum>
 {
-    protected EnumBase(string name, int value)
+    protected EnumClass(string name, int value,string display)
     {
         Name = name;
         Value = value;
+        Display = display;
     }
 
     public string Name { get; }
     public int Value { get; }
+    public string Display { get; }
 
+    public static TEnum[] GetEnumOptions() {
+        return EnumOptions.Value;
+        }
     private static readonly Lazy<TEnum[]> EnumOptions =
-        new(() => TypeHelper.GetFields<TEnum>(typeof(TEnum)).OrderBy(t => t.Name)
-            .ToArray(), LazyThreadSafetyMode.ExecutionAndPublication);
+        new(() => {
+            var options = TypeHelper.GetFields<TEnum>(typeof(TEnum));
+            return options.OrderBy(t => t.Name)            .ToArray();
+            },  LazyThreadSafetyMode.ExecutionAndPublication);
 
     private static readonly Lazy<Dictionary<string, TEnum>> FromNames =
         new(() => EnumOptions.Value.ToDictionary(item => item.Name, StringComparer.OrdinalIgnoreCase));
@@ -55,7 +68,7 @@ public abstract class EnumBase<TEnum> :IEnumBase, IEquatable<EnumBase<TEnum>>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override int GetHashCode() => Value.GetHashCode();
 
-    public bool Equals(EnumBase<TEnum>? other)
+    public bool Equals(EnumClass<TEnum>? other)
     {
         if (ReferenceEquals(this, other))
             return true;
@@ -69,15 +82,15 @@ public abstract class EnumBase<TEnum> :IEnumBase, IEquatable<EnumBase<TEnum>>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public int CompareTo(EnumBase<TEnum>? other)
+    public int CompareTo(EnumClass<TEnum>? other)
     {
         return Value.CompareTo(other?.Value);
     }
 
-    public override bool Equals(object? obj) => obj is EnumBase<TEnum> other && Equals(other);
+    public override bool Equals(object? obj) => obj is EnumClass<TEnum> other && Equals(other);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(EnumBase<TEnum> left, EnumBase<TEnum> right)
+    public static bool operator ==(EnumClass<TEnum> left, EnumClass<TEnum> right)
     {
 
 
@@ -86,35 +99,32 @@ public abstract class EnumBase<TEnum> :IEnumBase, IEquatable<EnumBase<TEnum>>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(EnumBase<TEnum> left, EnumBase<TEnum> right) =>
+    public static bool operator !=(EnumClass<TEnum> left, EnumClass<TEnum> right) =>
         !(left == right);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(EnumBase<TEnum> left, EnumBase<TEnum> right) =>
+    public static bool operator <(EnumClass<TEnum> left, EnumClass<TEnum> right) =>
         left.CompareTo(right) < 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(EnumBase<TEnum> left, EnumBase<TEnum> right) =>
+    public static bool operator <=(EnumClass<TEnum> left, EnumClass<TEnum> right) =>
         left.CompareTo(right) <= 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(EnumBase<TEnum> left, EnumBase<TEnum> right) =>
+    public static bool operator >(EnumClass<TEnum> left, EnumClass<TEnum> right) =>
         left.CompareTo(right) > 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(EnumBase<TEnum> left, EnumBase<TEnum> right) =>
+    public static bool operator >=(EnumClass<TEnum> left, EnumClass<TEnum> right) =>
         left.CompareTo(right) >= 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator int(EnumBase<TEnum> enumBase) => enumBase.Value;
+    public static implicit operator int(EnumClass<TEnum> enumBase) => enumBase.Value;
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator EnumBase<TEnum>(int value) =>
+    public static explicit operator EnumClass<TEnum>(int value) =>
         FromValue(value);
 
     #endregion
-
-
-
 }

@@ -37,8 +37,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Data.Sqlite", "framewo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Settings", "framework\Heus.Settings\Heus.Settings.csproj", "{000219DF-DBBF-4E90-929F-52E87073B273}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "enroll-web", "modules\enroll\enroll-web\enroll-web.esproj", "{A52F04F8-29C3-43CF-8F29-3DC755F51CEE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,12 +95,6 @@ Global
 		{000219DF-DBBF-4E90-929F-52E87073B273}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{000219DF-DBBF-4E90-929F-52E87073B273}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{000219DF-DBBF-4E90-929F-52E87073B273}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A52F04F8-29C3-43CF-8F29-3DC755F51CEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A52F04F8-29C3-43CF-8F29-3DC755F51CEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A52F04F8-29C3-43CF-8F29-3DC755F51CEE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{A52F04F8-29C3-43CF-8F29-3DC755F51CEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A52F04F8-29C3-43CF-8F29-3DC755F51CEE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A52F04F8-29C3-43CF-8F29-3DC755F51CEE}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,7 +115,6 @@ Global
 		{719ED3AF-5396-4A13-A49A-1D5838D4725F} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
 		{20217119-D6AA-453A-8E0B-FAF862B1B9FB} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
 		{000219DF-DBBF-4E90-929F-52E87073B273} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
-		{A52F04F8-29C3-43CF-8F29-3DC755F51CEE} = {6BBC5B03-FC03-4182-A462-8928209562EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {734361D4-560C-4467-BE8D-95EBDCA95E53}
