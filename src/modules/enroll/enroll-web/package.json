@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "api": "ts-node  scripts/api"
+    "api": "ts-node --project ./tsconfig.node.json scripts/api"
   },
   "dependencies": {
     "axios": "^1.1.3",

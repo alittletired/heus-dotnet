@@ -1,0 +1,9 @@
+{
+  "apis": [
+    {
+      "name": "admin",
+      "pathSplitIndex": 1,
+      "url": "http://localhost:6001/swagger/admin/swagger.json"
+    }
+  ]
+}

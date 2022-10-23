@@ -1,4 +1,4 @@
-import {OpenAPIV3} from './openapi-types'
+import { OpenAPIV3 } from './openapi-types'
 import {
   ApiClassSchma,
   ApiContext,
@@ -14,7 +14,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
 
   parse(apiConext: ApiContext<OpenAPIV3.Document>) {
     this.apiConext = apiConext
-    let {config, docs} = this.apiConext
+    let { config, docs } = this.apiConext
     for (let path in docs.paths) {
       try {
         this.parsePath(path, docs.paths[path]!)
@@ -38,7 +38,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
     for (let operationPair of operations) {
       let [httpMethod, operation] = operationPair
       if (!operation) continue
-      let {parameters = [], responses, requestBody} = operation
+      let { parameters = [], responses, requestBody } = operation
       let apiClasses = this.apiConext.classes
       let methodParts = [...pathParts]
       for (let i = 0; i < methodParts.length; i++) {
@@ -51,31 +51,29 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
       }
       let apiMethod = apiClasses[httpMethod] as ApiMethodSchma
       if (apiMethod) {
-        console.error(
-          `同名的方法签名${path} ${apiMethod.path}没有定义200返回对象,将不生成`,
-        )
+        console.error(`同名的方法签名${path} ${apiMethod.path}没有定义200返回对象,将不生成`)
         continue
       }
       if (!responses) {
         console.error(`${path} 没有定义返回对象,将不生成`)
+
         continue
       }
       let response = responses[200]!
       //@ts-ignore
-      if (!response || !response.content) {
+      if (!response) {
         console.error(`${path} 没有定义200返回对象,将不生成`)
 
         continue
       }
-
-      let responseType: string = ''
-      if ('$ref' in response) {
-        responseType = this.getType(response)
-      } else if ('*/*' in response.content!) {
-        responseType = this.getType((response.content as any)['*/*'].schema)
+      let responseSchema = this.getResponseSchema(responses)
+      if (!responseSchema) {
+        console.warn(`${path} 没有定义返回值，将不生成`)
+        continue
       }
+      let responseType: string = this.getType(responseSchema!)
       if (!responseType) {
-        console.warn(`${path} 没有定义返回值`)
+        console.warn(`${path} 没有定义返回值:${responseSchema}`)
       }
       let params: Record<string, ApiMethodParamSchema> = {}
       if (requestBody && 'content' in requestBody) {
@@ -88,7 +86,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
       }
       for (let p of parameters) {
         if ('in' in p) {
-          let {in: paramIn, name} = p
+          let { in: paramIn, name } = p
           if (paramIn === 'header' || paramIn === 'formData') {
             continue
           }
@@ -99,7 +97,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
             type = this.getType(p.schema as any)
           }
           try {
-            params[name] = {...p, type}
+            params[name] = { ...p, type }
           } catch (ex) {
             console.error(path)
 
@@ -118,9 +116,19 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
     }
   }
 
-  protected getType(
-    property: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
-  ): string {
+  protected getResponseSchema(responses: OpenAPIV3.ResponsesObject) {
+    let response = responses['200']!
+    if ('content' in response) {
+      var mediaObject = response['content']!
+      if ('application/json' in mediaObject) {
+        return mediaObject['application/json'].schema
+      } else if ('*/*' in mediaObject) {
+        return mediaObject['*/*'].schema
+      }
+    }
+    return null
+  }
+  protected getType(property: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject): string {
     if ('$ref' in property) return this.getRefType(property.$ref)
     if ('type' in property) {
       let type = property.type
@@ -129,6 +137,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
           if (property.format?.startsWith('enum:')) {
             return this.getRefType(property.format.split(':')[1])
           }
+          if (property.format == 'int64') return 'long'
           return 'number'
         case 'number':
           return 'number'
@@ -154,7 +163,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
   }
 
   protected checkRefType(name: string, definition: OpenAPIV3.SchemaObject) {
-    let {models, config} = this.apiConext
+    let { models, config } = this.apiConext
     if (models[name]) return
     let genericName = ''
     if (name.includes('<')) {
@@ -213,9 +222,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
   protected getRefType(refType: string): string {
     let tsType = normalType(refType)
     let definition =
-      this.apiConext.docs.components?.schemas?.[
-        refType.replace('#/components/schemas/', '')
-      ]
+      this.apiConext.docs.components?.schemas?.[refType.replace('#/components/schemas/', '')]
     if (!definition) throw new Error(`${refType} is null`)
 
     if ('$ref' in definition) {

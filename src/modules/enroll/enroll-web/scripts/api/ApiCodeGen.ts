@@ -17,8 +17,8 @@ const ENUM_FLAG = '__enum__'
 export default class ApiCodeGen {
   constructor(protected apiContext: ApiContext) {}
   generate() {
-    let {docs} = this.apiContext
-    let {name, url} = this.apiContext.config
+    let { docs } = this.apiContext
+    let { name, url } = this.apiContext.config
     console.log('start generate ', name, url)
     let parser: ApiParser
     if (docs.swagger) {
@@ -30,20 +30,20 @@ export default class ApiCodeGen {
     this.buildFile()
   }
   protected generateModel(arr: string[], modelSchma: ApiModelSchma) {
-    let {config} = this.apiContext
+    let { config } = this.apiContext
     let typeName = modelSchma.name
     // if (typeName.startsWith(config.responseWarp)) continue
     //排除Map定义
     if (typeName === 'Map<T>') return
     if (config.ignoreTypes.some((i) => i === typeName)) return
-    let titles:Record<string, string> = {}
+    let titles: Record<string, string> = {}
     if (modelSchma.description) {
       arr.push(`/** ${modelSchma.description} */`)
     }
     arr.push(`export interface ${typeName} {`)
     for (let propertyName in modelSchma.properties) {
       let property = modelSchma.properties[propertyName]
-      let {description, title} = property
+      let { description, title } = property
       description = description || title
       if (description && description.trim() !== propertyName) {
         arr.push(`/** ${description} */`)
@@ -58,13 +58,11 @@ export default class ApiCodeGen {
 
     arr.push('}\n')
     if (Object.keys(titles).length) {
-      arr.push(
-        `export const ${toLowerCamelCase(typeName)}Titles=${JSON.stringify(titles)}`,
-      )
+      arr.push(`export const ${toLowerCamelCase(typeName)}Titles=${JSON.stringify(titles)}`)
     }
   }
   protected generateEnum(arr: string[], modelSchma: ApiModelSchma) {
-    let {properties, name: enumName, description} = modelSchma
+    let { properties, name: enumName, description } = modelSchma
     if (description) {
       arr.push(`/** ${description} */`)
     }
@@ -98,8 +96,51 @@ export default class ApiCodeGen {
     )
   }
   protected buildFile() {
-    let {models, config} = this.apiContext
-    let tsContent: string[] = []
+    let { models, config } = this.apiContext
+    let tsContent: string[] = [
+      `
+      interface RequestConfig<D> {
+        data?: D
+        params?: any
+      }
+      
+      interface HttpClient {
+        get<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
+        post<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
+        delete<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
+        put<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
+        patch<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
+      }
+      let httpClient: HttpClient
+      export function setHttpClient(client: HttpClient) {
+        httpClient = client
+      }
+      
+      type long=string
+
+      type Operator =
+  | 'eq'
+  | 'neq'
+  | 'like'
+  | 'headLike'
+  | 'tailLike'
+  | 'in'
+  | 'notIn'
+  | 'gt'
+  | 'lt'
+  | 'gte'
+  | 'lte'
+
+      interface PageRequest {
+        pageIndex?: number
+        pageSize?: number
+        orderBy?: string
+      }
+    type DynamicQuery<T> = {
+  [P in keyof T]?: T[P] | { [key in Operator as \`$$\{key\}\`]?: T[P] | Array<T[P]> }
+} & PageRequest
+    `,
+    ]
     let typeNames = Object.keys(models).sort()
     // 生成ts类型
     for (let name of typeNames) {
@@ -111,9 +152,7 @@ export default class ApiCodeGen {
       }
     }
 
-    let options = prettier.resolveConfig.sync(
-      path.join(process.cwd(), 'prettier.config.js'),
-    )
+    let options = prettier.resolveConfig.sync(path.join(process.cwd(), 'prettier.config.js'))
     const apiDir = path.join(process.cwd(), config.outputDir)
     if (!fs.existsSync(apiDir)) {
       fs.mkdirSync(apiDir)
@@ -126,7 +165,7 @@ export default class ApiCodeGen {
     fs.writeFileSync(path.join(apiDir, config.name + `.ts`), finalContent, 'utf8')
   }
   protected generateApi() {
-    let {classes, config} = this.apiContext
+    let { classes, config } = this.apiContext
     //生成api
     let arr: string[] = []
     let classNames = Object.keys(classes)
@@ -163,9 +202,9 @@ export default class ApiCodeGen {
     }
   }
   protected generateMethod(arr: string[], apiMothod: ApiMethodSchma, methodName: string) {
-    let {config} = this.apiContext
+    let { config } = this.apiContext
 
-    let {path, httpMethod, responseType, summary, params} = apiMothod
+    let { path, httpMethod, responseType, summary, params } = apiMothod
 
     let queryParamArr: string[] = []
     let bodyParamArr: string[] = []
@@ -229,22 +268,16 @@ export default class ApiCodeGen {
     }
     methodStr += `: Promise<${responseType}> {`
     methodStr += `const path = \`${config.basePath}${path.replace(/\{/g, '${')}\`\n`
-    methodStr += `return  http.${httpMethod}(path`
+    methodStr += `return  httpClient.${httpMethod}(path,{`
     if (bodyParamArr.length > 0) {
-      methodStr += ',data'
-    } else if (
-      queryParamArr.length > 0 &&
-      httpMethod !== 'get' &&
-      httpMethod !== 'delete'
-    ) {
-      methodStr += ',null'
+      methodStr += 'data,'
     }
     if (queryParamArr.length === 1) {
       let queryStr = queryParamArr[0].split('*/')
       let paramName = queryStr[queryStr.length - 1].split(':')[0].replace('?', '')
-      methodStr += `,{params:{${paramName}}}`
+      methodStr += `params:{${paramName}}`
     } else if (queryParamArr.length > 0) {
-      methodStr += ',{params}'
+      methodStr += 'params'
     } else {
       methodStr += ''
     }
@@ -252,7 +285,7 @@ export default class ApiCodeGen {
     // if (config.responseWarp) {
     //   methodStr += '.data'
     // }
-    methodStr += ').then(res=>res.data.data)},'
+    methodStr += '})},'
     arr.push(methodStr)
   }
 }
