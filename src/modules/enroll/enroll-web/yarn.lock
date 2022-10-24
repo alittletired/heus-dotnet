@@ -874,6 +874,11 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+css-mediaquery@^0.1.2:
+  version "0.1.2"
+  resolved "https://npm.mingyuanyun.com/css-mediaquery/-/css-mediaquery-0.1.2.tgz#6a2c37344928618631c54bd33cedd301da18bea0"
+  integrity sha1-aiw3NEkoYYYxxUvTPO3TAdoYvqA=
+
 csstype@^3.0.10, csstype@^3.0.2:
   version "3.1.1"
   resolved "https://npm.mingyuanyun.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
@@ -1560,6 +1565,11 @@ husky@^8.0.1:
   resolved "https://npm.mingyuanyun.com/husky/-/husky-8.0.1.tgz#511cb3e57de3e3190514ae49ed50f6bc3f50b3e9"
   integrity sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==
 
+hyphenate-style-name@^1.0.0:
+  version "1.0.4"
+  resolved "https://npm.mingyuanyun.com/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz#691879af8e220aea5750e8827db4ef62a54e361d"
+  integrity sha1-aRh5r44iCupXUOiCfbTvYqVONh0=
+
 ieee754@^1.1.13:
   version "1.2.1"
   resolved "https://npm.mingyuanyun.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
@@ -1986,6 +1996,13 @@ make-error@^1.1.1:
   resolved "https://npm.mingyuanyun.com/make-error/-/make-error-1.3.6.tgz#2eb2e37ea9b67c4891f684a1394799af484cf7a2"
   integrity sha1-LrLjfqm2fEiR9oShOUeZr0hM96I=
 
+matchmediaquery@^0.3.0:
+  version "0.3.1"
+  resolved "https://npm.mingyuanyun.com/matchmediaquery/-/matchmediaquery-0.3.1.tgz#8247edc47e499ebb7c58f62a9ff9ccf5b815c6d7"
+  integrity sha1-gkftxH5Jnrt8WPYqn/nM9bgVxtc=
+  dependencies:
+    css-mediaquery "^0.1.2"
+
 memoize-one@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-6.0.0.tgz#b2591b871ed82948aee4727dc6abceeeac8c1045"
@@ -2320,7 +2337,7 @@ process-nextick-args@~2.0.0:
   resolved "https://npm.mingyuanyun.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
   integrity sha1-eCDZsWEgzFXKmud5JoCufbptf+I=
 
-prop-types@^15.8.1:
+prop-types@^15.6.1, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://npm.mingyuanyun.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -2728,6 +2745,16 @@ react-is@^16.12.0, react-is@^16.13.1:
   resolved "https://npm.mingyuanyun.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha1-eJcppNw23imZ3BVt1sHZwYzqVqQ=
 
+react-responsive@^9.0.0:
+  version "9.0.0"
+  resolved "https://npm.mingyuanyun.com/react-responsive/-/react-responsive-9.0.0.tgz#deb58d0bcb11854f84103bc0e5cecd799161fa5a"
+  integrity sha512-hyJmKpAglo1AdZsGmu1sab0VInEGzUTXT3nJ3Cl7cMDjR0ffV30lOM3N1xag456OsCGAgqRIkgloLy6tHaqZ2w==
+  dependencies:
+    hyphenate-style-name "^1.0.0"
+    matchmediaquery "^0.3.0"
+    prop-types "^15.6.1"
+    shallow-equal "^1.2.1"
+
 react@18.2.0:
   version "18.2.0"
   resolved "https://npm.mingyuanyun.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
@@ -2920,6 +2947,11 @@ setimmediate@^1.0.5, setimmediate@~1.0.4:
   version "1.0.5"
   resolved "https://npm.mingyuanyun.com/setimmediate/-/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
   integrity sha1-KQy7Iy4waULX1+qbg3Mqt4VvgoU=
+
+shallow-equal@^1.2.1:
+  version "1.2.1"
+  resolved "https://npm.mingyuanyun.com/shallow-equal/-/shallow-equal-1.2.1.tgz#4c16abfa56043aa20d050324efa68940b0da79da"
+  integrity sha1-TBar+lYEOqINBQMk76aJQLDaedo=
 
 shallowequal@^1.1.0:
   version "1.1.0"

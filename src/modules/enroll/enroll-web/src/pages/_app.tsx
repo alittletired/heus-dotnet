@@ -1,12 +1,13 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { RecoilRoot } from 'recoil'
-
+import { AppContainer } from '@/components/layout'
+import siteConfig from '@/config/siteConfig'
+import menus from '@/config/menus'
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <RecoilRoot>
+    <AppContainer {...siteConfig} menus={menus}>
       <Component {...pageProps} />
-    </RecoilRoot>
+    </AppContainer>
   )
 }
 

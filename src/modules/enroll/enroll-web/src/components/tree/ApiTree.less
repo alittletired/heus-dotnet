@@ -1,0 +1,43 @@
+@import '~antd/lib/style/themes/default.less';
+.api-tree {
+  cursor: pointer;
+
+  .ant-tree-treenode:hover {
+    background-color: @tree-node-hover-bg;
+    .api-tree-node-action {
+      display: block;
+    }
+  }
+
+  .ant-tree-treenode-selected {
+    .api-tree-node-action {
+      display: block;
+    }
+    transition: all 0.3s, border 0s, line-height 0s, box-shadow 0s;
+    &:hover {
+      background-color: @tree-node-selected-bg;
+    }
+
+    background-color: @tree-node-selected-bg;
+  }
+
+  .api-tree-node {
+    display: flex;
+    justify-content: space-between;
+  }
+  .api-tree-node-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .api-tree-node-action {
+    display: none;
+    flex: 1;
+    text-align: right;
+    margin-right: 8px;
+    span {
+      font-size: '16px';
+      margin-left: 8px;
+    }
+  }
+}

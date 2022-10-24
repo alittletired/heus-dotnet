@@ -1,7 +1,7 @@
 import adminApi, { AuthTokenDto } from '@/api/admin'
 import { useCallback } from 'react'
 import { selector, useRecoilState, useRecoilValue } from 'recoil'
-import { withStorage } from './storage'
+import { withStorage } from '../utils/storage'
 
 const defaultAuth: AuthToken = { isLogin: false }
 const authStorage = withStorage('auth', defaultAuth)
@@ -33,7 +33,7 @@ export const usePermission = () => {
   const permissions = useRecoilValue(permissionState)
   const auth = useRecoilValue(authState)
   const hasPermission = useCallback(
-    (actionCode: string) => {
+    (actionCode?: string) => {
       if (!actionCode) return true
       return (
         permissions.has(actionCode) || permissions.has(window.location.pathname + ':' + actionCode)
