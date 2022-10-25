@@ -9,13 +9,13 @@ import adminApi, {
   paymentStateOptions,
   trainingCategoryOptions,
 } from '@/api/admin'
-import {ApiTable, Form, FormItem, Loading, overlay} from '@/components'
-import {useAuth} from '@/services/auth'
-import {useQuery} from '@/utils/routerUtils'
-import {Button, Card, Col, Image, message, Row, Space, Tooltip} from 'antd'
-import {useState} from 'react'
-import {useNavigate} from 'react-router-dom'
-const imageProps = {width: 80, height: 80}
+import { ApiTable, Form, FormItem, Loading, overlay } from '@/components'
+import { useAuth } from '@/services/auth'
+import { useQuery } from '@/utils/routerUtils'
+import { Button, Card, Col, Image, message, Row, Space, Tooltip } from 'antd'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+const imageProps = { width: 80, height: 80 }
 const EnrollDetailPage: PageComponent = () => {
   const query = useQuery()
   const navigate = useNavigate()
@@ -42,11 +42,7 @@ const EnrollDetailPage: PageComponent = () => {
 
             <FormItem.Item label="身份证照片">
               <Image {...imageProps} src={enroll.idCardFace} />
-              <Image
-                {...imageProps}
-                style={{marginLeft: 24}}
-                src={enroll.idCardNational}
-              />
+              <Image {...imageProps} style={{ marginLeft: 24 }} src={enroll.idCardNational} />
             </FormItem.Item>
             <FormItem.Item label="登记照">
               <Image {...imageProps} src={enroll.registrationPhoto} />
@@ -78,7 +74,7 @@ const EnrollDetailPage: PageComponent = () => {
           setEnroll(enroll)
           message.success('操作成功')
         }}
-        onBefore={(data) => ({...data, state: data['state1']})}
+        onBefore={(data) => ({ ...data, state: data['state1'] })}
         api={adminApi.enroll.approve}>
         <Card title="审核">
           <Form.Item label="支付状态">
@@ -89,7 +85,7 @@ const EnrollDetailPage: PageComponent = () => {
                 noStyle
                 options={paymentStateOptions}
               />
-              <Tooltip className="ant-form-item-extra" style={{fontSize: '12px'}}>
+              <Tooltip className="ant-form-item-extra" style={{ fontSize: '12px' }}>
                 （确认支付报名费用后打勾）
               </Tooltip>
             </Space>
@@ -101,8 +97,8 @@ const EnrollDetailPage: PageComponent = () => {
             name="state1"
             label="是否受理"
             options={[
-              {value: ApproveState.PASS, label: '受理'},
-              {value: ApproveState.REJECT, label: '拒绝受理'},
+              { value: ApproveState.PASS, label: '受理' },
+              { value: ApproveState.REJECT, label: '拒绝受理' },
             ]}
           />
           <FormItem.TextArea
@@ -114,9 +110,7 @@ const EnrollDetailPage: PageComponent = () => {
 
           <FormItem.Item label=" " colon={false}>
             <Space>
-              {!query.has('hideMenu') && (
-                <Button onClick={() => navigate(-1)}>返回</Button>
-              )}
+              {!query.has('hideMenu') && <Button onClick={() => navigate(-1)}>返回</Button>}
 
               {canEdit && (
                 <Button type="primary" htmlType="submit">

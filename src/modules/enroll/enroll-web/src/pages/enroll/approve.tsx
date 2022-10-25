@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef} from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import adminApi, {
   ApproveState,
   approveStateOptions,
@@ -8,12 +8,12 @@ import adminApi, {
   genderEnumOptions,
   trainingCategoryOptions,
 } from '@/api/admin'
-import {ApiTable, Form, FormItem, overlay} from '@/components'
-import {Tabs} from 'antd'
-import {TableProps} from '@/components/api-table/interface'
-import {useNavigate} from 'react-router-dom'
-import {useAuth} from '@/services/auth'
-const {TabPane} = Tabs
+import { ApiTable, Form, FormItem, overlay } from '@/components'
+import { Tabs } from 'antd'
+import { TableProps } from '@/components/api-table/interface'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/services/auth'
+const { TabPane } = Tabs
 
 const EnrollPage: PageComponent = () => {
   const navigate = useNavigate()
@@ -25,15 +25,15 @@ const EnrollPage: PageComponent = () => {
 
       api: adminApi.enroll.getPageList,
       columns: [
-        {valueType: 'index'},
-        {dataIndex: 'name', operator: 'like'},
-        {dataIndex: 'phone'},
-        {dataIndex: 'idCard'},
-        {dataIndex: 'gender', options: genderEnumOptions},
-        {dataIndex: 'degree', options: degreeEnumOptions},
-        {dataIndex: 'trainingCategory', options: trainingCategoryOptions},
-        {dataIndex: 'institutionName'},
-        {dataIndex: 'state', options: approveStateOptions},
+        { valueType: 'index' },
+        { dataIndex: 'name', operator: 'like' },
+        { dataIndex: 'phone' },
+        { dataIndex: 'idCard' },
+        { dataIndex: 'gender', options: genderEnumOptions },
+        { dataIndex: 'degree', options: degreeEnumOptions },
+        { dataIndex: 'trainingCategory', options: trainingCategoryOptions },
+        { dataIndex: 'institutionName' },
+        { dataIndex: 'state', options: approveStateOptions },
         {
           actions: [
             {
@@ -71,31 +71,31 @@ const EnrollPage: PageComponent = () => {
         <ApiTable
           {...tabProps}
           tableTitle="报名列表"
-          toolBar={[{buttonType: 'export', title: '导出'}]}
+          toolBar={[{ buttonType: 'export', title: '导出' }]}
         />
       </TabPane>
       <TabPane tab="待审核" key="2">
         <ApiTable
           {...tabProps}
           tableTitle="报名待审核列表"
-          toolBar={[{buttonType: 'export', title: '导出'}]}
-          data={{state: ApproveState.PENDING}}
+          toolBar={[{ buttonType: 'export', title: '导出' }]}
+          data={{ state: ApproveState.PENDING }}
         />
       </TabPane>
       <TabPane tab="已审核" key="3">
         <ApiTable
           {...tabProps}
           tableTitle="报名已审核列表"
-          data={{state: ApproveState.PASS}}
-          toolBar={[{buttonType: 'export', title: '导出'}]}
+          data={{ state: ApproveState.PASS }}
+          toolBar={[{ buttonType: 'export', title: '导出' }]}
         />
       </TabPane>
       <TabPane tab="已拒绝" key="4">
         <ApiTable
           {...tabProps}
-          data={{state: ApproveState.REJECT}}
+          data={{ state: ApproveState.REJECT }}
           tableTitle="报名已拒绝列表"
-          toolBar={[{buttonType: 'export', title: '导出'}]}
+          toolBar={[{ buttonType: 'export', title: '导出' }]}
         />
       </TabPane>
     </Tabs>

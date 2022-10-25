@@ -1,16 +1,16 @@
-import React, {useMemo, useState, useEffect} from 'react'
-import {Layout, Menu as AntdMenu} from 'antd'
-import {Link, useLocation} from 'react-router-dom'
+import React, { useMemo, useState, useEffect } from 'react'
+import { Layout, Menu as AntdMenu } from 'antd'
+import { Link, useLocation } from 'react-router-dom'
 import './index.css'
-import {useAppConfig} from '@/layout/appConfig'
-import {getMenuByPath, getOpenKeys} from '@/services/menu'
-import {useAuth, usePermission} from '@/services/auth'
-import {ItemType} from 'antd/lib/menu/hooks/useItems'
-const {Sider} = Layout
+import { useAppConfig } from '@/layouts/appConfig'
+import { getMenuByPath, getOpenKeys } from '@/services/menu'
+import { useAuth, usePermission } from '@/services/auth'
+import { ItemType } from 'antd/lib/menu/hooks/useItems'
+const { Sider } = Layout
 
-const SiderMenu: React.FC<{menus: Menu[]}> = (props) => {
-  const {pathname} = useLocation()
-  const {hasPermission} = usePermission()
+const SiderMenu: React.FC<{ menus: Menu[] }> = (props) => {
+  const { pathname } = useLocation()
+  const { hasPermission } = usePermission()
   const appContext = useAppConfig()
 
   const menuItems: ItemType[] = useMemo(() => {
@@ -21,7 +21,7 @@ const SiderMenu: React.FC<{menus: Menu[]}> = (props) => {
         if (menu.children) {
           const children = getUserMenu(menu.children, menu)
           if (children.length) {
-            const item = {label: menu.name, key: menu.key, children}
+            const item = { label: menu.name, key: menu.key, children }
             userMenu.push(item)
           }
         } else if (hasPermission(menu.path)) {

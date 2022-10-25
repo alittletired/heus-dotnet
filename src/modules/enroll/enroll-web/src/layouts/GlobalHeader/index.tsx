@@ -1,8 +1,8 @@
 import React from 'react'
-import {Layout} from 'antd'
+import { Layout } from 'antd'
 
 import './index.css'
-import {useAppConfig} from '@/layout/appConfig'
+import { useAppConfig } from '@/layouts/appConfig'
 import NoticeIcon from './NoticeIcon'
 import AvatarDropdown from './AvatarDropdown'
 export const renderLogo = (logo: React.ReactNode): React.ReactNode => {
@@ -17,9 +17,7 @@ const GlobalHeader = () => {
   const menuDom = <></>
   return (
     <>
-      <Layout.Header
-        style={{height: '48px', lineHeight: '48px', background: 'transparent'}}
-      />
+      <Layout.Header style={{ height: '48px', lineHeight: '48px', background: 'transparent' }} />
       <Layout.Header className="global-header-fixed">
         <div className="global-header">
           <div className="global-header-logo">
@@ -28,7 +26,7 @@ const GlobalHeader = () => {
               <h1>{appConfig.siteName}</h1>
             </a>
           </div>
-          <div style={{flex: '1 1 0%'}}>{menuDom}</div>
+          <div style={{ flex: '1 1 0%' }}>{menuDom}</div>
           <div className="global-header-right">
             <div className="global-header-right-action">{/* <NoticeIcon /> */}</div>
             <div className="global-header-right-action">

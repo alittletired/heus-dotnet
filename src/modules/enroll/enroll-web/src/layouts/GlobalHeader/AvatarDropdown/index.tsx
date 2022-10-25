@@ -1,8 +1,8 @@
-import React, {useState} from 'react'
-import {BellOutlined, LogoutOutlined} from '@ant-design/icons'
+import React, { useState } from 'react'
+import { BellOutlined, LogoutOutlined } from '@ant-design/icons'
 import styles from './index.module.less'
-import {useAuth,logout} from '@/services/auth'
-import {Dropdown, Menu, Avatar} from 'antd'
+import { useAuth, logout } from '@/services/auth'
+import { Dropdown, Menu, Avatar } from 'antd'
 const AvatarDropdown: React.FC = () => {
   const [auth] = useAuth()
   const onMenuClick = (key: any) => {
@@ -32,9 +32,7 @@ const AvatarDropdown: React.FC = () => {
     <Dropdown overlayClassName={styles.container} overlay={dropDown}>
       <span className={`${styles.account}`}>
         {/* <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" /> */}
-        <span className={`${styles.name} anticon`}>
-          {auth.name || auth.account}
-        </span>
+        <span className={`${styles.name} anticon`}>{auth.name || auth.account}</span>
       </span>
     </Dropdown>
   )

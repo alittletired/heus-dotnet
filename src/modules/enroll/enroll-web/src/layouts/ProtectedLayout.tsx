@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { PropsWithChildren, useEffect, useMemo } from 'react'
 import { Layout } from 'antd'
 import GlobalHeader from './GlobalHeader'
 import SiderMenu from './SiderMenu'
@@ -7,15 +7,12 @@ import { useAppConfig } from './appConfig'
 import { ItemType } from 'antd/es/menu/hooks/useItems'
 import useRouter from '@/services/router'
 const { Content } = Layout
-interface Props {
-  menus: ItemType[]
-  children: React.ReactNode
-}
 
-const ProtectedLayout: React.FC<Props> = (props) => {
+const ProtectedLayout: React.FC<PropsWithChildren> = (props) => {
   const [auth] = useAuth()
-  const appConfig = useAppConfig()
+  const [appConfig] = useAppConfig()
   const router = useRouter()
+  const menus: ItemType[] = useMemo(() => [], [])
   useEffect(() => {
     if (!auth.isLogin) router.replace(appConfig.loginUrl)
   }, [router, auth.isLogin, appConfig.loginUrl])
@@ -24,10 +21,10 @@ const ProtectedLayout: React.FC<Props> = (props) => {
     return (
       <>
         <div className="globalLeft"></div>
-        <SiderMenu menus={props.menus} />
+        <SiderMenu menus={menus} />
       </>
     )
-  }, [props.menus, router.query])
+  }, [menus, router.query])
 
   return (
     <Layout hasSider style={{ minHeight: '100%' }}>
