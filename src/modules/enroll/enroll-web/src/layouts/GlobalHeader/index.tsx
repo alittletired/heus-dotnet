@@ -1,35 +1,29 @@
 import React from 'react'
 import { Layout } from 'antd'
-
-import './index.css'
+import styles from './index.module.css'
 import { useAppConfig } from '@/layouts/appConfig'
 import NoticeIcon from './NoticeIcon'
 import AvatarDropdown from './AvatarDropdown'
-export const renderLogo = (logo: React.ReactNode): React.ReactNode => {
-  if (typeof logo === 'string') {
-    return <img src={logo} alt="logo" />
-  }
+import { Link, Image } from '@/components'
 
-  return logo
-}
 const GlobalHeader = () => {
-  const appConfig = useAppConfig()
+  const [appConfig] = useAppConfig()
   const menuDom = <></>
   return (
     <>
       <Layout.Header style={{ height: '48px', lineHeight: '48px', background: 'transparent' }} />
-      <Layout.Header className="global-header-fixed">
-        <div className="global-header">
-          <div className="global-header-logo">
-            <a href="/">
-              <img src={appConfig.logo} alt="logo" />
+      <Layout.Header className={styles.headerFixed}>
+        <div className={styles.header}>
+          <div className={styles.headerLogo}>
+            <Link href="/">
+              <Image src={appConfig.loginUrl} alt="logo" />
               <h1>{appConfig.siteName}</h1>
-            </a>
+            </Link>
           </div>
           <div style={{ flex: '1 1 0%' }}>{menuDom}</div>
-          <div className="global-header-right">
-            <div className="global-header-right-action">{/* <NoticeIcon /> */}</div>
-            <div className="global-header-right-action">
+          <div className={styles.headerRight}>
+            <div className={styles.headerRightAction}>{/* <NoticeIcon /> */}</div>
+            <div className={styles.headerRightAction}>
               <AvatarDropdown />
             </div>
           </div>

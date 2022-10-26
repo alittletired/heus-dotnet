@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { TableInstance, ToolBarItem } from './interface'
 import { Divider, Button, Menu, Dropdown } from 'antd'
-import { usePermission } from '@/services/auth'
+import { usePermission } from '@/services/user'
 import { DownOutlined } from '@ant-design/icons'
 import { useTable } from './Table'
 import ActionAnchor from '../action/ActionAnchor'

@@ -1,19 +1,22 @@
-import React from 'react'
-
-import { Link } from '@/utils/routerUtils'
+import React, { PropsWithChildren } from 'react'
+import { Link, Image } from '@/components'
+import { useAppConfig } from '../appConfig'
+import styles from './index.module.css'
 type LayoutProps = React.PropsWithChildren<{
   containerClass?: string
 }>
-const UserLayout: React.FC<LayoutProps> = (props) => {
+
+const UserLayout = (props: LayoutProps) => {
+  const [appConfig] = useAppConfig()
   return (
     <div className={styles.container}>
       <div className={styles.lang}></div>
       <div className={styles.content}>
         <div className={styles.top}>
           <div className={styles.header}>
-            <Link to="/">
+            <Link href="/">
               <Image alt="logo" className={styles.logo} src="/favicon.png" />
-              <span className={styles.title}>{config.siteName}</span>
+              <span className={styles.title}>{appConfig.siteName}</span>
             </Link>
           </div>
           <div className={styles.desc}></div>

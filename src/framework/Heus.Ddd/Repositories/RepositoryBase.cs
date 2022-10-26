@@ -5,7 +5,6 @@ using Heus.Core.Uow;
 using Heus.Ddd.Domain;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories.Filtering;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,13 +19,10 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
 
     protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
 
-    protected IRepositoryProvider<TEntity> RepositoryProvider =>
-        ServiceProvider.GetRequiredService<IRepositoryProvider<TEntity>>();
+    protected IRepositoryProvider<TEntity> RepositoryProvider =>  ServiceProvider.GetRequiredService<IRepositoryProvider<TEntity>>();
 
-    public IQueryable<TEntity> GetQueryable()
-    {
-        return RepositoryProvider.GetQueryable();
-    }
+    public IQueryable<TEntity> Query => RepositoryProvider.Query;
+   
 
     public Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
@@ -100,7 +96,7 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
         CancellationToken cancellationToken = default)
     {
 
-        return await GetQueryable().FirstOrDefaultAsync(predicate, cancellationToken);
+        return await Query.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
     public async Task<TEntity> GetAsync(

@@ -14,6 +14,7 @@ public class Resource : AuditEntity, ITreeEntity,ISoftDelete
     public string ActionCode { get; set; } = null!;
     [Required]
     public ResourceType Type { get; set; } = ResourceType.Menu;
+    
     public bool IsDeleted { get; set; }
     #region ITreeEntity
 

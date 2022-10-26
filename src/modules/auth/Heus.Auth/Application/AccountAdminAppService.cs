@@ -8,12 +8,11 @@ using Microsoft.AspNetCore.Authorization;
 namespace Heus.Auth.Application;
 public interface IAccountAdminAppService:IAdminApplicationService
 {
-    Task<AuthTokenDto> LoginAsync(LoginInput input);
-    Task<AuthTokenDto> RefreshTokenAsync(AuthTokenDto input);
+    Task<LoginResult> LoginAsync(LoginInput input);
     Task<bool> SendVerifyCodeAsync(string phone);
 }
 
-internal class AccountAdminAppService :AdminApplicationService,  IAccountAdminAppService
+internal class AccountAdminAppService : AdminApplicationService, IAccountAdminAppService
 {
     private readonly IUserRepository _userRepository;
     private readonly UserManager _userManager;
@@ -33,7 +32,7 @@ internal class AccountAdminAppService :AdminApplicationService,  IAccountAdminAp
     }
 
     [AllowAnonymous]
-    public async Task<AuthTokenDto> LoginAsync(LoginInput input)
+    public async Task<LoginResult> LoginAsync(LoginInput input)
     {
         var user = await _userRepository.FindByUserNameAsync(input.UserName);
         if (user == null)
@@ -48,18 +47,15 @@ internal class AccountAdminAppService :AdminApplicationService,  IAccountAdminAp
         var principal = _tokenProvider.CreatePrincipal(Mapper.Map<ICurrentUser>(user), TokenType.Admin, input.RememberMe);
         _currentPrincipalAccessor.Change(principal);
         var unixTimestamp = principal.FindClaimValue<long>(SecurityClaimNames.Expiration);
-        AuthTokenDto authToken = new(user.Id, _tokenProvider.CreateToken(principal), unixTimestamp);
+        LoginResult authToken = new(user.Id, user.NickName, _tokenProvider.CreateToken(principal), unixTimestamp);
         return authToken;
     }
-    public Task<AuthTokenDto> RefreshTokenAsync(AuthTokenDto input)
-    {
-        throw new NotImplementedException();
-    }
+
     [AllowAnonymous]
     public Task<bool> SendVerifyCodeAsync(string phone)
     {
         throw new NotImplementedException();
     }
 
-   
+
 }

@@ -1,4 +1,4 @@
-import { getAuth } from '@/services/auth'
+import { getAuth } from '@/services/user'
 import { Button, Upload } from 'antd'
 import { UploadProps } from 'antd/lib/upload'
 import React, { useState } from 'react'

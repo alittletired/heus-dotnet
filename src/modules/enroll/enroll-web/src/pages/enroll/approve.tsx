@@ -12,7 +12,7 @@ import { ApiTable, Form, FormItem, overlay } from '@/components'
 import { Tabs } from 'antd'
 import { TableProps } from '@/components/api-table/interface'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/services/auth'
+import { useAuth } from '@/services/user'
 const { TabPane } = Tabs
 
 const EnrollPage: PageComponent = () => {

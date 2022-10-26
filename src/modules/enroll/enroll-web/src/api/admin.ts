@@ -1,15 +1,16 @@
-interface RequestConfig<D> {
+export interface RequestConfig<D> {
   data?: D
   params?: any
 }
 
-interface HttpClient {
+export interface HttpClient {
   get<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
   post<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
   delete<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
   put<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
   patch<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
 }
+
 let httpClient: HttpClient
 export function setHttpClient(client: HttpClient) {
   httpClient = client
@@ -39,12 +40,6 @@ type DynamicQuery<T> = {
   [P in keyof T]?: T[P] | { [key in Operator as `$${key}`]?: T[P] | Array<T[P]> }
 } & PageRequest
 
-export interface AuthTokenDto {
-  userId?: long
-  accessToken?: string
-  expiration?: long
-}
-
 export interface ICurrentUser {
   id?: long
   userName?: string
@@ -54,6 +49,13 @@ export interface LoginInput {
   userName?: string
   password?: string
   rememberMe?: boolean
+}
+
+export interface LoginResult {
+  userId?: long
+  nickName?: string
+  accessToken?: string
+  expiration?: long
 }
 
 export interface PagedList<T> {
@@ -143,12 +145,8 @@ export interface UserUpdateDto {
 
 const adminApi = {
   accounts: {
-    login(data: LoginInput): Promise<AuthTokenDto> {
+    login(data: LoginInput): Promise<LoginResult> {
       const path = `/admin/accounts/login`
-      return httpClient.post(path, { data })
-    },
-    refreshToken(data: AuthTokenDto): Promise<AuthTokenDto> {
-      const path = `/admin/accounts/refreshToken`
       return httpClient.post(path, { data })
     },
     sendVerifyCode(phone: string): Promise<boolean> {

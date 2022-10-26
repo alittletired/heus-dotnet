@@ -35,7 +35,7 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
 
     public async Task<PagedList<UserDto>> QueryAsync(DynamicQuery<UserDto> input)
     {
-        var query = from u in _userRepository.GetQueryable()
+        var query = from u in _userRepository.Query
             select  u;
         var data1 = await query.ToPageListAsync(input);
         return data1;
@@ -70,7 +70,7 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
 
     public async Task<IEnumerable<long>> GetUserRoleIdsAsync(long id)
     {
-        return await _userRoleRepository.GetQueryable().Where(s => s.UserId == id).Select(s => s.RoleId)
+        return await _userRoleRepository.Query.Where(s => s.UserId == id).Select(s => s.RoleId)
             .ToListAsync();
     }
 

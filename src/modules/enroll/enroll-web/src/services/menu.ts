@@ -1,4 +1,6 @@
 import menus from '@/config/menus'
+import { selector } from 'recoil'
+import userState from './user'
 export interface Menu {
   name: string
   key?: string //自动生成
@@ -17,7 +19,12 @@ function initMenuMap(menuArr: Menu[]) {
   }
 }
 initMenuMap(menus)
-
+const userMenuState = selector({
+  key: 'userMenu',
+  get: ({ get }) => {
+    const user = get(userState)
+  },
+})
 export const getMenuByPath = (path: string) => {
   return menuMap.get(path)
 }

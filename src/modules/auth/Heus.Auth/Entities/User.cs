@@ -35,7 +35,7 @@ public class User : AuditEntity
     /// 用户状态
     /// </summary>
     public UserStatus Status { get; set; } = UserStatus.Normal;
-
+    public bool IsSuperAdmin { get; set; }
     public void SetPassword(string newPassword)
     {
         Salt = RandomHelper.GenerateString(10);

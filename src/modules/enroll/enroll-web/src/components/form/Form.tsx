@@ -1,13 +1,11 @@
-import React, {useState, useContext} from 'react'
-import {Form, message} from 'antd'
+import React, { useState, useContext } from 'react'
+import { Form, FormProps as AntdFormProps, message } from 'antd'
 import FormContext from './FormContext'
 import useSubmit from '../../utils/useSubmit'
-import FormItem from './FormItem'
-import {FormProps as AntdFormProps} from 'antd/lib/form'
-import {OverlayContext} from '../overlay'
+import { OverlayContext } from '../overlay'
 const labelLayout = {
-  labelCol: {span: 4},
-  wrapperCol: {span: 18},
+  labelCol: { span: 4 },
+  wrapperCol: { span: 18 },
 }
 type FormApi<D, Return, Params> = (path: Params, data: D) => Promise<Return>
 function isFormApi<D, Return, Params>(
@@ -21,7 +19,7 @@ export interface FormProps<D, Path, Return>
   api?: FormApi<D, Return, Path> | Api<D, Return>
   params?: Path
   canDismiss?: (data: Return) => boolean
-  titles?: {[key in string]: string}
+  titles?: { [key in string]: string }
   noLabel?: boolean
   viewType?: ViewType
   operators?: Map<string, Operator>
@@ -49,10 +47,10 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
   //消除loading的警告
   const onFinish = useSubmit(async (values: any) => {
     try {
-      values = {...props.initialValues, ...values}
+      values = { ...props.initialValues, ...values }
       setLoading(true)
       overlay.setLoading(true)
-      let formData = {...props.data, ...values}
+      let formData = { ...props.data, ...values }
       // 通过onBefore 返回false 阻止发送请求
 
       formData = await onBefore(formData)
@@ -86,7 +84,7 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
   const layout = noLabel ? null : labelLayout
 
   return (
-    <FormContext.Provider value={{form, loading, setLoading, noLabel, onSuccess, titles}}>
+    <FormContext.Provider value={{ form, loading, setLoading, noLabel, onSuccess, titles }}>
       <Form
         form={form}
         autoComplete="off"

@@ -50,7 +50,7 @@ public interface IRepository<TEntity> : IRepositoryProvider<TEntity> where TEnti
     async Task<TEntity?> GetByIdOrDefaultAsync(long id)
     {
       
-        return await GetQueryable().FirstOrDefaultAsync(s => s.Id == id);
+        return await Query.FirstOrDefaultAsync(s => s.Id == id);
 
     }
     async Task DeleteByIdAsync(long id,
@@ -65,7 +65,7 @@ public interface IRepository<TEntity> : IRepositoryProvider<TEntity> where TEnti
    async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter,
         CancellationToken cancellationToken = default)
     {
-        return await GetQueryable().Where(filter).ToListAsync(cancellationToken);
+        return await Query.Where(filter).ToListAsync(cancellationToken);
     }
 
    async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter)

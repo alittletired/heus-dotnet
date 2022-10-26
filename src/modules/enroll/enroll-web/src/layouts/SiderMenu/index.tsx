@@ -1,11 +1,9 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { Layout, Menu as AntdMenu } from 'antd'
-import { Link, useLocation } from 'react-router-dom'
 import './index.css'
 import { useAppConfig } from '@/layouts/appConfig'
-import { getMenuByPath, getOpenKeys } from '@/services/menu'
-import { useAuth, usePermission } from '@/services/auth'
-import { ItemType } from 'antd/lib/menu/hooks/useItems'
+import { getMenuByPath, getOpenKeys, Menu } from '@/services/menu'
+import { usePermission } from '@/services/user'
 const { Sider } = Layout
 
 const SiderMenu: React.FC<{ menus: Menu[] }> = (props) => {

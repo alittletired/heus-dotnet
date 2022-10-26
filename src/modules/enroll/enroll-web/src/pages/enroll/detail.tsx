@@ -10,7 +10,7 @@ import adminApi, {
   trainingCategoryOptions,
 } from '@/api/admin'
 import { ApiTable, Form, FormItem, Loading, overlay } from '@/components'
-import { useAuth } from '@/services/auth'
+import { useAuth } from '@/services/user'
 import { useQuery } from '@/utils/routerUtils'
 import { Button, Card, Col, Image, message, Row, Space, Tooltip } from 'antd'
 import { useState } from 'react'
