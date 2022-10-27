@@ -14,6 +14,7 @@ public class SwaggerConfigureOptions: IConfigureOptions<SwaggerGenOptions>
         foreach (var description in provider.ApiDescriptionGroups.Items)
         {
             options.SwaggerDoc(description.GroupName, null);
+            options.SupportNonNullableReferenceTypes ();
         }
     }
 }

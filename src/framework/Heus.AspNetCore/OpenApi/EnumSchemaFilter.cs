@@ -45,7 +45,7 @@ internal class EnumSchemaFilter : ISchemaFilter
         //     schema.Reference = new OpenApiReference { Id = $"{baseSchemaName}", Type = ReferenceType.Schema };
         //     return;
         // }
-
+      
         if (!context.Type.IsEnum) 
             return;
         var enums = schema.Enum;

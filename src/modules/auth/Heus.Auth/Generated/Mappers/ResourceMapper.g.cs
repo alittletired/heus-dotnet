@@ -11,7 +11,7 @@ namespace Heus.Auth.Dtos
         {
             return p1 == null ? null : new ResourceDto()
             {
-                ActionCode = p1.ActionCode,
+             
                 Type = p1.Type,
                 IsDeleted = p1.IsDeleted,
                 Sort = p1.Sort,
@@ -26,7 +26,7 @@ namespace Heus.Auth.Dtos
         }
         public static Expression<Func<Resource, ResourceDto>> ProjectToDto => p2 => new ResourceDto()
         {
-            ActionCode = p2.ActionCode,
+         
             Type = p2.Type,
             IsDeleted = p2.IsDeleted,
             Sort = p2.Sort,
