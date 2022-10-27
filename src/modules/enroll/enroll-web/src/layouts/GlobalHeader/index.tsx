@@ -2,7 +2,6 @@ import React from 'react'
 import { Layout } from 'antd'
 import styles from './index.module.css'
 import { useAppConfig } from '@/layouts/appConfig'
-import NoticeIcon from './NoticeIcon'
 import AvatarDropdown from './AvatarDropdown'
 import { Link, Image } from '@/components'
 

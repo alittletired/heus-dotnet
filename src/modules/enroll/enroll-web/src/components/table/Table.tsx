@@ -4,7 +4,7 @@ import { toSearchData, translateColumns } from './tableUtils'
 import { TableInstance, TableProps } from './interface'
 import SearchForm from './SearchForm'
 import ToolBar from './ToolBar'
-import './index.css'
+// import './index.css'
 import { normalizeOptions, NameOption, OptionType, isApiOptions } from '../select'
 import { toTreeData, TreeEntity } from '../tree/treeUtils'
 
@@ -187,6 +187,75 @@ export default function ApiTable<T extends object, P extends PageRequest>(props:
             columns={columns}
           />
         </Card>
+        <style jsx global>{`
+          .api-table {
+            flex: auto;
+            height: 100%;
+          }
+          .api-table .ant-card {
+            flex: auto;
+            height: 100%;
+          }
+          .api-table .ant-card-body {
+            height: 100%;
+            padding: 0px;
+            position: relative;
+            overflow: auto;
+            border-bottom: 1px solid #f0f0f0;
+            margin-top: 1px;
+          }
+          .api-table td.column {
+            padding-right: 12px;
+          }
+          .api-table .search {
+            margin-bottom: 16px;
+            padding: 24px 24px 0px;
+            background: #fff;
+          }
+          .api-table .search-col {
+            padding-left: 8px;
+            padding-right: 8px;
+          }
+          .api-table .search-button {
+            margin-right: 8px;
+          }
+
+          .api-table .toobar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+          .api-table .toolbar-title {
+            flex: 1 1;
+            color: rgba(0, 0, 0, 0.85);
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            opacity: 0.85;
+          }
+          .api-table .toolbar-option {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+          }
+
+          .api-table .ant-table-tbody > tr > td:not(.table-index-column) {
+            min-width: 90px;
+          }
+          .toolbar-option button {
+            margin-left: 12px;
+          }
+
+          .api-table .date-column {
+            width: 110px;
+          }
+          .api-table .datetime-column {
+            width: 150px;
+          }
+          .api-table .column {
+            min-width: 80px;
+          }
+        `}</style>
       </div>
     </TableContext.Provider>
   )

@@ -52,7 +52,7 @@ export default class ApiCodeGen {
       if (title) {
         titles[name] = title
       }
-      arr.push(`${name}${property.required ? '' : '?'}: ${property.type}`)
+      arr.push(`${name}${property.nullable ? '?' : ''}: ${property.type}`)
     }
 
     arr.push('}\n')

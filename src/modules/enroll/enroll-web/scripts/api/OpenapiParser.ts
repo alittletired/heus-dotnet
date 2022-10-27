@@ -192,7 +192,6 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
       models[finalName] = apiModel
     }
 
-    let required = definition.required || []
     for (let propName in definition.properties) {
       let property = definition.properties[propName]
       try {
@@ -205,11 +204,12 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
           example = '',
           title,
           default: defaultValue,
+          nullable,
         } = property as OpenAPIV3.BaseSchemaObject
 
         apiModel.properties[propName] = {
           name,
-          required: required.includes(propName),
+          nullable: !!nullable,
           type: tsType,
           description,
           example,

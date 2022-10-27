@@ -29,7 +29,7 @@ export type ApiClassSchma = { [key: string]: ApiMethodSchma | ApiClassSchma }
 
 export interface ApiModelPropsSchma {
   name: string
-  required: boolean
+  nullable: boolean
   type: string
   description?: string
   example: string

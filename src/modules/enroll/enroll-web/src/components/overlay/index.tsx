@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Modal, Drawer, Button } from 'antd'
 import { ModalProps as AntdModalProps } from 'antd'
-import './index.module.css'
+import { ModalComponent, ModalComponentProps } from '../modal/interface'
 export type OverlayType = 'modal' | 'drawer'
 type OnDismiss = (data?: any) => void
 export const OverlayContext = React.createContext({
@@ -169,9 +169,10 @@ export function confirm(content: string): Promise<boolean> {
 export function deleteConfirm<T>(content: string = '确定删除该记录吗?'): Promise<boolean> {
   return confirm(content)
 }
-export default {
+const overlay = {
   showForm,
   showDrawer,
   deleteConfirm,
   confirm,
 }
+export default overlay

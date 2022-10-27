@@ -6,11 +6,12 @@ class MyStorage<T> {
   public constructor(key: string, defaultValue: T) {
     this._key = key
     this._defaultValue = defaultValue
-    const value = localStorage?.getItem(this._key)
-    if (value) {
-      this._value = JSON.parse(value)
-    } else {
-      this._value = this._defaultValue
+    this._value = this._defaultValue
+    if (typeof window !== 'undefined') {
+      const value = localStorage?.getItem(this._key)
+      if (value) {
+        this._value = JSON.parse(value)
+      }
     }
   }
   private _handlers: Array<(value: T) => void> = []

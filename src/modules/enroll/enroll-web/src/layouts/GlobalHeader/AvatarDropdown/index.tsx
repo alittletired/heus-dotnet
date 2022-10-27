@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { BellOutlined, LogoutOutlined } from '@ant-design/icons'
-import styles from './index.module.css'
 import { useUser, logout } from '@/services/user'
 import { Dropdown, Menu, Avatar } from 'antd'
 const AvatarDropdown: React.FC = () => {
@@ -13,7 +12,7 @@ const AvatarDropdown: React.FC = () => {
     }
   }
   const dropDown = (
-    <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
+    <Menu selectedKeys={[]} onClick={onMenuClick}>
       {/* {menu && (
 				<Menu.Item key="center">
 					<UserOutlined />
@@ -29,10 +28,10 @@ const AvatarDropdown: React.FC = () => {
   )
   if (!user.isLogin) return null
   return (
-    <Dropdown overlayClassName={styles.container} overlay={dropDown}>
-      <span className={`${styles.account}`}>
+    <Dropdown overlay={dropDown}>
+      <span>
         {/* <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" /> */}
-        <span className={`${styles.name} anticon`}>{user.nickName}</span>
+        <span className={`anticon`}>{user.nickName}</span>
       </span>
     </Dropdown>
   )

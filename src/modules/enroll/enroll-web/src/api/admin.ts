@@ -42,49 +42,90 @@ type DynamicQuery<T> = {
 
 export interface ICurrentUser {
   id?: long
-  userName?: string
+  userName: string
 }
 
 export interface LoginInput {
-  userName?: string
-  password?: string
-  rememberMe?: boolean
+  userName: string
+  password: string
+  rememberMe: boolean
 }
 
 export interface LoginResult {
-  userId?: long
-  nickName?: string
-  accessToken?: string
-  expiration?: long
+  userId: long
+  nickName: string
+  accessToken: string
+  expiration: long
 }
 
 export interface PagedList<T> {
-  count?: number
-  items?: T[]
+  count: number
+  items: T[]
 }
 
+export interface Resource {
+  /** 唯一主键，数据库为varchar(24) */
+  id: long
+  /** 创建人 */
+  createdBy?: long
+  /** 更新人 */
+  updateBy?: long
+  /** 创建时间 */
+  createdDate: string
+  /** 更新时间 */
+  updateDate: string
+  type: ResourceType
+  code: string
+  isDeleted: boolean
+  sort: number
+  treeCode: string
+  treePath: string
+  parentId?: long
+}
+
+/** 资源类型 */
+export enum ResourceType {
+  /** 动作点 */
+  Action = 1,
+  /** 系统 */
+  Application = 0,
+  /** 菜单 */
+  Menu = 1,
+  /** 菜单组 */
+  MenuGroup = 1,
+}
+
+export const resourceTypeOptions = [
+  { title: '动作点', value: 1 },
+  { title: '系统', value: 0 },
+  { title: '菜单', value: 1 },
+  { title: '菜单组', value: 1 },
+]
+
+export const getResourceTypeTitle = (resourceType: ResourceType) =>
+  resourceTypeOptions.find((o) => o.value === resourceType)?.title
 export interface RestPasswordDto {
-  userId?: long
-  newPassword?: string
+  userId: long
+  newPassword: string
 }
 
 export interface RoleCreateDto {
   id?: long
   createdBy?: long
   updateBy?: long
-  createdDate?: string
+  createdDate: string
   updateDate?: string
 }
 
 export interface RoleDto {
-  isBuildIn?: boolean
-  isDeleted?: boolean
+  isBuildIn: boolean
+  isDeleted: boolean
   name?: string
   remarks?: string
   id?: long
   createdBy?: long
   updateBy?: long
-  createdDate?: string
+  createdDate: string
   updateDate?: string
 }
 
@@ -95,21 +136,21 @@ export interface UserCreateDto {
   password?: string
   phone?: string
   salt?: string
-  status?: UserStatus
+  status: UserStatus
   id?: long
   createdBy?: long
   updateBy?: long
-  createdDate?: string
+  createdDate: string
   updateDate?: string
 }
 
 export interface UserDto {
-  userName?: string
+  userName: string
   account?: string
   password?: string
   phone?: string
   salt?: string
-  status?: UserStatus
+  status: UserStatus
   id?: long
   createdBy?: long
   updateBy?: long
@@ -140,7 +181,7 @@ export const userStatusOptions = [
 export const getUserStatusTitle = (userStatus: UserStatus) =>
   userStatusOptions.find((o) => o.value === userStatus)?.title
 export interface UserUpdateDto {
-  id?: long
+  id: long
 }
 
 const adminApi = {
@@ -152,6 +193,21 @@ const adminApi = {
     sendVerifyCode(phone: string): Promise<boolean> {
       const path = `/admin/accounts/sendVerifyCode`
       return httpClient.post(path, { params: { phone } })
+    },
+  },
+  resources: {
+    create(data: Resource): Promise<Resource> {
+      const path = `/admin/resources/create`
+      return httpClient.post(path, { data })
+    },
+    delete: {},
+    query(data: DynamicQuery<Resource>): Promise<PagedList<Resource>> {
+      const path = `/admin/resources/query`
+      return httpClient.post(path, { data })
+    },
+    update(data: Resource): Promise<Resource> {
+      const path = `/admin/resources/update`
+      return httpClient.put(path, { data })
     },
   },
   roles: {
@@ -210,6 +266,10 @@ const adminApi = {
     findByUserName(name: string): Promise<ICurrentUser> {
       const path = `/admin/users/findByUserName`
       return httpClient.post(path, { params: { name } })
+    },
+    getResourceCodes(userId: long): Promise<string[]> {
+      const path = `/admin/users/getResourceCodes`
+      return httpClient.get(path, { params: { userId } })
     },
   },
 }

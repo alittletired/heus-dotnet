@@ -1,6 +1,6 @@
 import React from 'react'
-import {FormItem, Form, overlay} from '@/components'
-import {ModalFormProps} from './interface'
+import { FormItem, Form, overlay } from '@/components'
+import { ModalFormProps } from './interface'
 
 function confirm<D, Path, Return, P>(props: ModalFormProps<D, Path, Return, P>) {
   const MForm: ModalComponent<D> = () => {
@@ -10,7 +10,7 @@ function confirm<D, Path, Return, P>(props: ModalFormProps<D, Path, Return, P>) 
           const key = `${item.type}-${item.config.name}`
           switch (item.type) {
             case 'input':
-              var fixDataAttr = {'data-key': key}
+              var fixDataAttr = { 'data-key': key }
               var FormInput = FormItem.Input as any
               return <FormInput key={key} {...item.config} {...fixDataAttr} />
             case 'textArea':
@@ -31,10 +31,23 @@ function confirm<D, Path, Return, P>(props: ModalFormProps<D, Path, Return, P>) 
               return <div key={key} />
           }
         })}
+        <style jsx global>{`
+          .modal {
+            width: 640px;
+          }
+          .modal .ant-modal-body .ant-tabs {
+            margin-top: -24px;
+          }
+          /* 上边距100，头部高度56，footer高度 53，下边距20 */
+          .modal .ant-modal-body {
+            max-height: calc(100vh - 230px);
+            overflow-y: auto;
+          }
+        `}</style>
       </Form>
     )
   }
-  MForm.defaultModalProps = () => ({title: props.title})
+  MForm.defaultModalProps = () => ({ title: props.title })
   return overlay.showForm(MForm, props.modal)
 }
 

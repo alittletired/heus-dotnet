@@ -2,20 +2,20 @@ import React, { PropsWithChildren, useEffect, useMemo } from 'react'
 import { Layout } from 'antd'
 import GlobalHeader from './GlobalHeader'
 import SiderMenu from './SiderMenu'
-import { useAuth } from '@/services/user'
+import { useUser } from '@/services/user'
 import { useAppConfig } from './appConfig'
 import { ItemType } from 'antd/es/menu/hooks/useItems'
 import useRouter from '@/services/router'
 const { Content } = Layout
 
 const ProtectedLayout: React.FC<PropsWithChildren> = (props) => {
-  const [auth] = useAuth()
+  const [user] = useUser()
   const [appConfig] = useAppConfig()
   const router = useRouter()
   const menus: ItemType[] = useMemo(() => [], [])
   useEffect(() => {
-    if (!auth.isLogin) router.replace(appConfig.loginUrl)
-  }, [router, auth.isLogin, appConfig.loginUrl])
+    if (!user.isLogin) router.replace(appConfig.loginUrl)
+  }, [router, user.isLogin, appConfig.loginUrl])
   const menu = useMemo(() => {
     if (router.query['hideMenu']) return null
     return (

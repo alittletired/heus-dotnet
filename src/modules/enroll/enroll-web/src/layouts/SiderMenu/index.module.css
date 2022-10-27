@@ -1,9 +1,4 @@
-.ant-layout-sider-children {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-.sider-fixed {
+.siderFixed {
   border-right: 0;
   transition: background-color 0.3s;
   position: fixed;
@@ -19,4 +14,9 @@
   min-width: 208px;
   width: 208px;
   padding-top: 48px;
+}
+.siderFixed :global .ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }

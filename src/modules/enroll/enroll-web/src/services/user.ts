@@ -5,7 +5,7 @@ export interface CurrentUser extends LoginResult {
   isLogin?: boolean
 }
 
-const defaultUser: CurrentUser = { isLogin: false }
+const defaultUser = { isLogin: false } as CurrentUser
 const userStorage = withStorage('auth', defaultUser)
 const userState = userStorage.state
 

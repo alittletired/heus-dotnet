@@ -1,11 +1,8 @@
 import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
-import './index.css'
 import { idIsEqual } from '@/utils/dataUtils'
 
 import EditableContext, { EditColumn } from './EditableContext'
 import EditableCell from './EditableCell'
-import { useShadowEqual } from '../../utils/useShadowEqual'
-import { translateColumns } from '../table/tableUtils'
 import ApiForm from '../form/Form'
 import { Action, overlay } from '..'
 import { getId, setId } from '@/utils/dataUtils'
@@ -150,6 +147,29 @@ export default function EditTable<T extends object>(props: EditTableProps<T>) {
           columns={columns}
           rowClassName="editable-row"
         />
+        <style jsx global>{`
+          .ant-table-tbody .editable-row .ant-table-cell {
+            padding: 4px 11px;
+          }
+          .ant-table-tbody .editable-row .ant-form-item {
+            margin: -3px -8px;
+          }
+          .editable-row .ant-input {
+            padding: 3px 8px;
+          }
+          .editable-row:hover .editable-cell-value-wrap {
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            padding: 4px 11px;
+          }
+
+          [data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
+            border: 1px solid #434343;
+          }
+          .ant-table.ant-table-small .ant-table-tbody > tr.editable-row > td {
+            padding: 2px 8px;
+          }
+        `}</style>
       </ApiForm>
     </EditableContext.Provider>
   )

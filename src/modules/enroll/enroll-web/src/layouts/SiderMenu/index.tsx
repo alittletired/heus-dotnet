@@ -1,15 +1,17 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { Layout, Menu as AntdMenu } from 'antd'
-import './index.css'
+import styles from './index.module.css'
 import { useAppConfig } from '@/layouts/appConfig'
 import { getMenuByPath, getOpenKeys, Menu } from '@/services/menu'
-import { usePermission } from '@/services/user'
+import { usePermission } from '@/services/permissions'
+import { ItemType } from 'antd/es/menu/hooks/useItems'
+import { Link } from '@/components'
 const { Sider } = Layout
 
 const SiderMenu: React.FC<{ menus: Menu[] }> = (props) => {
   const { pathname } = useLocation()
   const { hasPermission } = usePermission()
-  const appContext = useAppConfig()
+  const [appContext] = useAppConfig()
 
   const menuItems: ItemType[] = useMemo(() => {
     function getUserMenu(menus: Menu[], parentMenu?: Menu) {
@@ -26,7 +28,7 @@ const SiderMenu: React.FC<{ menus: Menu[] }> = (props) => {
           const item = {
             key: menu.key,
             label: (
-              <Link to={menu.path}>
+              <Link href={menu.path}>
                 <span>{menu.name}</span>
               </Link>
             ),
@@ -61,7 +63,7 @@ const SiderMenu: React.FC<{ menus: Menu[] }> = (props) => {
       trigger={null}
       collapsible
       theme="light"
-      className="sider-fixed"
+      className={styles.siderFixed}
       collapsed={appContext.collapsed}>
       <AntdMenu
         mode="inline"

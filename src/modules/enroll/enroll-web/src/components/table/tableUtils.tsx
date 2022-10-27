@@ -6,7 +6,7 @@ import ActionColumn from './ActionColumn'
 import { OptionType } from '../select'
 import OptionCell from './OptionCell'
 import AudioIcon from '../AudioIcon'
-import Image from '../image'
+import { Image } from '@/components'
 const actionWidths = [0, 70, 140, 190, 210]
 export function toSearchData(originData: any, columns: ColumnProps[] = []) {
   let data = { ...originData }

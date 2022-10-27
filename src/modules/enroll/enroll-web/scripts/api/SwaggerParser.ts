@@ -1,4 +1,4 @@
-import {OpenAPIV2} from './openapi-types'
+import { OpenAPIV2 } from './openapi-types'
 import {
   ApiClassSchma,
   ApiContext,
@@ -15,7 +15,7 @@ export default class SwaggerParser implements ApiParser<OpenAPIV2.Document> {
 
   parse(apiConext: ApiContext<OpenAPIV2.Document>) {
     this.apiConext = apiConext
-    let {config, docs} = this.apiConext
+    let { config, docs } = this.apiConext
 
     for (let path in docs.paths) {
       this.parsePath(path, docs.paths[path])
@@ -35,7 +35,7 @@ export default class SwaggerParser implements ApiParser<OpenAPIV2.Document> {
       let [httpMethod, operation] = operationPair
       if (!operation) continue
 
-      let {parameters = [], responses} = operation
+      let { parameters = [], responses } = operation
       let apiClasses = this.apiConext.classes
       let methodParts = [...pathParts]
       for (let i = 0; i < methodParts.length; i++) {
@@ -58,13 +58,13 @@ export default class SwaggerParser implements ApiParser<OpenAPIV2.Document> {
       let params: Record<string, ApiMethodParamSchema> = {}
       for (let p of parameters) {
         if ('in' in p) {
-          let {in: paramIn, name} = p
+          let { in: paramIn, name } = p
           if (paramIn === 'header' || paramIn === 'formData') {
             continue
           }
           try {
             let type = this.getType(p)
-            params[name] = {...p, type}
+            params[name] = { ...p, type }
           } catch (ex) {
             console.error(path)
             throw ex
@@ -83,7 +83,7 @@ export default class SwaggerParser implements ApiParser<OpenAPIV2.Document> {
   }
 
   protected getType(property: any): string {
-    let {type, $ref, schema} = property
+    let { type, $ref, schema } = property
     if (schema) return this.getType(schema)
     if ($ref) return this.getRefType($ref)
     switch (type) {
@@ -110,7 +110,7 @@ export default class SwaggerParser implements ApiParser<OpenAPIV2.Document> {
   }
 
   protected checkRefType(name: string, schema: OpenAPIV2.SchemaObject) {
-    let {models, config} = this.apiConext
+    let { models, config } = this.apiConext
     if (models[name]) return
     let genericName = ''
     if (name.includes('<')) {
@@ -147,7 +147,7 @@ export default class SwaggerParser implements ApiParser<OpenAPIV2.Document> {
         apiModel.properties[propName] = {
           ...property,
           name,
-          required: required.includes(propName),
+          nullable: !required.includes(propName),
           type: tsType,
 
           example: property.example,
@@ -161,8 +161,7 @@ export default class SwaggerParser implements ApiParser<OpenAPIV2.Document> {
 
   protected getRefType(refType: string): string {
     let tsType = normalType(refType)
-    let definition =
-      this.apiConext.docs.definitions![refType.replace('#/definitions/', '')]
+    let definition = this.apiConext.docs.definitions![refType.replace('#/definitions/', '')]
     this.checkRefType(tsType, definition)
     return tsType
   }
