@@ -1,43 +1,56 @@
 import menus from '@/config/menus'
-import { selector } from 'recoil'
+import { selector, useRecoilValue } from 'recoil'
+import authState, { AuthState } from './auth'
 import userState from './user'
 export interface Menu {
   name: string
-  key?: string //自动生成
   icon?: string
   path: string
   type: number
   children?: Menu[]
+  code?: string
 }
 
-const menuMap = new Map<string, Menu>()
-function initMenuMap(menuArr: Menu[]) {
-  if (!menuArr) return
-  for (let menu of menuArr) {
-    menuMap.set(menu.path, menu)
-    menu.children && initMenuMap(menu.children)
-  }
-}
-initMenuMap(menus)
 const userMenuState = selector({
   key: 'userMenu',
   get: ({ get }) => {
-    const user = get(userState)
+    const auth = get(authState)
+    return getUserMenu(menus, auth)
   },
 })
-export const getMenuByPath = (path: string) => {
-  return menuMap.get(path)
-}
-export const getOpenKeys = (selectKey: string) => {
-  if (!selectKey) return []
-
-  let openKeys = []
-  // let lastIndex = selectKey.lastIndexOf('.')
-  let index = selectKey.indexOf('.')
-  while (index !== -1) {
-    openKeys.push(selectKey.substring(0, index))
-    index = selectKey.indexOf('.', index + 1)
+export const useUserMenu = () => useRecoilValue(userMenuState)
+function getUserMenu(menus: Menu[], auth: AuthState, parentMenu?: Menu) {
+  let userMenu: Menu[] = []
+  if (!menus.length) return userMenu
+  for (let menu of menus) {
+    if (menu.children) {
+      const children = getUserMenu(menu.children, auth, menu)
+      if (children.length) {
+        const item = { ...menu, children }
+        userMenu.push(item)
+      }
+    } else if (auth.isAllow(menu.code)) {
+      userMenu.push(menu)
+    }
   }
 
-  return openKeys
+  return userMenu
+}
+export function findMenusByPath(path?: string) {
+  function recursionFind(menus?: Menu[], path?: string): Menu[] | undefined {
+    if (!path) return
+    if (!menus) return
+    for (const menu of menus) {
+      if (!menu) continue
+      if (menu.children) {
+        const subMenus = recursionFind(menu.children, path)
+        if (subMenus) return [menu, ...subMenus]
+      }
+      if (menu.path === path) {
+        return [menu]
+      }
+    }
+    return
+  }
+  return recursionFind(menus, path)
 }

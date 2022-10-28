@@ -15,7 +15,7 @@ const GlobalHeader = () => {
         <div className={styles.header}>
           <div className={styles.headerLogo}>
             <Link href="/">
-              <Image src={appConfig.loginUrl} alt="logo" />
+              {/* <Image src={appConfig.loginUrl} alt="logo" /> */}
               <h1>{appConfig.siteName}</h1>
             </Link>
           </div>

@@ -2,61 +2,53 @@ import React, { useMemo, useState, useEffect } from 'react'
 import { Layout, Menu as AntdMenu } from 'antd'
 import styles from './index.module.css'
 import { useAppConfig } from '@/layouts/appConfig'
-import { getMenuByPath, getOpenKeys, Menu } from '@/services/menu'
-import { usePermission } from '@/services/permissions'
+import { findMenusByPath, Menu, useUserMenu } from '@/services/menu'
 import { ItemType } from 'antd/es/menu/hooks/useItems'
 import { Link } from '@/components'
+import useRouter from '@/services/router'
 const { Sider } = Layout
 
-const SiderMenu: React.FC<{ menus: Menu[] }> = (props) => {
-  const { pathname } = useLocation()
-  const { hasPermission } = usePermission()
+const SiderMenu: React.FC = (props) => {
+  const router = useRouter()
   const [appContext] = useAppConfig()
-
+  const userMenu = useUserMenu()
   const menuItems: ItemType[] = useMemo(() => {
-    function getUserMenu(menus: Menu[], parentMenu?: Menu) {
-      let userMenu: ItemType[] = []
-      if (!menus || menus.length === 0) return userMenu
-      for (let menu of menus) {
+    function getMenus(userMenu: Menu[]) {
+      let menus: ItemType[] = []
+      if (!userMenu || userMenu.length === 0) return []
+      for (let menu of userMenu) {
         if (menu.children) {
-          const children = getUserMenu(menu.children, menu)
-          if (children.length) {
-            const item = { label: menu.name, key: menu.key, children }
-            userMenu.push(item)
-          }
-        } else if (hasPermission(menu.path)) {
-          const item = {
-            key: menu.key,
+          var menuItem = { label: menu.name, key: menu.path, children: getMenus(menu.children) }
+          menus.push(menuItem)
+        } else {
+          menus.push({
+            key: menu.path,
             label: (
               <Link href={menu.path}>
                 <span>{menu.name}</span>
               </Link>
             ),
-          }
-          userMenu.push(item)
+          })
         }
       }
-      return userMenu
+      return menus
     }
 
-    let menus = getUserMenu(appContext.menus)
+    let menus = getMenus(userMenu)
 
     return menus
-  }, [appContext.menus, hasPermission])
+  }, [userMenu])
 
-  let [selectedKeys, setSelectedKeys] = useState([])
-  let [openKeys, setOpenKeys] = useState([])
+  let [selectedKeys, setSelectedKeys] = useState([] as string[])
+  let [openKeys, setOpenKeys] = useState([] as string[])
   useEffect(() => {
-    let menu = getMenuByPath(pathname)
-
-    if (!menu) {
+    let menus = findMenusByPath(router.pathname)
+    if (!menus || menus.length == 0) {
       return
     }
-    let selectedKey = menu.key
-
-    setSelectedKeys([selectedKey])
-    setOpenKeys(getOpenKeys(selectedKey))
-  }, [pathname])
+    setSelectedKeys([menus[menus.length - 1].path])
+    setOpenKeys(menus.map((m) => m.path))
+  }, [router.pathname])
 
   return (
     <Sider
