@@ -22,7 +22,12 @@ public class AspNetModuleInitializer : ModuleInitializerBase
     {
         var services = context.Services;
         var configuration = context.Configuration;
-     
+        services.AddCors(o => o.AddDefaultPolicy(builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }));
         services.AddMvc(options =>
         {
             options.Conventions.Add(new ServiceApplicationModelConvention());
@@ -87,6 +92,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
         // app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
+        app.UseCors();
         // if (context.Environment.IsDevelopment())
         // {
         //     app.UseMiddleware<DevAuthenticationMiddleware>();

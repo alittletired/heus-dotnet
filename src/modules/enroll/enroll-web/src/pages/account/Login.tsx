@@ -30,6 +30,7 @@ const LoginMessage: React.FC<{
   />
 )
 type LoginType = 'account' | 'mobile'
+
 const Login: PageComponent = () => {
   const [user] = useUser()
   const router = useRouter()
@@ -43,6 +44,26 @@ const Login: PageComponent = () => {
     router.replace((router.query['redirect'] as string) ?? '/')
     return <Spin />
   }
+  const account = (
+    <div>
+      <PasswordInput />
+      <FormItem.Input
+        name="userName"
+        size="large"
+        required
+        placeholder="用户名"
+        prefix={<UserOutlined className={styles.userIcon} />}
+      />
+      <FormItem.Input
+        name="password"
+        type="password"
+        required
+        size="large"
+        placeholder="密码"
+        autoComplete="new-password"
+        prefix={<LockTwoTone className={styles.prefixIcon} />}></FormItem.Input>
+    </div>
+  )
 
   return (
     <UserLayout containerClass={styles.main}>
@@ -52,35 +73,23 @@ const Login: PageComponent = () => {
           animated={false}
           className={styles.tabs}
           activeKey={loginType}
-          onChange={(value) => setLoginType(value as LoginType)}>
-          <Tabs.TabPane key="account" tab="账户密码登录">
-            <PasswordInput />
-            <FormItem.Input
-              name="userName"
-              size="large"
-              required
-              placeholder="用户名"
-              prefix={<UserOutlined className={styles.userIcon} />}
-            />
-            <FormItem.Input
-              name="password"
-              type="password"
-              required
-              size="large"
-              placeholder="密码"
-              autoComplete="new-password"
-              prefix={<LockTwoTone className={styles.prefixIcon} />}></FormItem.Input>
-          </Tabs.TabPane>
-          <Tabs.TabPane key="mobile" tab="手机号登录">
-            <FormItem.Input
-              name="phone"
-              size="large"
-              required
-              placeholder="手机号"
-              prefix={<MobileOutlined className={styles.prefixIcon} />}
-            />
-          </Tabs.TabPane>
-        </Tabs>
+          onChange={(value) => setLoginType(value as LoginType)}
+          items={[
+            { label: '账户密码登录', key: 'account', children: account },
+            {
+              label: '手机号登录',
+              key: 'mobile',
+              children: (
+                <FormItem.Input
+                  name="phone"
+                  size="large"
+                  required
+                  placeholder="手机号"
+                  prefix={<MobileOutlined className={styles.prefixIcon} />}
+                />
+              ),
+            },
+          ]}></Tabs>
 
         <FormItem.Item>
           <FormItem.Checkbox name="rememberMe">自动登录</FormItem.Checkbox>

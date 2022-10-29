@@ -20,7 +20,7 @@
 }
 @media (min-width: 768px) {
   .container {
-    background-image: url('./images/login-bg.svg');
+    background-image: url('/images/login/bg.svg');
     background-repeat: no-repeat;
     background-position: center 110px;
     background-size: 100%;

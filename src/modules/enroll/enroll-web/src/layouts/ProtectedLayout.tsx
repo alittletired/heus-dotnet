@@ -12,7 +12,9 @@ const ProtectedLayout: React.FC<PropsWithChildren> = (props) => {
   const [appConfig] = useAppConfig()
   const router = useRouter()
 
-  if (!user.isLogin) {
+  if (!user.isLogin && router.asPath !== appConfig.loginUrl) {
+    // console.warn(router, router.pathname, appConfig.loginUrl)
+
     router.replace(appConfig.loginUrl)
     return <div></div>
   }

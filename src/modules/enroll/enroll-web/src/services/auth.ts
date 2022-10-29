@@ -19,6 +19,8 @@ const authState = selector({
   get: async ({ get }) => {
     const user = get(userState)
     if (!user.isLogin) return new AuthState([])
+    console.warn(user)
+
     let resourceCodes = await adminApi.users.getResourceCodes(user.userId)
     return new AuthState(resourceCodes)
   },

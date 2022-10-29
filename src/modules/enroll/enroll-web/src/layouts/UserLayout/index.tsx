@@ -15,7 +15,7 @@ const UserLayout = (props: LayoutProps) => {
         <div className={styles.top}>
           <div className={styles.header}>
             <Link href="/">
-              <Image alt="logo" className={styles.logo} src="/favicon.png" />
+              <Image alt="logo" className={styles.logo} src="/logo.svg" width={44} height={44} />
               <span className={styles.title}>{appConfig.siteName}</span>
             </Link>
           </div>

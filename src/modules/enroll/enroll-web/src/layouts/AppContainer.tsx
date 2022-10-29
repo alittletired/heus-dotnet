@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ConfigProvider } from 'antd'
 // import zhCN from 'antd/es/locale/zh_CN'
 import { RecoilRoot } from 'recoil'
@@ -11,7 +11,7 @@ interface Props<P> {
   Component: React.ComponentType<P>
 }
 
-export default function AppContainer<P>(props: Props<P>) {
+export default function AppContainer<P = any>(props: Props<P>) {
   // const [appConfig] = useAppConfig()
   const [isInBrowse, setInBrowse] = useState(false)
   useEffect(() => {
@@ -22,12 +22,11 @@ export default function AppContainer<P>(props: Props<P>) {
   const LayoutComponent = withLayout(props.Component)
   return (
     <RecoilRoot>
+      {/* <ConfigProvider locale={zhCN}> */}
       <RecoilAsyncState>
         <DocumentTitle />
-        <LayoutComponent {...props.pageProps} />
+        <LayoutComponent {...(props.pageProps as any)} />
       </RecoilAsyncState>
-      {/* <ConfigProvider locale={zhCN}> */}
-
       {/* </ConfigProvider> */}
     </RecoilRoot>
   )
