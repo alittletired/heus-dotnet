@@ -17,25 +17,3 @@ export function setHttpClient(client: HttpClient) {
 }
 
 type long = string
-
-type Operator =
-  | 'eq'
-  | 'neq'
-  | 'like'
-  | 'headLike'
-  | 'tailLike'
-  | 'in'
-  | 'notIn'
-  | 'gt'
-  | 'lt'
-  | 'gte'
-  | 'lte'
-
-interface PageRequest {
-  pageIndex?: number
-  pageSize?: number
-  orderBy?: string
-}
-type DynamicQuery<T> = {
-  [P in keyof T]?: T[P] | { [key in Operator as `$${key}`]?: T[P] | Array<T[P]> }
-} & PageRequest

@@ -20,12 +20,12 @@ const ProtectedLayout: React.FC<PropsWithChildren> = (props) => {
   }
   if (router.query['hideMenu']) return null
   return (
-    <Layout hasSider style={{ minHeight: '100%' }}>
-      <div className="globalLeft"></div>
+    <Layout hasSider style={{ minHeight: '100%' }} className="global">
+      <div className="global-left"></div>
       <SiderMenu />
       <Layout style={{ position: 'relative' }}>
         <GlobalHeader />
-        <Content className="globalcontent">{props.children}</Content>
+        <Content className="global-content">{props.children}</Content>
       </Layout>
     </Layout>
   )

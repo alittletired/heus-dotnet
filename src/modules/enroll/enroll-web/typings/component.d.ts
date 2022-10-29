@@ -8,7 +8,17 @@ declare interface PageOptions {
 
   parent?: PageComponent
 }
-interface PageComponent<P = {}> extends React.FC<P> {
+declare interface PageComponent<P = {}> extends React.FC<P> {
   options?: PageOptions
 }
-type HOC<P> = (Component: React.ComponentType<P>) => React.Component<P>
+
+declare interface ModalOptions {
+  title?: string
+  width?: string | number
+  viewType?: ViewType
+  overlayType?: OverlayType
+}
+
+declare interface ModalComponent<P> extends React.FC<{ model?: P }> {
+  modalOptions?: (props: { model?: P }) => ModalProps
+}

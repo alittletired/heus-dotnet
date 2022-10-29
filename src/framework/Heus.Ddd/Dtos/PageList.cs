@@ -2,7 +2,7 @@
 namespace Heus.Ddd.Dtos;
 public class PagedList<T>
 {
-    public int Count { get; set; }
+    public int Total { get; set; }
     public IEnumerable<T> Items { get; set; }=new List<T>();
 
     /// <summary>
@@ -12,7 +12,7 @@ public class PagedList<T>
     /// <param name="items">List of items in current page</param>
     public PagedList(int total, IEnumerable<T> items)
     {
-        Count = total;
+        Total = total;
         Items = items;
     }
     public PagedList() { }

@@ -13,33 +13,19 @@ function isFormApi<D, Return, Params>(
 ): api is FormApi<D, Return, Params> {
   return api.length === 2
 }
-export interface FormProps<D, Path, Return>
-  extends AntdFormProps,
-    Omit<ApiProps<D, Return>, 'api'> {
-  api?: FormApi<D, Return, Path> | Api<D, Return>
-  params?: Path
-  canDismiss?: (data: Return) => boolean
-  titles?: { [key in string]: string }
+export interface FormProps<D, P, R> extends AntdFormProps {
+  api?: Api<D, R>
+  params?: P
+  canDismiss?: (data: R) => boolean
+  labels?: { [key in string]: string }
   noLabel?: boolean
   viewType?: ViewType
-  operators?: Map<string, Operator>
-  children?: React.ReactNode
 }
 
 // type FormProps = Parameters<Form>[0]
 
 function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Return>) {
-  const {
-    onSuccess = () => {},
-    onBefore = (data) => data,
-    canDismiss = () => true,
-    noLabel,
-    operators,
-    api,
-    params,
-    titles,
-    ...rest
-  } = props
+  const { noLabel, api, params, labels, ...rest } = props
   let [form] = Form.useForm()
   let overlay = useContext(OverlayContext)
   const [loading, setLoading] = useState(false)
@@ -50,7 +36,7 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
       values = { ...props.initialValues, ...values }
       setLoading(true)
       overlay.setLoading(true)
-      let formData = { ...props.data, ...values }
+      let formData = { ...props, ...values }
       // 通过onBefore 返回false 阻止发送请求
 
       formData = await onBefore(formData)
@@ -59,19 +45,16 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
       }
 
       let data
-      if (isFormApi(api)) {
+      if (params) {
         data = await api(params!, formData)
       } else {
         data = await api(formData)
       }
 
-      await onSuccess(data)
-      if (canDismiss(data)) {
-        overlay.onDismiss(data)
-      }
+      await props.onSuccess?.(data)
     } catch (ex: any) {
       console.error('onFail', ex)
-      if (!props.onFail && ex?.data?.msg) message.error(ex?.data?.msg, 4)
+      // if (!props.onFail && ex?.data?.msg) message.error(ex?.data?.msg, 4)
     } finally {
       setLoading(false)
       overlay.setLoading && overlay.setLoading(false)
@@ -84,7 +67,7 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
   const layout = noLabel ? null : labelLayout
 
   return (
-    <FormContext.Provider value={{ form, loading, setLoading, noLabel, onSuccess, titles }}>
+    <FormContext.Provider value={{ form, loading, setLoading, noLabel, labels }}>
       <Form
         form={form}
         autoComplete="off"

@@ -25,7 +25,7 @@ export function SearchItem<T>(props: SearchItemPorps<T>) {
     return (
       <FormItem.Select
         {...controlProps}
-        options={table.options[String(column.dataIndex)]}
+        options={column.options}
         mode={column.operator === 'in' ? 'multiple' : undefined}
         hasAllOption={column.operator !== 'in'}
       />
@@ -74,7 +74,7 @@ const SearchForm: React.FC = (props) => {
   }
   const onSearch = () => {
     var data = form.getFieldsValue()
-    table.search(data)
+    table.setParams((p: any) => ({ ...p, ...data }))
   }
   const onReset = () => {
     form.resetFields()

@@ -1,8 +1,9 @@
+using Heus.Core.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Heus.AspNetCore.Validation;
 
-public class ValidationActionFilter:IAsyncActionFilter
+internal class ValidationActionFilter:IAsyncActionFilter,IScopedDependency
 {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {

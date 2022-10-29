@@ -59,7 +59,7 @@ export interface LoginResult {
 }
 
 export interface PagedList<T> {
-  count: number
+  total: number
   items: T[]
 }
 

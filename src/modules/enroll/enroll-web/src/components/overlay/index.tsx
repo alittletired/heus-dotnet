@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Modal, Drawer, Button } from 'antd'
 import { ModalProps as AntdModalProps } from 'antd'
-import { ModalComponent, ModalComponentProps } from '../modal/interface'
 export type OverlayType = 'modal' | 'drawer'
 type OnDismiss = (data?: any) => void
 export const OverlayContext = React.createContext({

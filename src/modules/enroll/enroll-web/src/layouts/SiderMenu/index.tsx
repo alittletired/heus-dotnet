@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { Layout, Menu as AntdMenu } from 'antd'
-import styles from './index.module.css'
 import { useAppConfig } from '@/layouts/appConfig'
 import { findMenusByPath, Menu, useUserMenu } from '@/services/menu'
 import { ItemType } from 'antd/es/menu/hooks/useItems'
@@ -55,7 +54,7 @@ const SiderMenu: React.FC = (props) => {
       trigger={null}
       collapsible
       theme="light"
-      className={styles.siderFixed}
+      className="sider-fixed"
       collapsed={appContext.collapsed}>
       <AntdMenu
         mode="inline"

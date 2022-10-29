@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react'
-import { TableInstance, ToolBarItem } from './interface'
+import {  ToolBarItem } from './interface'
 import { Divider, Button, Menu, Dropdown } from 'antd'
-import { usePermission } from '@/services/user'
 import { DownOutlined } from '@ant-design/icons'
 import { useTable } from './Table'
 import ActionAnchor from '../action/ActionAnchor'
+import { useAtuh } from '@/services/auth'
 interface Props<T> {
   actions?: ToolBarItem<T>[]
   data: any
@@ -12,18 +12,18 @@ interface Props<T> {
 }
 export default function ActionColumn<T>(props: Props<T>) {
   let { actions = [], data, showCount = 3 } = props
-  const { hasPermission } = usePermission()
+  const { hasAuthority } = useAtuh()
   const table = useTable()
-  actions = actions.filter((action) => hasPermission(action.code))
+  actions = actions.filter((action) => hasAuthority(action.code))
   const moreDom: JSX.Element[] = []
   const actionDom: JSX.Element[] = []
   for (let index = 0; index < actions.length; index++) {
     let action = actions[index]
-    let { disableAutoReload, disabled, ...rest } = action
+    let { reloadData, disabled, ...rest } = action
     const item = (
       <ActionAnchor
         {...rest}
-        onSuccess={() => !disableAutoReload && table.reload()}
+        onSuccess={() => reloadData !== false && table.reload()}
         data={data}
         key={index}
       />

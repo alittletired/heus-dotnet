@@ -8,7 +8,7 @@ export class AuthState {
     this.state = new Set<string>(actionCodes)
   }
   public state: Set<string>
-  isAllow = (actionCode?: string) => {
+  hasAuthority = (actionCode?: string) => {
     if (!actionCode) return true
     return this.state.has(actionCode) || this.state.has(window.location.pathname + ':' + actionCode)
   }

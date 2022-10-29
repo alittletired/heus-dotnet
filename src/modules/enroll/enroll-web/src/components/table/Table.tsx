@@ -1,49 +1,62 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+  Dispatch,
+  SetStateAction,
+} from 'react'
 import { Table, Card, TablePaginationConfig } from 'antd'
 import { toSearchData, translateColumns } from './tableUtils'
-import { TableInstance, TableProps } from './interface'
+import { ColumnProps, TableProps } from './interface'
 import SearchForm from './SearchForm'
 import ToolBar from './ToolBar'
 // import './index.css'
-import { normalizeOptions, NameOption, OptionType, isApiOptions } from '../select'
 import { toTreeData, TreeEntity } from '../tree/treeUtils'
+export interface TableContext<T = any, P = any> {
+  props: TableProps<T, P>
+  columns: ColumnProps<T>[]
+  dataSource: T[]
+  setDataSource: Dispatch<SetStateAction<T[]>>
+  params: P
+  //当前的请求参数
+  setParams: Dispatch<SetStateAction<P & PageRequest>>
+}
 
-export const TableContext = React.createContext({} as TableInstance)
+export const TableContext = React.createContext({} as TableContext)
 export const useTable = () => React.useContext(TableContext)
-export default function ApiTable<T extends object, P extends PageRequest>(props: TableProps<T, P>) {
+export default function ApiTable<T extends object = any, P = {}>(props: TableProps<T, P>) {
   let [dataSource, setDataSource] = useState([] as T[])
-  let queryDataRef = useRef({
-    ...props.data,
-    pageIndex: 1,
-    pageSize: props.pagination === false ? -1 : props.pagination?.pageSize || 10,
-  })
-
-  let pageRef = useRef<TablePaginationConfig>({
-    pageSize: queryDataRef.current.pageSize,
-    current: queryDataRef.current.pageIndex,
-    showSizeChanger: true,
-    hideOnSinglePage: true,
-    ...props.pagination,
-  })
-  let loadRef = useRef(false)
   let [loading, setLoading] = useState(false)
-  let fetchData = useRef(async (param?: Partial<P>) => {
-    if (loadRef.current) return
-    queryDataRef.current = { ...queryDataRef.current, ...param }
+  let [params, setParams] = useState(
+    () =>
+      ({
+        ...props.params,
+        pageIndex: 1,
+        pageSize: props.pagination === false ? -1 : props.pagination?.pageSize || 10,
+      } as P & PageRequest),
+  )
 
-    if (props.onApiBefore) {
-      let canInvoke = await props.onApiBefore(queryDataRef.current)
-      if (!canInvoke) {
-        return
-      }
+  let pageOptions = useMemo<TablePaginationConfig>(() => {
+    return {
+      pageSize: params.pageSize,
+      current: params.pageIndex,
+      showSizeChanger: true,
+      hideOnSinglePage: true,
+      ...props.pagination,
     }
-    loadRef.current = true
-    setLoading(loadRef.current)
+  }, [params.pageIndex, params.pageSize, props.pagination])
+
+  let fetchData = useRef(async (newParams: Partial<P>) => {
+    if (loading) return
+    setLoading(loading)
     try {
       let dataSource: T[] = []
       let total = 0
       if (!props.api) return
-      let searchData = toSearchData(queryDataRef.current, props.columns)
+      let finalParams = { ...params, ...newParams }
+      let searchData = toSearchData(finalParams, props.columns)
       let apiResult = await props.api(searchData)
 
       dataSource = apiResult.items
@@ -51,24 +64,20 @@ export default function ApiTable<T extends object, P extends PageRequest>(props:
 
       dataSource.forEach(
         (item: any, index: number) =>
-          (item._index =
-            (queryDataRef.current.pageIndex - 1) * queryDataRef.current.pageSize + index + 1),
+          (item._index = (params.pageIndex! - 1) * params.pageSize! + index + 1),
       )
 
       if (props.useTreeTable) {
-        pageRef.current.pageSize = dataSource.length
         //@ts-ignore
         dataSource = toTreeData(dataSource)
       }
-      pageRef.current.total = total
-      pageRef.current.current = queryDataRef.current.pageIndex
-      props.OnApiSuccess?.(apiResult)
+
       setDataSource(dataSource)
+      setParams(finalParams)
     } catch (ex) {
-      // console.warn(ex)
+      console.warn('fetch error', ex)
     } finally {
-      loadRef.current = false
-      setLoading(loadRef.current)
+      setLoading(false)
     }
   })
   const onTableChange = useCallback((page: TablePaginationConfig, filters: any, sorter: any) => {
@@ -80,63 +89,32 @@ export default function ApiTable<T extends object, P extends PageRequest>(props:
         pageParam.orderBy = undefined
       }
     }
-    fetchData.current(pageParam as any)
+    setParams((p) => ({ ...p, ...pageParam }))
   }, [])
-  const search = useRef((data?: any) => {
-    queryDataRef.current = {
-      ...props.data,
-      pageIndex: 1,
-      pageSize: props.pagination === false ? -1 : props.pagination?.pageSize || 10,
-    }
 
-    return fetchData.current(data)
-  })
   useEffect(() => {
-    let data = { ...props.data }
+    let propParams = { ...props.params }
 
-    for (let key of Object.keys(data)) {
-      if (key in queryDataRef.current) {
+    for (let key of Object.keys(propParams)) {
+      if (key in params) {
         //@ts-ignore
-        if (data[key] !== queryDataRef.current[key]) {
-          search.current(data)
+        if (propParams[key] !== params[key]) {
+          fetchData.current(propParams)
           return
         }
       } else {
-        search.current(data)
+        fetchData.current(propParams)
         return
       }
     }
-  }, [props.data])
-  const apiOptions = useRef<Record<string, Promise<OptionType[]>>>({})
-  const [options, setOptions] = useState(() => {
-    let options: Record<string, NameOption[]> = {}
-    for (let col of props.columns) {
-      if (col.dataIndex && col.options) {
-        let api = col.options
-        if (isApiOptions(api)) {
-          apiOptions.current[col.dataIndex.toString()] = api(col.optionsParam)
-        } else {
-          options[col.dataIndex.toString()] = normalizeOptions(api)
-        }
-      }
-    }
-    return options
-  })
-  useEffect(() => {
-    Promise.all(Object.values(apiOptions.current)).then((res) => {
-      setOptions((options) => {
-        let keys = Object.keys(apiOptions.current)
-        for (let idx = 0; idx < keys.length; idx++) {
-          options[keys[idx]] = normalizeOptions(res[idx])
-        }
-        return options
-      })
-    })
-  }, [])
+  }, [props.params, params])
+
   const columns = useMemo(() => {
     let columns = translateColumns(props.columns)
     columns.forEach((col) => {
-      col.title = col.title ?? props.titles?.[col.dataIndex?.toString()]
+      if (col.dataIndex && !col.title) {
+        col.title = props.titles?.[col.dataIndex.toString()]
+      }
       if (!col.title) {
         console.warn('列没有设置标题:', col)
       }
@@ -145,35 +123,24 @@ export default function ApiTable<T extends object, P extends PageRequest>(props:
     return columns
   }, [props.columns, props.titles])
 
-  const table: TableInstance<T> = {
+  const tableContext: TableContext<T, P> = {
     props,
     dataSource,
     setDataSource,
     columns,
-    options,
-    data: queryDataRef.current,
-    search: search.current,
-    reset: search.current,
-    reload: fetchData.current,
+    params,
+    setParams,
   }
 
-  if (props.table) {
-    Object.assign(props.table, table)
-  }
-  useEffect(() => {
-    search.current()
-  }, [])
-
-  props.toolBar?.forEach((op) => (op.title = op.title ?? props.title?.[op.code!]))
   return (
-    <TableContext.Provider value={table}>
+    <TableContext.Provider value={tableContext}>
       <div className="api-table">
         <SearchForm />
         <Card
           bodyStyle={{ height: '100%', padding: 0 }}
           title={props.tableTitle}
           extra={<ToolBar items={props.toolBar} />}>
-          <Table<T>
+          <Table
             scroll={{ x: 'max-content' }}
             key={dataSource.length}
             rowKey={props.rowKey ?? 'id'}
@@ -183,7 +150,7 @@ export default function ApiTable<T extends object, P extends PageRequest>(props:
             loading={loading}
             onChange={onTableChange}
             dataSource={dataSource}
-            pagination={pageRef.current.pageSize > 0 && pageRef.current}
+            pagination={params.pageSize! > 0 && pageOptions}
             columns={columns}
           />
         </Card>

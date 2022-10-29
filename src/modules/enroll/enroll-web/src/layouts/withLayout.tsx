@@ -9,7 +9,6 @@ function withLayout<P>(Component: ComponentType<P>) {
   if (Component.displayName == 'ErrorPage') {
     return Component
   }
-  console.warn('layout', layout, Component)
 
   const LayoutComponent: ComponentType<P> = (props) => {
     return (

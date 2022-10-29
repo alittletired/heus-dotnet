@@ -3,7 +3,7 @@ import { formatDate, formatDateTime } from '@/utils/dateUtils'
 import { getProperty } from '../../utils/dataUtils'
 import { ColumnProps } from './interface'
 import ActionColumn from './ActionColumn'
-import { OptionType } from '../select'
+import { getOptionTitle, OptionType } from '../select'
 import OptionCell from './OptionCell'
 import AudioIcon from '../AudioIcon'
 import { Image } from '@/components'
@@ -77,7 +77,7 @@ export function translateColumns<T>(columns: ColumnProps<T>[] = []): ColumnProps
       } else {
         options = column.options
       }
-      column.render = (value) => <OptionCell dataIndex={column.dataIndex!} value={value} />
+      column.render = (value) => getOptionTitle(value, options)
     } else if (column.valueType && column.dataIndex) {
       column.render = (value, data) => {
         if (column.valueType === 'date') {

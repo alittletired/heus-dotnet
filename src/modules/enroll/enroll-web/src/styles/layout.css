@@ -1,0 +1,114 @@
+.ant-layout .global-header-stub {
+  height: 48px;
+  line-height: 48px;
+  background: transparent;
+}
+
+.ant-layout .global-header-fixed {
+  position: fixed;
+  top: 0;
+  padding: 0px;
+  height: 48px;
+  line-height: 48px;
+  width: 100%;
+  z-index: 100;
+  right: 0px;
+}
+.ant-layout .global-header {
+  background-color: #001529;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 16px;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+}
+.global-header > * {
+  height: 100%;
+}
+.global-header-logo {
+  position: relative;
+  overflow: hidden;
+  line-height: 48px;
+  /* width: 183px; */
+}
+.global-header-logo a {
+  display: flex;
+  align-items: center;
+  height: 48px;
+}
+.global-header-logo a img {
+  height: 28px;
+}
+.global-header-logo h1 {
+  color: #fff;
+  height: 32px;
+  margin: 0 0 0 12px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 32px;
+}
+
+.global-header-right {
+  display: flex;
+  float: right;
+  height: 48px;
+  margin-left: auto;
+  overflow: hidden;
+}
+.global-header-right-action {
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.global-header-right-action .anticon {
+  color: #fff;
+}
+
+.global-left {
+  width: 204px;
+  overflow: hidden;
+  flex: 0 0 204px;
+  max-width: 204px;
+  min-width: 204px;
+}
+.globalcontent {
+  position: relative;
+  margin: 12px 12px 0px 12px;
+  flex: auto;
+  min-height: 0;
+}
+.ant-form .ant-input-number {
+  width: 100%;
+}
+
+.global.ant-layout .sider-fixed {
+  border-right: 0;
+  transition: background-color 0.3s;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  height: 100%;
+  overflow-x: hidden;
+  box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+  overflow: hidden;
+  flex: 0 0 208px;
+  max-width: 208px;
+  min-width: 208px;
+  width: 208px;
+  padding-top: 48px;
+}
+.sider-fixed :global .ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.ant-menu .ant-menu-item {
+  border-radius: 0px;
+  margin: 0px 0px;
+  padding: 0px 0px;
+}
