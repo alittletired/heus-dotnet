@@ -22,7 +22,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
     {
         var services = context.Services;
         var configuration = context.Configuration;
-        services.AddCors(o => o.AddDefaultPolicy(builder =>
+        services.AddCors(o => o.AddPolicy("AnyOrigin",builder =>
         {
             builder.AllowAnyOrigin()
                 .AllowAnyMethod()
@@ -88,11 +88,11 @@ public class AspNetModuleInitializer : ModuleInitializerBase
             app.UseDeveloperExceptionPage();
             app.UseOpenApi();
         }
-
+       
         // app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
-        app.UseCors();
+        app.UseCors("AnyOrigin");
         // if (context.Environment.IsDevelopment())
         // {
         //     app.UseMiddleware<DevAuthenticationMiddleware>();

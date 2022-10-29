@@ -5,10 +5,10 @@ export interface RequestConfig<D> {
 
 export interface HttpClient {
   get<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
-  post<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
+  post<D, R>(url: string, data?: D, config?: RequestConfig<D>): Promise<R>
   delete<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
-  put<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
-  patch<D, R>(url: string, config?: RequestConfig<D>): Promise<R>
+  put<D, R>(url: string, data?: D, config?: RequestConfig<D>): Promise<R>
+  patch<D, R>(url: string, data?: D, config?: RequestConfig<D>): Promise<R>
 }
 
 let httpClient: HttpClient
@@ -188,7 +188,7 @@ const adminApi = {
   accounts: {
     login(data: LoginInput): Promise<LoginResult> {
       const path = `/admin/accounts/login`
-      return httpClient.post(path, { data })
+      return httpClient.post(path, data)
     },
     sendVerifyCode(phone: string): Promise<boolean> {
       const path = `/admin/accounts/sendVerifyCode`
@@ -198,16 +198,16 @@ const adminApi = {
   resources: {
     create(data: Resource): Promise<Resource> {
       const path = `/admin/resources/create`
-      return httpClient.post(path, { data })
+      return httpClient.post(path, data)
     },
     delete: {},
     query(data: DynamicQuery<Resource>): Promise<PagedList<Resource>> {
       const path = `/admin/resources/query`
-      return httpClient.post(path, { data })
+      return httpClient.post(path, data)
     },
     update(data: Resource): Promise<Resource> {
       const path = `/admin/resources/update`
-      return httpClient.put(path, { data })
+      return httpClient.put(path, data)
     },
   },
   roles: {
@@ -217,15 +217,15 @@ const adminApi = {
     },
     query(data: DynamicQuery<RoleDto>): Promise<PagedList<RoleDto>> {
       const path = `/admin/roles/query`
-      return httpClient.post(path, { data })
+      return httpClient.post(path, data)
     },
     create(data: RoleCreateDto): Promise<RoleDto> {
       const path = `/admin/roles/create`
-      return httpClient.post(path, { data })
+      return httpClient.post(path, data)
     },
     update(data: RoleUpdateDto): Promise<RoleDto> {
       const path = `/admin/roles/update`
-      return httpClient.put(path, { data })
+      return httpClient.put(path, data)
     },
     delete: {},
     getResourceIds(id: long): Promise<long[]> {
@@ -234,7 +234,7 @@ const adminApi = {
     },
     authorizeResources(id: long, data: long[]): Promise<boolean> {
       const path = `/admin/roles/authorizeResources`
-      return httpClient.post(path, { data, params: { id } })
+      return httpClient.post(path, data, { params: { id } })
     },
   },
   users: {
@@ -244,16 +244,16 @@ const adminApi = {
     },
     query(data: DynamicQuery<UserDto>): Promise<PagedList<UserDto>> {
       const path = `/admin/users/query`
-      return httpClient.post(path, { data })
+      return httpClient.post(path, data)
     },
     create(data: UserCreateDto): Promise<UserDto> {
       const path = `/admin/users/create`
-      return httpClient.post(path, { data })
+      return httpClient.post(path, data)
     },
     delete: {},
     update(data: UserUpdateDto): Promise<UserDto> {
       const path = `/admin/users/update`
-      return httpClient.put(path, { data })
+      return httpClient.put(path, data)
     },
     getUserRoleIds(id: long): Promise<long[]> {
       const path = `/admin/users/getUserRoleIds`
@@ -261,7 +261,7 @@ const adminApi = {
     },
     resetPassword(data: RestPasswordDto): Promise<boolean> {
       const path = `/admin/users/resetPassword`
-      return httpClient.post(path, { data })
+      return httpClient.post(path, data)
     },
     findByUserName(name: string): Promise<ICurrentUser> {
       const path = `/admin/users/findByUserName`

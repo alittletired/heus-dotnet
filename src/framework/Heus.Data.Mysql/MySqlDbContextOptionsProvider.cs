@@ -18,7 +18,7 @@ namespace Heus.Data.Mysql
         public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
         {
 
-            var serverVersion = _serverVersions.GetOrAdd(shareConnection.ConnectionString, ServerVersion.AutoDetect);
+            var serverVersion = _serverVersions.GetOrAdd(shareConnection.ConnectionString,(key)=> ServerVersion.AutoDetect(shareConnection as MySqlConnection));
             dbContextOptions.UseMySql(shareConnection, serverVersion,
                 mySqlOptions =>
                 {

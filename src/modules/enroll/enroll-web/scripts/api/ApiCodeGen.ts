@@ -215,16 +215,16 @@ export default class ApiCodeGen {
     }
     methodStr += `: Promise<${responseType}> {`
     methodStr += `const path = \`${config.basePath}${path.replace(/\{/g, '${')}\`\n`
-    methodStr += `return  httpClient.${httpMethod}(path,{`
+    methodStr += `return  httpClient.${httpMethod}(path`
     if (bodyParamArr.length > 0) {
-      methodStr += 'data,'
+      methodStr += ',data'
     }
     if (queryParamArr.length === 1) {
       let queryStr = queryParamArr[0].split('*/')
       let paramName = queryStr[queryStr.length - 1].split(':')[0].replace('?', '')
-      methodStr += `params:{${paramName}}`
+      methodStr += `,{params:{${paramName}}}`
     } else if (queryParamArr.length > 0) {
-      methodStr += 'params'
+      methodStr += ',{params}'
     } else {
       methodStr += ''
     }
@@ -232,7 +232,7 @@ export default class ApiCodeGen {
     // if (config.responseWarp) {
     //   methodStr += '.data'
     // }
-    methodStr += '})},'
+    methodStr += ')},'
     arr.push(methodStr)
   }
 }
