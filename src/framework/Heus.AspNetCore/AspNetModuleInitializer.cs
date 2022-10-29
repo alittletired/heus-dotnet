@@ -3,6 +3,7 @@ using Heus.AspNetCore.ActionFilter;
 using Heus.AspNetCore.Authorization;
 using Heus.AspNetCore.Conventions;
 using Heus.AspNetCore.OpenApi;
+using Heus.AspNetCore.Validation;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
 using Heus.Core.Utils;
@@ -32,8 +33,10 @@ public class AspNetModuleInitializer : ModuleInitializerBase
         {
             options.Conventions.Add(new ServiceApplicationModelConvention());
             options.Conventions.Add(new ApiExplorerGroupConvention());
-            options.Filters.AddService(typeof(UowActionFilter));
             options.Filters.AddService(typeof(ApiResultActionFilter));
+            options.Filters.AddService(typeof(ValidationActionFilter));
+            options.Filters.AddService(typeof(UowActionFilter));
+           
 
         }).AddControllersAsServices().AddJsonOptions(options =>
         {
