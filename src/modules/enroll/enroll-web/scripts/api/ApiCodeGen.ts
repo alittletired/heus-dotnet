@@ -90,8 +90,8 @@ export default class ApiCodeGen {
   }
   protected buildFile() {
     let { models, config } = this.apiContext
-    var template = fs.readFileSync(__dirname + '/Template.ts').toString()
-    let tsContent: string[] = [template]
+    // var template = fs.readFileSync(__dirname + '/Template.ts').toString()
+    let tsContent: string[] = []
     let typeNames = Object.keys(models).sort()
     // 生成ts类型
     for (let name of typeNames) {
@@ -215,7 +215,7 @@ export default class ApiCodeGen {
     }
     methodStr += `: Promise<${responseType}> {`
     methodStr += `const path = \`${config.basePath}${path.replace(/\{/g, '${')}\`\n`
-    methodStr += `return  httpClient.${httpMethod}(path`
+    methodStr += `return  http.${httpMethod}(path`
     if (bodyParamArr.length > 0) {
       methodStr += ',data'
     }

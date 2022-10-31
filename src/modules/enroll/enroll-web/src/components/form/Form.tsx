@@ -27,17 +27,15 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
   let overlay = useContext(OverlayContext)
   const [loading, setLoading] = useState(false)
   form = props.form ?? form
-  //消除loading的警告
   const onFinish = useSubmit(async (values: any) => {
     try {
-      values = { ...props.initialValues, ...values }
+      let formData = { ...props.initialValues, ...values }
       setLoading(true)
       overlay.setLoading(true)
-      let formData = { ...props, ...values }
-      // 通过onBefore 返回false 阻止发送请求
 
-      formData = await onBefore?.(formData)
-      if (formData === false) {
+      // 通过onBefore 返回false 阻止发送请求
+      if (onBefore) formData = await onBefore?.(formData)
+      if (values === false) {
         return
       }
       if (api) {

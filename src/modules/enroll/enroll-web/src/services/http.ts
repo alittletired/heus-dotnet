@@ -1,9 +1,7 @@
-import { setHttpClient } from '@/api/admin'
 import { getUser, logout } from './user'
 import { message } from 'antd'
 import { AxiosError } from 'axios'
 import axios from 'axios'
-import { HttpClient, RequestConfig } from '../../scripts/api/types'
 
 export const axiosInstance = axios.create({
   timeout: 10000,
@@ -69,5 +67,5 @@ axiosInstance.interceptors.response.use(
   },
 )
 
-setHttpClient(httpClient)
+globalThis.http = httpClient
 export default axiosInstance

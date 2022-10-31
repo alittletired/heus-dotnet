@@ -29,7 +29,7 @@ function getUserMenu(menus: Menu[], auth: AuthState, parentMenu?: Menu) {
         const item = { ...menu, children }
         userMenu.push(item)
       }
-    } else if (auth.isAllow(menu.code)) {
+    } else if (auth.hasAuthority(menu.code)) {
       userMenu.push(menu)
     }
   }

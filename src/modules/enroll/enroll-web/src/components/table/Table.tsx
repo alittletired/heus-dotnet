@@ -14,58 +14,55 @@ import SearchForm from './SearchForm'
 import ToolBar from './ToolBar'
 // import './index.css'
 import { toTreeData, TreeEntity } from '../tree/treeUtils'
-export interface TableContext<T = any, P = any> {
-  props: TableProps<T, P>
+export interface TableContext<T = any> {
+  props: TableProps<T>
   columns: ColumnProps<T>[]
   dataSource: T[]
   setDataSource: Dispatch<SetStateAction<T[]>>
-  params: P
+  reset: () => Promise<void>
   //当前的请求参数
-  setParams: Dispatch<SetStateAction<P & PageRequest>>
-  reload: (params?: Partial<T>) => void
+  search: (data?: Partial<T>) => Promise<void>
 }
 
 export const TableContext = React.createContext({} as TableContext)
 export const useTable = () => React.useContext(TableContext)
-export default function ApiTable<T extends object = any, P = {}>(props: TableProps<T, P>) {
-  let [dataSource, setDataSource] = useState([] as T[])
-  let [loading, setLoading] = useState(false)
-  let [params, setParams] = useState(
-    () =>
-      ({
-        ...props.params,
-        pageIndex: 1,
-        pageSize: props.pagination === false ? -1 : props.pagination?.pageSize || 10,
-      } as P & PageRequest),
-  )
+export default function ApiTable<T extends object>(props: TableProps<T>) {
+  const [dataSource, setDataSource] = useState([] as T[])
+  const [total, setTotal] = useState(0)
+  const pageRef = useRef<PageRequest>({
+    pageIndex: 1,
+    pageSize: props.pagination === false ? -1 : props.pagination?.pageSize || 10,
+  })
 
-  let pageOptions = useMemo<TablePaginationConfig>(() => {
-    return {
-      pageSize: params.pageSize,
-      current: params.pageIndex,
-      showSizeChanger: true,
-      hideOnSinglePage: true,
-      ...props.pagination,
-    }
-  }, [params.pageIndex, params.pageSize, props.pagination])
+  const [loading, setLoading] = useState(false)
+  const loadingRef = useRef(loading)
+  loadingRef.current = loading
+  let dataRef = useRef({ ...props.data })
 
-  let fetchData = useRef(async (newParams: Partial<P>) => {
-    if (loading) return
-    setLoading(loading)
+  const fetchData = useRef(async (data?: Partial<T>, pageRequest?: PageRequest) => {
+    if (loadingRef.current) return
+    if (!props.fetchApi) return
+    let page = pageRequest || pageRef.current
+
+    setLoading(true)
     try {
-      let dataSource: T[] = []
-      let total = 0
-      if (!props.api) return
-      let finalParams = { ...params, ...newParams }
-      let searchData = toSearchData(finalParams, props.columns)
-      let apiResult = await props.api(searchData)
+      dataRef.current = { ...dataRef.current, ...data }
 
-      dataSource = apiResult.items
-      total = apiResult.total
+      if (props.beforeFetch) {
+        let finalData = await props.beforeFetch(dataRef.current)
+        if (finalData == false) return
+        dataRef.current = finalData
+      }
+
+      let searchData = toSearchData(dataRef.current, props.columns)
+      let { total, items: dataSource } = await props.fetchApi({
+        ...searchData,
+        ...page,
+      })
 
       dataSource.forEach(
         (item: any, index: number) =>
-          (item._index = (params.pageIndex! - 1) * params.pageSize! + index + 1),
+          (item._index = (page.pageIndex! - 1) * page.pageSize! + index + 1),
       )
 
       if (props.useTreeTable) {
@@ -74,7 +71,7 @@ export default function ApiTable<T extends object = any, P = {}>(props: TablePro
       }
 
       setDataSource(dataSource)
-      setParams(finalParams)
+      setTotal(total)
     } catch (ex) {
       console.warn('fetch error', ex)
     } finally {
@@ -82,33 +79,33 @@ export default function ApiTable<T extends object = any, P = {}>(props: TablePro
     }
   })
   const onTableChange = useCallback((page: TablePaginationConfig, filters: any, sorter: any) => {
-    let pageParam: PageRequest = { pageSize: page.pageSize, pageIndex: page.current }
+    let pageRequest: PageRequest = { pageSize: page.pageSize, pageIndex: page.current }
     if (sorter) {
       if (sorter.order) {
-        pageParam.orderBy = `${sorter.field} ${sorter.order === 'descend' ? 'desc' : 'asc'}`
+        pageRequest.orderBy = `${sorter.field} ${sorter.order === 'descend' ? 'desc' : 'asc'}`
       } else {
-        pageParam.orderBy = undefined
+        pageRequest.orderBy = undefined
       }
     }
-    setParams((p) => ({ ...p, ...pageParam }))
+    fetchData.current(dataRef.current, pageRequest)
   }, [])
 
   useEffect(() => {
-    let propParams = { ...props.params }
+    let propData = { ...props.data }
 
-    for (let key of Object.keys(propParams)) {
-      if (key in params) {
+    for (let key of Object.keys(propData)) {
+      if (key in dataRef.current) {
         //@ts-ignore
         if (propParams[key] !== params[key]) {
-          fetchData.current(propParams)
+          fetchData.current(propData)
           return
         }
       } else {
-        fetchData.current(propParams)
+        fetchData.current(propData)
         return
       }
     }
-  }, [props.params, params])
+  }, [props.data])
 
   const columns = useMemo(() => {
     let columns = translateColumns(props.columns)
@@ -124,19 +121,32 @@ export default function ApiTable<T extends object = any, P = {}>(props: TablePro
     return columns
   }, [props.columns, props.titles])
 
-  const reload = useCallback((p?: Partial<T>) => {
-    setParams((params) => ({ ...params, ...p }))
+  const search = useCallback(async (p?: Partial<T>) => {
+    await fetchData.current(p, pageRef.current)
   }, [])
-  const tableContext: TableContext<T, P> = {
+  const reset = useCallback(async () => {
+    dataRef.current = { ...props.data }
+    pageRef.current.pageIndex = 1
+    await fetchData.current()
+  }, [props.data])
+  useEffect(() => {
+    fetchData.current()
+  }, [])
+  const tableContext: TableContext<T> = {
     props,
     dataSource,
     setDataSource,
     columns,
-    params,
-    setParams,
-    reload,
+    reset,
+    search,
   }
-
+  let pageConfig = {
+    current: pageRef.current.pageIndex,
+    total: total,
+    showSizeChanger: true,
+    hideOnSinglePage: true,
+    ...props.pagination,
+  }
   return (
     <TableContext.Provider value={tableContext}>
       <div className="api-table">
@@ -155,7 +165,7 @@ export default function ApiTable<T extends object = any, P = {}>(props: TablePro
             loading={loading}
             onChange={onTableChange}
             dataSource={dataSource}
-            pagination={params.pageSize! > 0 && pageOptions}
+            pagination={pageRef.current.pageSize! > 0 && pageConfig}
             columns={columns}
           />
         </Card>

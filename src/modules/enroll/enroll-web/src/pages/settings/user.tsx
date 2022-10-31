@@ -55,12 +55,12 @@ const UserPage: PageComponent = () => {
         { buttonType: 'export', title: '导出' },
         // { buttonType: 'import', title: '导入',  },
       ]}
-      api={adminApi.users.query}
+      fetchApi={adminApi.users.query}
       tableTitle="用户列表"
       columns={[
         { valueType: 'index' },
         { dataIndex: 'account' },
-        { dataIndex: 'name', operator: 'like' },
+        { dataIndex: 'phone', operator: 'like' },
         {
           dataIndex: 'status',
           options: userStatusOptions,

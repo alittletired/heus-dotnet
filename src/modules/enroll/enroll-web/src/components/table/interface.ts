@@ -23,15 +23,16 @@ export type OnApiSuccess<T> = (data: PageList<T>) => any
 export type ToolBarItem<T = any> = ActionComponentProps<T> & {
   reloadData?: boolean
 }
-export interface TableProps<T, P> extends Omit<AntdTableProps<T>, 'columns'> {
+export interface TableProps<T> extends Omit<AntdTableProps<T>, 'columns'> {
   useTreeTable?: boolean
   titles?: { [key in string]: string }
   tableTitle: string
   columns?: ColumnProps<T>[]
   tableHeader?: React.ReactNode
   toolBar?: ToolBarItem[]
-  api?: (param: P) => Promise<PageList<T>>
-  params?: Partial<P>
+  fetchApi?: (data: DynamicQuery<T>) => Promise<PageList<T>>
+  beforeFetch?: (data: Partial<T>) => false | T | Promise<false | T>
+  data?: Partial<T>
   hiddenIndexColumn?: boolean
 }
 
@@ -43,5 +44,5 @@ export interface ColumnProps<T = any> extends Omit<ColumnType<T>, 'dataIndex'> {
   dataPath?: string
   operator?: Operator
   sortable?: boolean
-  dataIndex?: keyof T | string
+  dataIndex?: keyof T
 }

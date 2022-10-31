@@ -44,7 +44,7 @@ const SearchForm: React.FC = (props) => {
   const [expand, setExpand] = useState(false)
   const reset = useCallback(() => {
     form.resetFields()
-    table.reset()
+    table.reload({ ...form.getFieldsValue() })
   }, [table, form])
   const searchColumns = table.columns.filter((c) => c.operator && c.dataIndex)
   if (searchColumns.length === 0) return null
@@ -74,7 +74,7 @@ const SearchForm: React.FC = (props) => {
   }
   const onSearch = () => {
     var data = form.getFieldsValue()
-    table.setParams((p: any) => ({ ...p, ...data }))
+    table.search((p: any) => ({ ...p, ...data }))
   }
   const onReset = () => {
     form.resetFields()
