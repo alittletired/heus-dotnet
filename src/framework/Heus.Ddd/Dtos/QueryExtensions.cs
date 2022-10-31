@@ -6,10 +6,10 @@ namespace Heus.Ddd.Dtos;
 
 public static class QueryExtensions
 {
-    public static async Task<PagedList<T>> ToPageListAsync<T>(this IQueryable queryable, IQueryDto<T> queryDto)
+    public static async Task<PageList<T>> ToPageListAsync<T>(this IQueryable queryable, IQueryDto<T> queryDto)
     {
         var query = TranslateQuery(queryable, queryDto);
-        var pageList = new PagedList<T>();
+        var pageList = new PageList<T>();
         var count = await query.CountAsync();
         if (count > 0)
         {

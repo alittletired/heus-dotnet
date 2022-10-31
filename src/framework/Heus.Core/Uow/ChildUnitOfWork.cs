@@ -7,7 +7,7 @@ internal class ChildUnitOfWork : IUnitOfWork
     private readonly IUnitOfWork _parent;
 
     public UnitOfWorkOptions Options => _parent.Options;
-
+   public Dictionary<string, DbConnection> DbConnections => _parent.DbConnections;
 
     public ChildUnitOfWork(IUnitOfWork parent)
     {

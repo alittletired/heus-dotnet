@@ -26,8 +26,6 @@ namespace Heus.Auth
             await AddRoles(serviceProvider);
         }
 
-      
-
         private async Task AddUsers(IServiceProvider serviceProvider)
         {
             var userService = serviceProvider.GetRequiredService<IUserAdminAppService>();
@@ -38,6 +36,7 @@ namespace Heus.Auth
                 adminUser = new User()
                 {
                     UserName = "admin",
+                    Id = 1,
                     NickName = "超级管理员",
                     Phone = "13900000000"
 
@@ -53,8 +52,8 @@ namespace Heus.Auth
             var roleRepository = serviceProvider.GetRequiredService<IRepository<Role>>();
             var roles = new List<Role>
             {
-                new() { Name = "super_admin", Remarks = "超级管理员", IsBuildIn = true },
-                new() { Name = "common_user", Remarks = "普通用户", IsBuildIn = true }
+                new() { Id = 1,Name = "super_admin", Remarks = "超级管理员", IsBuildIn = true },
+                new() { Id = 2,Name = "common_user", Remarks = "普通用户", IsBuildIn = true }
             };
             foreach (var role in roles)
             {

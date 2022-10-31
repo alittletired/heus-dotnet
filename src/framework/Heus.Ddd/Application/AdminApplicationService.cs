@@ -10,7 +10,7 @@ public interface IAdminApplicationService<in TCreateDto, in TUpdateDto, TDto> : 
     , IUpdateAppService<TUpdateDto, TDto>
     , IDeleteAppService
 {
-  Task<PagedList<TDto>> QueryAsync(DynamicQuery<TDto> input);
+  Task<PageList<TDto>> QueryAsync(DynamicQuery<TDto> input);
 }
 
 /// <summary>

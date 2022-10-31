@@ -44,9 +44,11 @@ namespace Heus.Data.EfCore.Internal
             var connectionStringName = ConnectionStringNameAttribute.GetConnStringName<TDbContext>();
             
             var connectionString = _connectionStringResolver.Resolve(connectionStringName);
-            var dbProvider = _options.DefaultDbProvider?? DbProvider.MySql;
-            var dbContextOptionsProvider = _dbConnectionProviders.First(p=>p.DbProvider== dbProvider);
-            var dbConnection = dbContextOptionsProvider.CreateConnection(connectionString);
+            var dbProvider = _options.DefaultDbProvider ?? DbProvider.MySql;
+            var dbContextOptionsProvider = _dbConnectionProviders.First(p => p.DbProvider == dbProvider);
+            var dbConnection = unitOfWork.DbConnections.GetOrAdd(connectionString, (key) =>
+                dbContextOptionsProvider.CreateConnection(connectionString));
+           
             var builder = new DbContextOptionsBuilder<TDbContext>();
             _logger.LogDebug(" connectionString:{ConnectionString},DbContext:{DbContext}",connectionString,typeof(TDbContext).Name);
             _options.DbContextOptionsActions.ForEach(action => action(builder));

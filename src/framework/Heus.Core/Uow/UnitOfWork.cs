@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using System.Data.Common;
 
 namespace Heus.Core.Uow;
@@ -15,6 +14,7 @@ internal class UnitOfWork : IUnitOfWork
         _logger = logger;
     }
 
+    public Dictionary<string, DbConnection> DbConnections { get; } = new();
     public Dictionary<string, DbTransaction> DbTransactions { get; } = new();
     public event EventHandler<UnitOfWorkEventArgs>? Disposed;
     public UnitOfWorkOptions Options { get; }
@@ -59,6 +59,7 @@ internal class UnitOfWork : IUnitOfWork
 
             }
         }
+
         DbTransactions.Clear();
     }
 
@@ -69,7 +70,7 @@ internal class UnitOfWork : IUnitOfWork
         if (_isDisposed) return;
         _isDisposed = true;
         DisposeTransactions();
-
+        DbConnections.Values.ForEach(c => c.Dispose());
         Disposed?.Invoke(this, new UnitOfWorkEventArgs(this));
     }
 }
