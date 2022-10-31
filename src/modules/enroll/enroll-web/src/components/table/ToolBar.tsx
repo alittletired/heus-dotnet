@@ -2,6 +2,7 @@ import React from 'react'
 import { ToolBarItem } from './interface'
 import { ActionComponent } from '../action'
 import { useTable } from './Table'
+import { Space } from 'antd'
 interface Props {
   items?: ToolBarItem[]
   data?: any
@@ -28,7 +29,7 @@ const ToolBar: React.FC<Props> = (props) => {
 
   return (
     <div className="toobar">
-      <div className="toolbar-option">{itemsDom}</div>
+      <Space>{itemsDom}</Space>
     </div>
   )
 }

@@ -7,14 +7,11 @@ const labelLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 18 },
 }
-type FormApi<D, Return, Params> = (path: Params, data: D) => Promise<Return>
-function isFormApi<D, Return, Params>(
-  api: FormApi<D, Return, Params> | Api<D>,
-): api is FormApi<D, Return, Params> {
-  return api.length === 2
+function isParamApi<D, P, R>(api?: ParamApi<D, P, R> | Api<D, R>): api is ParamApi<D, P, R> {
+  return api?.length === 2
 }
-export interface FormProps<D, P, R> extends AntdFormProps {
-  api?: Api<D, R>
+
+export interface FormProps<D, P, R> extends AntdFormProps, ApiProps<D, P, R> {
   params?: P
   canDismiss?: (data: R) => boolean
   labels?: { [key in string]: string }
@@ -25,7 +22,7 @@ export interface FormProps<D, P, R> extends AntdFormProps {
 // type FormProps = Parameters<Form>[0]
 
 function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Return>) {
-  const { noLabel, api, params, labels, ...rest } = props
+  const { noLabel, api, onBefore, onSuccess, params, labels, ...rest } = props
   let [form] = Form.useForm()
   let overlay = useContext(OverlayContext)
   const [loading, setLoading] = useState(false)
@@ -39,19 +36,19 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
       let formData = { ...props, ...values }
       // 通过onBefore 返回false 阻止发送请求
 
-      formData = await onBefore(formData)
+      formData = await onBefore?.(formData)
       if (formData === false) {
         return
       }
-
-      let data
-      if (params) {
-        data = await api(params!, formData)
-      } else {
-        data = await api(formData)
+      if (api) {
+        let data
+        if (isParamApi(api)) {
+          data = await api(params!, formData)
+        } else {
+          data = await api(formData)
+        }
+        await onSuccess?.(data)
       }
-
-      await props.onSuccess?.(data)
     } catch (ex: any) {
       console.error('onFail', ex)
       // if (!props.onFail && ex?.data?.msg) message.error(ex?.data?.msg, 4)

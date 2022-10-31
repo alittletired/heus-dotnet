@@ -1,11 +1,11 @@
-import React, {useEffect, useMemo, useState} from 'react'
-import {SelectProps as AntdSelectProps} from 'antd/lib/select'
+import React, { useEffect, useState } from 'react'
+import { SelectProps as AntdSelectProps } from 'antd'
 type StyleProps = {
   style?: React.CSSProperties
 }
-export type NameOption = {id?: number; name?: string} & StyleProps
-export type TitleOption = {title?: string; value?: number} & StyleProps
-export type OptionItem = {value: string | number; label: string} & StyleProps
+export type NameOption = { id: number; name: string } & StyleProps
+export type TitleOption = { title: string; value: number } & StyleProps
+export type OptionItem = { value: string | number; label: string } & StyleProps
 export type OptionType = NameOption | TitleOption | OptionItem
 
 export type ApiOptions = (p?: any) => Promise<OptionType[]>
@@ -49,18 +49,18 @@ export interface SelectProps extends Omit<AntdSelectProps<string>, 'options'> {
   // onChange?:
 }
 
-export const normalizeOptions = (options: OptionType[]): OptionItem[] => {
+export const normalizeOptions = (options?: OptionType[]): OptionItem[] => {
   if (!options) return []
   if (!Array.isArray(options)) {
     return normalizeOptions(
-      Object.keys(options).map((value) => ({value, label: options[value as any]})),
+      Object.keys(options).map((value) => ({ value, label: options[value as any] })),
     )
   }
   return options.map((option) => {
     if (isNameOption(option)) {
-      return {value: option.id, label: option.name, style: option.style}
+      return { value: option.id, label: option.name, style: option.style }
     } else if (isTitleOption(option)) {
-      return {value: option.value, label: option.title, style: option.style}
+      return { value: option.value, label: option.title, style: option.style }
     }
     return option
   })

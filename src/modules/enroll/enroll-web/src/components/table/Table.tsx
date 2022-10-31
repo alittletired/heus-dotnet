@@ -22,6 +22,7 @@ export interface TableContext<T = any, P = any> {
   params: P
   //当前的请求参数
   setParams: Dispatch<SetStateAction<P & PageRequest>>
+  reload: (params?: Partial<T>) => void
 }
 
 export const TableContext = React.createContext({} as TableContext)
@@ -123,6 +124,9 @@ export default function ApiTable<T extends object = any, P = {}>(props: TablePro
     return columns
   }, [props.columns, props.titles])
 
+  const reload = useCallback((p?: Partial<T>) => {
+    setParams((params) => ({ ...params, ...p }))
+  }, [])
   const tableContext: TableContext<T, P> = {
     props,
     dataSource,
@@ -130,6 +134,7 @@ export default function ApiTable<T extends object = any, P = {}>(props: TablePro
     columns,
     params,
     setParams,
+    reload,
   }
 
   return (

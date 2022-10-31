@@ -1,14 +1,13 @@
-import React, {useState, useCallback} from 'react'
+import React, { useState, useCallback } from 'react'
 import withFormItem from './withFormItem'
 import icons from '../icons'
-import {Upload, message} from 'antd'
-import {UploadProps, UploadChangeParam, UploadFile} from 'antd/lib/upload/interface'
+import { Upload, message, UploadProps, UploadFile } from 'antd'
 interface AvatarProps extends Omit<UploadProps, 'onChange'> {
   value?: string
   onChange?: (value: string) => void
 }
 const FormAvatar = withFormItem((props: AvatarProps, ref: any) => {
-  let {onChange, value, ...rest} = props
+  let { onChange, value, ...rest } = props
   const [loading, setLoading] = useState(false)
 
   const uploadButton = (
@@ -47,7 +46,7 @@ const FormAvatar = withFormItem((props: AvatarProps, ref: any) => {
   )
   return (
     <Upload
-      style={{width: '128px', height: '128px'}}
+      style={{ width: '128px', height: '128px' }}
       name="avatar"
       listType="picture-card"
       className="avatar-uploader"
@@ -60,7 +59,7 @@ const FormAvatar = withFormItem((props: AvatarProps, ref: any) => {
         <img
           src={`${globalThis.apiBaseUrl}${props.value}`}
           alt="avatar"
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
         />
       ) : (
         uploadButton

@@ -4,7 +4,6 @@ import { getProperty } from '../../utils/dataUtils'
 import { ColumnProps } from './interface'
 import ActionColumn from './ActionColumn'
 import { getOptionTitle, OptionType } from '../select'
-import OptionCell from './OptionCell'
 import AudioIcon from '../AudioIcon'
 import { Image } from '@/components'
 const actionWidths = [0, 70, 140, 190, 210]

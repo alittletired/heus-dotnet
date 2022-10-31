@@ -1,6 +1,4 @@
-import React, {useMemo} from 'react'
-import {Checkbox} from 'antd'
-import {CheckboxProps} from 'antd/lib/checkbox'
+import { Checkbox } from 'antd'
 import withFormItem from './withFormItem'
 const FormCheckbox = withFormItem(Checkbox)
 FormCheckbox.defaulItemProps = {

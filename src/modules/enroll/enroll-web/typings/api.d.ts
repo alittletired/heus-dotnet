@@ -7,12 +7,13 @@ type DynamicQuery<T> = {
   [P in keyof T]?: T[P] | { ['$' + key in Operator]?: T[P] | Array<T[P]> }
 } & PageRequest
 type PageList<T> = { items: T[]; total: number }
-type Api<T = any, D = any> = (data: T) => Promise<D>
-interface ApiProps<T = any, D = any> {
-  api: Api<T, D>
-  data?: T
-  onBefore?: (data: T) => Promise<T | boolean> | T | boolean
-  onSuccess?: (data: D) => any
+type Api<D = any, R = any> = (data: D) => Promise<R>
+type ParamApi<D = any, P = any, R = any> = (params: P, data: D) => Promise<R>
+interface ApiProps<D = any, P = any, R = any> {
+  api?: Api<D, R> | ParamApi<D, P, R>
+  data?: D
+  onBefore?: (data: D) => Promise<D | boolean> | D | boolean
+  onSuccess?: (data: R) => any
   onFail?(err: any): void
 }
 

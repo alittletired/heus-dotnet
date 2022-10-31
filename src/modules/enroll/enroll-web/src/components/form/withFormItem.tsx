@@ -1,13 +1,6 @@
-import React, {
-  ComponentClass,
-  PropsWithChildren,
-  ReactElement,
-  ComponentType,
-  ForwardRefExoticComponent,
-} from 'react'
-import {Form, Input} from 'antd'
-import {FormItemProps as AntFormItemProps} from 'antd/lib/form'
-import {getRules} from './formItemRule'
+import React, { PropsWithChildren, ComponentType } from 'react'
+import { Form, FormItemProps as AntFormItemProps } from 'antd'
+import { getRules } from './formItemRule'
 import FormContext from './FormContext'
 const AntFormItem = Form.Item
 
@@ -30,10 +23,10 @@ export interface FormItemProps {
   noStyle?: boolean
   extra?: React.ReactNode
 }
-interface WithComponent<P> {
-  <D>(props: PropsWithChildren<P & FormItemProps>): JSX.Element
+type WithComponent<P> = React.FC<P & FormItemProps> & {
   defaulItemProps?: Partial<AntFormItemProps & FormItemProps>
 }
+
 function getProps<P>(props: P & AntFormItemProps & FormItemProps): [AntFormItemProps, P] {
   let {
     required,
@@ -53,16 +46,16 @@ function getProps<P>(props: P & AntFormItemProps & FormItemProps): [AntFormItemP
   // (rest as any).placeholder = rest.placeholder ?? placeholder)
   let rules = getRules(props)
   return [
-    {rules, label, noStyle, colon, valuePropName, name, extra},
-    {placeholder: placeholder, ...rest} as P,
+    { rules, label, noStyle, colon, valuePropName, name, extra },
+    { placeholder: placeholder, ...rest } as P,
   ]
 }
-export default function withFormItem<P>(Component: ComponentType<P>): WithComponent<P> {
+
+export default function withFormItem<P>(Component: ComponentType<P>) {
   const WithFormItem: WithComponent<P> = (props) => {
     const formContext = React.useContext(FormContext)
-
     if (props.hidden) return null
-    let label = props.label ?? formContext.titles?.[props.name]
+    let label = props.label ?? formContext.labels?.[props.name!]
     let [itemProps, restProps] = getProps({
       ...WithFormItem.defaulItemProps,
       ...props,

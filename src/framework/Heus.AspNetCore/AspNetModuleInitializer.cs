@@ -23,25 +23,23 @@ public class AspNetModuleInitializer : ModuleInitializerBase
     {
         var services = context.Services;
         var configuration = context.Configuration;
-        services.AddCors(o => o.AddPolicy("AnyOrigin",builder =>
+        services.AddCors(o => o.AddPolicy("AnyOrigin", builder =>
         {
             builder.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         }));
         services.AddMvc(options =>
-        {
-            options.Conventions.Add(new ServiceApplicationModelConvention());
-            options.Conventions.Add(new ApiExplorerGroupConvention());
-            options.Filters.AddService(typeof(ApiResultActionFilter));
-            options.Filters.AddService(typeof(ValidationActionFilter));
-            options.Filters.AddService(typeof(UowActionFilter));
-           
+            {
+                options.Conventions.Add(new ServiceApplicationModelConvention());
+                options.Conventions.Add(new ApiExplorerGroupConvention());
+                options.Filters.AddService(typeof(ApiResultActionFilter));
+                options.Filters.AddService(typeof(ValidationActionFilter));
+                options.Filters.AddService(typeof(UowActionFilter));
 
-        }).AddControllersAsServices().AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.ApplyDefaultSettings();
-        });
+
+            }).AddControllersAsServices()
+            .AddJsonOptions(options => { options.JsonSerializerOptions.ApplyDefaultSettings(); });
         services.AddHttpContextAccessor();
         services.AddOpenApi();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -52,7 +50,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = true,
-                    ValidateAudience=false,
+                    ValidateAudience = false,
                     ValidIssuer = jwtOptions.Issuer,
                     ValidAudience = jwtOptions.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SignKey))
