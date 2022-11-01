@@ -2,7 +2,7 @@
 
 namespace Heus.Ddd.Dtos
 {
-    public interface IPageDto<T>
+    public interface IPageRequest<T>
     {
          int PageIndex { get;  }
          int PageSize { get;  } 
