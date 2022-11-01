@@ -1,6 +1,6 @@
 ﻿
 
-namespace Heus.Ddd.Qeury;
+namespace Heus.Ddd.Query;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class QueryFilterAttribute : Attribute, IQueryFilter

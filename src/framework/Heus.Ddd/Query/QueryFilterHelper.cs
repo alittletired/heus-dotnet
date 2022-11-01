@@ -4,9 +4,8 @@ using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Linq;
-using static Heus.Ddd.Qeury.FilterMapping;
 
-namespace Heus.Ddd.Qeury;
+namespace Heus.Ddd.Query;
 internal static class QueryFilterHelper
 {
     private static ConcurrentDictionary<string, FilterMapping> _dynamicMappingCache = new();
@@ -29,7 +28,7 @@ internal static class QueryFilterHelper
                                                                       dtoProp.Name == entityType.Name + p.Name);
                     if (mappingProp != null)
                     {
-                        mapping.Mappings.Add(dtoProp.Name,new MappingItem(dtoProp, mappingProp,entityType ,i));
+                        mapping.Mappings.Add(dtoProp.Name,new FilterMapping.MappingItem(dtoProp, mappingProp,entityType ,i));
                         break;
                     }
                 }
@@ -39,7 +38,7 @@ internal static class QueryFilterHelper
         });
     }
 
-   public static List<QueryFilterItem> GetQueryFilterItems<T>(IPageDto<T> queryDto)
+   public static List<QueryFilterItem> GetQueryFilterItems<T>(IPageRequest<T> queryDto)
     {
         if(queryDto is DynamicSearch<T> dynamicQuery)
         {

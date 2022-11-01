@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-namespace Heus.Ddd.Qeury;
+namespace Heus.Ddd.Query;
 internal class FilterMapping
 {
     internal class MappingItem

@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace Heus.Ddd.Qeury;
+namespace Heus.Ddd.Query;
 
 internal class QueryFilterItem: IQueryFilter
 {

@@ -1,21 +1,21 @@
 ﻿
-using Heus.Ddd.Dtos;
 using System.Diagnostics.CodeAnalysis;
 
 using System.Linq.Expressions;
 using System.Reflection;
+using Heus.Ddd.Dtos;
 
-namespace Heus.Ddd.Qeury;
+namespace Heus.Ddd.Query;
 
 internal class QueryExpressionVisitor<T> : ExpressionVisitor 
 {
-    private readonly IPageDto<T> _queryDto;
+    private readonly IPageRequest<T> _queryDto;
     private FilterMapping _filterMapping = null!;
 
     private static readonly MethodInfo WhereMethod = typeof(Queryable).GetRuntimeMethods()
         .First(s => s.Name == nameof(Queryable.Where) && s.GetParameters().Length == 2);
 
-    public QueryExpressionVisitor(IPageDto<T> data)
+    public QueryExpressionVisitor(IPageRequest<T> data)
     {
         _queryDto = data;
     }
