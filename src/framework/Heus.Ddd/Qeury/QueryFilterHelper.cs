@@ -39,19 +39,19 @@ internal static class QueryFilterHelper
         });
     }
 
-   public static List<QueryFilterItem> GetQueryFilterItems<T>(IQueryDto<T> queryDto)
+   public static List<QueryFilterItem> GetQueryFilterItems<T>(IPageDto<T> queryDto)
     {
-        if(queryDto is DynamicQuery<T> dynamicQuery)
+        if(queryDto is DynamicSearch<T> dynamicQuery)
         {
             return GetQueryFilterItems(dynamicQuery);
         }
         return new List<QueryFilterItem>();
      
     }
-    public static List<QueryFilterItem> GetQueryFilterItems<T>(DynamicQuery<T> queryDto)
+    public static List<QueryFilterItem> GetQueryFilterItems<T>(DynamicSearch<T> searchDto)
     {
         var filterItems = new List<QueryFilterItem>();
-        foreach (var pair in queryDto.Filters)
+        foreach (var pair in searchDto.Filters)
         {
             if (pair.Value == null)
                 continue;

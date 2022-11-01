@@ -42,7 +42,7 @@ namespace Heus.Auth.Application
 
   
 
-        public Task<PageList<Resource>> QueryAsync(DynamicQuery<Resource> input)
+        public Task<PageList<Resource>> SearchAsync(DynamicSearch<Resource> input)
         {
             throw new NotImplementedException();
         }

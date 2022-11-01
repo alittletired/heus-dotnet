@@ -18,7 +18,7 @@ const { TabPane } = Tabs
 const EnrollPage: PageComponent = () => {
   const navigate = useNavigate()
   const [auth] = useAuth()
-  const tabProps: TableProps<Enroll, DynamicQuery<Enroll>> = useMemo(() => {
+  const tabProps: TableProps<Enroll> = useMemo(() => {
     return {
       titles: enrollTitles,
       tableTitle: '',

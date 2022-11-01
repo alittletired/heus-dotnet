@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react'
-import { Cascader } from 'antd'
-import { CascaderProps } from 'antd'
-import withFormItem from './withFormItem'
+import { Cascader, CascaderProps } from 'antd'
+import withFormItem, { FormItemProps } from './withFormItem'
+import { OptionItem } from '../select/OptionUtils'
 const fieldNames = { label: 'name', value: 'id', children: 'children' }
+export type FormItemCascader = CascaderProps<OptionItem> & FormItemProps & { control: 'cascader' }
 const FormCascader = withFormItem((props: CascaderProps<any>, ref: any) => {
   console.warn('options', props.options)
 

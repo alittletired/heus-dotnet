@@ -9,13 +9,13 @@ namespace Heus.Ddd.Qeury;
 
 internal class QueryExpressionVisitor<T> : ExpressionVisitor 
 {
-    private readonly IQueryDto<T> _queryDto;
+    private readonly IPageDto<T> _queryDto;
     private FilterMapping _filterMapping = null!;
 
     private static readonly MethodInfo WhereMethod = typeof(Queryable).GetRuntimeMethods()
         .First(s => s.Name == nameof(Queryable.Where) && s.GetParameters().Length == 2);
 
-    public QueryExpressionVisitor(IQueryDto<T> data)
+    public QueryExpressionVisitor(IPageDto<T> data)
     {
         _queryDto = data;
     }

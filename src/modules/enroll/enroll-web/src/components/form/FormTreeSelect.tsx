@@ -1,7 +1,5 @@
-import React, {useMemo, useRef} from 'react'
-import {TreeSelect} from 'antd'
-import {TreeSelectProps} from 'antd/lib/tree-select'
+import { TreeSelect, TreeSelectProps } from 'antd'
 import withFormItem from './withFormItem'
-
+export type FormItemTreeSelect = TreeSelectProps & { control: 'treeSelect ' }
 const FormTreeSelect = withFormItem(TreeSelect)
 export default FormTreeSelect

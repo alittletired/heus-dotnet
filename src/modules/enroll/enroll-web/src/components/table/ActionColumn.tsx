@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import {  ToolBarItem } from './interface'
+import { ToolBarItem } from './interface'
 import { Divider, Button, Menu, Dropdown } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { useTable } from './Table'
@@ -19,11 +19,11 @@ export default function ActionColumn<T>(props: Props<T>) {
   const actionDom: JSX.Element[] = []
   for (let index = 0; index < actions.length; index++) {
     let action = actions[index]
-    let { reloadData, disabled, ...rest } = action
+    let { autoReload, disabled, ...rest } = action
     const item = (
       <ActionAnchor
         {...rest}
-        onSuccess={() => reloadData !== false && table.reload()}
+        onSuccess={() => autoReload !== false && table.search()}
         data={data}
         key={index}
       />

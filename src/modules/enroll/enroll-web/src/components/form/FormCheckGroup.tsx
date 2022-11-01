@@ -1,8 +1,10 @@
 import React, { useMemo, Ref } from 'react'
 import { Checkbox } from 'antd'
-import withFormItem from './withFormItem'
+import withFormItem, { FormItemProps } from './withFormItem'
 import { normalizeOptions, OptionType } from '../select'
 import { CheckboxGroupProps } from 'antd/es/checkbox'
+export type FormItemCheckboxGroup = CheckboxGroupProps &
+  FormItemProps & { control: 'checkboxGroup' }
 interface Props extends Omit<CheckboxGroupProps, 'options'> {
   options?: OptionType[]
 }

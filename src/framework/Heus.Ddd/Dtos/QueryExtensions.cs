@@ -6,7 +6,7 @@ namespace Heus.Ddd.Dtos;
 
 public static class QueryExtensions
 {
-    public static async Task<PageList<T>> ToPageListAsync<T>(this IQueryable queryable, IQueryDto<T> queryDto)
+    public static async Task<PageList<T>> ToPageListAsync<T>(this IQueryable queryable, IPageDto<T> queryDto)
     {
         var query = TranslateQuery(queryable, queryDto);
         var pageList = new PageList<T>();
@@ -22,13 +22,13 @@ public static class QueryExtensions
 
     }
 
-    public static async Task<T?> FirstOrDefaultAsync<T>(IQueryable queryable, IQueryDto<T> queryDto) 
+    public static async Task<T?> FirstOrDefaultAsync<T>(IQueryable queryable, IPageDto<T> queryDto) 
     {
         var query = TranslateQuery(queryable, queryDto);
         return await query.FirstOrDefaultAsync();
     }
 
-    public static async Task<T> First<T>(IQueryable queryable, IQueryDto<T> queryDto) 
+    public static async Task<T> First<T>(IQueryable queryable, IPageDto<T> queryDto) 
     {
         var query = TranslateQuery(queryable, queryDto);
         var data= await query.FirstOrDefaultAsync();
@@ -40,7 +40,7 @@ public static class QueryExtensions
         return data;
     }
 
-    private static  IQueryable<T> TranslateQuery<T>(this IQueryable queryable, IQueryDto<T> queryDto) 
+    private static  IQueryable<T> TranslateQuery<T>(this IQueryable queryable, IPageDto<T> queryDto) 
     {
         var visitor = new QueryExpressionVisitor<T>(queryDto);
         var expr = queryable.Expression;

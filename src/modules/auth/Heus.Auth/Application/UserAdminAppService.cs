@@ -38,7 +38,7 @@ internal class UserAdminAppService : AdminApplicationService, IUserAdminAppServi
         return Mapper.Map<UserDto>(user);
     }
 
-    public async Task<PageList<UserDto>> QueryAsync(DynamicQuery<UserDto> input)
+    public async Task<PageList<UserDto>> SearchAsync(DynamicSearch<UserDto> input)
     {
         var query = from u in _userRepository.Query
             select  u;

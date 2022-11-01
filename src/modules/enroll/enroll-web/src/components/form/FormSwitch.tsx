@@ -1,7 +1,6 @@
-import React from 'react'
-import {Switch} from 'antd'
-import withFormItem from './withFormItem'
-
+import { Switch, SwitchProps } from 'antd'
+import withFormItem, { FormItemProps } from './withFormItem'
+export type FormItemSwitch = SwitchProps & FormItemProps & { control: 'switch' }
 const FormSwitch = withFormItem(Switch)
-FormSwitch.defaulItemProps = {valuePropName: 'checked', placeholder: '请选择'}
+FormSwitch.defaulItemProps = { valuePropName: 'checked', placeholder: '请选择' }
 export default FormSwitch

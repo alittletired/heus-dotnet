@@ -3,6 +3,13 @@ import { Form, FormProps as AntdFormProps, message } from 'antd'
 import FormContext from './FormContext'
 import useSubmit from '../../utils/useSubmit'
 import { OverlayContext } from '../overlay'
+import { FormItemButton } from './FormButton'
+import { FormItemCascader } from './FormCascader'
+import { FormItemCheckbox } from './FormCheckbox'
+import { FormItemCheckboxGroup } from './FormCheckGroup'
+import { FormItemInput, FormItemInputNumber, FormItemTextArea } from './FormInput'
+import { FormItemTreeSelect } from './FormTreeSelect'
+
 const labelLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 18 },
@@ -18,11 +25,19 @@ export interface FormProps<D, P, R> extends AntdFormProps, ApiProps<D, P, R> {
   noLabel?: boolean
   viewType?: ViewType
 }
-
+export type FormItemOption =
+  | FormItemButton
+  | FormItemCascader
+  | FormItemCheckbox
+  | FormItemCheckboxGroup
+  | FormItemInput
+  | FormItemTextArea
+  | FormItemInputNumber
+  | FormItemTreeSelect
 // type FormProps = Parameters<Form>[0]
 
 function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Return>) {
-  const { noLabel, api, onBefore, onSuccess, params, labels, ...rest } = props
+  const { noLabel, api, onBefore, onSuccess, params, labels, children, ...rest } = props
   let [form] = Form.useForm()
   let overlay = useContext(OverlayContext)
   const [loading, setLoading] = useState(false)
@@ -71,8 +86,9 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
         {...layout}
         {...rest}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-      />
+        onFinishFailed={onFinishFailed}>
+        {children}
+      </Form>
     </FormContext.Provider>
   )
 }

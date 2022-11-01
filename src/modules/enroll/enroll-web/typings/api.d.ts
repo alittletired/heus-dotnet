@@ -3,7 +3,7 @@ interface PageRequest {
   pageSize?: number
   orderBy?: string
 }
-type DynamicQuery<T> = {
+type DynamicSearch<T> = {
   [P in keyof T]?: T[P] | { ['$' + key in Operator]?: T[P] | Array<T[P]> }
 } & PageRequest
 interface PageList<T> {

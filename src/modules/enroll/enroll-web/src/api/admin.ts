@@ -154,8 +154,8 @@ const adminApi = {
       return http.post(path, data)
     },
     delete: {},
-    query(data: DynamicQuery<Resource>): Promise<PageList<Resource>> {
-      const path = `/admin/resources/query`
+    search(data: DynamicSearch<Resource>): Promise<PageList<Resource>> {
+      const path = `/admin/resources/search`
       return http.post(path, data)
     },
     update(data: Resource): Promise<Resource> {
@@ -168,8 +168,8 @@ const adminApi = {
       const path = `/admin/roles/get`
       return http.get(path, { params: { id } })
     },
-    query(data: DynamicQuery<RoleDto>): Promise<PageList<RoleDto>> {
-      const path = `/admin/roles/query`
+    search(data: DynamicSearch<RoleDto>): Promise<PageList<RoleDto>> {
+      const path = `/admin/roles/search`
       return http.post(path, data)
     },
     create(data: RoleCreateDto): Promise<RoleDto> {
@@ -195,8 +195,8 @@ const adminApi = {
       const path = `/admin/users/get`
       return http.get(path, { params: { id } })
     },
-    query(data: DynamicQuery<UserDto>): Promise<PageList<UserDto>> {
-      const path = `/admin/users/query`
+    search(data: DynamicSearch<UserDto>): Promise<PageList<UserDto>> {
+      const path = `/admin/users/search`
       return http.post(path, data)
     },
     create(data: UserCreateDto): Promise<UserDto> {
