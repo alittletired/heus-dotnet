@@ -3,12 +3,7 @@ import { Form, FormProps as AntdFormProps, message } from 'antd'
 import FormContext from './FormContext'
 import useSubmit from '../../utils/useSubmit'
 import { OverlayContext } from '../overlay'
-import { FormItemButton } from './FormButton'
-import { FormItemCascader } from './FormCascader'
-import { FormItemCheckbox } from './FormCheckbox'
-import { FormItemCheckboxGroup } from './FormCheckGroup'
-import { FormItemInput, FormItemInputNumber, FormItemTextArea } from './FormInput'
-import { FormItemTreeSelect } from './FormTreeSelect'
+import { formControls } from './FormItem'
 
 const labelLayout = {
   labelCol: { span: 4 },
@@ -17,6 +12,14 @@ const labelLayout = {
 function isParamApi<D, P, R>(api?: ParamApi<D, P, R> | Api<D, R>): api is ParamApi<D, P, R> {
   return api?.length === 2
 }
+type ValueOf<T> = T[keyof T]
+type FormControls = typeof formControls
+type FormControlKeys = keyof FormControls
+type ComponentProps<T> = T extends React.ComponentType<infer P> ? P : never
+type FormControlProps = {
+  [key in FormControlKeys]: { control: key } & ComponentProps<FormControls[key]>
+}
+export type FormControlItem<D> = ValueOf<FormControlProps> & { name: keyof D }
 
 export interface FormProps<D, P, R> extends AntdFormProps, ApiProps<D, P, R> {
   params?: P
@@ -24,16 +27,9 @@ export interface FormProps<D, P, R> extends AntdFormProps, ApiProps<D, P, R> {
   labels?: { [key in string]: string }
   noLabel?: boolean
   viewType?: ViewType
+  items?: FormControlItem<D>[]
 }
-export type FormItemOption =
-  | FormItemButton
-  | FormItemCascader
-  | FormItemCheckbox
-  | FormItemCheckboxGroup
-  | FormItemInput
-  | FormItemTextArea
-  | FormItemInputNumber
-  | FormItemTreeSelect
+
 // type FormProps = Parameters<Form>[0]
 
 function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Return>) {
@@ -86,9 +82,8 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
         {...layout}
         {...rest}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}>
-        {children}
-      </Form>
+        onFinishFailed={onFinishFailed}
+      />
     </FormContext.Provider>
   )
 }

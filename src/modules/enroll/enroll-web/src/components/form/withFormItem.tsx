@@ -4,34 +4,22 @@ import { getRules } from './formItemRule'
 import FormContext from './FormContext'
 const AntFormItem = Form.Item
 
-export interface FormItemProps {
-  /**是否必填 */
-  required?: boolean
-  /**标题 */
-  label?: string
-  placeholder?: string
-  /**是否隐藏 */
-  hidden?: boolean
-  /**是否显示冒号 */
-  colon?: boolean
-  name?: string
+export interface FormItemProps extends AntFormItemProps {
   pattern?: string
   //string 类型为字符串最大长度；number 类型时为最大值；array 类型时为数组最大长度
   max?: number | string
   //string 类型为字符串最大长度；number 类型时为最大值；array 类型时为数组最大长度
   min?: number | string
-  noStyle?: boolean
-  extra?: React.ReactNode
 }
 type WithComponent<P> = React.FC<P & FormItemProps> & {
-  defaulItemProps?: Partial<AntFormItemProps & FormItemProps>
+  defaulItemProps?: Partial<FormItemProps>
+  defaultControlProps?: Partial<P>
 }
 
-function getProps<P>(props: P & AntFormItemProps & FormItemProps): [AntFormItemProps, P] {
+function extractProps<P>(props: P & FormItemProps): [AntFormItemProps, P] {
   let {
     required,
     label,
-    placeholder,
     colon,
     name,
     pattern,
@@ -45,30 +33,35 @@ function getProps<P>(props: P & AntFormItemProps & FormItemProps): [AntFormItemP
   } = props
   // (rest as any).placeholder = rest.placeholder ?? placeholder)
   let rules = getRules(props)
-  return [
-    { rules, label, noStyle, colon, valuePropName, name, extra },
-    { placeholder: placeholder, ...rest } as P,
-  ]
+  return [{ rules, label, noStyle, colon, valuePropName, name, extra }, { ...rest } as P]
 }
 
 export default function withFormItem<P>(Component: ComponentType<P>) {
   const WithFormItem: WithComponent<P> = (props) => {
     const formContext = React.useContext(FormContext)
     if (props.hidden) return null
-    let label = props.label ?? formContext.labels?.[props.name!]
-    let [itemProps, restProps] = getProps({
+    let finalProps = {
       ...WithFormItem.defaulItemProps,
       ...props,
-      label,
-    })
-    //消除formitem的警告
-    if (Component.length === 2) {
-      Component = React.forwardRef(Component as any) as unknown as ComponentType<P>
     }
 
+    if (formContext.noLabel) {
+      finalProps.label = ''
+    } else if (!props.label && formContext.labels && props.name) {
+      finalProps.label = formContext.labels?.[props.name.toString()]
+    }
+    let [itemProps, controlProps] = extractProps(finalProps)
+    WithFormItem.defaulItemProps = itemProps
+    WithFormItem.defaultControlProps = controlProps
+
+    // //消除formitem的警告
+    // if (Component.length === 2) {
+    //   Component = React.forwardRef(Component as any) as unknown as ComponentType<P>
+    // }
+
     return (
-      <AntFormItem {...itemProps} label={formContext.noLabel ? '' : label}>
-        <Component {...restProps} />
+      <AntFormItem {...itemProps}>
+        <Component {...controlProps} />
       </AntFormItem>
     )
   }

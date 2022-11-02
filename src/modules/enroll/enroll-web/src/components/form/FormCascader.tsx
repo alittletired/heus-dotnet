@@ -1,15 +1,16 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Cascader, CascaderProps } from 'antd'
-import withFormItem, { FormItemProps } from './withFormItem'
-import { OptionItem } from '../select/OptionUtils'
-const fieldNames = { label: 'name', value: 'id', children: 'children' }
-export type FormItemCascader = CascaderProps<OptionItem> & FormItemProps & { control: 'cascader' }
-const FormCascader = withFormItem((props: CascaderProps<any>, ref: any) => {
-  console.warn('options', props.options)
+import withFormItem from './withFormItem'
+import { OptionType } from '../select/OptionUtils'
+export const idNameFieldNames = { label: 'name', value: 'id', children: 'children' }
+export const titleFieldNames = { label: 'title', value: 'value', children: 'children' }
+export const labelFieldNames = { label: 'label', value: 'value', children: 'children' }
 
-  return <Cascader ref={ref} fieldNames={fieldNames} {...props} />
+const FormCascader = withFormItem((props: CascaderProps<OptionType>) => {
+  var fieldNames = labelFieldNames
+  return <Cascader fieldNames={fieldNames} {...props} />
 })
-FormCascader.defaulItemProps = { placeholder: '请选择' }
+FormCascader.defaultControlProps = { placeholder: '请选择' }
 export default FormCascader
 
 // export const FormCityCascader: React.FC<CityProps> = (props) => {

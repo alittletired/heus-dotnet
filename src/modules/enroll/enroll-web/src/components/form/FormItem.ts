@@ -1,6 +1,10 @@
 import withFormItem from './withFormItem'
 import Checkbox from './FormCheckbox'
-import { FormInput as Input, FormTextArea as TextArea, FormInputNumber as InputNumber } from './FormInput'
+import {
+  FormInput as Input,
+  FormTextArea as TextArea,
+  FormInputNumber as InputNumber,
+} from './FormInput'
 import Select from './FormSelect'
 import Text from './FormText'
 import Switch from './FormSwitch'
@@ -12,36 +16,50 @@ import Avatar from './FormAvatar'
 import Cascader from './FormCascader'
 import TreeSelect from './FormTreeSelect'
 import {
-	FormDatePicker as DatePicker,
-	FormWeekPicker as WeekPicker,
-	FormMonthPicker as MonthPicker,
-	FormRangePicker as RangePicker,
+  FormDatePicker as DatePicker,
+  FormWeekPicker as WeekPicker,
+  FormMonthPicker as MonthPicker,
+  FormRangePicker as RangePicker,
 } from './FormDatePicker'
 
-const Item = withFormItem((props: React.PropsWithChildren<any>) => {
-	return props.children
-})
-
-export default {
-	withFormItem,
-	Item,
-	Checkbox,
-	Input,
-	TextArea,
-	InputNumber,
-	Select,
-	Text,
-	Switch,
-	RadioGroup,
-	Button,
-	SubmitButton,
-	CheckboxGroup,
-	DatePicker,
-	WeekPicker,
-	MonthPicker,
-	RangePicker,
-	TreeSelect,
-	Avatar,
-	Cascader,
-	VerifyCode
+export const formControls = {
+  button: Button,
+  submitButton: SubmitButton,
+  cascader: Cascader,
+  checkbox: Checkbox,
+  checkboxGroup: CheckboxGroup,
+  input: Input,
+  textarea: TextArea,
+  inputNumber: InputNumber,
+  datePicker: DatePicker,
+  weekPicker: WeekPicker,
+  monthPicker: MonthPicker,
+  select: Select,
 }
+export const Item = withFormItem((props: React.PropsWithChildren<any>) => {
+  return props.children
+})
+export { withFormItem }
+const FormItem = {
+  Item,
+  Checkbox,
+  Input,
+  TextArea,
+  InputNumber,
+  Select,
+  Text,
+  Switch,
+  RadioGroup,
+  Button,
+  SubmitButton,
+  CheckboxGroup,
+  DatePicker,
+  WeekPicker,
+  MonthPicker,
+  RangePicker,
+  TreeSelect,
+  Avatar,
+  Cascader,
+  VerifyCode,
+}
+export default FormItem

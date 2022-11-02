@@ -19,7 +19,7 @@ export function isTitleOption(option: OptionType): option is TitleOption {
   return typeof (option as TitleOption).title !== 'undefined'
 }
 
-export function isNameOption(option: OptionType): option is NameOption {
+export function isIdNameOption(option: OptionType): option is NameOption {
   return typeof (option as NameOption).name !== 'undefined'
 }
 

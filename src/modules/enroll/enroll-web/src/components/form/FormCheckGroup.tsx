@@ -1,18 +1,17 @@
-import React, { useMemo, Ref } from 'react'
+import React, { useMemo } from 'react'
 import { Checkbox } from 'antd'
-import withFormItem, { FormItemProps } from './withFormItem'
+import withFormItem from './withFormItem'
 import { normalizeOptions, OptionType } from '../select'
 import { CheckboxGroupProps } from 'antd/es/checkbox'
-export type FormItemCheckboxGroup = CheckboxGroupProps &
-  FormItemProps & { control: 'checkboxGroup' }
+
 interface Props extends Omit<CheckboxGroupProps, 'options'> {
   options?: OptionType[]
 }
 
 const FormCheckGroup = withFormItem((props: Props) => {
-  const checkOptions = useMemo(() => normalizeOptions(props.options), [props.options])
+  const options = useMemo(() => normalizeOptions(props.options), [props.options])
 
-  return <Checkbox.Group {...props} options={checkOptions} />
+  return <Checkbox.Group {...props} options={options} />
 })
-FormCheckGroup.defaulItemProps = { placeholder: '请选择' }
+// FormCheckGroup.defaulItemProps = { placeholder: '请选择' }
 export default FormCheckGroup

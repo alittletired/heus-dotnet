@@ -1,10 +1,11 @@
-import { Checkbox, CheckboxProps } from 'antd'
+import { Checkbox } from 'antd'
 import withFormItem from './withFormItem'
-export type FormItemCheckbox = CheckboxProps & { control: 'checkbox' }
 const FormCheckbox = withFormItem(Checkbox)
 FormCheckbox.defaulItemProps = {
-  valuePropName: 'checked',
   noStyle: true,
-  placeholder: '请选择',
+}
+FormCheckbox.defaultControlProps = {
+  // placeholder: '请选择',
+  //  valuePropName: 'checked'
 }
 export default FormCheckbox
