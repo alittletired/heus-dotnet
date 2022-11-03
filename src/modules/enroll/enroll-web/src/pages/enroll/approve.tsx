@@ -101,4 +101,5 @@ const EnrollPage: PageComponent = () => {
     </Tabs>
   )
 }
+EnrollPage.options = { name: '报名审核', code: '000201', isMenu: true }
 export default EnrollPage

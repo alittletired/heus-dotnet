@@ -85,5 +85,7 @@ const UserPage: PageComponent = () => {
 UserPage.options = {
   name: '用户管理',
   labels: userLabels,
+  code: '000101',
+  isMenu: true,
 }
 export default UserPage

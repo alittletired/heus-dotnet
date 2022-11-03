@@ -6,6 +6,8 @@ declare interface PageOptions {
   name?: string
   labels?: Record<string, string>
   parent?: PageComponent
+  code?: string
+  isMenu?: boolean
 }
 declare interface PageComponent<P = {}> extends React.FC<P> {
   options?: PageOptions

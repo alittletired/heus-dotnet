@@ -1,14 +1,13 @@
-import React, {useCallback, useState, useMemo, useRef} from 'react'
+import React, { useCallback, useState, useMemo, useRef } from 'react'
 import MenuEdit from './components/MenuEdit'
-import adminApi, {Resource} from '@/api/admin'
-import {menuTypes, menuLabels} from './menuData'
-import {Action, ApiTable, overlay} from '@/components'
+import adminApi, { Resource } from '@/api/admin'
+import { menuTypes, menuLabels } from './menuData'
+import { Action, ApiTable, overlay } from '@/components'
 
 const ResourcePage: PageComponent = () => {
   const menus = useRef([] as Resource[])
   const onEditMenu = useCallback(
-    async (resource?: Resource) =>
-      overlay.showForm(MenuEdit, resource, {menus: menus.current}),
+    async (resource?: Resource) => overlay.showForm(MenuEdit, resource, { menus: menus.current }),
     [],
   )
   const deleteMenu = useCallback(async (data: Resource) => {
@@ -24,9 +23,9 @@ const ResourcePage: PageComponent = () => {
       OnApiSuccess={(data) => {
         menus.current = data.items
       }}
-      pagination={{pageSize: -1}}
+      pagination={{ pageSize: -1 }}
       tableTitle="菜单列表"
-      data={{type: {$in: [1, 2]}}}
+      data={{ type: { $in: [1, 2] } }}
       toolBar={[
         {
           title: '新增菜单',
@@ -36,9 +35,9 @@ const ResourcePage: PageComponent = () => {
       ]}
       useTreeTable
       columns={[
-        {dataIndex: 'name'},
-        {dataIndex: 'icon', valueType: 'image'},
-        {dataIndex: 'path'},
+        { dataIndex: 'name' },
+        { dataIndex: 'icon', valueType: 'image' },
+        { dataIndex: 'path' },
         {
           dataIndex: 'type',
           render: (value) => menuTypes.find((t) => t.value === value)?.title,
@@ -62,5 +61,5 @@ const ResourcePage: PageComponent = () => {
     />
   )
 }
-ResourcePage.options = {name: '菜单管理'}
+ResourcePage.options = { name: '菜单管理', code: '000102', isMenu: true }
 export default ResourcePage

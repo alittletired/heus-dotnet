@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react'
-import adminApi, {Role} from '@/api/admin'
-import {ApiTable, Form, FormItem, overlay} from '@/components'
+import React, { useCallback } from 'react'
+import adminApi, { RoleDto } from '@/api/admin'
+import { ApiTable, Form, FormItem, overlay } from '@/components'
 import AuthorizeActionForm from './components/AuthorizeActionForm'
 
-const roleLables = {
+const roleLables: ControlLabels<RoleDto> = {
   name: '角色名',
   remarks: '角色描述',
   create: '新增角色',
@@ -21,7 +21,7 @@ const RoleEdit: ModalComponent<Role> = (props) => {
   )
 }
 RoleEdit.defaultModalProps = (props) => {
-  return {title: props.model?.id ? roleLables.update : roleLables.create}
+  return { title: props.model?.id ? roleLables.update : roleLables.create }
 }
 const RolePage: PageComponent = () => {
   const deleteRole = useCallback(async (data: Role) => {
@@ -43,10 +43,10 @@ const RolePage: PageComponent = () => {
         },
       ]}
       columns={[
-        {valueType: 'index'},
-        {dataIndex: 'name', operator: 'like'},
+        { valueType: 'index' },
+        { dataIndex: 'name', operator: 'like' },
 
-        {dataIndex: 'remarks'},
+        { dataIndex: 'remarks' },
         {
           actions: [
             {
@@ -68,5 +68,5 @@ const RolePage: PageComponent = () => {
     />
   )
 }
-RolePage.options = {name: '角色管理', path: '/auth/role'}
+RolePage.options = { name: '角色管理', labels: roleLables, code: '000103', isMenu: true }
 export default RolePage
