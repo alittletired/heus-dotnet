@@ -12,6 +12,7 @@ import { toSearchData, translateColumns } from './tableUtils'
 import { ColumnProps, TableProps } from './interface'
 import SearchForm from './SearchForm'
 import ToolBar from './ToolBar'
+import { usePageContext } from '../PageContext'
 // import './index.css'
 import { toTreeData, TreeEntity } from '../tree/treeUtils'
 export interface TableContext<T = any> {
@@ -34,18 +35,15 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
     pageSize: props.pagination === false ? -1 : props.pagination?.pageSize || 10,
   })
 
-  const [loading, setLoading] = useState(false)
-  const loadingRef = useRef(loading)
-  loadingRef.current = loading
+  let pageContext = usePageContext()
   let dataRef = useRef({ ...props.data })
 
   const fetchData = useRef(async (data?: Partial<T>, pageRequest?: PageRequest) => {
-    if (loadingRef.current) return
+    if (pageContext.loading) return
     if (!props.fetchApi) return
-    let page = pageRequest || pageRef.current
+    await pageContext.doLoading(async () => {
+      let page = pageRequest || pageRef.current
 
-    setLoading(true)
-    try {
       dataRef.current = { ...dataRef.current, ...data }
 
       if (props.beforeFetch) {
@@ -55,7 +53,7 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
       }
 
       let searchData = toSearchData(dataRef.current, props.columns)
-      let { total, items: dataSource } = await props.fetchApi({
+      let { total, items: dataSource } = await props.fetchApi!({
         ...searchData,
         ...page,
       })
@@ -72,11 +70,7 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
 
       setDataSource(dataSource)
       setTotal(total)
-    } catch (ex) {
-      console.warn('fetch error', ex)
-    } finally {
-      setLoading(false)
-    }
+    })
   })
   const onTableChange = useCallback((page: TablePaginationConfig, filters: any, sorter: any) => {
     let pageRequest: PageRequest = { pageSize: page.pageSize, pageIndex: page.current }
@@ -162,7 +156,7 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
             size="small"
             expandable={{ defaultExpandAllRows: true }}
             {...props}
-            loading={loading}
+            loading={pageContext.loading}
             onChange={onTableChange}
             dataSource={dataSource}
             pagination={pageRef.current.pageSize! > 0 && pageConfig}

@@ -1,6 +1,5 @@
 
 using Heus.Core.DependencyInjection;
-using System.Runtime.CompilerServices;
 
 namespace Microsoft.AspNetCore.Builder;
 

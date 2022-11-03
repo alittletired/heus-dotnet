@@ -23,6 +23,7 @@ export type FormControlItem<D> = ValueOf<FormControlProps> & { name: keyof D }
 
 export interface FormProps<D, P, R> extends AntdFormProps, ApiProps<D, P, R> {
   params?: P
+  children?: React.ReactNode
   canDismiss?: (data: R) => boolean
   labels?: { [key in string]: string }
   noLabel?: boolean
@@ -79,8 +80,9 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
         {...layout}
         {...rest}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-      />
+        onFinishFailed={onFinishFailed}>
+        {children}
+      </Form>
     </FormContext.Provider>
   )
 }
