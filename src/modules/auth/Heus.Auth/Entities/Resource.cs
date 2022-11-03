@@ -1,9 +1,7 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Heus.Auth.Domain;
 using Heus.Ddd.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Auth.Entities;
 [Table("auth_resource")]

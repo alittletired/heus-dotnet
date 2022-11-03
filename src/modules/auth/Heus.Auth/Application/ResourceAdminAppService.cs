@@ -20,10 +20,7 @@ namespace Heus.Auth.Application
     }
     internal class ResourceAdminAppService : AdminApplicationService, IResourceAdminAppService
     {
-     
         private readonly IRepository<Resource> _resourceRepository;
-
- 
         public ResourceAdminAppService(IUserRepository userRepository, IRepository<UserRole> userRoleRepository
             , IRepository<RoleResource> roleResourceRepository, IRepository<Resource> resourceRepository)
         {

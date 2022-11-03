@@ -37,6 +37,7 @@ namespace Heus.Auth
                 {
                     UserName = "admin",
                     Id = 1,
+                    IsSuperAdmin = true,
                     NickName = "超级管理员",
                     Phone = "13900000000"
 
