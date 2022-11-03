@@ -7,6 +7,7 @@ import { LockTwoTone, MobileOutlined, UserOutlined } from '@ant-design/icons'
 import useRouter from '@/services/router'
 import UserLayout from '@/layouts/UserLayout'
 import styles from './login.module.css'
+import { FormControlItem } from '@/components/form/Form'
 /*防止自动填充 */
 const PasswordInput: React.FC = () => {
   return (
@@ -44,6 +45,25 @@ const Login: PageComponent = () => {
     router.replace((router.query['redirect'] as string) ?? '/')
     return <Spin />
   }
+  const allCount: FormControlItem<LoginInput>[] = [
+    {
+      name: 'userName',
+      control: 'input',
+      placeholder: '用户名',
+      required: true,
+      prefix: <UserOutlined className={styles.userIcon} />,
+    },
+    {
+      control: 'input',
+      name: 'password',
+      type: 'password',
+      required: true,
+      size: 'large',
+      placeholder: '密码',
+      autoComplete: 'new-password',
+      prefix: <LockTwoTone className={styles.prefixIcon} />,
+    },
+  ]
   const account = (
     <div>
       <PasswordInput />

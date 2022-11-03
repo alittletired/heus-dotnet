@@ -21,8 +21,8 @@ public class Organ : AuditEntity, ITreeEntity
     #region ITreeEntity
 
     public int Sort { get; set; }
+    public string Code { get; set; } = null!;
     public string TreeCode { get; set; } = null!;
-    public string TreePath { get; set; } = null!;
     public long? ParentId { get; set; }
 
     #endregion

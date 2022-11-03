@@ -1,84 +1,84 @@
 export interface ICurrentUser {
   id?: long
-  userName: string
+  userName?: string
 }
 
 export interface LoginInput {
-  userName: string
-  password: string
-  rememberMe: boolean
+  userName?: string
+  password?: string
+  rememberMe?: boolean
 }
 
 export interface LoginResult {
-  userId: long
-  nickName: string
-  accessToken: string
-  expiration: long
+  userId?: long
+  nickName?: string
+  accessToken?: string
+  expiration?: long
 }
 
 export interface Resource {
   /** 唯一主键，数据库为varchar(24) */
-  id: long
+  id?: long
   /** 创建人 */
   createdBy?: long
   /** 更新人 */
   updateBy?: long
   /** 创建时间 */
-  createdDate: string
+  createdDate?: string
   /** 更新时间 */
-  updateDate: string
+  updateDate?: string
+  appCode?: string
   type: ResourceType
+  isDeleted?: boolean
+  sort?: number
+  treeCode?: string
   code: string
-  isDeleted: boolean
-  sort: number
-  treeCode: string
-  treePath: string
   parentId?: long
 }
 
 /** 资源类型 */
 export enum ResourceType {
   /** 动作点 */
-  Action = 1,
+  Action = 3,
   /** 系统 */
   Application = 0,
   /** 菜单 */
-  Menu = 1,
+  Menu = 2,
   /** 菜单组 */
   MenuGroup = 1,
 }
 
 export const resourceTypeOptions = [
-  { title: '动作点', value: 1 },
+  { title: '动作点', value: 3 },
   { title: '系统', value: 0 },
-  { title: '菜单', value: 1 },
+  { title: '菜单', value: 2 },
   { title: '菜单组', value: 1 },
 ]
 
 export const getResourceTypeTitle = (resourceType: ResourceType) =>
   resourceTypeOptions.find((o) => o.value === resourceType)?.title
 export interface RestPasswordDto {
-  userId: long
-  newPassword: string
+  userId?: long
+  newPassword?: string
 }
 
 export interface RoleCreateDto {
   id?: long
   createdBy?: long
   updateBy?: long
-  createdDate: string
+  createdDate?: string
   updateDate?: string
 }
 
 export interface RoleDto {
-  isBuildIn: boolean
-  isDeleted: boolean
+  isBuildIn?: boolean
+  isDeleted?: boolean
   name?: string
   remarks?: string
   id?: long
   createdBy?: long
   updateBy?: long
-  createdDate: string
+  createdDate?: string
   updateDate?: string
 }
 
@@ -89,21 +89,21 @@ export interface UserCreateDto {
   password?: string
   phone?: string
   salt?: string
-  status: UserStatus
+  status?: UserStatus
   id?: long
   createdBy?: long
   updateBy?: long
-  createdDate: string
+  createdDate?: string
   updateDate?: string
 }
 
 export interface UserDto {
-  userName: string
+  userName?: string
   account?: string
   password?: string
   phone?: string
   salt?: string
-  status: UserStatus
+  status?: UserStatus
   id?: long
   createdBy?: long
   updateBy?: long
@@ -134,7 +134,7 @@ export const userStatusOptions = [
 export const getUserStatusTitle = (userStatus: UserStatus) =>
   userStatusOptions.find((o) => o.value === userStatus)?.title
 export interface UserUpdateDto {
-  id: long
+  id?: long
 }
 
 const adminApi = {
@@ -149,6 +149,10 @@ const adminApi = {
     },
   },
   resources: {
+    syncResource(data: Resource[]): Promise<Resource[]> {
+      const path = `/admin/resources/syncResource`
+      return http.post(path, data)
+    },
     create(data: Resource): Promise<Resource> {
       const path = `/admin/resources/create`
       return http.post(path, data)

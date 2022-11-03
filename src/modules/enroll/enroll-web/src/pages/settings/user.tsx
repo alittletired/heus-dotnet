@@ -5,7 +5,7 @@ import { ApiTable, FormItem, Form, overlay } from '@/components'
 import AuthorizeRoles from './components/AuthorizeRoles'
 import ResetPassword from './components/ResetPassword'
 
-export const userTitles = {
+export const userLabels: ControlLabels<UserDto> = {
   account: '用户账号',
   password: '用户密码',
   name: '用户姓名',
@@ -20,12 +20,8 @@ export const userTitles = {
 }
 
 const UserEdit: ModalComponent<UserDto> = ({ model: user }) => {
-  let api = user?.id ? adminApi.users.update : adminApi.users.create
   return (
-    <Form
-      initialValues={user}
-      titles={userTitles}
-      api={user?.id ? adminApi.users.update : adminApi.users.create}>
+    <Form initialValues={user} api={user?.id ? adminApi.users.update : adminApi.users.create}>
       {user?.id ? false : <FormItem.Text>用户初始密码为：123456</FormItem.Text>}
       <FormItem.Input name="account" readOnly={!!user?.id} required />
       <FormItem.Input name="name" required />
@@ -34,7 +30,7 @@ const UserEdit: ModalComponent<UserDto> = ({ model: user }) => {
   )
 }
 UserEdit.modalOptions = ({ model: user }) => {
-  return { title: user?.id ? userTitles.update : userTitles.create }
+  return { title: user?.id ? userLabels.update : userLabels.create }
 }
 const UserPage: PageComponent = () => {
   // const disabledUser = useCallback(async (user: UserDto) => {
@@ -45,17 +41,16 @@ const UserPage: PageComponent = () => {
 
   return (
     <ApiTable
-      titles={userTitles}
       toolBar={[
         {
-          title: userTitles.create,
+          title: userLabels.create,
           buttonType: 'create',
           component: UserEdit,
         },
         { buttonType: 'export', title: '导出' },
         // { buttonType: 'import', title: '导入',  },
       ]}
-      fetchApi={adminApi.users.query}
+      fetchApi={adminApi.users.search}
       tableTitle="用户列表"
       columns={[
         { valueType: 'index' },
@@ -89,6 +84,6 @@ const UserPage: PageComponent = () => {
 }
 UserPage.options = {
   name: '用户管理',
-  path: '/auth/settings/user',
+  labels: userLabels,
 }
 export default UserPage

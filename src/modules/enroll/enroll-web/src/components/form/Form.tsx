@@ -35,14 +35,12 @@ export interface FormProps<D, P, R> extends AntdFormProps, ApiProps<D, P, R> {
 function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Return>) {
   const { noLabel, api, onBefore, onSuccess, params, labels, children, ...rest } = props
   let [form] = Form.useForm()
-  let overlay = useContext(OverlayContext)
   const [loading, setLoading] = useState(false)
   form = props.form ?? form
   const onFinish = useSubmit(async (values: any) => {
     try {
       let formData = { ...props.initialValues, ...values }
       setLoading(true)
-      overlay.setLoading(true)
 
       // 通过onBefore 返回false 阻止发送请求
       if (onBefore) formData = await onBefore?.(formData)
@@ -63,7 +61,6 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
       // if (!props.onFail && ex?.data?.msg) message.error(ex?.data?.msg, 4)
     } finally {
       setLoading(false)
-      overlay.setLoading && overlay.setLoading(false)
     }
   })
 

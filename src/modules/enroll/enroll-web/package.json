@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "api": "ts-node --project ./tsconfig.node.json scripts/api"
+    "api": "ts-node --project ./tsconfig.node.json scripts/api",
+    "menu": "ts-node --project ./tsconfig.node.json ./scripts/menu.ts",
+    "routes": "ts-node --project ./tsconfig.node.json ./scripts/routes.ts"
   },
   "dependencies": {
     "@types/prettier": "^2.7.1",

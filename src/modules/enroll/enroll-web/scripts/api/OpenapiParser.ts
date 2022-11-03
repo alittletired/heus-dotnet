@@ -165,7 +165,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
     throw new Error(`不识别的对象${property}`)
   }
 
-  protected checkRefType(name: string, definition: OpenAPIV3.SchemaObject) {
+  protected checkRefType(name: string, schema: OpenAPIV3.SchemaObject) {
     let { models, config } = this.apiConext
     if (models[name]) return
     let genericName = ''
@@ -178,10 +178,10 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
     let finalName = name.replace(/<.*>$/, '<T>').replace('[', '').replace(']', '')
 
     let apiModel: ApiModelSchma = {
-      description: definition.description,
+      description: schema.description,
       properties: {},
       name: finalName,
-      format: definition.format,
+      format: schema.format,
     }
 
     //先插入 防止递归引用类型
@@ -191,9 +191,9 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
     if (!hasIgnore) {
       models[finalName] = apiModel
     }
-
-    for (let propName in definition.properties) {
-      let property = definition.properties[propName]
+    let { required: requiredProps, type } = schema
+    for (let propName in schema.properties) {
+      let property = schema.properties[propName]
       try {
         let tsType = this.getType(property, propName)
         if (tsType === genericName || tsType === genericName + '[]') {
@@ -206,10 +206,13 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
           default: defaultValue,
           nullable,
         } = property as OpenAPIV3.BaseSchemaObject
-
+        let nullableType = ['boolean', 'integer']
+        let required =
+          requiredProps?.includes(propName) ||
+          (nullable !== true && nullableType.includes(type?.toString()!))
         apiModel.properties[propName] = {
           name,
-          nullable: !!nullable,
+          required,
           type: tsType,
           description,
           example,

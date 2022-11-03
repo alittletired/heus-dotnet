@@ -11,15 +11,20 @@ namespace Heus.Auth.Entities;
 public class Resource : AuditEntity, ITreeEntity,ISoftDelete
 {
 
+
+    public string? AppCode { get; set; } 
+
     [Required]
-    public ResourceType Type { get; set; } = ResourceType.Menu;
-    public string Code { get; set; } = null!;
+    public ResourceType Type { get; set; } = null!;
+
+
     public bool IsDeleted { get; set; }
     #region ITreeEntity
 
     public int Sort { get; set; }
     public string TreeCode { get; set; } = null!;
-    public string TreePath { get; set; } = null!;
+    [Required]
+    public string Code { get; set; } = null!;
     public long? ParentId { get; set; }
 
     #endregion

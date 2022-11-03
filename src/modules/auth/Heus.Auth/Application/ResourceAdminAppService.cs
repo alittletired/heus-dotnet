@@ -1,18 +1,22 @@
 ﻿using Heus.Auth.Domain;
 using Heus.Auth.Entities;
-using Heus.Core.Security;
 using Heus.Ddd.Application;
 using Heus.Ddd.Application.Services;
 using Heus.Ddd.Dtos;
 using Heus.Ddd.Repositories;
-using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace Heus.Auth.Application
 {
+    public class ResourceTreeNode: Resource
+    {
+
+        public List<ResourceTreeNode> Children { get; set; } = new();
+    }
     public interface IResourceAdminAppService: IAdminApplicationService<Resource, Resource, Resource>
     {
-      
+        Task<IEnumerable<Resource>> SyncResource(List<Resource> resources);
     }
     internal class ResourceAdminAppService : AdminApplicationService, IResourceAdminAppService
     {
@@ -23,13 +27,20 @@ namespace Heus.Auth.Application
         public ResourceAdminAppService(IUserRepository userRepository, IRepository<UserRole> userRoleRepository
             , IRepository<RoleResource> roleResourceRepository, IRepository<Resource> resourceRepository)
         {
-      
-        
-           
             _resourceRepository = resourceRepository;
         }
+        [AllowAnonymous]
+        public async Task<IEnumerable<Resource>> SyncResource( List<Resource> resources)
+        {
+            if (resources.Count == 0) return resources;
+            var existsResources = await _resourceRepository.GetListAsync(s => s.AppCode == resources[0].AppCode);
+            await _resourceRepository.DeleteManyAsync(existsResources);
+            await _resourceRepository.InsertManyAsync(resources);
+            return resources;
 
-        
+            //_resourceRepository.InsertAsync
+        }
+       
         public Task<Resource> CreateAsync(Resource createDto)
         {
             throw new NotImplementedException();

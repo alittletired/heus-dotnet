@@ -1,5 +1,5 @@
-import React from 'react'
-import icons from '../icons'
+import React, { useMemo } from 'react'
+import { GetIconDom, IconKey } from '../icons'
 import { Button, message } from 'antd'
 
 import overlay from '../overlay'
@@ -12,7 +12,7 @@ export interface ActionButtonProps<T> {
   onClick?: (data?: T) => Promise<any>
   data?: T
   title?: string | GetTitle<T>
-  icon?: keyof typeof icons
+  icon?: IconKey
   onSuccess?: (res: any) => any
   onError?: (e: any) => any
   disabled?: boolean | FuncSync<T, boolean>
@@ -39,8 +39,8 @@ export default function ActionButton<T>(
 
     ...rest
   } = props
-  const IconComponent = icons[icon]
-  const iconDom = IconComponent ? <IconComponent /> : undefined
+
+  const iconDom = GetIconDom(icon)
   code = code ?? icon
   let handleClick = async () => {
     try {

@@ -147,7 +147,7 @@ export default class SwaggerParser implements ApiParser<OpenAPIV2.Document> {
         apiModel.properties[propName] = {
           ...property,
           name,
-          nullable: !required.includes(propName),
+          required: required.includes(propName),
           type: tsType,
 
           example: property.example,

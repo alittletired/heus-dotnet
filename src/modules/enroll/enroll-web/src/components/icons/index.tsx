@@ -37,4 +37,9 @@ export {
   UpOutlined,
 }
 export type IconKey = keyof typeof icons
+export function GetIconDom(icon?: IconKey) {
+  if (!icon) return undefined
+  const IconComponent = icons[icon]
+  return <IconComponent />
+}
 export default icons

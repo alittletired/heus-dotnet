@@ -65,3 +65,5 @@ interface HttpClient {
 }
 type long = string
 declare var http: HttpClient
+
+type ControlLabels<T> = { [key: keyof T]: string } & Record<string, string>

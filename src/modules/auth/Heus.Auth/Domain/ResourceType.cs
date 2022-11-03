@@ -23,11 +23,11 @@ public class ResourceType : EnumClass<ResourceType>
     /// <summary>
     /// 菜单
     /// </summary>
-    public static ResourceType Menu = new(nameof(Menu)  ,1,"菜单");
+    public static ResourceType Menu = new(nameof(Menu)  ,2,"菜单");
 
     /// <summary>
     /// 动作点
     /// </summary>
-    public static ResourceType Action = new(nameof(Action), 1, "动作点");
+    public static ResourceType Action = new(nameof(Action), 3, "动作点");
 
 }
