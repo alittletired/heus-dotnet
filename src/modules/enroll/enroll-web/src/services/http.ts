@@ -1,6 +1,6 @@
 import { getUser, logout } from './user'
 import { message } from 'antd'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 import axios from 'axios'
 
 export const axiosInstance = axios.create({
@@ -68,4 +68,7 @@ axiosInstance.interceptors.response.use(
 )
 
 globalThis.http = httpClient
+export function isApiError(ex: AxiosResponse<ApiError> | any): ex is AxiosResponse<ApiError> {
+  return ex.data?.code && ex.data?.message
+}
 export default axiosInstance

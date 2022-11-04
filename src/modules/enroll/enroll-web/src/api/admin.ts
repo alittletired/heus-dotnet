@@ -4,16 +4,16 @@ export interface ICurrentUser {
 }
 
 export interface LoginInput {
-  userName?: string
-  password?: string
-  rememberMe?: boolean
+  userName: string
+  password: string
+  rememberMe: boolean
 }
 
 export interface LoginResult {
-  userId?: long
-  nickName?: string
-  accessToken?: string
-  expiration?: long
+  userId: long
+  nickName: string
+  accessToken: string
+  expiration: long
 }
 
 export interface Resource {

@@ -15,8 +15,8 @@ namespace Heus.Auth
         public DbSet<UserRole> UserRoles => Set<UserRole>();
         public DbSet<Organ> Organs => Set<Organ>();
         public DbSet<Resource> Resources => Set<Resource>();
-
-        public DbSet<RoleResource> RoleResources => Set<RoleResource>();
+        public DbSet<ActionRight> ActionRights => Set<ActionRight>();
+        public DbSet<RoleActionRight> RolePermissions => Set<RoleActionRight>();
 
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

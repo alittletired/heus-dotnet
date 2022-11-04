@@ -1,21 +1,20 @@
-import ActionButton, {ActionButtonProps} from './ActionButton'
-import ExportButton, {ExportProps} from './ActionExportButton'
-import ImportButton, {ImportExeclProps} from './ActionImportButton'
-type ExportButtonProps = {buttonType: 'export'} & ExportProps
-type ImportButtonProps = {buttonType: 'import'} & ImportExeclProps
+import ActionButton, { ActionButtonProps } from './ActionButton'
+import ExportButton, { ExportProps } from './ActionExportButton'
+import ImportButton, { ImportExeclProps } from './ActionImportButton'
+type ExportButtonProps<T> = { actionType: 'export' } & ExportProps<T>
+type ImportButtonProps<T> = { actionType: 'import' } & ImportExeclProps<T>
 export type ActionComponentProps<T> = ActionButtonProps<T> &
   (
-    | ExportButtonProps
-    | ImportButtonProps
+    | ExportButtonProps<T>
+    | ImportButtonProps<T>
     | {
-        buttonType?: 'create'
+        actionType?: 'create'
       }
   )
 
 export default function ActionComponent<T>(props: ActionComponentProps<T>) {
-  let {buttonType, ...restProps} = props
-  if (buttonType === 'export') return <ExportButton {...restProps} />
-  if (buttonType === 'import')
-    return <ImportButton {...(restProps as ImportButtonProps)} />
+  let { actionType, ...restProps } = props
+  if (actionType === 'export') return <ExportButton {...restProps} />
+  if (actionType === 'import') return <ImportButton {...(restProps as ImportButtonProps<T>)} />
   return <ActionButton {...restProps} />
 }

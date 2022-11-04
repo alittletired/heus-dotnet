@@ -1,6 +1,3 @@
-using System.Xml;
-using Heus.Ddd.Dtos;
-
 namespace Heus.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -9,7 +6,7 @@ using Microsoft.OpenApi.Any;
 using Heus.Core;
 using System.Reflection;
 
-internal class EnumClassSchemaFilte : ISchemaFilter
+internal class EnumClassSchemaFilter : ISchemaFilter
 {
 
 

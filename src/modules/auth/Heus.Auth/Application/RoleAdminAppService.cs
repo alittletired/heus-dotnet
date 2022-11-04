@@ -6,62 +6,30 @@ using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
 
 namespace Heus.Auth.Application;
-public interface IRoleAdminAppService:IAdminApplicationService<RoleCreateDto,RoleUpdateDto,RoleDto>
+public interface IRoleAdminAppService:IAdminApplicationService<Role>
 {
-    Task<IEnumerable<long>> GetResourceIdsAsync(long id);
-    Task<bool> AuthorizeResourcesAsync(long id, IEnumerable<long> resourceIds);
+   
+    Task<bool> AuthorizeActionRightsAsync(long id, IEnumerable<ActionRight> actionRights);
 
 }
-internal class RoleAdminAppService : AdminApplicationService, IRoleAdminAppService
+internal class RoleAdminAppService : AdminApplicationService<Role>, IRoleAdminAppService
 {
-    private readonly IRepository<RoleResource> _roleResourceRepository;
+    private readonly IRepository<RoleActionRight> _roleActionRightRepository;
 
-    public RoleAdminAppService(IRepository<RoleResource> roleResourceRepository)
+
+    public RoleAdminAppService(IRepository<RoleActionRight> roleActionRightRepository)
     {
-        _roleResourceRepository = roleResourceRepository;
+        _roleActionRightRepository = roleActionRightRepository;
     }
 
-    public Task<RoleDto> GetAsync(long id)
+    public async Task<bool> AuthorizeActionRightsAsync(long id, IEnumerable<ActionRight> actionRights)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<PageList<RoleDto>> SearchAsync(DynamicSearch<RoleDto> input)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<RoleDto> CreateAsync(RoleCreateDto createDto)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<RoleDto> UpdateAsync(RoleUpdateDto updateDto)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteAsync(long id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<long>> GetResourceIdsAsync(long id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<bool> AuthorizeResourcesAsync(long id, IEnumerable<long> resourceIds)
-    {
-       var roleResources=await _roleResourceRepository.GetListAsync(r => r.RoleId == id);
-       var deleteItems = roleResources.Where(s => !resourceIds.Contains(s.ResourceId));
-       var existsIds = roleResources.Select(s => s.ResourceId).ToList();
-       var insertItems = resourceIds.Where(r => !existsIds.Contains(r)).Select(r => new RoleResource()
-       {
-           ResourceId = r, RoleId = id
-       });
-       await _roleResourceRepository.InsertManyAsync(insertItems);
-       await _roleResourceRepository.DeleteManyAsync(deleteItems);
-       return true;
+        var existsRoleActions = await _roleActionRightRepository.GetListAsync(r => r.RoleId == id);
+        var roleActionRights = from ar in actionRights
+                               group ar by ar.ResourceId into grp
+                               select new RoleActionRight { ResourceId = grp.Key, RoleId = id, ActionMask = grp.Sum(t => t.ActionMask) };
+        await _roleActionRightRepository.DeleteManyAsync(existsRoleActions);
+        await _roleActionRightRepository.InsertManyAsync(roleActionRights);
+        return true;
     }
 }

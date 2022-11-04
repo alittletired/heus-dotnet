@@ -1,5 +1,4 @@
 import { ComponentType } from 'react'
-import { useAuth, usePermission } from '@/services/user'
 export interface Action {
   code: string
   menuPath?: string

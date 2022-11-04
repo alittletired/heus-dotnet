@@ -3,8 +3,8 @@
   "profiles": {
     "Heus.Enroll.Web": {
       "commandName": "Project",
-      "dotnetRunMessages": "true",
-      "launchBrowser": true,
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
       "launchUrl": "swagger/index.html",
       "applicationUrl": "http://localhost:6001",
       "environmentVariables": {

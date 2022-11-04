@@ -4,7 +4,7 @@ import { Button, message } from 'antd'
 
 import overlay from '../overlay'
 import { isApiError } from '@/services/http'
-import { ButtonProps as AntdButtonProps, ButtonType } from 'antd'
+import { ButtonProps as AntdButtonProps } from 'antd'
 type GetTitle<T> = (data: T) => string
 export interface ActionButtonProps<T> {
   code?: string
@@ -17,7 +17,7 @@ export interface ActionButtonProps<T> {
   onError?: (e: any) => any
   disabled?: boolean | FuncSync<T, boolean>
   hidden?: boolean | FuncSync<T, boolean>
-  type?: ButtonType
+  type?: AntdButtonProps['type']
 }
 
 export default function ActionButton<T>(
@@ -48,12 +48,13 @@ export default function ActionButton<T>(
       let res
       if (component) {
         let showFn = overlay.showForm
-        if (component.defaultModalProps?.(data).overlayType === 'drawer') {
+        let componentProps = { model: data }
+        if (component.modalOptions?.(componentProps).overlayType === 'drawer') {
           showFn = overlay.showDrawer
         }
-        res = await showFn(component, data)
+        res = await showFn(component, componentProps)
       } else {
-        res = await props.onClick(data)
+        res = await props.onClick?.(data)
       }
       if (onSuccess) {
         onSuccess(res)
@@ -64,7 +65,7 @@ export default function ActionButton<T>(
       if (onError) {
         onError(ex)
       } else {
-        isApiError(ex) && message.error(ex.data.msg)
+        isApiError(ex) && message.error(ex.data.message)
         console.warn('onunhandledrejection', ex)
       }
     }
@@ -82,7 +83,7 @@ export default function ActionButton<T>(
   }
   if (!children) {
     if (typeof title === 'function') {
-      children = title(data)
+      children = title(data!)
     } else {
       children = title
     }

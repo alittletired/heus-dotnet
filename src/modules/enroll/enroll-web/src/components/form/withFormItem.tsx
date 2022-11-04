@@ -2,7 +2,18 @@ import React, { PropsWithChildren, ComponentType } from 'react'
 import { Form, FormItemProps as AntFormItemProps } from 'antd'
 import { getRules } from './formItemRule'
 import FormContext from './FormContext'
+import { isForwardRef } from 'react-is'
 const AntFormItem = Form.Item
+const Empty: React.ForwardRefRenderFunction<any, any> = (props, ref) => {
+  return <></>
+}
+const EmptyRef = React.forwardRef(Empty)
+const REACT_FORWARD_REF_TYPE = EmptyRef.$$typeof
+function isForwardRefComponent<P>(
+  Component: React.ComponentType<P>,
+): Component is React.ForwardRefExoticComponent<P> {
+  return (Component as React.ForwardRefExoticComponent<P>).$$typeof == REACT_FORWARD_REF_TYPE
+}
 
 export interface FormItemProps extends AntFormItemProps {
   pattern?: string
@@ -14,6 +25,7 @@ export interface FormItemProps extends AntFormItemProps {
 type WithComponent<P> = React.FC<P & FormItemProps> & {
   defaulItemProps?: Partial<FormItemProps>
   defaultControlProps?: Partial<P>
+  defaultProps?: Partial<P & FormItemProps> | undefined
 }
 
 function extractProps<P>(props: P & FormItemProps): [AntFormItemProps, P] {
@@ -37,7 +49,7 @@ function extractProps<P>(props: P & FormItemProps): [AntFormItemProps, P] {
 }
 
 export default function withFormItem<P>(Component: ComponentType<P>) {
-  const WithFormItem: WithComponent<P> = (props) => {
+  const WithFormItem: WithComponent<P> = (props, ref) => {
     const formContext = React.useContext(FormContext)
     if (props.hidden) return null
     let finalProps = {
@@ -61,9 +73,12 @@ export default function withFormItem<P>(Component: ComponentType<P>) {
 
     return (
       <AntFormItem {...itemProps}>
-        <Component {...controlProps} />
+        <Component {...controlProps} ref={ref} />
       </AntFormItem>
     )
   }
+  // if (isForwardRefComponent(Component)) {
+  //   var ForwardItem = React.forwardRef(WithFormItem)
+  // }
   return WithFormItem
 }

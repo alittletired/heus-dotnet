@@ -1,4 +1,3 @@
-import { PropsWithChildren, useCallback } from 'react'
 import { selector, useRecoilValue, useRecoilValueLoadable } from 'recoil'
 import userState from './user'
 import adminApi from '@/api/admin'

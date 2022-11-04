@@ -2,8 +2,10 @@ import Upload, { UploadProps } from 'antd'
 import ActionButton, { ActionButtonProps } from './ActionButton'
 import { importExcel } from '@/utils/excelUtils'
 import { useTable } from '../table/Table'
-export type ImportExeclProps = { importApi: any }
-const ImportButton = function <T>(props: ImportExeclProps & ActionButtonProps<T>) {
+export interface ImportExeclProps<T> extends ActionButtonProps<T> {
+  importApi: any
+}
+function ImportButton<T>(props: ImportExeclProps<T>) {
   let { icon, importApi, ...rest } = props
   let table = useTable()
   if (!icon) {

@@ -46,10 +46,6 @@ declare type TreeEntity<T = {}> = NameEntity<T> & {
 //   key?: string | number
 //   title?: string
 // }
-interface ApiError {
-  code: number
-  msg: string
-}
 
 interface RequestConfig<D> {
   data?: D
@@ -67,3 +63,13 @@ type long = string
 declare var http: HttpClient
 
 type ControlLabels<T> = { [key: keyof T]: string } & Record<string, string>
+
+interface ApiResult<T> {
+  code: number
+  message?: string
+  data?: T
+}
+interface ApiError {
+  code: number
+  message: string
+}

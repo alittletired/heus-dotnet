@@ -19,7 +19,7 @@ declare interface ModalOptions {
   viewType?: ViewType
   overlayType?: OverlayType
 }
-
-declare interface ModalComponent<P> extends React.FC<{ model?: P }> {
-  modalOptions?: (props: { model?: P }) => ModalProps
+declare type ModalComponentProps<P> = { model?: P }
+declare interface ModalComponent<P> extends React.FC<ModalComponentProps<P>> {
+  modalOptions?: (props: ModalComponentProps<P>) => ModalProps
 }

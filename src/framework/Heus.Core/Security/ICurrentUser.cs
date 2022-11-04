@@ -4,5 +4,5 @@ public interface ICurrentUser
 {
     long? Id { get; }
     string UserName { get; }
- 
+  
 }

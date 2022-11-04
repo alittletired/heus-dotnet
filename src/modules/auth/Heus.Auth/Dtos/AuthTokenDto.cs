@@ -1,6 +1,8 @@
 
+using System.ComponentModel.DataAnnotations;
+
 namespace Heus.Auth.Dtos;
 
-public record LoginResult(long UserId,string NickName, string AccessToken, long Expiration)
+public record LoginResult([Required] long UserId,string NickName, string AccessToken, long Expiration)
 {
 }

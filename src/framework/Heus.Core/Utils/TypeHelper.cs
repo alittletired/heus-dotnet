@@ -32,7 +32,10 @@ namespace Heus.Core.Utils
             typeof(TimeSpan),
             typeof(Guid)
         };
-
+        public static bool IsRecordType(Type type)
+        {
+            return type.GetMethods().Any(m => m.Name == "<Clone>$");
+        }
         public static bool IsNonNullablePrimitiveType(Type type)
         {
             return NonNullablePrimitiveTypes.Contains(type);
@@ -59,23 +62,11 @@ namespace Heus.Core.Utils
             return obj != null && obj.GetType() == typeof(Func<TReturn>);
         }
 
-        public static bool IsPrimitiveExtended(Type type, bool includeNullables = true, bool includeEnums = false)
-        {
-            if (IsPrimitiveExtendedInternal(type, includeEnums))
-            {
-                return true;
-            }
-
-            if (includeNullables && IsNullable(type) && type.GenericTypeArguments.Any())
-            {
-                return IsPrimitiveExtendedInternal(type.GenericTypeArguments[0], includeEnums);
-            }
-
-            return false;
-        }
+    
 
         public static bool IsNullable(Type type)
         {
+            if (type.IsValueType) return false;
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
@@ -89,13 +80,9 @@ namespace Heus.Core.Utils
             return t;
         }
 
-        public static bool IsEnumerable(Type type, out Type? itemType, bool includePrimitives = true)
+        public static bool IsEnumerable(Type type, out Type? itemType)
         {
-            if (!includePrimitives && IsPrimitiveExtended(type))
-            {
-                itemType = null;
-                return false;
-            }
+       
 
             var enumerableTypes = ReflectionHelper.GetImplementedGenericTypes(type, typeof(IEnumerable<>));
             if (enumerableTypes.Count == 1)
@@ -307,33 +294,12 @@ namespace Heus.Core.Utils
 
             var converter = TypeDescriptor.GetConverter(targetType);
 
-            if (IsFloatingType(targetType))
-            {
-                using (CultureHelper.Use(CultureInfo.InvariantCulture))
-                {
-                    return converter.ConvertFromString(value.Replace(',', '.'));
-                }
-            }
+    
 
             return converter.ConvertFromString(value);
         }
 
-        public static bool IsFloatingType(Type type, bool includeNullable = true)
-        {
-            if (FloatingTypes.Contains(type))
-            {
-                return true;
-            }
-
-            if (includeNullable &&
-                IsNullable(type) &&
-                FloatingTypes.Contains(type.GenericTypeArguments[0]))
-            {
-                return true;
-            }
-
-            return false;
-        }
+      
 
         public static object? ConvertFrom<TTargetType>(object value)
         {
@@ -347,12 +313,7 @@ namespace Heus.Core.Utils
                 .ConvertFrom(value);
         }
 
-        public static Type StripNullable(Type type)
-        {
-            return IsNullable(type)
-                ? type.GenericTypeArguments[0]
-                : type;
-        }
+   
 
         public static bool IsDefaultValue(object? obj)
         {

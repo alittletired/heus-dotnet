@@ -8,15 +8,10 @@ namespace Heus.Auth.Entities;
 [Index(nameof(Code), IsUnique = true)]
 public class Resource : AuditEntity, ITreeEntity,ISoftDelete
 {
-
-
-    public string? AppCode { get; set; } 
-
-    [Required]
-    public ResourceType Type { get; set; } = null!;
-
-
+    public string? AppCode { get; set; }
+    public string Name { get; init; } = null!;
     public bool IsDeleted { get; set; }
+    public ResourceType Type { get; set; } = ResourceType.Menu;
     #region ITreeEntity
 
     public int Sort { get; set; }
