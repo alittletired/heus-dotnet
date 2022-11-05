@@ -1,29 +1,50 @@
 import path from 'path'
-import menus, { Menu } from '../src/config/menus'
+import fs from 'fs'
+import menus from '../src/config/menus'
 import appConfig from '../src/config/appConfig'
-import { Resource } from '@/api/admin'
+import { Resource, ResourceDto } from '@/api/admin'
 import axios from 'axios'
 const appCode = null
-async function syncMenu() {
+const rootpath = path.resolve('./src/pages')
+const resources: Record<string, ResourceDto> = {}
+async function syncResources() {
   const url = appConfig.apiBaseUrl + '/admin/resources/SyncResource'
-  const resources: Record<string, Resource> = {}
-  normalizeMenu(menus, resources)
   await axios.post(url, Object.values(resources))
 }
-function normalizeMenu(subMenus: Menu[], resources: Record<string, Resource>, parent?: Resource) {
-  for (const subMenu of subMenus) {
-    let { children, sort, ...rest } = subMenu
-    let treeCode = rest.code
-    if (parent) treeCode = parent.treeCode + '.' + treeCode
-    const resource: Resource = {
-      ...rest,
-      id: rest.code,
-      treeCode,
-      sort: sort ?? 0,
-      isDeleted: false,
+// function normalizeMenu(subMenus: Menu[], ) {
+//   for (const subMenu of subMenus) {
+//     let { children, ...rest } = subMenu
+//     const resource: ResourceDto = {
+//       ...rest,
+//       actions: [],
+//     }
+//     resources[resource.code] = resource
+//     normalizeMenu(children || [])
+//   }
+// }
+async function loadPages(dir: string) {
+  const files = fs.readdirSync(dir)
+  for (const fileName of files) {
+    if (fileName === 'components' || fileName.startsWith('_')) {
+      continue
     }
-    resources[resource.code] = resource
-    normalizeMenu(children || [], resources, resource)
+    const pagePath = path.join(dir, fileName)
+    if (fs.lstatSync(pagePath).isDirectory()) {
+      loadPages(pagePath)
+      continue
+    }
+    if (!pagePath.endsWith('.jsx') && !pagePath.endsWith('.tsx')) {
+      continue
+    }
+    console.log(' load page ' + pagePath)
+    var pageComponent: PageComponent = await import(pagePath)
+    console.log(' load page options' + pageComponent.options)
   }
 }
-syncMenu()
+
+async function main() {
+  console.log('start load page rootPath:' + rootpath)
+  await loadPages(rootpath)
+  // await syncResources()
+}
+main()

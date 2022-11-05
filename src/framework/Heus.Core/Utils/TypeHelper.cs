@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
@@ -61,13 +62,22 @@ namespace Heus.Core.Utils
         {
             return obj != null && obj.GetType() == typeof(Func<TReturn>);
         }
-
+        private static NullabilityInfoContext _nullabilityContext = new NullabilityInfoContext();
+        public static bool IsNullable(PropertyInfo property)
+        {
+            var nullabilityInfo = _nullabilityContext.Create(property);
+            return nullabilityInfo.WriteState is NullabilityState.Nullable;
+        }
     
+
+      
+
 
         public static bool IsNullable(Type type)
         {
-            if (type.IsValueType) return false;
+
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+
         }
 
         public static Type GetFirstGenericArgumentIfNullable(this Type t)

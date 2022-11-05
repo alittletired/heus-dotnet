@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Any;
 using Heus.Core;
 using System.Reflection;
 using Heus.Core.Utils;
+using System.Diagnostics.CodeAnalysis;
 
 internal class RecordTypeSchemaFilter : ISchemaFilter
 {
@@ -19,7 +20,12 @@ internal class RecordTypeSchemaFilter : ISchemaFilter
         var properties = context.Type.GetProperties();
         foreach (var p in properties)
         {
-            if (!TypeHelper.IsNullable(p.PropertyType))
+            if (p.Name == "Actions")
+            {
+                var type = p.PropertyType;
+            }
+          
+            if ( !TypeHelper.IsNullable(p))
             {
                 schema.Required.Add(p.Name.ToCamelCase());
             }

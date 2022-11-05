@@ -10,7 +10,9 @@ public class Resource : AuditEntity, ITreeEntity,ISoftDelete
 {
     public string? AppCode { get; set; }
     public string Name { get; init; } = null!;
+    public string Path { get; set; } = null!;
     public bool IsDeleted { get; set; }
+
     public ResourceType Type { get; set; } = ResourceType.Menu;
     #region ITreeEntity
 
