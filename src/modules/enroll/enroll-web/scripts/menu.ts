@@ -3,9 +3,15 @@ import fs from 'fs'
 import menus from '../src/config/menus'
 import appConfig from '../src/config/appConfig'
 import { Resource, ResourceDto } from '@/api/admin'
+import * as ts from 'typescript'
 import axios from 'axios'
 const appCode = null
 const rootpath = path.resolve('./src/pages')
+const tsOptions: ts.CompilerOptions = {
+  allowJs: true,
+  jsx: ts.JsxEmit.Preserve,
+  module: ts.ModuleKind.CommonJS,
+}
 const resources: Record<string, ResourceDto> = {}
 async function syncResources() {
   const url = appConfig.apiBaseUrl + '/admin/resources/SyncResource'
@@ -37,8 +43,18 @@ async function loadPages(dir: string) {
       continue
     }
     console.log(' load page ' + pagePath)
-    var pageComponent: PageComponent = await import(pagePath)
-    console.log(' load page options' + pageComponent.options)
+
+    // const sourceFile = program.getSourceFile(pagePath)
+    // const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed })
+
+    // if (pagePath.includes('login.tsx')) {
+    //   const source = fs.readFileSync(pagePath).toString()
+    //   console.log('transplate', source)
+    //   var result = ts.transpileModule(source, {
+    //     compilerOptions: { module: ts.ModuleKind.ESNext, jsxFactory: 'h', jsx: ts.JsxEmit.React },
+    //   })
+    //   console.log('result', result)
+    // }
   }
 }
 
