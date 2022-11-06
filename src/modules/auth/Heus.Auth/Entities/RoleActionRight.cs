@@ -9,5 +9,5 @@ public class RoleActionRight : AuditEntity
 {
     public long ResourceId { get; init; }
     public long RoleId { get; init; }
-    public long ActionId { get; init; }
+    public int Flag { get; init; }
 }

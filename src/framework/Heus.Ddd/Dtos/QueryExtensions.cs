@@ -22,6 +22,11 @@ public static class QueryExtensions
 
     }
 
+    // public static async Task<IEnumerable<T>> ToDtoList<T>(this IQueryable queryable)
+    // {
+    //     var query = TranslateQuery(queryable, queryDto);
+    // }
+
     public static async Task<T?> FirstOrDefaultAsync<T>(IQueryable queryable, IPageRequest<T> queryDto) 
     {
         var query = TranslateQuery(queryable, queryDto);
@@ -45,7 +50,6 @@ public static class QueryExtensions
         var visitor = new QueryExpressionVisitor<T>(queryDto);
         var expr = queryable.Expression;
         var newExpr = visitor.VisitStart(expr);
-     
         var query= queryable.Provider.CreateQuery<T>(newExpr) ;
         return query;
     }

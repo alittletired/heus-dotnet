@@ -5,6 +5,7 @@ using Heus.Ddd.Entities;
 
 namespace Heus.Auth.Entities;
 [Table("auth_resource")]
+[Index(nameof(Path), IsUnique = true)]
 [Index(nameof(Code), IsUnique = true)]
 public class Resource : AuditEntity, ITreeEntity,ISoftDelete
 {

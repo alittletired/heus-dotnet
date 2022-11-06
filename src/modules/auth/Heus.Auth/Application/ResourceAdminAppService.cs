@@ -6,6 +6,7 @@ using Heus.Ddd.Application;
 using Heus.Ddd.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics.CodeAnalysis;
+using Heus.Ddd.Dtos;
 
 namespace Heus.Auth.Application
 {
@@ -13,21 +14,31 @@ namespace Heus.Auth.Application
     public record ResourceDto(string Code, string Name, string Path)
     {
         public int? Sort { get; init; }
-        public IEnumerable<ActionRightDto>? Actions { get; init; } 
-    
+        public IEnumerable<ResourceDto>? Children { get; set; }
+        public IEnumerable<ActionDto>? Actions { get; set; }
+
     }
 
     [MapTo(typeof(ActionRight))]
-    public record ActionRightDto(string Name, string Display, string Url) { }
+    public record ActionDto(string Name, int Flag, string Title, string? Url)
+    {
+    }
+
+
+    public record UserActionRight(string ResourcePath, int Flag)
+    {
+
+    }
 
 
     public interface IResourceAdminAppService : IAdminApplicationService<Resource>
     {
-        //Task<List<UserMenuDto>> GetUserMenuAsync(long userId);
-        //Task<bool> SyncResources(List<ActionRightDto> resources);
 
-        Task<IEnumerable<ResourceDto>> GetUserResources(long userId);
+        Task<bool> SyncResources(List<ResourceDto> resources);
+
+        Task<IEnumerable<UserActionRight>> GetUserActionRights(long userId);
     }
+
     internal class ResourceAdminAppService : AdminApplicationService<Resource>, IResourceAdminAppService
     {
         private readonly IRepository<ActionRight> _actionRightRepository;
@@ -35,6 +46,7 @@ namespace Heus.Auth.Application
         private readonly IRepository<UserRole> _userRoleRepository;
         private readonly IRepository<RoleActionRight> _roleActionRightRepository;
         private readonly IRepository<Resource> _resourceRepository;
+
         public ResourceAdminAppService(IRepository<ActionRight> actionRightRepository
             , IRepository<User> userRepository
             , IRepository<RoleActionRight> roleActionRightRepository
@@ -47,58 +59,71 @@ namespace Heus.Auth.Application
             _resourceRepository = resourceRepository;
             _userRoleRepository = userRoleRepository;
         }
-        [AllowAnonymous]
-        public async Task<bool> SyncResources(List<ResourceDto> resourceDtos)
+
+
+        private void ExtractResourceTree(IEnumerable<ResourceDto> dtos, List<Resource> resources,
+            List<ActionRight> actionRights)
         {
-            if (resourceDtos.Count == 0) return false;
+            foreach (var dto in dtos)
+            {
+                var resource = Mapper.Map<Resource>(dto);
+                resource.Id = long.Parse(resource.Code);
+                resources.Add(resource);
+                if (dto.Children != null)
+                {
+                    ExtractResourceTree(dto.Children, resources, actionRights);
+                    continue;
+                }
+
+                var actions = new List<ActionDto>(dto.Actions ?? new List<ActionDto>());
+                //每个资源默认应该添加查询权限
+                actions.Insert(0, new ActionDto("view", 1, "查看", null));
+                foreach (var action in actions)
+                {
+                    var actionRight = Mapper.Map<ActionRight>(action);
+                    actionRight.ResourceId = resource.Id;
+                    //使用pad防止id重复
+                    actionRight.Id = long.Parse(resource.Code + action.Flag.ToString().PadLeft(10));
+
+                    actionRights.Add(actionRight);
+                }
+            }
+        }
+
+        [AllowAnonymous]
+        public async Task<bool> SyncResources(List<ResourceDto> dtos)
+        {
+            if (dtos.Count == 0) return false;
             var resources = await Repository.GetListAsync(s => true);
-            //var actionRights = await _actionRightActionRepository.GetListAsync(s => true);
-
-            //var insertResources = new List<Resource>();
-            //var insertActionRights = new List<ActionRight>();
-
-            //foreach (var resourceDto in resourceDtos)
-            //{
-            //    var resource = Mapper.Map<Resource>(resourceDto);
-            //    resource.Id = long.Parse(resource.Code);
-            //    insertResources.Add(resource);
-            //}
-            ////var menuIds = menus.Select(s => s.Id);
-            ////var actions=await _menuActionRepository.GetListAsync(s => menuIds.Contains(s.MenuId));
-
-            //await Repository.DeleteManyAsync(resources);
-            //await _actionRightActionRepository.DeleteManyAsync(actionRights);
-
-            // await _menuRepository.InsertManyAsync(resources);
-            // var actionDtos = menuDtos.SelectMany(r => r.Actions);
-            // await _menuActionRepository.DeleteManyAsync();
+            var actionRights = await _actionRightRepository.GetListAsync(s => true);
+            var insertResources = new List<Resource>();
+            var insertActionRights = new List<ActionRight>();
+            ExtractResourceTree(dtos, insertResources, insertActionRights);
+            await Repository.DeleteManyAsync(resources);
+            await _actionRightRepository.DeleteManyAsync(actionRights);
+            await Repository.InsertManyAsync(insertResources);
+            await _actionRightRepository.InsertManyAsync(insertActionRights);
             return true;
-
             //_resourceRepository.InsertAsync
         }
 
-        public async Task<IEnumerable<ResourceDto>> GetUserResources(long userId)
+        public async Task<IEnumerable<UserActionRight>> GetUserActionRights(long userId)
         {
             var user = await _userRepository.GetByIdAsync(userId);
             if (user.IsSuperAdmin)
             {
-                var query = from r in _resourceRepository.Query
-                            join ar in _actionRightRepository.Query on r.Id equals ar.ResourceId     into grouping
-                            select new ResourceDto(r.Code,r.Name, r.Path) { Sort=r.Sort,
-                            Actions=grouping.Select(a=> new  ActionRightDto(a.Name,a.Display,a.Url))
-                            };
-                return await query.ToListAsync();
+                var query = from ar in _actionRightRepository.Query
+                    join r in _resourceRepository.Query on ar.ResourceId equals r.Id
+                    select new UserActionRight(r.Path, ar.Flag);
+                var data = await query.ToListAsync();
+                return data.GroupBy(s => s.ResourcePath)
+                    .Select(s => new UserActionRight(s.Key, s.Sum(p => p.Flag)));
             }
             var query1 = from r in _resourceRepository.Query
-                         join ar in _actionRightRepository.Query on r.Id equals ar.ResourceId into grouping
-                         join rar in _roleActionRightRepository.Query on r.Id equals rar.ResourceId
-                         join ur in _userRoleRepository.Query on rar.RoleId equals ur.Id
-                         where ur.UserId == userId
-                         select new ResourceDto(r.Code, r.Name, r.Path)
-                         {
-                             Sort = r.Sort,
-                             Actions = grouping.Select(a => new ActionRightDto(a.Name, a.Display, a.Url))
-                         };
+                join rar in _roleActionRightRepository.Query on r.Id equals rar.ResourceId
+                join ur in _userRoleRepository.Query on rar.RoleId equals ur.Id
+                where ur.UserId == userId
+                select new UserActionRight(r.Path, rar.Flag);
             return await query1.ToListAsync();
 
         }

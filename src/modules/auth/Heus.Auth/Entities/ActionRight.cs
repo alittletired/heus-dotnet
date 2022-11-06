@@ -9,8 +9,9 @@ namespace Heus.Auth.Entities
     {
         public long ResourceId { get; set; }
         public string Name { get; set; } = null!;
-        public string Display { get; set; } = null!;
-        public string Url { get; set; } = null!;
+        public int Flag { get; set; }
+        public string Title { get; set; } = null!;
+        public string? Url { get; set; } = null!;
         public bool IsDeleted { get; set; }
     }
 }

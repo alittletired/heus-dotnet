@@ -16,7 +16,7 @@ public class EfCoreModuleInitializer :ModuleInitializerBase {
         AutoAddDbContextTypes(context.Services);
     }
 
-    private static readonly MethodInfo _addDbContextOptionsMethod = typeof(EfCoreModuleInitializer)
+    private static readonly MethodInfo AddDbContextOptionsMethod = typeof(EfCoreModuleInitializer)
         .GetTypeInfo().DeclaredMethods.First(m => m.Name == nameof(AddDbContextOptions));
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
@@ -48,7 +48,7 @@ public class EfCoreModuleInitializer :ModuleInitializerBase {
                     entityTypes.Add(entityType);
                 }
              
-                var actualMethod = _addDbContextOptionsMethod.MakeGenericMethod(type);
+                var actualMethod = AddDbContextOptionsMethod.MakeGenericMethod(type);
                 actualMethod.Invoke(null, new object[] { services });
             }
         });

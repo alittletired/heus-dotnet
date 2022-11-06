@@ -12,7 +12,15 @@ const menus: ResourceDto[] = [
     code: '0001',
     path: '/settings',
     children: [
-      { name: '用户管理', code: '000101', path: '/settings/user' },
+      {
+        name: '用户管理',
+        code: '000101',
+        path: '/settings/user',
+        actions: [
+          { name: 'create', title: '创建用户', flag: 2 },
+          { name: 'update', title: '修改用户', flag: 4 },
+        ],
+      },
       { name: '菜单管理', code: '000102', path: '/settings/menu' },
       { name: '角色管理', code: '000103', path: '/settings/role' },
       {

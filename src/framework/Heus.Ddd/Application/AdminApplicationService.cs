@@ -50,15 +50,23 @@ public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdate
         ArgumentNullException.ThrowIfNull(updateDto);
         var entity = Mapper.Map<TEntity>(updateDto);
         await Repository.UpdateAsync(entity);
-        return Mapper.Map<TDto>(entity);
+        return MapToDto(entity);
 
     }
 
+    protected virtual TDto MapToDto(TEntity entity)
+    {
+        if (entity is TDto dto)
+        {
+            return dto;
+        }
+        return  Mapper.Map<TDto>(entity); 
+    }
     public virtual async Task<TDto> CreateAsync(TCreateDto createDto)
     {
         ArgumentNullException.ThrowIfNull(createDto);
         var entity = Mapper.Map<TEntity>(createDto);
         await Repository.InsertAsync(entity);
-        return Mapper.Map<TDto>(entity); ;
+        return MapToDto(entity);
     }
 }

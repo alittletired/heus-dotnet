@@ -206,15 +206,15 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
           default: defaultValue,
           nullable,
         } = property as OpenAPIV3.BaseSchemaObject
-        let nullableType = ['boolean', 'integer']
-        let required =
-          requiredProps?.includes(propName) ||
-          (nullable !== true && nullableType.includes(type?.toString()!))
+
+        let required = requiredProps?.includes(propName)
+
         apiModel.properties[propName] = {
           name,
           required,
           type: tsType,
           description,
+          nullable,
           example,
           title,
           default: defaultValue,

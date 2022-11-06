@@ -1,6 +1,13 @@
+export interface ActionDto {
+  name: string
+  flag: number
+  title: string
+  url?: string
+}
+
 export interface ActionRight {
   /** 唯一主键，数据库为varchar(24) */
-  id?: long
+  id: long
   /** 创建人 */
   createdBy?: long
   /** 更新人 */
@@ -9,22 +16,37 @@ export interface ActionRight {
   createdDate?: string
   /** 更新时间 */
   updateDate?: string
-  resourceId?: long
-  name?: string
-  display?: string
+  resourceId: long
+  name: string
+  flag: number
+  title: string
   url?: string
-  isDeleted?: boolean
+  isDeleted: boolean
 }
 
 export interface ActionRightDto {
+  /** 唯一主键，数据库为varchar(24) */
+  id: long
+  /** 创建人 */
+  createdBy?: long
+  /** 更新人 */
+  updateBy?: long
+  /** 创建时间 */
+  createdDate?: string
+  /** 更新时间 */
+  updateDate?: string
+  resourceId: long
   name: string
-  display: string
-  url: string
+  flag: number
+  title: string
+  url?: string
+  isDeleted: boolean
+  resourcePath: string
 }
 
 export interface ICurrentUser {
   id?: long
-  userName?: string
+  userName: string
 }
 
 export interface LoginInput {
@@ -42,7 +64,7 @@ export interface LoginResult {
 
 export interface Resource {
   /** 唯一主键，数据库为varchar(24) */
-  id?: long
+  id: long
   /** 创建人 */
   createdBy?: long
   /** 更新人 */
@@ -52,12 +74,12 @@ export interface Resource {
   /** 更新时间 */
   updateDate?: string
   appCode?: string
-  name?: string
-  path?: string
-  isDeleted?: boolean
-  type?: ResourceType
-  sort?: number
-  treeCode?: string
+  name: string
+  path: string
+  isDeleted: boolean
+  type: ResourceType
+  sort: number
+  treeCode: string
   code: string
   parentId?: long
 }
@@ -67,7 +89,8 @@ export interface ResourceDto {
   name: string
   path: string
   sort?: number
-  actions?: ActionRightDto[]
+  children?: ResourceDto[]
+  actions?: ActionDto[]
 }
 
 /** 资源类型 */
@@ -93,7 +116,7 @@ export const getResourceTypeTitle = (resourceType: ResourceType) =>
   resourceTypeOptions.find((o) => o.value === resourceType)?.title
 export interface Role {
   /** 唯一主键，数据库为varchar(24) */
-  id?: long
+  id: long
   /** 创建人 */
   createdBy?: long
   /** 更新人 */
@@ -103,17 +126,17 @@ export interface Role {
   /** 更新时间 */
   updateDate?: string
   /** 内置角色，不允许删除 */
-  isBuildIn?: boolean
-  isDeleted?: boolean
+  isBuildIn: boolean
+  isDeleted: boolean
   /** 角色名 */
-  name?: string
+  name: string
   /** 角色说明 */
   remarks?: string
 }
 
 export interface User {
   /** 唯一主键，数据库为varchar(24) */
-  id?: long
+  id: long
   /** 创建人 */
   createdBy?: long
   /** 更新人 */
@@ -125,10 +148,10 @@ export interface User {
   /** 用户账号 */
   userName: string
   /** 用户手机 */
-  phone?: string
-  nickName?: string
-  status?: UserStatus
-  isSuperAdmin?: boolean
+  phone: string
+  nickName: string
+  status: UserStatus
+  isSuperAdmin: boolean
 }
 
 /** 用户状态 */
@@ -171,8 +194,8 @@ const adminApi = {
       const path = `/admin/resources/syncResources`
       return http.post(path, data)
     },
-    getUserResources(userId: long): Promise<ResourceDto[]> {
-      const path = `/admin/resources/getUserResources`
+    getUserActionRights(userId: long): Promise<ActionRightDto[]> {
+      const path = `/admin/resources/getUserActionRights`
       return http.get(path, { params: { userId } })
     },
     delete: {},

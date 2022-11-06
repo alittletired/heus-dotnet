@@ -1,9 +1,9 @@
-import { selector, useRecoilValue, useRecoilValueLoadable } from 'recoil'
+import { selector, useRecoilValue } from 'recoil'
 import userState from './user'
-import adminApi, { ResourceDto } from '@/api/admin'
+import adminApi, { ActionRightDto, ResourceDto } from '@/api/admin'
 
 export class AuthState {
-  constructor(public resoures: ResourceDto[]) {}
+  constructor(public actionRight: ActionRightDto[]) {}
   hasAuthority = (path: string, actionName?: string) => {
     if (!actionName) return true
     return true
@@ -16,7 +16,7 @@ const authState = selector({
     const user = get(userState)
     if (!user.isLogin) return new AuthState([])
 
-    let resourceCodes = await adminApi.resources.getUserResources(user.userId)
+    let resourceCodes = await adminApi.resources.getUserActionRights(user.userId)
     return new AuthState(resourceCodes)
   },
 })

@@ -14,7 +14,7 @@ const tsOptions: ts.CompilerOptions = {
 }
 const resources: Record<string, ResourceDto> = {}
 async function syncResources() {
-  const url = appConfig.apiBaseUrl + '/admin/resources/SyncResource'
+  const url = appConfig.apiBaseUrl + '/admin/resources/SyncResources'
   await axios.post(url, Object.values(resources))
 }
 // function normalizeMenu(subMenus: Menu[], ) {

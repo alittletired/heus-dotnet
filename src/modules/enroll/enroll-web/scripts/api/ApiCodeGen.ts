@@ -11,7 +11,6 @@ import path from 'path'
 import OpenapiParser from './OpenapiParser'
 import fs from 'fs'
 import prettier from 'prettier'
-import SwaggerParser from './SwaggerParser'
 const httpMethods = ['get', 'post', 'put', 'delete', 'patch']
 export default class ApiCodeGen {
   constructor(protected apiContext: ApiContext) {}
@@ -20,11 +19,7 @@ export default class ApiCodeGen {
     let { name, url } = this.apiContext.config
     console.log('start generate ', name, url)
     let parser: ApiParser
-    if (docs.swagger) {
-      parser = new SwaggerParser()
-    } else {
-      parser = new OpenapiParser()
-    }
+    parser = new OpenapiParser()
     parser.parse(this.apiContext)
     this.buildFile()
   }
@@ -52,7 +47,8 @@ export default class ApiCodeGen {
       if (title) {
         titles[name] = title
       }
-      arr.push(`${name}${property.required ? '' : '?'}: ${property.type}`)
+
+      arr.push(`${name}${property.nullable ? '?' : ''}: ${property.type}`)
     }
 
     arr.push('}\n')

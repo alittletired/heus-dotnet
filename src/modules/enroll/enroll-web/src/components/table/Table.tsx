@@ -30,18 +30,22 @@ export const useTable = () => React.useContext(TableContext)
 export default function ApiTable<T extends object>(props: TableProps<T>) {
   const [dataSource, setDataSource] = useState([] as T[])
   const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(false)
   const pageRef = useRef<PageRequest>({
     pageIndex: 1,
     pageSize: props.pagination === false ? -1 : props.pagination?.pageSize || 10,
   })
 
-  let pageContext = usePageContext()
-  let dataRef = useRef({ ...props.data })
+  const dataRef = useRef({ ...props.data })
+  const propsRef = useRef(props)
+  const loadingRef = useRef(loading)
 
   const fetchData = useRef(async (data?: Partial<T>, pageRequest?: PageRequest) => {
-    if (pageContext.loading) return
+    if (loadingRef.current) return
     if (!props.fetchApi) return
-    await pageContext.doLoading(async () => {
+    try {
+      loadingRef.current = true
+      setLoading(true)
       let page = pageRequest || pageRef.current
 
       dataRef.current = { ...dataRef.current, ...data }
@@ -70,7 +74,10 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
 
       setDataSource(dataSource)
       setTotal(total)
-    })
+    } finally {
+      loadingRef.current = false
+      setLoading(false)
+    }
   })
   const onTableChange = useCallback((page: TablePaginationConfig, filters: any, sorter: any) => {
     let pageRequest: PageRequest = { pageSize: page.pageSize, pageIndex: page.current }
@@ -156,7 +163,7 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
             size="small"
             expandable={{ defaultExpandAllRows: true }}
             {...props}
-            loading={pageContext.loading}
+            loading={loading}
             onChange={onTableChange}
             dataSource={dataSource}
             pagination={pageRef.current.pageSize! > 0 && pageConfig}
