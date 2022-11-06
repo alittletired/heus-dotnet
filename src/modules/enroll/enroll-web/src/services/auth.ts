@@ -1,15 +1,12 @@
 import { selector, useRecoilValue, useRecoilValueLoadable } from 'recoil'
 import userState from './user'
-import adminApi from '@/api/admin'
+import adminApi, { ResourceDto } from '@/api/admin'
 
 export class AuthState {
-  constructor(actionCodes: string[]) {
-    this.state = new Set<string>(actionCodes)
-  }
-  public state: Set<string>
-  hasAuthority = (actionCode?: string) => {
-    if (!actionCode) return true
-    return this.state.has(actionCode) || this.state.has(window.location.pathname + ':' + actionCode)
+  constructor(public resoures: ResourceDto[]) {}
+  hasAuthority = (path: string, actionName?: string) => {
+    if (!actionName) return true
+    return true
   }
 }
 
@@ -19,7 +16,7 @@ const authState = selector({
     const user = get(userState)
     if (!user.isLogin) return new AuthState([])
 
-    let resourceCodes = await adminApi.users.getResourceCodes(user.userId)
+    let resourceCodes = await adminApi.resources.getUserResources(user.userId)
     return new AuthState(resourceCodes)
   },
 })

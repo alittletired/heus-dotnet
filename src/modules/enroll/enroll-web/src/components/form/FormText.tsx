@@ -3,5 +3,5 @@ import withFormItem from './withFormItem'
 
 const FormText: React.FC<PropsWithChildren> = (props) => <div>{props.children}</div>
 const FormItemText = withFormItem(FormText)
-FormItemText.defaulItemProps = { className: 'form-item-text' }
+FormItemText.defaultProps = { className: 'form-item-text' }
 export default FormItemText

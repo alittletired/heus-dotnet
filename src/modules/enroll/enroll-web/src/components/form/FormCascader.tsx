@@ -10,7 +10,7 @@ const FormCascader = withFormItem((props: CascaderProps<OptionType>) => {
   var fieldNames = labelFieldNames
   return <Cascader fieldNames={fieldNames} {...props} />
 })
-FormCascader.defaultControlProps = { placeholder: '请选择' }
+FormCascader.defaultProps = { placeholder: '请选择' }
 export default FormCascader
 
 // export const FormCityCascader: React.FC<CityProps> = (props) => {

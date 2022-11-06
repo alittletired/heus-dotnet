@@ -1,7 +1,7 @@
-import React, {ComponentClass} from 'react'
+import React, { ComponentClass } from 'react'
 import withFormItem from './withFormItem'
-import {TimePicker as AntdTimePicker, DatePicker as AntdDatePicker} from 'antd'
-import moment, {Moment} from 'moment'
+import { TimePicker as AntdTimePicker, DatePicker as AntdDatePicker } from 'antd'
+import moment, { Moment } from 'moment'
 import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 const dateFormat = 'YYYY-MM-DD'
@@ -58,5 +58,5 @@ export const FormRangePicker = withFormItem(withMomentHoc(dateFormat, AntdRangeP
 export const FormMonthPicker = withFormItem(withMomentHoc(monthFormat, AntdMonthPicker))
 export const FormWeekPicker = withFormItem(withMomentHoc(dateFormat, AntdWeekPicker))
 export const FormDatePicker = withFormItem(withMomentHoc(dateFormat, AntdDatePicker))
-FormRangePicker.defaulItemProps = {placeholder: '请选择'}
-FormDatePicker.defaulItemProps = {placeholder: '请选择'}
+// FormRangePicker.defaultProps = {placeholder: '请选择'}
+FormDatePicker.defaultProps = { placeholder: '请选择' }

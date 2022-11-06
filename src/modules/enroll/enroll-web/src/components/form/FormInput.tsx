@@ -5,14 +5,14 @@ export const FormInputNumber = withFormItem(InputNumber)
 export const FormTextArea = withFormItem(Input.TextArea)
 export const FormInput = withFormItem(Input)
 
-FormInputNumber.defaultControlProps = {
+FormInputNumber.defaultProps = {
   placeholder: '请输入',
 }
 
-FormInput.defaultControlProps = {
+FormInput.defaultProps = {
   placeholder: '请输入',
 }
-FormTextArea.defaultControlProps = {
+FormTextArea.defaultProps = {
   placeholder: '请输入',
 }
 export default FormInput

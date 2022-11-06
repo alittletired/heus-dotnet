@@ -10,17 +10,16 @@ export interface ActionRight {
   /** 更新时间 */
   updateDate?: string
   resourceId?: long
-  actionMask?: long
   name?: string
-  title?: string
+  display?: string
   url?: string
   isDeleted?: boolean
 }
 
 export interface ActionRightDto {
   name: string
-  title: string
-  actionMask: long
+  display: string
+  url: string
 }
 
 export interface ICurrentUser {
@@ -69,7 +68,6 @@ export interface ResourceDto {
   path: string
   sort?: number
   actions?: ActionRightDto[]
-  children?: ResourceDto[]
 }
 
 /** 资源类型 */
@@ -172,6 +170,10 @@ const adminApi = {
     syncResources(data: ResourceDto[]): Promise<boolean> {
       const path = `/admin/resources/syncResources`
       return http.post(path, data)
+    },
+    getUserResources(userId: long): Promise<ResourceDto[]> {
+      const path = `/admin/resources/getUserResources`
+      return http.get(path, { params: { userId } })
     },
     delete: {},
     get(id: long): Promise<Resource> {

@@ -13,8 +13,12 @@ export default FormButton
 export const SubmitButton = withFormItem((props: FormButtonProps) => {
   const formContext = React.useContext(FormContext)
   return (
-    <Button type="primary" htmlType="submit" loading={formContext.loading} {...props}>
-      {props.children && props.title}
+    <Button loading={formContext.loading} {...props}>
+      {props.children ?? props.title}
     </Button>
   )
 })
+SubmitButton.defaultProps = {
+  type: 'primary',
+  htmlType: 'submit',
+}
