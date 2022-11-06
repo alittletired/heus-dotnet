@@ -7,9 +7,9 @@ public enum MapType
 }
 
 
-    public interface IMapInfo
-    {
-        Type MappingType { get; }
+public interface IMapInfo
+{
+    Type MappingType { get; }
     MapType MapType { get; }
 
 }

@@ -8,10 +8,9 @@ namespace Heus.Auth.Entities
     public class ActionRight : AuditEntity, ISoftDelete
     {
         public long ResourceId { get; set; }
-        public long ActionMask { get; set; } 
         public string Name { get; set; } = null!;
-        public string Title { get; set; } = null!;
-        public string? Url { get; set; } 
+        public string Display { get; set; } = null!;
+        public string Url { get; set; } = null!;
         public bool IsDeleted { get; set; }
     }
 }

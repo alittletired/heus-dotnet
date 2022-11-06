@@ -52,7 +52,6 @@ public class AspNetModuleInitializer : ModuleInitializerBase
                     ValidateIssuer = true,
                     ValidateAudience = false,
                     ValidIssuer = jwtOptions.Issuer,
-                    ValidAudience = jwtOptions.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SignKey))
                 };
             });
