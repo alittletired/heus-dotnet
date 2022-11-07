@@ -3,7 +3,7 @@ import '../styles/layout.css'
 import type { AppProps } from 'next/app'
 import { AppContainer } from '@/layouts'
 function MyApp(props: AppProps) {
-  return <AppContainer {...props} />
+  return <AppContainer {...(props as any)} />
 }
 
 export default MyApp

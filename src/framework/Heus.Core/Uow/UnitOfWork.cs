@@ -5,7 +5,7 @@ namespace Heus.Core.Uow;
 internal class UnitOfWork : IUnitOfWork
 {
 
-    private bool _isDisposed = false;
+    private bool _isDisposed;
     private readonly ILogger<UnitOfWork> _logger;
 
     public UnitOfWork(UnitOfWorkOptions options, ILogger<UnitOfWork> logger)
@@ -23,7 +23,7 @@ internal class UnitOfWork : IUnitOfWork
     {
         foreach (var dbTran in DbTransactions.Values)
         {
-            await dbTran.CommitAsync();
+            await dbTran.CommitAsync(cancellationToken);
         }
 
     }

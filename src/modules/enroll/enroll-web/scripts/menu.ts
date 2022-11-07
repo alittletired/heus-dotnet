@@ -15,7 +15,7 @@ const tsOptions: ts.CompilerOptions = {
 const resources: Record<string, ResourceDto> = {}
 async function syncResources() {
   const url = appConfig.apiBaseUrl + '/admin/resources/SyncResources'
-  await axios.post(url, Object.values(resources))
+  await axios.post(url, menus)
 }
 // function normalizeMenu(subMenus: Menu[], ) {
 //   for (const subMenu of subMenus) {
@@ -61,6 +61,6 @@ async function loadPages(dir: string) {
 async function main() {
   console.log('start load page rootPath:' + rootpath)
   await loadPages(rootpath)
-  // await syncResources()
+  await syncResources()
 }
 main()

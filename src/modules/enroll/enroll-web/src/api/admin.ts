@@ -24,26 +24,6 @@ export interface ActionRight {
   isDeleted: boolean
 }
 
-export interface ActionRightDto {
-  /** 唯一主键，数据库为varchar(24) */
-  id: long
-  /** 创建人 */
-  createdBy?: long
-  /** 更新人 */
-  updateBy?: long
-  /** 创建时间 */
-  createdDate?: string
-  /** 更新时间 */
-  updateDate?: string
-  resourceId: long
-  name: string
-  flag: number
-  title: string
-  url?: string
-  isDeleted: boolean
-  resourcePath: string
-}
-
 export interface ICurrentUser {
   id?: long
   userName: string
@@ -154,6 +134,11 @@ export interface User {
   isSuperAdmin: boolean
 }
 
+export interface UserActionRight {
+  resourcePath: string
+  flag: number
+}
+
 /** 用户状态 */
 export enum UserStatus {
   /** 禁用 */
@@ -194,7 +179,7 @@ const adminApi = {
       const path = `/admin/resources/syncResources`
       return http.post(path, data)
     },
-    getUserActionRights(userId: long): Promise<ActionRightDto[]> {
+    getUserActionRights(userId: long): Promise<UserActionRight[]> {
       const path = `/admin/resources/getUserActionRights`
       return http.get(path, { params: { userId } })
     },

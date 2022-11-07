@@ -4,7 +4,7 @@ import { Divider, Button, Menu, Dropdown } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { useTable } from './Table'
 import ActionAnchor from '../action/ActionAnchor'
-import { useAtuh } from '@/services/auth'
+import { usePageContext } from '../PageContext'
 interface Props<T> {
   actions?: ToolBarItem<T>[]
   data: any
@@ -12,9 +12,9 @@ interface Props<T> {
 }
 export default function ActionColumn<T>(props: Props<T>) {
   let { actions = [], data, showCount = 3 } = props
-  const { hasAuthority } = useAtuh()
+  const pageContext = usePageContext()
   const table = useTable()
-  actions = actions.filter((action) => hasAuthority(action.code))
+  actions = actions.filter((action) => pageContext.hasRight(action.actionName))
   const moreDom: JSX.Element[] = []
   const actionDom: JSX.Element[] = []
   for (let index = 0; index < actions.length; index++) {

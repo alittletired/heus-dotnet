@@ -7,7 +7,7 @@ import { isApiError } from '@/services/http'
 import { ButtonProps as AntdButtonProps } from 'antd'
 type GetTitle<T> = (data: T) => string
 export interface ActionButtonProps<T> {
-  code?: string
+  actionName?: string
   component?: ModalComponent<T>
   onClick?: (data?: T) => Promise<any>
   data?: T
@@ -25,7 +25,7 @@ export default function ActionButton<T>(
     Omit<AntdButtonProps, 'onClick' | 'icon' | 'disabled' | 'hidden' | 'title'>,
 ) {
   let {
-    code,
+    actionName,
     icon,
     type,
     title,
@@ -41,7 +41,6 @@ export default function ActionButton<T>(
   } = props
 
   const iconDom = GetIconDom(icon)
-  code = code ?? icon
   let handleClick = async () => {
     try {
       //   let res: any = await props.onClick?.(data)

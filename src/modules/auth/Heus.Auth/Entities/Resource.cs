@@ -15,15 +15,15 @@ public class Resource : AuditEntity, ITreeEntity,ISoftDelete
     public bool IsDeleted { get; set; }
 
     public ResourceType Type { get; set; } = ResourceType.Menu;
-    #region ITreeEntity
+
 
     public int Sort { get; set; }
     public string TreeCode { get; set; } = null!;
-    [Required]
+   
     public string Code { get; set; } = null!;
     public long? ParentId { get; set; }
 
-    #endregion
+
 
    
 }

@@ -6,6 +6,7 @@ using Heus.Ddd.Application;
 using Heus.Ddd.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics.CodeAnalysis;
+using Heus.Auth.Domain;
 using Heus.Ddd.Dtos;
 
 namespace Heus.Auth.Application
@@ -62,19 +63,23 @@ namespace Heus.Auth.Application
 
 
         private void ExtractResourceTree(IEnumerable<ResourceDto> dtos, List<Resource> resources,
-            List<ActionRight> actionRights)
+            List<ActionRight> actionRights,Resource? parent)
         {
             foreach (var dto in dtos)
             {
                 var resource = Mapper.Map<Resource>(dto);
                 resource.Id = long.Parse(resource.Code);
                 resources.Add(resource);
+                var parentTreeCode = parent == null ? "" : parent.TreeCode + ".";
+                resource.TreeCode = parentTreeCode + resource.Code;
+                resource.ParentId = parent?.Id;
                 if (dto.Children != null)
                 {
-                    ExtractResourceTree(dto.Children, resources, actionRights);
+                 resource.Type= ResourceType.MenuGroup;
+                    ExtractResourceTree(dto.Children, resources, actionRights, resource);
                     continue;
                 }
-
+                resource.Type= ResourceType.Menu;
                 var actions = new List<ActionDto>(dto.Actions ?? new List<ActionDto>());
                 //每个资源默认应该添加查询权限
                 actions.Insert(0, new ActionDto("view", 1, "查看", null));
@@ -83,7 +88,7 @@ namespace Heus.Auth.Application
                     var actionRight = Mapper.Map<ActionRight>(action);
                     actionRight.ResourceId = resource.Id;
                     //使用pad防止id重复
-                    actionRight.Id = long.Parse(resource.Code + action.Flag.ToString().PadLeft(10));
+                    actionRight.Id = long.Parse(resource.Code + action.Flag.ToString().PadLeft(10,'0'));
 
                     actionRights.Add(actionRight);
                 }
@@ -98,7 +103,7 @@ namespace Heus.Auth.Application
             var actionRights = await _actionRightRepository.GetListAsync(s => true);
             var insertResources = new List<Resource>();
             var insertActionRights = new List<ActionRight>();
-            ExtractResourceTree(dtos, insertResources, insertActionRights);
+            ExtractResourceTree(dtos, insertResources, insertActionRights,null);
             await Repository.DeleteManyAsync(resources);
             await _actionRightRepository.DeleteManyAsync(actionRights);
             await Repository.InsertManyAsync(insertResources);

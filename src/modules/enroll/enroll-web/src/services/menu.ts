@@ -1,7 +1,5 @@
 import menus from '@/config/menus'
-import { selector, useRecoilValue } from 'recoil'
-import authState, { AuthState } from './auth'
-import userState from './user'
+import authState, { AuthState, useAuth } from './auth'
 export interface Menu {
   name: string
   icon?: string
@@ -11,14 +9,11 @@ export interface Menu {
   code?: string
 }
 
-const userMenuState = selector({
-  key: 'userMenu',
-  get: ({ get }) => {
-    const auth = get(authState)
-    return getUserMenu(menus, auth)
-  },
-})
-export const useUserMenu = () => useRecoilValue(userMenuState)
+export const useMenu = () => {
+  const auth = useAuth()
+  const getUserMenu = () => {}
+  return { getUserMenu }
+}
 function getUserMenu(menus: Menu[], auth: AuthState, parentMenu?: Menu) {
   let userMenu: Menu[] = []
   if (!menus.length) return userMenu
@@ -29,7 +24,7 @@ function getUserMenu(menus: Menu[], auth: AuthState, parentMenu?: Menu) {
         const item = { ...menu, children }
         userMenu.push(item)
       }
-    } else if (auth.hasAuthority(menu.code)) {
+    } else if (auth.hasRight('view')) {
       userMenu.push(menu)
     }
   }
