@@ -1,44 +1,44 @@
-import { selector, useRecoilValue } from 'recoil'
 import userState from './user'
 import menus from '@/config/menus'
 import adminApi, { UserActionRight, ResourceDto, ActionDto } from '@/api/admin'
 import useRouter from './router'
 import { useCallback } from 'react'
+import { atom, useAtomValue } from 'jotai'
 
-const actionRightMap: Map<string, ActionDto[]> = new Map()
-function initActionRight(menuArr: ResourceDto[]) {
+const actionMap: Map<string, ActionDto[]> = new Map()
+function initActionMap(menuArr: ResourceDto[]) {
   for (let menu of menuArr) {
     let { children, actions = [] } = menu
     if (children) {
-      initActionRight(children)
+      initActionMap(children)
       continue
     }
-    actionRightMap.set(menu.path, actions)
+    actionMap.set(menu.path, actions)
   }
 }
-initActionRight(menus)
+initActionMap(menus)
 export function findAction(path: string, actionName?: string) {
   if (!actionName) return null
-  const actions = actionRightMap.get(path)
+  const actions = actionMap.get(path)
   if (!actions) return null
   return actions.find((s) => s.name === actionName)
 }
 
-const userAuthState = selector({
-  key: 'userAuthState',
-  get: async ({ get }) => {
-    const user = get(userState)
-    if (!user.isLogin) return new Map<string, number>()
-    let authState = await adminApi.resources.getUserActionRights(user.userId)
-    const authMap = new Map(authState.map((a) => [a.resourcePath, a.flag]))
+const authState = atom(async (get) => {
+  const user = get(userState)
+  let authMap: Map<string, number> = new Map()
+  if (!user.isLogin) {
     return authMap
-  },
+  }
+  let authState = await adminApi.resources.getUserActionRights(user.userId)
+  authState.forEach((a) => authMap.set(a.resourcePath, a.flag))
+  return authMap
 })
 
 export const useAuth = () => {
-  const state = useRecoilValue(userAuthState)
   const router = useRouter()
-  const hasPageRight = useCallback(
+  const state = useAtomValue(authState)
+  const hasRight = useCallback(
     (path: string, actionName?: string) => {
       if (!actionName) return true
       const action = findAction(path, actionName)
@@ -48,11 +48,14 @@ export const useAuth = () => {
     },
     [state],
   )
-  const hasRight = useCallback(
-    (actionName: string) => hasPageRight(router.asPath, actionName),
-    [router.asPath, hasPageRight],
+
+  const hasActionRight = useCallback(
+    (actionName?: string) => {
+      return hasRight(router.asPath, actionName)
+    },
+    [router.asPath, hasRight],
   )
 
-  return { state, hasRight }
+  return { state, hasRight, hasActionRight }
 }
-export default userAuthState
+export default authState

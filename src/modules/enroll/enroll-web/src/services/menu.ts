@@ -1,36 +1,41 @@
+import { ActionDto, ResourceDto } from '@/api/admin'
 import menus from '@/config/menus'
-import authState, { AuthState, useAuth } from './auth'
+import { useMemo } from 'react'
+import authState, { useAuth } from './auth'
 export interface Menu {
   name: string
   icon?: string
   path: string
-  type: number
   children?: Menu[]
   code?: string
 }
 
 export const useMenu = () => {
-  const auth = useAuth()
-  const getUserMenu = () => {}
-  return { getUserMenu }
-}
-function getUserMenu(menus: Menu[], auth: AuthState, parentMenu?: Menu) {
-  let userMenu: Menu[] = []
-  if (!menus.length) return userMenu
-  for (let menu of menus) {
-    if (menu.children) {
-      const children = getUserMenu(menu.children, auth, menu)
-      if (children.length) {
-        const item = { ...menu, children }
-        userMenu.push(item)
-      }
-    } else if (auth.hasRight('view')) {
-      userMenu.push(menu)
-    }
-  }
+  const { hasRight } = useAuth()
 
-  return userMenu
+  const userMenus = useMemo(() => {
+    function getUserMenus(menus: Menu[], parentMenu?: Menu) {
+      let userMenu: Menu[] = []
+      if (!menus.length) return userMenu
+      for (let menu of menus) {
+        const { children, ...item } = menu
+        if (menu.children) {
+          const children = getUserMenus(menu.children, menu)
+          if (children.length) {
+            userMenu.push(item)
+          }
+        } else if (hasRight(item.path, 'view')) {
+          userMenu.push(item)
+        }
+      }
+      return useMenu
+    }
+    const userMenus = getUserMenus(menus)
+    return userMenus
+  }, [hasRight])
+  return { menus }
 }
+
 export function findMenusByPath(path?: string) {
   function recursionFind(menus?: Menu[], path?: string): Menu[] | undefined {
     if (!path) return

@@ -15,5 +15,5 @@ export const login = async (token: LoginInput) => {
   }
 }
 export const getUser = userStorage.getState
-export const useUser = () => userStorage.useState
+export const useUser = userStorage.useState
 export default userStorage.state

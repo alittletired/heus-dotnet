@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { Layout, Menu as AntdMenu } from 'antd'
 import { useAppConfig } from '@/layouts/appConfig'
-import { findMenusByPath, Menu, useUserMenu } from '@/services/menu'
+import { findMenusByPath, Menu, useMenu } from '@/services/menu'
 import { ItemType } from 'antd/es/menu/hooks/useItems'
 import { Link } from '@/components'
 import useRouter from '@/services/router'
@@ -10,7 +10,7 @@ const { Sider } = Layout
 const SiderMenu: React.FC = (props) => {
   const router = useRouter()
   const [appContext] = useAppConfig()
-  const userMenu = useUserMenu()
+  const menu = useMenu()
   const menuItems: ItemType[] = useMemo(() => {
     function getMenus(userMenu: Menu[]) {
       let menus: ItemType[] = []
@@ -33,10 +33,10 @@ const SiderMenu: React.FC = (props) => {
       return menus
     }
 
-    let menus = getMenus(userMenu)
+    let menus = getMenus(menu.menus)
 
     return menus
-  }, [userMenu])
+  }, [menu.menus])
 
   let [selectedKeys, setSelectedKeys] = useState([] as string[])
   let [openKeys, setOpenKeys] = useState([] as string[])

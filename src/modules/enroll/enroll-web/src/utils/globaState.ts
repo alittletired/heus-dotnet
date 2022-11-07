@@ -15,6 +15,9 @@ class GlobaState<T> {
   public setState = (newValue: T) => {
     this.state = newValue
     this.key && localStorage.setItem(this.key, JSON.stringify(newValue))
+    this.setAotms.forEach((set: any) => {
+      set(this.state)
+    })
   }
 
   public onMount = (setAotm: any) => {
@@ -40,7 +43,7 @@ export function withGlobaState<T>(defaultState: T, persistkey?: string) {
       myStorage.setState(newValue)
     },
   )
-  state.onMount = (setAtom) => {
+  baseAtom.onMount = (setAtom) => {
     return myStorage.onMount(setAtom)
   }
   const useState = () => useAtom(state)

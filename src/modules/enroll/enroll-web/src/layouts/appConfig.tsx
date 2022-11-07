@@ -1,9 +1,6 @@
 import appConfig from '@/config/appConfig'
-import { atom, useRecoilState, useRecoilValue } from 'recoil'
-const appConfigState = atom({
-  key: 'appConfig',
-  default: { ...appConfig, collapsed: false },
-})
+import { atom, useAtom } from 'jotai'
+const appConfigState = atom({ ...appConfig, collapsed: false })
 
 export default appConfigState
-export const useAppConfig = () => useRecoilState(appConfigState)
+export const useAppConfig = () => useAtom(appConfigState)
