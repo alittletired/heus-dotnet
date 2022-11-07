@@ -3,7 +3,6 @@ import { ConfigProvider } from 'antd'
 // import zhCN from 'antd/es/locale/zh_CN'
 import withLayout from './withLayout'
 import DocumentTitle from './DocumentTitle'
-import { RecoilAsyncState } from '@/services'
 import { PageProps, PageContextProvider } from '@/components/PageContext'
 
 export default function AppContainer<P = any>(props: PageProps<P>) {

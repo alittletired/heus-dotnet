@@ -38,7 +38,7 @@ const authState = atom(async (get) => {
 export const useAuth = () => {
   const router = useRouter()
   const state = useAtomValue(authState)
-  const hasRight = useCallback(
+  const hasActionRight = useCallback(
     (path: string, actionName?: string) => {
       if (!actionName) return true
       const action = findAction(path, actionName)
@@ -49,11 +49,11 @@ export const useAuth = () => {
     [state],
   )
 
-  const hasActionRight = useCallback(
+  const hasRight = useCallback(
     (actionName?: string) => {
-      return hasRight(router.asPath, actionName)
+      return hasActionRight(router.asPath, actionName)
     },
-    [router.asPath, hasRight],
+    [router.asPath, hasActionRight],
   )
 
   return { state, hasRight, hasActionRight }

@@ -41,17 +41,17 @@ const UserPage: PageComponent = () => {
 
   return (
     <ApiTable
-      toolBar={[
-        {
-          title: userLabels.create,
-          buttonType: 'create',
-          component: UserEdit,
-        },
-        { buttonType: 'export', title: '导出' },
-        // { buttonType: 'import', title: '导入',  },
-      ]}
       fetchApi={adminApi.users.search}
       tableTitle="用户列表"
+      toolBar={[
+        {
+          actionName: 'create',
+          actionType: 'create',
+          component: UserEdit,
+        },
+        { actionType: 'export', title: '导出' },
+        // { buttonType: 'import', title: '导入',  },
+      ]}
       columns={[
         { valueType: 'index' },
         { dataIndex: 'account' },

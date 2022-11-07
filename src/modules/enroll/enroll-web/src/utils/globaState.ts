@@ -26,6 +26,7 @@ class GlobaState<T> {
   }
   public resetState = () => {
     this.state = this.defaultState
+    localStorage.removeItem(this.key)
     this.setAotms.forEach((set: any) => {
       set(this.state)
     })

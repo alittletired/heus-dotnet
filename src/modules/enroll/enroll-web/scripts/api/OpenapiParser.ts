@@ -67,14 +67,14 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
         continue
       }
       let responseSchema = this.getResponseSchema(responses)
+      let responseType: string
       if (!responseSchema) {
-        console.warn(`${path} 没有定义返回值，将不生成`)
-        continue
+        console.warn(`${path} 没有定义返回值`)
+        responseType = 'void'
+      } else {
+        responseType = this.getType(responseSchema!)
       }
-      let responseType: string = this.getType(responseSchema!)
-      if (!responseType) {
-        console.warn(`${path} 没有定义返回值:${responseSchema}`)
-      }
+
       let params: Record<string, ApiMethodParamSchema> = {}
       if (requestBody && 'content' in requestBody) {
         let body = requestBody.content['application/json'].schema!

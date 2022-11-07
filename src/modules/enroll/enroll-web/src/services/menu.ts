@@ -1,6 +1,6 @@
 import { ActionDto, ResourceDto } from '@/api/admin'
 import menus from '@/config/menus'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import authState, { useAuth } from './auth'
 export interface Menu {
   name: string
@@ -11,7 +11,7 @@ export interface Menu {
 }
 
 export const useMenu = () => {
-  const { hasRight } = useAuth()
+  const { hasActionRight } = useAuth()
 
   const userMenus = useMemo(() => {
     function getUserMenus(menus: Menu[], parentMenu?: Menu) {
@@ -24,7 +24,7 @@ export const useMenu = () => {
           if (children.length) {
             userMenu.push(item)
           }
-        } else if (hasRight(item.path, 'view')) {
+        } else if (hasActionRight(item.path, 'view')) {
           userMenu.push(item)
         }
       }
@@ -32,7 +32,7 @@ export const useMenu = () => {
     }
     const userMenus = getUserMenus(menus)
     return userMenus
-  }, [hasRight])
+  }, [hasActionRight])
   return { menus }
 }
 

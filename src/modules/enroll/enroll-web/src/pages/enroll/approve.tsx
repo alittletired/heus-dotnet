@@ -71,7 +71,7 @@ const EnrollPage: PageComponent = () => {
         <ApiTable
           {...tabProps}
           tableTitle="报名列表"
-          toolBar={[{ buttonType: 'export', title: '导出' }]}
+          toolBar={[{ actionType: 'export', title: '导出' }]}
         />
       </TabPane>
       <TabPane tab="待审核" key="2">

@@ -183,7 +183,10 @@ const adminApi = {
       const path = `/admin/resources/getUserActionRights`
       return http.get(path, { params: { userId } })
     },
-    delete: {},
+    delete(id: long): Promise<void> {
+      const path = `/admin/resources/delete`
+      return http.delete(path, { params: { id } })
+    },
     get(id: long): Promise<Resource> {
       const path = `/admin/resources/get`
       return http.get(path, { params: { id } })
@@ -206,7 +209,10 @@ const adminApi = {
       const path = `/admin/roles/authorizeActionRights`
       return http.post(path, data, { params: { id } })
     },
-    delete: {},
+    delete(id: long): Promise<void> {
+      const path = `/admin/roles/delete`
+      return http.delete(path, { params: { id } })
+    },
     get(id: long): Promise<Role> {
       const path = `/admin/roles/get`
       return http.get(path, { params: { id } })
@@ -229,7 +235,10 @@ const adminApi = {
       const path = `/admin/users/findByUserName`
       return http.post(path, { params: { name } })
     },
-    delete: {},
+    delete(id: long): Promise<void> {
+      const path = `/admin/users/delete`
+      return http.delete(path, { params: { id } })
+    },
     get(id: long): Promise<User> {
       const path = `/admin/users/get`
       return http.get(path, { params: { id } })

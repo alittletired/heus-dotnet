@@ -117,7 +117,7 @@ export default function EditTable<T extends object>(props: EditTableProps<T>) {
   const toolBar = useMemo(() => {
     let toolBar = props.toolBar || []
     if (props.createApi) {
-      toolBar.unshift({ title: '新增', onClick: onAdd.current, buttonType: 'create' })
+      toolBar.unshift({ title: '新增', onClick: onAdd.current, actionType: 'create' })
     }
     return toolBar
   }, [props.toolBar, props.createApi])

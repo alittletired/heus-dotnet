@@ -29,7 +29,7 @@ const ResourcePage: PageComponent = () => {
       toolBar={[
         {
           title: '新增菜单',
-          buttonType: 'create',
+          actionType: 'create',
           onClick: onEditMenu,
         },
       ]}
@@ -61,5 +61,5 @@ const ResourcePage: PageComponent = () => {
     />
   )
 }
-ResourcePage.options = { name: '菜单管理', code: '000102', isMenu: true }
+ResourcePage.options = { name: '菜单管理', code: '000102' }
 export default ResourcePage

@@ -5,6 +5,7 @@ import { DownOutlined } from '@ant-design/icons'
 import { useTable } from './Table'
 import ActionAnchor from '../action/ActionAnchor'
 import { usePageContext } from '../PageContext'
+import { useAuth } from '@/services/auth'
 interface Props<T> {
   actions?: ToolBarItem<T>[]
   data: any
@@ -12,9 +13,9 @@ interface Props<T> {
 }
 export default function ActionColumn<T>(props: Props<T>) {
   let { actions = [], data, showCount = 3 } = props
-  const pageContext = usePageContext()
   const table = useTable()
-  actions = actions.filter((action) => pageContext.hasRight(action.actionName))
+  const auth = useAuth()
+  actions = actions.filter((action) => auth.hasRight(action.actionName))
   const moreDom: JSX.Element[] = []
   const actionDom: JSX.Element[] = []
   for (let index = 0; index < actions.length; index++) {

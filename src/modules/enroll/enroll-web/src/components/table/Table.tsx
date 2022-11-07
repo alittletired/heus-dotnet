@@ -35,7 +35,7 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
     pageIndex: 1,
     pageSize: props.pagination === false ? -1 : props.pagination?.pageSize || 10,
   })
-
+  const pageContext = usePageContext()
   const dataRef = useRef({ ...props.data })
   const propsRef = useRef(props)
   const loadingRef = useRef(loading)
@@ -112,15 +112,26 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
     let columns = translateColumns(props.columns)
     columns.forEach((col) => {
       if (col.dataIndex && !col.title) {
-        col.title = props.titles?.[col.dataIndex.toString()]
+        col.title =
+          props.titles?.[col.dataIndex.toString()] ?? pageContext.labels?.[col.dataIndex.toString()]
       }
       if (!col.title) {
         console.warn('列没有设置标题:', col)
       }
-      col.actions?.map((a) => (a.title = a.title ?? props.titles?.[a.code!]))
+      if (col.actions) {
+        col.actions.forEach((action) => {
+          if (!action.title && action.actionName) {
+            action.title =
+              action.title ??
+              props.titles?.[action.actionName] ??
+              pageContext.labels?.[action.actionName] ??
+              action.actionName
+          }
+        })
+      }
     })
     return columns
-  }, [props.columns, props.titles])
+  }, [pageContext.labels, props.columns, props.titles])
 
   const search = useCallback(async (p?: Partial<T>) => {
     await fetchData.current(p, pageRef.current)

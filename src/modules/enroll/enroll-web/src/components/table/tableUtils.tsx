@@ -54,7 +54,7 @@ function fileeDefaultStyle<T>(column: ColumnProps<T>) {
     column.title = column.title ?? '操作'
   }
   column.className = column.className ?? 'column'
-  column.key = `col_${column.title ?? column.valueType}`
+  column.key = column.key ?? `col_${column.dataIndex}`
 }
 export function translateColumns<T>(columns: ColumnProps<T>[] = []): ColumnProps<T>[] {
   return columns.map((column) => {
