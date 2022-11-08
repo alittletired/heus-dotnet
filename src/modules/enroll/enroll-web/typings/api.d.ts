@@ -3,8 +3,15 @@ interface PageRequest {
   pageSize?: number
   orderBy?: string
 }
+type BaseOperator = 'eq' | 'neq' | 'gt' | 'lt' | 'gte' | 'lte' | 'like' | 'headLike' | 'tailLike'
+type CollectionOperator = 'in' | 'notIn'
+type Operator = BaseOperator | CollectionOperator
+type DynamicSearchFilter<T, P extends keyof T> =
+  | { op: CollectionOperator; value: Array<T[P]> }
+  | { op: BaseOperator; value: T[P] }
+
 type DynamicSearch<T> = {
-  [P in keyof T]?: T[P] | { ['$' + key in Operator]?: T[P] | Array<T[P]> }
+  filters: { [P in keyof T]?: DynamicSearchFilter<T, P> }
 } & PageRequest
 interface PageList<T> {
   total: number
@@ -19,19 +26,6 @@ interface ApiProps<D = any, P = any, R = any> {
   onSuccess?: (data: R) => any
   onFail?(err: any): void
 }
-
-type Operator =
-  | 'eq'
-  | 'neq'
-  | 'like'
-  | 'headLike'
-  | 'tailLike'
-  | 'in'
-  | 'notIn'
-  | 'gt'
-  | 'lt'
-  | 'gte'
-  | 'lte'
 
 declare type NameEntity<T = {}> = T & {
   id?: number

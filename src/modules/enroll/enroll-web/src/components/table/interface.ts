@@ -27,7 +27,7 @@ export interface TableProps<T> extends Omit<AntdTableProps<T>, 'columns'> {
   useTreeTable?: boolean
   titles?: { [key in string]: string }
   tableTitle: string
-  columns?: ColumnProps<T>[]
+  columns: ColumnProps<T>[]
   tableHeader?: React.ReactNode
   toolBar?: ToolBarItem[]
   fetchApi?: (data: DynamicSearch<T>) => Promise<PageList<T>>

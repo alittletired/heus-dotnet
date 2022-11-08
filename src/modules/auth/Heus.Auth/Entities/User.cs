@@ -18,7 +18,7 @@ public class User : AuditEntity
     /// 用户账号
     /// </summary>
     [Required]
-    public string UserName { get; set; } = null!;
+    public string Name { get; set; } = null!;
     /// <summary>
     /// 用户账号
     /// </summary>

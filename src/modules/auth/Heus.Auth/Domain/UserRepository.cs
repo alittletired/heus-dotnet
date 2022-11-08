@@ -5,13 +5,13 @@ namespace Heus.Auth.Domain;
 
 public interface IUserRepository : IRepository<User>
 {
-   Task<User?> FindByUserNameAsync(string account);
+   Task<User?> FindByNameAsync(string account);
 
 }
 internal class UserRepository:RepositoryBase<User>,IUserRepository
 {
-   public async Task<User?> FindByUserNameAsync(string account)
+   public async Task<User?> FindByNameAsync(string account)
    {
-      return await FindAsync(s => s.UserName== account);
+      return await FindAsync(s => s.Name== account);
    }
 }

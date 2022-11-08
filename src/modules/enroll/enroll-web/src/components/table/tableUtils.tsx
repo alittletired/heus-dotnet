@@ -7,16 +7,36 @@ import { getOptionTitle, OptionType } from '../select'
 import AudioIcon from '../AudioIcon'
 import { Image } from '@/components'
 const actionWidths = [0, 70, 140, 190, 210]
-export function toSearchData(originData: any, columns: ColumnProps[] = []) {
-  let data = { ...originData }
-  columns.forEach((col) => {
-    let key = col.dataIndex as string
-    if (col.operator && col.operator !== 'eq' && typeof data[key] !== 'undefined') {
-      data[key] = { [`$${col.operator}`]: data[key] }
+function isDynamicSearchFilter(value: any): value is DynamicSearchFilter<any, any> {
+  return typeof value === 'object' && 'op' in value
+}
+export function toSearchData<T>(
+  originData: T,
+  columns: ColumnProps[],
+  page: PageRequest,
+): DynamicSearch<T> {
+  const searchData: DynamicSearch<T> = { filters: {} }
+  const ops = new Map(
+    columns
+      .filter((col) => col.dataIndex && col.operator)
+      .map((col) => [col.dataIndex!, col.operator!]),
+  )
+  for (let key in originData) {
+    let value = originData[key]
+    if (!value) {
+      continue
     }
-  })
 
-  return data
+    let op: any = ops.get(key) ?? 'eq'
+    //允许构造参数时，自行使用高级查询
+    if (isDynamicSearchFilter(value)) {
+      searchData.filters[key] = { ...value }
+    } else {
+      searchData.filters[key] = { op, value }
+    }
+  }
+
+  return { ...searchData, ...page }
 }
 
 function fileeDefaultStyle<T>(column: ColumnProps<T>) {

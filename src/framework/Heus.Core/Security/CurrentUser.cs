@@ -20,7 +20,7 @@ internal class CurrentUser : ICurrentUser,ISingletonDependency
 
     public long? Id => Principal.FindClaimValue<long>(ClaimTypes.NameIdentifier);
 
-    public string UserName => Principal.FindClaimValue(ClaimTypes.Name)!;
+    public string Name => Principal.FindClaimValue(ClaimTypes.Name)!;
   
 }
 

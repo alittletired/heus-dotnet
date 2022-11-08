@@ -17,6 +17,8 @@ export const userLabels: ControlLabels<UserDto> = {
   create: '新增用户',
   headImg: '用户头像',
   gender: '性别',
+  authorizeRoles: '授权角色',
+  export: '导出',
 }
 
 const UserEdit: ModalComponent<UserDto> = ({ model: user }) => {
@@ -49,12 +51,12 @@ const UserPage: PageComponent = () => {
           actionType: 'create',
           component: UserEdit,
         },
-        { actionType: 'export', title: '导出' },
+        { actionType: 'export' },
         // { buttonType: 'import', title: '导入',  },
       ]}
       columns={[
         { valueType: 'index' },
-        { dataIndex: 'account' },
+        { dataIndex: 'name' },
         { dataIndex: 'phone', operator: 'like' },
         {
           dataIndex: 'status',
@@ -64,7 +66,7 @@ const UserPage: PageComponent = () => {
           width: 210,
           actions: [
             { title: '编辑', component: UserEdit },
-            { title: '授权角色', code: 'authorize', component: AuthorizeRoles },
+            { title: '授权角色', actionName: 'authorizeRoles', component: AuthorizeRoles },
             { title: '重置密码', component: ResetPassword },
             // {
             //   onClick: disabledUser,
@@ -86,6 +88,5 @@ UserPage.options = {
   name: '用户管理',
   labels: userLabels,
   code: '000101',
-  isMenu: true,
 }
 export default UserPage

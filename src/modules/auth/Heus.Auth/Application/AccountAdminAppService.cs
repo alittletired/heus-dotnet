@@ -34,10 +34,10 @@ internal class AccountAdminAppService : AdminApplicationService, IAccountAdminAp
     [AllowAnonymous]
     public async Task<LoginResult> LoginAsync(LoginInput input)
     {
-        var user = await _userRepository.FindByUserNameAsync(input.UserName);
+        var user = await _userRepository.FindByNameAsync(input.UserName);
         if (user == null)
         {
-            throw EntityNotFoundException.Create(user, nameof(User.UserName), input.UserName);
+            throw EntityNotFoundException.Create(user, nameof(User.Name), input.UserName);
         }
         var (_, err) = _userManager.CheckUserState(user);
         if (err.HasText())

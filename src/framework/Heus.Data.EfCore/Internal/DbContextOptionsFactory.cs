@@ -50,9 +50,11 @@ namespace Heus.Data.EfCore.Internal
                 dbContextOptionsProvider.CreateConnection(connectionString));
            
             var builder = new DbContextOptionsBuilder<TDbContext>();
+            builder.LogTo(Console.WriteLine, LogLevel.Information);
             _logger.LogDebug(" connectionString:{ConnectionString},DbContext:{DbContext}",connectionString,typeof(TDbContext).Name);
             _options.DbContextOptionsActions.ForEach(action => action(builder));
             dbContextOptionsProvider.Configure(builder,dbConnection);
+          
             return builder.Options;
         }
 

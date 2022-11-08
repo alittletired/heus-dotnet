@@ -38,29 +38,51 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
   const pageContext = usePageContext()
   const dataRef = useRef({ ...props.data })
   const propsRef = useRef(props)
+  propsRef.current = props
   const loadingRef = useRef(loading)
-
+  const columnsRef = useRef([] as ColumnProps[])
+  const columns = useMemo(() => {
+    let columns = translateColumns(props.columns)
+    columns.forEach((col) => {
+      if (col.dataIndex && !col.title) {
+        col.title =
+          props.titles?.[col.dataIndex.toString()] ?? pageContext.labels?.[col.dataIndex.toString()]
+      }
+      if (!col.title) {
+        console.warn('列没有设置标题:', col)
+      }
+      if (col.actions) {
+        col.actions.forEach((action) => {
+          if (!action.title && action.actionName) {
+            action.title =
+              action.title ??
+              props.titles?.[action.actionName] ??
+              pageContext.labels?.[action.actionName] ??
+              action.actionName
+          }
+        })
+      }
+    })
+    columnsRef.current = columns
+    return columns
+  }, [pageContext.labels, props.columns, props.titles])
   const fetchData = useRef(async (data?: Partial<T>, pageRequest?: PageRequest) => {
     if (loadingRef.current) return
-    if (!props.fetchApi) return
+
+    if (!propsRef.current.fetchApi) return
     try {
       loadingRef.current = true
       setLoading(true)
       let page = pageRequest || pageRef.current
-
       dataRef.current = { ...dataRef.current, ...data }
-
-      if (props.beforeFetch) {
-        let finalData = await props.beforeFetch(dataRef.current)
+      if (propsRef.current.beforeFetch) {
+        let finalData = await propsRef.current.beforeFetch(dataRef.current)
         if (finalData == false) return
         dataRef.current = finalData
       }
+      let searchData = toSearchData(dataRef.current, columnsRef.current, page)
 
-      let searchData = toSearchData(dataRef.current, props.columns)
-      let { total, items: dataSource } = await props.fetchApi!({
-        ...searchData,
-        ...page,
-      })
+      let { total, items: dataSource } = await propsRef.current.fetchApi!(searchData)
 
       dataSource.forEach(
         (item: any, index: number) =>
@@ -79,6 +101,7 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
       setLoading(false)
     }
   })
+
   const onTableChange = useCallback((page: TablePaginationConfig, filters: any, sorter: any) => {
     let pageRequest: PageRequest = { pageSize: page.pageSize, pageIndex: page.current }
     if (sorter) {
@@ -107,31 +130,6 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
       }
     }
   }, [props.data])
-
-  const columns = useMemo(() => {
-    let columns = translateColumns(props.columns)
-    columns.forEach((col) => {
-      if (col.dataIndex && !col.title) {
-        col.title =
-          props.titles?.[col.dataIndex.toString()] ?? pageContext.labels?.[col.dataIndex.toString()]
-      }
-      if (!col.title) {
-        console.warn('列没有设置标题:', col)
-      }
-      if (col.actions) {
-        col.actions.forEach((action) => {
-          if (!action.title && action.actionName) {
-            action.title =
-              action.title ??
-              props.titles?.[action.actionName] ??
-              pageContext.labels?.[action.actionName] ??
-              action.actionName
-          }
-        })
-      }
-    })
-    return columns
-  }, [pageContext.labels, props.columns, props.titles])
 
   const search = useCallback(async (p?: Partial<T>) => {
     await fetchData.current(p, pageRef.current)

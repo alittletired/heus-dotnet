@@ -21,9 +21,10 @@ export const PageContextProvider: React.FC<PageProps & PropsWithChildren> = (pro
   const [user] = useUser()
   const [appConfig] = useAppConfig()
   const auth = useAuth()
-  if (!(user.isLogin && auth.hasRight('view')) && router.asPath !== appConfig.loginUrl) {
-    console.warn('redirect for login:', router.asPath, appConfig.loginUrl)
-    router.replace(appConfig.loginUrl)
+  if (!(user.isLogin && auth.hasRight('view')) && router.route !== appConfig.loginUrl) {
+    console.warn('redirect for login:', router, appConfig.loginUrl)
+
+    router.replace(appConfig.loginUrl + '?redirect=' + encodeURIComponent(router.asPath))
     return <Spin />
   }
   return <PageContext.Provider value={{ labels }}>{props.children}</PageContext.Provider>

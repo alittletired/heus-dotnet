@@ -1,28 +1,26 @@
 using Heus.Ddd.Dtos;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Xml.Linq;
 
 namespace Heus.Ddd.Query;
 internal static class QueryFilterHelper
 {
     private static ConcurrentDictionary<string, FilterMapping> _dynamicMappingCache = new();
 
-    public static FilterMapping GetDynamicMappings(Type dtoType, IEnumerable<ParameterExpression> parameters)
+    public static FilterMapping GetDynamicMappings(Type dtoType, Type[] parameters)
     {
-        var entityTypes = parameters.Select(p => p.Type).ToArray();
-        var key = dtoType.Name + ":" + entityTypes.Select(t => t.Name).JoinAsString(":");
+      
+        var key = dtoType.Name + ":" + parameters.Select(t => t.Name).JoinAsString(":");
         return _dynamicMappingCache.GetOrAdd(key, k =>
         {
-            var mapping = new FilterMapping(dtoType, entityTypes);
+            var mapping = new FilterMapping(dtoType, parameters);
             var dtoProps = dtoType.GetTypeInfo().DeclaredProperties.Where(p => p.CanWrite);
             foreach (var dtoProp in dtoProps)
             {
-                for (var i = 0; i < entityTypes.Length; i++)
+                for (var i = 0; i < parameters.Length; i++)
                 {
-                    var entityType = entityTypes[i];
+                    var entityType = parameters[i];
                     var entityProps = entityType.GetProperties();
                     var mappingProp = entityProps.FirstOrDefault(p => dtoProp.Name == p.Name ||
                                                                       dtoProp.Name == entityType.Name + p.Name);
@@ -38,35 +36,5 @@ internal static class QueryFilterHelper
         });
     }
 
-   public static List<QueryFilterItem> GetQueryFilterItems<T>(IPageRequest<T> queryDto)
-    {
-        if(queryDto is DynamicSearch<T> dynamicQuery)
-        {
-            return GetQueryFilterItems(dynamicQuery);
-        }
-        return new List<QueryFilterItem>();
-     
-    }
-    public static List<QueryFilterItem> GetQueryFilterItems<T>(DynamicSearch<T> searchDto)
-    {
-        var filterItems = new List<QueryFilterItem>();
-        foreach (var pair in searchDto.Filters)
-        {
-            if (pair.Value == null)
-                continue;
-            var val = pair.Value;
-            var op = OperatorTypes.Equal;
-            var alias = "";
-         if(val is IDictionary<string,object> dict)
-            {
-                op = dict.GetOrDefault("op", op).ToString()!;
-                alias = dict.GetOrDefault("alias", "").ToString();
-                val = dict["value"];
-            }
-            filterItems.Add(new QueryFilterItem(pair.Key, op, val, alias));
-
-
-        }
-        return filterItems;
-    }
+   
 }

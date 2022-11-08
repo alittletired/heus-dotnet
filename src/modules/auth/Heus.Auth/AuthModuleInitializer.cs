@@ -30,12 +30,12 @@ namespace Heus.Auth
         {
             var userService = serviceProvider.GetRequiredService<IUserAdminAppService>();
             var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
-            var adminUser = await userRepository.FindByUserNameAsync("admin");
+            var adminUser = await userRepository.FindByNameAsync("admin");
             if (adminUser == null)
             {
                 adminUser = new User()
                 {
-                    UserName = "admin",
+                    Name = "admin",
                     Id = 1,
                     IsSuperAdmin = true,
                     NickName = "超级管理员",

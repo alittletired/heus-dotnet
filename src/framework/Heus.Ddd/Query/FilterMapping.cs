@@ -25,5 +25,5 @@ internal class FilterMapping
 
     public Type DtoType { get; }
     public Type[] EntityTypes { get; }
-    public Dictionary<string, MappingItem> Mappings { get; } = new();
+    public Dictionary<string, MappingItem> Mappings { get; } = new(StringComparer.OrdinalIgnoreCase);
 }

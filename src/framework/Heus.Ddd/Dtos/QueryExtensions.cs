@@ -47,7 +47,7 @@ public static class QueryExtensions
 
     private static  IQueryable<T> TranslateQuery<T>(this IQueryable queryable, IPageRequest<T> queryDto) 
     {
-        var visitor = new QueryExpressionVisitor<T>(queryDto);
+        var visitor = new QueryExpressionVisitor<T>(queryable,queryDto);
         var expr = queryable.Expression;
         var newExpr = visitor.VisitStart(expr);
         var query= queryable.Provider.CreateQuery<T>(newExpr) ;
