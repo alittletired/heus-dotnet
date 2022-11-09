@@ -14,7 +14,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@types/prettier": "^2.7.1",
-    "antd": "5.0.0-alpha.34",
+    "antd": "5.0.0-beta.0",
     "axios": "^1.1.3",
     "exceljs": "^4.3.0",
     "jotai": "^1.9.1",

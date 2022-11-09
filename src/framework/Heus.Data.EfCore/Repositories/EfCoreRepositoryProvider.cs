@@ -18,7 +18,7 @@ internal class EfCoreRepositoryProvider<TEntity> :
         _dbContext = _dbContextProvider.GetDbContext<TEntity>();
     }
 
-    public IQueryable<TEntity> Query => DbSet.AsQueryable();
+    public IQueryable<TEntity> Query => DbSet.AsQueryable().AsNoTracking();
 
     protected DbSet<TEntity> DbSet => _dbContext.Set<TEntity>();
    

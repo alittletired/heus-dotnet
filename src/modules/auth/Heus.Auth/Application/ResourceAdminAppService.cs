@@ -98,7 +98,11 @@ namespace Heus.Auth.Application
         [AllowAnonymous]
         public async Task<bool> SyncResources(List<ResourceDto> dtos)
         {
-            if (dtos.Count == 0) return false;
+            if (dtos.Count == 0)
+            {
+                return false;
+            }
+
             var resources = await Repository.GetListAsync(s => true);
             var actionRights = await _actionRightRepository.GetListAsync(s => true);
             var insertResources = new List<Resource>();

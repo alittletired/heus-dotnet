@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import menus from '../src/config/menus'
-import appConfig from '../src/config/appConfig'
+import appConfig from '../src/config/siteConfig'
 import { Resource, ResourceDto } from '@/api/admin'
 import * as ts from 'typescript'
 import axios from 'axios'

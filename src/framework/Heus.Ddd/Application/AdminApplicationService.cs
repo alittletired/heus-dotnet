@@ -6,6 +6,7 @@ using Heus.Ddd.Repositories;
 namespace Heus.Ddd.Application;
 
 public interface IAdminApplicationService<TEntity>: IAdminApplicationService<TEntity, TEntity,  TEntity, TEntity> where TEntity : class, IEntity  { }
+public interface IAdminApplicationService<TEntity, TDto> : IAdminApplicationService<TEntity, TDto, TDto, TDto> where TEntity : class, IEntity { }
 public interface IAdminApplicationService<TEntity, TDto, in TCreateDto, in TUpdateDto> : IAdminApplicationService
     , IGetOneAppService<TDto>
     , ICreateAppService<TCreateDto, TDto>
@@ -23,6 +24,7 @@ public abstract class AdminApplicationService: ApplicationService, IAdminApplica
 {
 }
 public abstract class AdminApplicationService<TEntity>: AdminApplicationService<TEntity, TEntity, TEntity, TEntity> where TEntity : class, IEntity { }
+public abstract class AdminApplicationService<TEntity, TDto> : AdminApplicationService<TEntity, TDto, TDto, TDto> where TEntity : class, IEntity { }
 public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> : ApplicationService,
     IAdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> where TEntity : class, IEntity
 {

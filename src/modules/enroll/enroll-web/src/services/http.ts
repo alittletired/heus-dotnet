@@ -2,10 +2,11 @@ import { getUser, logout } from './user'
 import { message } from 'antd'
 import { AxiosError, AxiosResponse } from 'axios'
 import axios from 'axios'
+import siteConfig from '@/config/siteConfig'
 
 export const axiosInstance = axios.create({
   timeout: 10000,
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: siteConfig.apiBaseUrl,
 })
 const httpClient: HttpClient = {
   get: async function <D, R>(url: string, config?: RequestConfig<D>): Promise<R> {
@@ -59,11 +60,14 @@ axiosInstance.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status == 401) {
       logout()
-    }
-    // message.error('系统出错，请联系管理员')
-    console.warn('http error', error, error.message)
+      const redirect = encodeURIComponent(location.href.substring(location.origin.length))
+      location.href = location.origin + siteConfig.loginUrl + '?redirect=' + redirect
+    } else {
+      // message.error('系统出错，请联系管理员')
+      console.warn('http error', error, error.message)
 
-    return Promise.reject(error)
+      return Promise.reject(error)
+    }
   },
 )
 
