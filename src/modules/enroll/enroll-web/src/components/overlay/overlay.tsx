@@ -1,30 +1,29 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, SetStateAction } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Modal, Drawer, Button } from 'antd'
-import { ModalProps as AntdModalProps } from 'antd'
 export type OverlayType = 'modal' | 'drawer'
 type OnDismiss = (data?: any) => void
-export const OverlayContext = React.createContext({
-  onDismiss(data?: any) {},
-  setLoading(loading: boolean) {},
-})
-export interface ModalProps extends AntdModalProps {
-  viewType?: ViewType
+interface OverlayContext {
+  onDismiss: OnDismiss
+  setLoading: (loading: boolean) => any
+  setModalProps: Dispatch<SetStateAction<ModalProps>>
 }
+export const OverlayContext = React.createContext({} as OverlayContext)
+
 export interface ModalFormProps<M, P> {
   Component: ModalComponent<M, P>
-  componentProps?: ModalComponentProps<M, P>
+  componentProps: ModalComponentProps<M, P>
   onDismiss: OnDismiss
   onCancel: OnDismiss
   overlayType: OverlayType
 }
 
 function ModalForm<M, P>({ onCancel, onDismiss, ...props }: ModalFormProps<M, P>) {
-  let { Component, componentProps, overlayType, ...rest } = props
+  let { Component, componentProps, overlayType } = props
   const [loading, setLoading] = useState(false)
-  const [visible, setVisible] = useState(true)
+  const [open, setOpen] = useState(true)
   const onHide = () => {
-    setVisible(false)
+    setOpen(false)
     setTimeout(onCancel, 300)
   }
   const warpClass = useRef('modal-' + new Date().getTime())
@@ -48,23 +47,17 @@ function ModalForm<M, P>({ onCancel, onDismiss, ...props }: ModalFormProps<M, P>
     return false
   }
 
-  const [modalProps, setModalProps] = useState<ModalProps>(() => {
-    if (Component.defaultModalProps) {
-      return Component.defaultModalProps(componentProps!)
-    }
-    return {}
-  })
+  const [modalProps, setModalProps] = useState<ModalProps>(
+    Component.modalProps?.(componentProps) ?? {},
+  )
 
   // const setModalProps = useCallback((mprops: FormModalProps) => {
   //   setTimeout(() => setProps(mprops), 16)
   // }, [])
   const footer = modalProps.viewType === 'view' ? false : undefined
   const children = (
-    <OverlayContext.Provider value={{ setLoading, onDismiss }}>
-      <Component
-        {...componentProps}
-        setModalProps={(nextProps) => setModalProps((prev) => ({ ...prev, ...nextProps }))}
-      />
+    <OverlayContext.Provider value={{ setLoading, onDismiss, setModalProps }}>
+      <Component {...componentProps} />
     </OverlayContext.Provider>
   )
   if (overlayType === 'modal')
@@ -72,7 +65,7 @@ function ModalForm<M, P>({ onCancel, onDismiss, ...props }: ModalFormProps<M, P>
       <Modal
         maskClosable={false}
         wrapClassName={warpClass.current}
-        visible={visible}
+        open={open}
         confirmLoading={loading}
         className="modal"
         onOk={onOk}
@@ -86,7 +79,7 @@ function ModalForm<M, P>({ onCancel, onDismiss, ...props }: ModalFormProps<M, P>
     <Drawer
       destroyOnClose
       onClose={onHide}
-      visible={visible}
+      open={open}
       width={modalProps.width ?? 800}
       className={warpClass.current}
       footer={
@@ -109,15 +102,13 @@ function ModalForm<M, P>({ onCancel, onDismiss, ...props }: ModalFormProps<M, P>
 }
 export function showDrawer<M, P = any>(
   Component: ModalComponent<M, P>,
-  model: M,
-  props?: P,
+  props: ModalComponentProps<M, P>,
 ): Promise<any> {
-  return showForm(Component, model, props, 'drawer')
+  return showForm(Component, props, 'drawer')
 }
 export function showForm<M, P = any>(
   Component: ModalComponent<M, P>,
-  model: M,
-  props?: P,
+  props: ModalComponentProps<M, P>,
   overlayType: OverlayType = 'modal',
 ): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -147,7 +138,7 @@ export function showForm<M, P = any>(
         Component={Component}
         onDismiss={onDismiss}
         onCancel={onCancel}
-        componentProps={{ model, ...props }}
+        componentProps={props}
         overlayType={overlayType}
       />,
     )

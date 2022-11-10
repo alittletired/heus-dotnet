@@ -5,11 +5,12 @@ import { Button, message } from 'antd'
 import overlay from '../overlay'
 import { isApiError } from '@/services/http'
 import { ButtonProps as AntdButtonProps } from 'antd'
+import { usePageContext } from '../PageContext'
 type GetTitle<T> = (data: T) => string
 export interface ActionButtonProps<T> {
   actionName?: string
   component?: ModalComponent<T>
-  onClick?: (data: T) => Promise<any>
+  onClick?: (data?: T) => Promise<any>
   data?: T
   title?: string | GetTitle<T>
   icon?: IconKey
@@ -36,19 +37,20 @@ export default function ActionButton<T>(
     children,
     onSuccess,
     onError,
-
     ...rest
   } = props
 
   const iconDom = GetIconDom(icon)
+  const pageContext = usePageContext()
   let handleClick = async () => {
     try {
       //   let res: any = await props.onClick?.(data)
       let res
       if (component) {
         let showFn = overlay.showForm
+
         let componentProps = { model: data }
-        if (component.modalOptions?.(componentProps).overlayType === 'drawer') {
+        if (component.modalProps?.(componentProps).overlayType === 'drawer') {
           showFn = overlay.showDrawer
         }
         res = await showFn(component, componentProps)
@@ -83,8 +85,10 @@ export default function ActionButton<T>(
   if (!children) {
     if (typeof title === 'function') {
       children = title(data!)
-    } else {
+    } else if (title) {
       children = title
+    } else if (actionName) {
+      children = pageContext.labels?.[actionName]
     }
   }
   return (

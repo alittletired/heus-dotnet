@@ -32,7 +32,7 @@ const UserEditModal: ModalComponent<User> = ({ model: user }) => {
     </Form>
   )
 }
-UserEditModal.modalOptions = ({ model: user }) => {
+UserEditModal.modalProps = ({ model: user }) => {
   return { title: user?.id ? userLabels.update : userLabels.create }
 }
 const UserPage: PageComponent = () => {
@@ -52,7 +52,7 @@ const UserPage: PageComponent = () => {
           actionType: 'create',
           component: UserEditModal,
         },
-        { actionType: 'export' },
+        { actionType: 'export', actionName: 'create' },
         // { buttonType: 'import', title: '导入',  },
       ]}
       columns={[

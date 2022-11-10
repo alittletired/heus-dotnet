@@ -24,13 +24,14 @@ declare interface PageComponent<P = {}> extends React.FC<P> {
   options?: PageOptions
 }
 
-declare interface ModalOptions {
+declare interface ModalProps {
   title?: string
   width?: string | number
   viewType?: ViewType
   overlayType?: OverlayType
 }
-declare type ModalComponentProps<P> = { model?: P }
-declare interface ModalComponent<P> extends React.FC<ModalComponentProps<P>> {
-  modalOptions?: (props: ModalComponentProps<P>) => ModalProps
+declare type ModalComponentProps<M, P = any> = { model?: M } & P
+declare interface ModalComponent<M, P = any> extends React.FC<ModalComponentProps<M, P>> {
+  modalProps?: (props: ModalComponentProps<M, P>) => ModalProps
 }
+type Dispatch<A> = (value: A) => void
