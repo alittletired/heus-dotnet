@@ -1,48 +1,52 @@
-﻿
-using System.Diagnostics.CodeAnalysis;
-
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using Heus.Ddd.Dtos;
-
-
 namespace Heus.Ddd.Query;
-
-internal class QueryExpressionVisitor<T> : ExpressionVisitor 
+internal class QueryExpressionVisitor<T> : ExpressionVisitor
 {
- 
 
+    private readonly FilterMapping _filterMapping;
     private readonly IQueryable _queryable;
+    // ReSharper disable once StaticMemberInGenericType
     private static readonly MethodInfo WhereMethod = typeof(Queryable).GetRuntimeMethods()
         .First(s => s.Name == nameof(Queryable.Where) && s.GetParameters().Length == 2);
 
+    private IPageRequest<T>? _pageRequest;
+    private Expression? _selectExpression;
     public QueryExpressionVisitor(IQueryable queryable)
     {
- 
         _queryable= queryable;
-        var genericArguments = queryable.ElementType.GetGenericArguments();
+        var genericArguments = _queryable.ElementType.GetGenericArguments();
         _filterMapping = QueryFilterHelper.GetDynamicMappings(typeof(T), genericArguments);
     }
 
-    [return: NotNullIfNotNull("node")]
-    public Expression? VisitStart(Expression? node)
+    protected override Expression VisitMethodCall(MethodCallExpression methodCall)
     {
-        if (node == null)
-            return null;
-        if (node is MethodCallExpression methodCall)
+        if (methodCall.Method.Name == "SelectMany" && _selectExpression==null)
         {
             var obj = Visit(methodCall.Object);
             var paras = methodCall.Arguments.ToArray();
-            paras[^1] = TranslateSelect((UnaryExpression)paras[^1]!);
+            paras[^1] = TranslateSelect((UnaryExpression)paras[^1]);
             paras = paras.Select(Visit).ToArray()!;
             var genericTypes = methodCall.Method.GetGenericArguments().ToArray();
             genericTypes[^1] = typeof(T);
             var selectMany = methodCall.Method.GetGenericMethodDefinition().MakeGenericMethod(genericTypes);
-
-            return Expression.Call(obj, selectMany, paras!);
+            _selectExpression = Expression.Call(obj, selectMany, paras);
+            return _selectExpression;
         }
 
-        return Visit( node);
+        return base.VisitMethodCall(methodCall);
+    }
+
+    public IQueryable<T> Translate(IPageRequest<T>? pageRequest)
+    {
+        _pageRequest = pageRequest;
+        _selectExpression = null;
+        //如果类型相同，并且没有过滤条件，则直接返回
+        if (_pageRequest==null && typeof(T) == _queryable.ElementType)
+            return (IQueryable<T>)_queryable;
+        var expr = Visit(_queryable.Expression);
+        return _queryable.Provider.CreateQuery<T>(expr);
 
     }
 
@@ -51,24 +55,24 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
         if (node.Type.IsGenericType && node.Type.GetGenericTypeDefinition() == typeof(IQueryable<>))
         {
             var type = node.Type.GenericTypeArguments[0];
-            var whereExpr = GetWhereExpression(type);
-            if (whereExpr == null)
+            var filterExpression = GetFilterExpression(type);
+            if (filterExpression == null)
             {
                 return base.VisitExtension(node);
             }
 
             var whereMethod = WhereMethod.MakeGenericMethod(type);
-            return Expression.Call(null, whereMethod, node, whereExpr);
+            return Expression.Call(null, whereMethod, node, filterExpression);
         }
 
         return base.VisitExtension(node);
     }
 
-    public Expression TranslateSelect(UnaryExpression expression)
+    private Expression TranslateSelect(UnaryExpression expression)
     {
         var lambda = (LambdaExpression)expression.Operand;
        
-        var parameters = lambda.Parameters.Select(p => (ParameterExpression)Visit(p)).ToList()!;
+        var parameters = lambda.Parameters.Select(p => (ParameterExpression)Visit(p)).ToList();
         var express = GetSelectExpression(_filterMapping, parameters);
         var newLambda = Expression.Lambda(express, parameters);
         return Expression.Quote(newLambda);
@@ -82,7 +86,7 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
         {
             var dtoProp = mappingItem.DtoProperty;
             var entityProp = mappingItem.EntityProperty;
-            Expression parameter = parameterList[mappingItem.ParamIndex]!;
+            Expression parameter = parameterList[mappingItem.ParamIndex];
             //left join 会导致参数表达式包裹一层，故需要再次取出
             if(parameter.Type!= mappingItem.EntityType)
             {
@@ -106,7 +110,8 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
         return Expression.MemberInit(Expression.New(mapping.DtoType), memberBindings);
     }
 
-    private Expression GetFilterExpresion(ParameterExpression paramExpr, MemberExpression memberExpr,string propName, DynamicSearchFilter filter)
+    private Expression GetFilterItemExpression(MemberExpression memberExpr
+        ,string propName, DynamicSearchFilter filter)
     {
         Expression filterExpr=null! ;
         var propertyInfo =(PropertyInfo)memberExpr.Member ;
@@ -137,17 +142,17 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
 
             case OperatorTypes.HeadLike:
                 constExpr = Expression.Constant(ChangeType(value, propertyInfo.PropertyType));
-                var startsWith = typeof(string).GetMethod(nameof(string.StartsWith), new Type[] { typeof(string) })!;
+                var startsWith = typeof(string).GetMethod(nameof(string.StartsWith), new [] { typeof(string) })!;
                 filterExpr = Expression.Call(memberExpr, startsWith, constExpr);
                 break;
             case OperatorTypes.TailLike:
                 constExpr = Expression.Constant(ChangeType(value, propertyInfo.PropertyType));
-                var endsWith = typeof(string).GetMethod(nameof(string.EndsWith), new Type[] { typeof(string) })!;
+                var endsWith = typeof(string).GetMethod(nameof(string.EndsWith), new [] { typeof(string) })!;
                 filterExpr = Expression.Call(memberExpr, endsWith, constExpr);
                 break;
             case OperatorTypes.Like:
                 constExpr = Expression.Constant(ChangeType(value, propertyInfo.PropertyType));
-                var contains = typeof(string).GetMethod(nameof(string.Contains), new Type[] { typeof(string) })!;
+                var contains = typeof(string).GetMethod(nameof(string.Contains), new [] { typeof(string) })!;
                 filterExpr = Expression.Call(memberExpr, contains, constExpr);
                 break;
             case OperatorTypes.In:
@@ -180,9 +185,9 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
         return val;
     }
 
-    public Expression? GetWhereExpression(Type entityType)
+    private Expression? GetFilterExpression(Type entityType)
     {
-        var dynamicQuery = _queryDto as DynamicSearch<T>;
+        var dynamicQuery = _pageRequest as DynamicSearch<T>;
         if (dynamicQuery == null)
             return null;
       
@@ -201,7 +206,7 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
             }
 
             var memberExpr = Expression.Property(paramExpr, mappingItem.EntityProperty);
-            var filterExpr= GetFilterExpresion(paramExpr, memberExpr, propName, filter);
+            var filterExpr= GetFilterItemExpression(memberExpr, propName, filter);
             filters.Add(filterExpr);
 
         }

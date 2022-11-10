@@ -3,7 +3,7 @@ import adminApi, { RoleDto } from '@/api/admin'
 import { ApiTable, Form, FormItem, overlay } from '@/components'
 import AuthorizeActionForm from './components/AuthorizeActionForm'
 
-const roleLables: ControlLabels<RoleDto> = {
+const roleLables: Labels<RoleDto> = {
   name: '角色名',
   remarks: '角色描述',
   create: '新增角色',

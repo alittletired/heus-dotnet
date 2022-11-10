@@ -26,7 +26,7 @@ export interface ActionRight {
 
 export interface ICurrentUser {
   id?: long
-  userName: string
+  name: string
 }
 
 export interface LoginInput {
@@ -126,7 +126,7 @@ export interface User {
   /** 更新时间 */
   updateDate?: string
   /** 用户账号 */
-  userName: string
+  name: string
   /** 用户手机 */
   phone: string
   nickName: string
@@ -231,8 +231,8 @@ const adminApi = {
     },
   },
   users: {
-    findByUserName(name: string): Promise<ICurrentUser> {
-      const path = `/admin/users/findByUserName`
+    findByName(name: string): Promise<ICurrentUser> {
+      const path = `/admin/users/findByName`
       return http.post(path, { params: { name } })
     },
     delete(id: long): Promise<void> {

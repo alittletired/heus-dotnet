@@ -68,21 +68,21 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
   }, [pageContext.labels, props.columns, props.titles])
   const fetchData = useRef(async (data?: Partial<T>, pageRequest?: PageRequest) => {
     if (loadingRef.current) return
-
-    if (!propsRef.current.fetchApi) return
+    let { request, beforeRequest } = propsRef.current
+    if (!request) return
     try {
       loadingRef.current = true
       setLoading(true)
       let page = pageRequest || pageRef.current
       dataRef.current = { ...dataRef.current, ...data }
-      if (propsRef.current.beforeFetch) {
-        let finalData = await propsRef.current.beforeFetch(dataRef.current)
+      if (beforeRequest) {
+        let finalData = await beforeRequest(dataRef.current)
         if (finalData == false) return
         dataRef.current = finalData
       }
       let searchData = toSearchData(dataRef.current, columnsRef.current, page)
 
-      let { total, items: dataSource } = await propsRef.current.fetchApi!(searchData)
+      let { total, items: dataSource } = await request(searchData)
 
       dataSource.forEach(
         (item: any, index: number) =>

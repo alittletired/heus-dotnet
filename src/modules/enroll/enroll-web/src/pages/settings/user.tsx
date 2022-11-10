@@ -1,37 +1,38 @@
 import React from 'react'
-import adminApi, { UserDto, UserStatus, userStatusOptions } from '@/api/admin'
+import adminApi, { User, UserStatus, userStatusOptions } from '@/api/admin'
 import { ApiTable, FormItem, Form, overlay } from '@/components'
 
 import AuthorizeRoles from './components/AuthorizeRoles'
 import ResetPassword from './components/ResetPassword'
 
-export const userLabels: ControlLabels<UserDto> = {
-  account: '用户账号',
+export const userLabels: Labels<User> = {
+  name: '用户账号',
   password: '用户密码',
-  name: '用户姓名',
+  nickName: '用户昵称',
   phone: '手机号码',
   email: '邮箱',
   status: '用户状态',
-  update: '编辑',
+
   disable: '禁用',
   create: '新增用户',
+  update: '编辑用户',
   headImg: '用户头像',
   gender: '性别',
   authorizeRoles: '授权角色',
   export: '导出',
 }
 
-const UserEdit: ModalComponent<UserDto> = ({ model: user }) => {
+const UserEditModal: ModalComponent<User> = ({ model: user }) => {
   return (
     <Form initialValues={user} api={user?.id ? adminApi.users.update : adminApi.users.create}>
       {user?.id ? false : <FormItem.Text>用户初始密码为：123456</FormItem.Text>}
-      <FormItem.Input name="account" readOnly={!!user?.id} required />
-      <FormItem.Input name="name" required />
+      <FormItem.Input name="name" readOnly={!!user?.id} required />
+      <FormItem.Input name="nickName" required />
       <FormItem.Input name="phone" required type="mobile" />
     </Form>
   )
 }
-UserEdit.modalOptions = ({ model: user }) => {
+UserEditModal.modalOptions = ({ model: user }) => {
   return { title: user?.id ? userLabels.update : userLabels.create }
 }
 const UserPage: PageComponent = () => {
@@ -43,20 +44,21 @@ const UserPage: PageComponent = () => {
 
   return (
     <ApiTable
-      fetchApi={adminApi.users.search}
+      request={adminApi.users.search}
       tableTitle="用户列表"
       toolBar={[
         {
           actionName: 'create',
           actionType: 'create',
-          component: UserEdit,
+          component: UserEditModal,
         },
         { actionType: 'export' },
         // { buttonType: 'import', title: '导入',  },
       ]}
       columns={[
         { valueType: 'index' },
-        { dataIndex: 'name' },
+        { dataIndex: 'name', operator: 'like' },
+        { dataIndex: 'nickName' },
         { dataIndex: 'phone', operator: 'like' },
         {
           dataIndex: 'status',
@@ -65,7 +67,7 @@ const UserPage: PageComponent = () => {
         {
           width: 210,
           actions: [
-            { title: '编辑', component: UserEdit },
+            { title: '编辑', component: UserEditModal },
             { title: '授权角色', actionName: 'authorizeRoles', component: AuthorizeRoles },
             { title: '重置密码', component: ResetPassword },
             // {

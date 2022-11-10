@@ -56,7 +56,7 @@ interface HttpClient {
 type long = string
 declare var http: HttpClient
 
-type ControlLabels<T> = { [key: keyof T]: string } & Record<string, string>
+type Labels<T> = { [key: keyof T]: string } & Record<string, string>
 
 interface ApiResult<T> {
   code: number

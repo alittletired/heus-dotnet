@@ -1,7 +1,11 @@
+using System.Linq.Expressions;
 using Heus.Ddd.Application.Services;
+using Heus.Ddd.Domain;
 using Heus.Ddd.Dtos;
 using Heus.Ddd.Entities;
+using Heus.Ddd.Query;
 using Heus.Ddd.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Ddd.Application;
 
@@ -25,6 +29,7 @@ public abstract class AdminApplicationService: ApplicationService, IAdminApplica
 }
 public abstract class AdminApplicationService<TEntity>: AdminApplicationService<TEntity, TEntity, TEntity, TEntity> where TEntity : class, IEntity { }
 public abstract class AdminApplicationService<TEntity, TDto> : AdminApplicationService<TEntity, TDto, TDto, TDto> where TEntity : class, IEntity { }
+
 public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> : ApplicationService,
     IAdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> where TEntity : class, IEntity
 {
@@ -35,15 +40,34 @@ public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdate
         await Repository.DeleteByIdAsync(id);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IQueryable<TDto> GetQuery(Expression<Func<TEntity, bool>>? filter = null)
+    {
+        var query = Repository.Query;
+        if (filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        return query.CastQueryable<TDto>();
+    }
+
     public virtual async Task<TDto> GetAsync(long id)
     {
-        var entity = await Repository.GetByIdAsync(id);
-        return Mapper.Map<TDto>(entity);
+        var dto = await GetQuery(s => s.Id == id).FirstOrDefaultAsync();
+        if (dto == null)
+        {
+            throw new EntityNotFoundException(typeof(TEntity), id);
+        }
+        return dto;
     }
 
     public virtual async Task<PageList<TDto>> SearchAsync(DynamicSearch<TDto> input)
     {
-        var query = Repository.Query;
+        var query = GetQuery();
         return await query.ToPageListAsync(input);
     }
 
@@ -52,23 +76,41 @@ public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdate
         ArgumentNullException.ThrowIfNull(updateDto);
         var entity = Mapper.Map<TEntity>(updateDto);
         await Repository.UpdateAsync(entity);
-        return MapToDto(entity);
+        return await MapToDto(entity);
 
     }
 
-    protected virtual TDto MapToDto(TEntity entity)
+    protected virtual async Task<TDto> MapToDto(TEntity entity)
     {
         if (entity is TDto dto)
         {
             return dto;
         }
-        return  Mapper.Map<TDto>(entity); 
+        //todo: 需要解析query，减少数据库查询
+        
+        var query = GetQuery(s => s.Id == entity.Id);
+        if (IsOnlyOneEntity(query))
+        {
+            return Mapper.Map<TDto>(entity);      
+        }
+        return await query.FirstAsync();
+       
     }
+
+    private bool IsOnlyOneEntity(IQueryable queryable)
+    {
+        // var methodCall = (MethodCallExpression)queryable.Expression;
+        // .Expression
+        return true;
+    }
+
     public virtual async Task<TDto> CreateAsync(TCreateDto createDto)
     {
         ArgumentNullException.ThrowIfNull(createDto);
         var entity = Mapper.Map<TEntity>(createDto);
         await Repository.InsertAsync(entity);
-        return MapToDto(entity);
+
+        return await MapToDto(entity);
+
     }
 }

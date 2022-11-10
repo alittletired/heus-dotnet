@@ -14,11 +14,7 @@ export type ValueType =
   | 'number'
   | 'hidden'
   | 'audio'
-export type TableApi<T, P> = (param?: P) => Promise<PageList<T>>
 export type TableApiSearch<P> = (param?: Partial<P>) => void
-
-export type OnApiBefore<P> = (param: P) => Promise<boolean> | boolean
-export type OnApiSuccess<T> = (data: PageList<T>) => any
 
 export type ToolBarItem<T = any> = ActionComponentProps<T> & {
   autoReload?: boolean
@@ -30,8 +26,8 @@ export interface TableProps<T> extends Omit<AntdTableProps<T>, 'columns'> {
   columns: ColumnProps<T>[]
   tableHeader?: React.ReactNode
   toolBar?: ToolBarItem[]
-  fetchApi?: (data: DynamicSearch<T>) => Promise<PageList<T>>
-  beforeFetch?: (data: Partial<T>) => false | T | Promise<false | T>
+  request?: (data: DynamicSearch<T>) => Promise<PageList<T>>
+  beforeRequest?: (data: Partial<T>) => false | T | Promise<false | T>
   data?: Partial<T>
   hiddenIndexColumn?: boolean
 }
