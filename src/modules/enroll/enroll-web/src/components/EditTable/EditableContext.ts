@@ -1,5 +1,5 @@
 import React from 'react'
-import { ColumnProps } from '../table/interface'
+import { ColumnProps } from '../table/types'
 import { EditType } from './editData'
 import { FormItemProps } from '../form/withFormItem'
 export interface EditableContext<T> {

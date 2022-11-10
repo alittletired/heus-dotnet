@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react'
 import { Form, Col, Row, Button, Space } from 'antd'
-import { DownOutlined, UpOutlined } from '../icons'
-import { ColumnProps } from './interface'
-import { FormItem } from '../form'
-import { useTable } from './Table'
+import { DownOutlined, UpOutlined } from '../../icons'
+import { ColumnProps } from '../types'
+import { FormItem } from '../../form'
+import { useTable } from '../Table'
 /**
  * 默认的查询表单配置
  */

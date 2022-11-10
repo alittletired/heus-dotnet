@@ -1,4 +1,3 @@
-using Heus.Auth.Entities;
 using Heus.Core.ObjectMapping;
 namespace Heus.Auth.Dtos;
 

@@ -1,9 +1,3 @@
-using Heus.Auth.Dtos;
-using Heus.Auth.Entities;
-using Heus.Ddd.Application;
-using Heus.Ddd.Dtos;
-using Heus.Ddd.Entities;
-using Heus.Ddd.Repositories;
 
 namespace Heus.Auth.Application;
 public interface IRoleAdminAppService:IAdminApplicationService<Role>

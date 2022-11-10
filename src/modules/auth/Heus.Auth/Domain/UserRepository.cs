@@ -1,5 +1,3 @@
-using Heus.Auth.Entities;
-using Heus.Ddd.Repositories;
 
 namespace Heus.Auth.Domain;
 

@@ -1,4 +1,3 @@
-using Heus.Auth.Entities;
 using Heus.Core.DependencyInjection;
 
 namespace Heus.Auth.Domain;

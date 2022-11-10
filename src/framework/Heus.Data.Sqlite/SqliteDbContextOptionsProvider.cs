@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Data.Sqlite;
 
-// Sqliteʹ���ڴ�ʱ��ֻ���ǵ���
 internal class SqliteDbConnectionProvider : IDbConnectionProvider,ISingletonDependency
 {
     private readonly ConcurrentDictionary<string, DbConnection> _connections = new();

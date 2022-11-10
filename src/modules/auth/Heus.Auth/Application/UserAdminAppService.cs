@@ -1,10 +1,5 @@
-using Heus.Auth.Domain;
-using Heus.Auth.Dtos;
-using Heus.Ddd.Application;
-using Heus.Auth.Entities;
+
 using Heus.Core.Security;
-using Heus.Ddd.Dtos;
-using Heus.Ddd.Repositories;
 
 namespace Heus.Auth.Application;
 public interface IUserAdminAppService:IAdminApplicationService<User, UserDto, User,User>

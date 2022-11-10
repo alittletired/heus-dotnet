@@ -4,21 +4,21 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using Heus.Ddd.Dtos;
-using static Heus.Ddd.Query.FilterMapping;
+
 
 namespace Heus.Ddd.Query;
 
 internal class QueryExpressionVisitor<T> : ExpressionVisitor 
 {
-    private readonly IPageRequest<T> _queryDto;
-    private readonly FilterMapping _filterMapping;
+ 
+
     private readonly IQueryable _queryable;
     private static readonly MethodInfo WhereMethod = typeof(Queryable).GetRuntimeMethods()
         .First(s => s.Name == nameof(Queryable.Where) && s.GetParameters().Length == 2);
 
-    public QueryExpressionVisitor(IQueryable queryable, IPageRequest<T> data)
+    public QueryExpressionVisitor(IQueryable queryable)
     {
-        _queryDto = data;
+ 
         _queryable= queryable;
         var genericArguments = queryable.ElementType.GetGenericArguments();
         _filterMapping = QueryFilterHelper.GetDynamicMappings(typeof(T), genericArguments);

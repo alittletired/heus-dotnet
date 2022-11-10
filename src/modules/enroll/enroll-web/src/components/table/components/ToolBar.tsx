@@ -1,7 +1,7 @@
 import React from 'react'
-import { ToolBarItem } from './interface'
-import { ActionComponent } from '../action'
-import { useTable } from './Table'
+import { ToolBarItem } from '../types'
+import { ActionComponent } from '../../action'
+import { useTable } from '../Table'
 import { Space } from 'antd'
 interface Props {
   items?: ToolBarItem[]

@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react'
-import { ToolBarItem } from './interface'
+import { ToolBarItem } from '../types'
 import { Divider, Button, Menu, Dropdown } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-import { useTable } from './Table'
-import ActionAnchor from '../action/ActionAnchor'
-import { usePageContext } from '../PageContext'
+import { useTable } from '../Table'
+import ActionAnchor from '../../action/ActionAnchor'
+import { usePageContext } from '../../PageContext'
 import { useAuth } from '@/services/auth'
 interface Props<T> {
   actions?: ToolBarItem<T>[]

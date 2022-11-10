@@ -1,9 +1,5 @@
-using Heus.Auth.Domain;
-using Heus.Auth.Dtos;
-using Heus.Auth.Entities;
+
 using Heus.Core.Security;
-using Heus.Ddd.Application;
-using Heus.Ddd.Domain;
 using Microsoft.AspNetCore.Authorization;
 namespace Heus.Auth.Application;
 public interface IAccountAdminAppService:IAdminApplicationService
