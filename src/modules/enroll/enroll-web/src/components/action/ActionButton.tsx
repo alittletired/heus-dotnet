@@ -30,7 +30,7 @@ export default function ActionButton<T>(
     icon,
     type,
     title,
-    data,
+    data = {} as T,
     component,
     hidden,
     disabled,
@@ -41,6 +41,7 @@ export default function ActionButton<T>(
   } = props
 
   const iconDom = GetIconDom(icon)
+
   const pageContext = usePageContext()
   let handleClick = async () => {
     try {

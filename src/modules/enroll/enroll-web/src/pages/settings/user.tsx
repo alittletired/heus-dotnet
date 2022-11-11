@@ -1,9 +1,10 @@
-import React from 'react'
-import adminApi, { User, UserStatus, userStatusOptions } from '@/api/admin'
+import React, { useMemo } from 'react'
+import adminApi, { User, UserCreateDto, UserStatus, userStatusOptions } from '@/api/admin'
 import { ApiTable, FormItem, Form, overlay } from '@/components'
 
 import AuthorizeRoles from './components/AuthorizeRoles'
 import ResetPassword from './components/ResetPassword'
+import { FormControlItem } from '@/components/form/Form'
 
 export const userLabels: Labels<User> = {
   name: '用户账号',
@@ -20,20 +21,33 @@ export const userLabels: Labels<User> = {
   gender: '性别',
   authorizeRoles: '授权角色',
   export: '导出',
+  initialPassword: '用户密码',
 }
 
-const UserEditModal: ModalComponent<User> = ({ model: user }) => {
+const userFormItems: FormControlItem<UserCreateDto | User>[] = [
+  { name: 'name', control: 'input', required: true },
+  { name: 'nickName', control: 'input', required: true },
+  { name: 'phone', control: 'input', type: 'mobile', required: true },
+]
+const UserCreateModal: ModalComponent<UserCreateDto> = ({ model }) => {
+  const data = { ...model, initialPassword: '123456' }
   return (
-    <Form initialValues={user} api={user?.id ? adminApi.users.update : adminApi.users.create}>
-      {user?.id ? false : <FormItem.Text>用户初始密码为：123456</FormItem.Text>}
-      <FormItem.Input name="name" readOnly={!!user?.id} required />
-      <FormItem.Input name="nickName" required />
-      <FormItem.Input name="phone" required type="mobile" />
-    </Form>
+    <Form
+      initialValues={data}
+      api={adminApi.users.create}
+      items={[
+        { control: 'text', children: `用户初始密码为：${data.initialPassword}` },
+        ...userFormItems,
+      ]}></Form>
   )
 }
+
+const UserEditModal: ModalComponent<User> = (props) => {
+  return <Form initialValues={props.model} api={adminApi.users.update} items={userFormItems} />
+}
+
 UserEditModal.modalProps = ({ model: user }) => {
-  return { title: user?.id ? userLabels.update : userLabels.create }
+  return { title: user.id ? userLabels.update : userLabels.create }
 }
 const UserPage: PageComponent = () => {
   // const disabledUser = useCallback(async (user: UserDto) => {
@@ -50,9 +64,10 @@ const UserPage: PageComponent = () => {
         {
           actionName: 'create',
           actionType: 'create',
-          component: UserEditModal,
+          component: UserCreateModal,
+          type: 'primary',
         },
-        { actionType: 'export', actionName: 'create' },
+        { actionType: 'export', actionName: 'export' },
         // { buttonType: 'import', title: '导入',  },
       ]}
       columns={[

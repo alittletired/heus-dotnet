@@ -1,25 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { ConfigProvider } from 'antd'
-// import zhCN from 'antd/es/locale/zh_CN'
+import { ConfigProvider, Spin } from 'antd'
+import enUS from 'antd/locale/en_US'
+import zhCN from 'antd/locale/zh_CN'
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
 import withLayout from './withLayout'
 import DocumentTitle from './DocumentTitle'
 import { PageProps, PageContextProvider } from '@/components/PageContext'
-
+dayjs.locale('en')
 export default function AppContainer<P = any>(props: PageProps<P>) {
-  // const [appConfig] = useAppConfig()
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     setLoading(false)
   }, [props.Component])
 
-  if (loading) return <div>Loading</div>
+  if (loading) return <div></div>
   const LayoutComponent = withLayout(props.Component)
   return (
-    <>
+    <ConfigProvider locale={zhCN}>
       <DocumentTitle />
       <PageContextProvider {...props}>
-        <LayoutComponent {...(props.pageProps as any)} />
+        <LayoutComponent {...props.pageProps} />
       </PageContextProvider>
-    </>
+    </ConfigProvider>
   )
 }

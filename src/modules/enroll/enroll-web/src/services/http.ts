@@ -72,7 +72,7 @@ axiosInstance.interceptors.response.use(
 )
 
 globalThis.http = httpClient
-export function isApiError(ex: AxiosResponse<ApiError> | any): ex is AxiosResponse<ApiError> {
-  return ex.data?.code && ex.data?.message
+export function isApiError(ex?: AxiosResponse<ApiError> | any): ex is AxiosResponse<ApiError> {
+  return ex?.data?.code && ex?.data?.message
 }
 export default axiosInstance

@@ -13,12 +13,11 @@ declare interface PageAction {
 declare interface PageOptions {
   //控制布局和权限 使用public将使用空布局，并不校验权限
   layout?: 'default' | 'empty' | 'public'
-
   actions?: PageAction[]
   labels?: Record<string, string>
   parent?: PageComponent
   code?: string
-  name: string
+  name?: string
 }
 declare interface PageComponent<P = {}> extends React.FC<P> {
   options?: PageOptions
@@ -30,8 +29,8 @@ declare interface ModalProps {
   viewType?: ViewType
   overlayType?: OverlayType
 }
-declare type ModalComponentProps<M, P = any> = { model?: M } & P
-declare interface ModalComponent<M, P = any> extends React.FC<ModalComponentProps<M, P>> {
+declare type ModalComponentProps<M, P = {}> = { model: M } & P
+declare interface ModalComponent<M, P = {}> extends React.FC<{ model: M } & P> {
   modalProps?: (props: ModalComponentProps<M, P>) => ModalProps
 }
 type Dispatch<A> = (value: A) => void

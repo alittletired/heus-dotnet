@@ -11,7 +11,7 @@ type DynamicSearchFilter<T, P extends keyof T> =
   | { op: BaseOperator; value: T[P] }
 
 type DynamicSearch<T> = {
-  filters: { [P in keyof T]?: DynamicSearchFilter<T, P> }
+  filters: { [P in keyof T]?: T[P] | DynamicSearchFilter<T, P> }
 } & PageRequest
 interface PageList<T> {
   total: number

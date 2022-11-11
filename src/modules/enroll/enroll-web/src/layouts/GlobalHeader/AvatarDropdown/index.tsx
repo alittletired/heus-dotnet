@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { BellOutlined, LogoutOutlined } from '@ant-design/icons'
 import { useUser, logout } from '@/services/user'
-import { Dropdown, Menu, Avatar } from 'antd'
+import { Dropdown, Menu, Avatar, MenuProps } from 'antd'
 const AvatarDropdown: React.FC = () => {
   const [user] = useUser()
   const onMenuClick = (key: any) => {
@@ -11,24 +11,25 @@ const AvatarDropdown: React.FC = () => {
       logout()
     }
   }
-  const dropDown = (
-    <Menu selectedKeys={[]} onClick={onMenuClick}>
-      {/* {menu && (
-				<Menu.Item key="center">
-					<UserOutlined />
-					个人中心
-				</Menu.Item>
-			)} */}
-      <Menu.Divider />
-      <Menu.Item key="logout">
-        <LogoutOutlined />
-        退出登录
-      </Menu.Item>
-    </Menu>
-  )
+  const menu: MenuProps = {
+    onClick: onMenuClick,
+    items: [
+      { key: 'divider', label: <Menu.Divider /> },
+      {
+        key: 'logout',
+        label: (
+          <>
+            <LogoutOutlined />
+            退出登录
+          </>
+        ),
+      },
+    ],
+  }
+
   if (!user.isLogin) return null
   return (
-    <Dropdown overlay={dropDown}>
+    <Dropdown menu={menu}>
       <span>
         {/* <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" /> */}
         <span className={`anticon`}>{user.nickName}</span>

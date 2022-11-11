@@ -1,17 +1,18 @@
 
 using Heus.Core.Security;
+using Heus.Ddd.Entities;
 
 namespace Heus.Auth.Application;
-public interface IUserAdminAppService:IAdminApplicationService<User>
+public interface IUserAdminAppService:IAdminApplicationService<User,User, UserCreateDto, User>
 {
     
     
 }
 
-internal class UserAdminAppService : AdminApplicationService<User>, IUserAdminAppService,IUserService
+internal class UserAdminAppService : AdminApplicationService<User, User, UserCreateDto, User>, IUserAdminAppService,IUserService
 {
-   
-  
+
+
     //public async Task<bool> ResetPasswordAsync(RestPasswordDto dto)
     //{
     //    var user = await _userRepository.GetByIdAsync(dto.UserId);
@@ -19,7 +20,13 @@ internal class UserAdminAppService : AdminApplicationService<User>, IUserAdminAp
     //    await _userRepository.UpdateAsync(user);
     //    return true;
     //}
- 
+    public override async Task<User> CreateAsync(UserCreateDto createDto)
+    {
+        var entity = Mapper.Map<User>(createDto);
+        entity.SetPassword(createDto.InitialPassword);
+        await Repository.InsertAsync(entity);
+        return entity;
+    }
     public async Task<ICurrentUser?> FindByNameAsync(string name)
     {
         var user = await Repository.FindAsync(u => u.Name == name);

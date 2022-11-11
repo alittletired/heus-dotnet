@@ -139,6 +139,13 @@ export interface UserActionRight {
   flag: number
 }
 
+export interface UserCreateDto {
+  name: string
+  phone: string
+  nickName: string
+  initialPassword: string
+}
+
 /** 用户状态 */
 export enum UserStatus {
   /** 禁用 */
@@ -231,6 +238,10 @@ const adminApi = {
     },
   },
   users: {
+    create(data: UserCreateDto): Promise<User> {
+      const path = `/admin/users/create`
+      return http.post(path, data)
+    },
     findByName(name: string): Promise<ICurrentUser> {
       const path = `/admin/users/findByName`
       return http.post(path, { params: { name } })
@@ -250,10 +261,6 @@ const adminApi = {
     update(data: User): Promise<User> {
       const path = `/admin/users/update`
       return http.put(path, data)
-    },
-    create(data: User): Promise<User> {
-      const path = `/admin/users/create`
-      return http.post(path, data)
     },
   },
 }

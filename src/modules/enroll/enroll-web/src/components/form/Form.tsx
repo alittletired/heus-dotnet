@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useMemo } from 'react'
 import { Form, FormProps as AntdFormProps, message } from 'antd'
 import FormContext from './FormContext'
 import useSubmit from '../../utils/useSubmit'
@@ -15,26 +15,31 @@ function isParamApi<D, P, R>(api?: ParamApi<D, P, R> | Api<D, R>): api is ParamA
 type ValueOf<T> = T[keyof T]
 type FormControls = typeof formControls
 type FormControlKeys = keyof FormControls
-type ComponentProps<T> = T extends React.ComponentType<infer P> ? P : never
-type FormControlProps = {
-  [key in FormControlKeys]: { control: key } & ComponentProps<FormControls[key]>
+type ComponentProps<T, D> = T extends React.ComponentType<infer P>
+  ? ComponentPropsWithName<P, D>
+  : never
+type ComponentPropsWithName<P, D> = P extends { name: any } ? P & { name: keyof D } : P
+type FormControlProps<D> = {
+  [key in FormControlKeys]: { control: key } & ComponentProps<FormControls[key], D>
 }
-export type FormControlItem<D> = ValueOf<FormControlProps> & { name: keyof D }
+export type FormControlItem<D> = ValueOf<FormControlProps<D>>
 
 export interface FormProps<D, P, R> extends AntdFormProps, ApiProps<D, P, R> {
   params?: P
-  children?: React.ReactNode
+
   canDismiss?: (data: R) => boolean
   labels?: { [key in string]: string }
   noLabel?: boolean
   viewType?: ViewType
   items?: FormControlItem<D>[]
+  initialValues: D
+  children?: React.ReactNode
 }
 
 // type FormProps = Parameters<Form>[0]
 
 function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Return>) {
-  const { noLabel, api, onBefore, onSuccess, params, labels, children, ...rest } = props
+  const { noLabel, api, onBefore, onSuccess, params, labels, children, items, ...rest } = props
   let [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   form = props.form ?? form
@@ -69,7 +74,12 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
     console.log('onFinishFailed:', errorInfo)
   }
   const layout = noLabel ? null : labelLayout
-
+  const itemDom = items?.map((item, idx) => {
+    let { control, ...rest } = item
+    const FormControlItem = formControls[control]
+    const key = 'name' in rest ? String(rest['name']) : `formitem_${idx}`
+    return <FormControlItem {...(rest as any)} key={key} />
+  })
   return (
     <FormContext.Provider value={{ form, loading, setLoading, noLabel, labels }}>
       <Form
@@ -81,6 +91,7 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
         {...rest}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}>
+        {itemDom}
         {children}
       </Form>
     </FormContext.Provider>

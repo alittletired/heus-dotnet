@@ -39,7 +39,7 @@ export function toSearchData<T>(
   return { ...searchData, ...page }
 }
 
-function fileeDefaultStyle<T>(column: ColumnProps<T>) {
+function applyDefaultStyle<T>(column: ColumnProps<T>) {
   column.ellipsis = true
 
   switch (column.valueType) {
@@ -78,7 +78,7 @@ function fileeDefaultStyle<T>(column: ColumnProps<T>) {
 }
 export function translateColumns<T>(columns: ColumnProps<T>[] = []): ColumnProps<T>[] {
   return columns.map((column) => {
-    fileeDefaultStyle(column)
+    applyDefaultStyle(column)
 
     if (column.render) {
       return column

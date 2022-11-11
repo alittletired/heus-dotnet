@@ -66,7 +66,6 @@ const Login: PageComponent = () => {
   ]
   const account = (
     <div>
-      <PasswordInput />
       <FormItem.Input
         name="userName"
         size="large"

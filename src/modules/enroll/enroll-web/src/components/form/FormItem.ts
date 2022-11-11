@@ -1,4 +1,5 @@
 import withFormItem from './withFormItem'
+import FormText from './FormText'
 import Checkbox from './FormCheckbox'
 import {
   FormInput as Input,
@@ -35,6 +36,7 @@ export const formControls = {
   weekPicker: WeekPicker,
   monthPicker: MonthPicker,
   select: Select,
+  text: FormText,
 }
 export const Item = withFormItem((props: React.PropsWithChildren<any>) => {
   return props.children
