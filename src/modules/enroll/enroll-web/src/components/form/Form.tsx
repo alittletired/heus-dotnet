@@ -2,7 +2,6 @@ import React, { useState, useContext, useMemo } from 'react'
 import { Form, FormProps as AntdFormProps, message } from 'antd'
 import FormContext from './FormContext'
 import useSubmit from '../../utils/useSubmit'
-import { OverlayContext } from '../overlay'
 import { formControls } from './FormItem'
 
 const labelLayout = {
@@ -81,7 +80,7 @@ function ApiForm<D, Params = any, Return = any>(props: FormProps<D, Params, Retu
     return <FormControlItem {...(rest as any)} key={key} />
   })
   return (
-    <FormContext.Provider value={{ form, loading, setLoading, noLabel, labels }}>
+    <FormContext.Provider value={{ form, loading, setLoading, noLabel }}>
       <Form
         form={form}
         autoComplete="off"

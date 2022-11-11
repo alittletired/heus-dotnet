@@ -1,12 +1,27 @@
-import React, { useState, useRef, SetStateAction } from 'react'
+import React, {
+  useState,
+  useRef,
+  SetStateAction,
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+} from 'react'
 import ReactDOM from 'react-dom/client'
 import { Modal, Drawer, Button } from 'antd'
+import { createPortal } from 'react-dom'
 export type OverlayType = 'modal' | 'drawer'
+
 type OnDismiss = (data?: any) => void
 interface OverlayContext {
   onDismiss: OnDismiss
   setLoading: (loading: boolean) => any
   setModalProps: Dispatch<SetStateAction<ModalProps>>
+}
+let openModal = null as unknown as React.Dispatch<React.SetStateAction<ReactNode>>
+export const OverlayContainer: React.FC<PropsWithChildren> = (props) => {
+  const [modal, setModal] = useState<ReactNode>(undefined)
+  openModal = setModal
+  return <div id="modal-root">{modal}</div>
 }
 export const OverlayContext = React.createContext({} as OverlayContext)
 
@@ -112,36 +127,26 @@ export function showForm<M, P = any>(
   overlayType: OverlayType = 'modal',
 ): Promise<any> {
   return new Promise((resolve, reject) => {
-    let div = document.createElement('div')
-    div.id = 'div_' + Math.random()
-    document.body.appendChild(div)
-    const root = ReactDOM.createRoot(div)
-    let removeNode = () => {
-      requestAnimationFrame(() => {
-        root.unmount()
-        // console.warn('onDismiss', div, div.parentNode)
-        div.parentNode?.removeChild(div)
-      })
-    }
     let onDismiss = (data?: any) => {
       resolve(data)
-      removeNode()
+      openModal(null)
     }
     let onCancel = (data?: any) => {
       reject(data)
-      removeNode()
+      openModal(null)
     }
-    // console.warn('createPortal')
 
-    root.render(
+    // console.warn('createPortal')
+    var modalDom = (
       <ModalForm<M, P>
         Component={Component}
         onDismiss={onDismiss}
         onCancel={onCancel}
         componentProps={props}
         overlayType={overlayType}
-      />,
+      />
     )
+    openModal(modalDom)
   })
 }
 
@@ -149,10 +154,8 @@ export function confirm(content: string): Promise<boolean> {
   return new Promise((resolve, reject) => {
     return Modal.confirm({
       content,
-      onOk: async () => {
-        resolve(true)
-      },
-      onCancel: () => reject(),
+      onOk: resolve,
+      onCancel: reject,
     })
   })
 }

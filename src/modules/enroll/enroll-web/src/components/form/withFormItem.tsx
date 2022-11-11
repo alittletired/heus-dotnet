@@ -1,7 +1,8 @@
 import React, { PropsWithChildren, ComponentType } from 'react'
 import { Form, FormItemProps as AntFormItemProps } from 'antd'
 import { getRules } from './formItemRule'
-import FormContext from './FormContext'
+import { usePageContext } from '../PageContext'
+import { useFormContext } from './FormContext'
 const AntFormItem = Form.Item
 const Empty: React.ForwardRefRenderFunction<any, any> = (props, ref) => {
   return <></>
@@ -59,7 +60,8 @@ function extractProps<P>(props: P & FormItemProps): [AntFormItemProps, P] {
 
 export default function withFormItem<P>(Component: ComponentType<P>) {
   const WithFormItem: WithComponent<P> = (props) => {
-    const formContext = React.useContext(FormContext)
+    const pageContext = usePageContext()
+    const formContext = useFormContext()
     if (props.hidden) return null
     let finalProps = {
       ...WithFormItem.defaultProps,
@@ -68,8 +70,8 @@ export default function withFormItem<P>(Component: ComponentType<P>) {
 
     if (formContext.noLabel) {
       finalProps.label = undefined
-    } else if (!props.label && formContext.labels && props.name) {
-      finalProps.label = formContext.labels?.[props.name.toString()] as any
+    } else if (!props.label && props.name) {
+      finalProps.label = pageContext.labels?.[props.name.toString()] as any
     }
     let [itemProps, controlProps] = extractProps(finalProps)
 
