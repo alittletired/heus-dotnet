@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import withFormItem from './withFormItem'
 import icons from '../icons'
 import { Upload, message, UploadProps, UploadFile } from 'antd'
+import { useAppConfig } from '@/layouts/appConfig'
 interface AvatarProps extends Omit<UploadProps, 'onChange'> {
   value?: string
   onChange?: (value: string) => void
@@ -9,7 +10,7 @@ interface AvatarProps extends Omit<UploadProps, 'onChange'> {
 const FormAvatar = withFormItem((props: AvatarProps, ref: any) => {
   let { onChange, value, ...rest } = props
   const [loading, setLoading] = useState(false)
-
+  const [appConfig] = useAppConfig()
   const uploadButton = (
     // @ts-expect-error
     <div>
@@ -51,16 +52,12 @@ const FormAvatar = withFormItem((props: AvatarProps, ref: any) => {
       listType="picture-card"
       className="avatar-uploader"
       showUploadList={false}
-      action={`${globalThis.apiBaseUrl}/api/pb/file/upload-image`}
+      action={`${appConfig.apiBaseUrl}/api/pb/file/upload-image`}
       beforeUpload={beforeUpload}
       {...rest}
       onChange={handleChange}>
       {props.value ? (
-        <img
-          src={`${globalThis.apiBaseUrl}${props.value}`}
-          alt="avatar"
-          style={{ width: '100%' }}
-        />
+        <img src={`${appConfig.apiBaseUrl}${props.value}`} alt="avatar" style={{ width: '100%' }} />
       ) : (
         uploadButton
       )}

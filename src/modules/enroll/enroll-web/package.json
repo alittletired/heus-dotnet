@@ -9,7 +9,8 @@
     "lint": "next lint",
     "api": "ts-node --project ./tsconfig.node.json scripts/api",
     "menu": "ts-node --project ./tsconfig.node.json ./scripts/menu.ts",
-    "routes": "ts-node --project ./tsconfig.node.json ./scripts/routes.ts"
+    "routes": "ts-node --project ./tsconfig.node.json ./scripts/routes.ts",
+    "tsc": "tsc --noEmit --incremental"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",

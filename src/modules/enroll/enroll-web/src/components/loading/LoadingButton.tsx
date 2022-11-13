@@ -1,14 +1,13 @@
-import React, {useCallback, useState} from 'react'
-import {Button} from 'antd'
-import {ButtonProps} from 'antd/lib/button'
+import React, { useCallback, useState } from 'react'
+import { Button, ButtonProps } from 'antd'
 export default function LoadingButton(props: ButtonProps) {
   const [loading, setLoading] = useState(false)
-  const {onClick} = props
+  const { onClick } = props
   const handeClick = useCallback(
     async (e: any) => {
       setLoading(true)
       try {
-        await onClick(e)
+        await onClick?.(e)
       } finally {
         setLoading(false)
       }

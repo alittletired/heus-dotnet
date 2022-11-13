@@ -1,6 +1,6 @@
-import { getAuth } from '@/services/user'
-import { Button, Upload } from 'antd'
-import { UploadProps } from 'antd/lib/upload'
+import { getAuthHeaders } from '@/services/http'
+import { getUser, useUser } from '@/services/user'
+import { Button, Upload, UploadProps } from 'antd'
 import React, { useState } from 'react'
 import { UploadOutlined } from './icons'
 interface Props {
@@ -17,16 +17,12 @@ const UploadButton: React.FC<Props> = (props) => {
       setLoading(true)
     }
   }
-  const auth = getAuth()
   return (
     <Upload
       disabled={loading}
       name="file"
       action="/api/file/upload"
-      headers={{
-        Authorization: 'Bearer ' + auth.accessToken,
-        userId: auth.userId.toString(),
-      }}
+      headers={getAuthHeaders()}
       showUploadList={false}
       onChange={onChange}>
       <Button loading={loading} icon={<UploadOutlined />}>

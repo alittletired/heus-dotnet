@@ -32,14 +32,21 @@ const httpClient: HttpClient = {
   },
 }
 
+export function getAuthHeaders(): Record<string, string> {
+  const auth = getUser()
+  if (!auth.isLogin) {
+    return {}
+  }
+  return {
+    Authorization: 'Bearer ' + auth.accessToken,
+    userId: auth.userId,
+  }
+}
 axiosInstance.interceptors.request.use(async (config) => {
   const auth = getUser()
 
   if (auth.isLogin) {
-    config.headers = Object.assign({}, config.headers, {
-      Authorization: 'Bearer ' + auth.accessToken,
-      userId: auth.userId,
-    })
+    config.headers = Object.assign({}, config.headers, getAuthHeaders())
   }
   return config
 })

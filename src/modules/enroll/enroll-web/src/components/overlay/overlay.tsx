@@ -1,21 +1,12 @@
-import React, {
-  useState,
-  useRef,
-  SetStateAction,
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-} from 'react'
-import ReactDOM from 'react-dom/client'
+import React, { useState, useRef, PropsWithChildren, ReactNode } from 'react'
 import { Modal, Drawer, Button } from 'antd'
-import { createPortal } from 'react-dom'
 export type OverlayType = 'modal' | 'drawer'
 
 type OnDismiss = (data?: any) => void
 interface OverlayContext {
   onDismiss: OnDismiss
   setLoading: (loading: boolean) => any
-  setModalProps: Dispatch<SetStateAction<ModalProps>>
+  setModalProps: React.Dispatch<React.SetStateAction<ModalProps>>
 }
 let openModal = null as unknown as React.Dispatch<React.SetStateAction<ReactNode>>
 export const OverlayContainer: React.FC<PropsWithChildren> = (props) => {
