@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Heus.Core.ObjectMapping
+namespace Heus.Core.ObjectMapping;
+
+public interface IObjectMapper
 {
-    public interface IObjectMapper
-    {
-        TDestination Map<TDestination>(object source);
-      
-       
-        TDestination Map<TSource, TDestination>(TSource source, TDestination destination);
-    }
+    TDestination Map<TDestination>(object source);
+  
+   
+    TDestination Map<TSource, TDestination>(TSource source, TDestination destination);
 }

@@ -3,25 +3,25 @@ import { ToolBarItem } from '../types'
 import { ActionComponent } from '../../action'
 import { useTable } from '../Table'
 import { Space } from 'antd'
-interface Props {
+interface Props<T> {
   items?: ToolBarItem[]
-  data?: any
+  data?: T
 }
-const ToolBar: React.FC<Props> = (props) => {
+function ToolBar<T>(props: Props<T>) {
   const table = useTable()
   let { items = [] } = props
 
   const itemsDom = items.map((item, idx) => {
     let { disabled, type, ...rest } = item
-    if (item.buttonType === 'create') {
+    if (item.actionName === 'create') {
       type = type ?? 'primary'
     }
     return (
       <ActionComponent
         data={table.data}
-        key={item.code || idx}
+        key={item.actionName || idx}
         type={type}
-        onSuccess={() => table.reload()}
+        onSuccess={() => table.search()}
         {...rest}
       />
     )

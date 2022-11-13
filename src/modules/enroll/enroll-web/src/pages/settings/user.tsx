@@ -1,11 +1,24 @@
-import React, { useMemo } from 'react'
-import adminApi, { User, UserCreateDto, UserStatus, userStatusOptions } from '@/api/admin'
+import React, { useCallback, useMemo } from 'react'
+import adminApi, {
+  User,
+  UserCreateDto,
+  UserStatus,
+  userStatusOptions,
+  UserUpdateDto,
+} from '@/api/admin'
+
 import { ApiTable, FormItem, Form, overlay } from '@/components'
 
 import AuthorizeRoles from './components/AuthorizeRoles'
 import ResetPassword from './components/ResetPassword'
-import { FormControlItem } from '@/components/form/Form'
+import { FormControlItem, FormProps } from '@/components/form/Form'
 
+// type ApiRequestParamType<T> = T extends (p: infer P, d: infer D) => any
+//   ? D extends Object
+//     ? P
+//     : never
+//   : never
+// type b= ApiRequestParamType<typeof adminApi.users.update>
 export const userLabels: Labels<User> = {
   name: '用户账号',
   password: '用户密码',
@@ -13,7 +26,6 @@ export const userLabels: Labels<User> = {
   phone: '手机号码',
   email: '邮箱',
   status: '用户状态',
-
   disable: '禁用',
   create: '新增用户',
   update: '编辑用户',
@@ -24,17 +36,18 @@ export const userLabels: Labels<User> = {
   initialPassword: '用户密码',
 }
 
-const userFormItems: FormControlItem<UserCreateDto | User>[] = [
+const userFormItems: FormControlItem<User | UserCreateDto>[] = [
   { name: 'name', control: 'input', required: true },
   { name: 'nickName', control: 'input', required: true },
   { name: 'phone', control: 'input', type: 'mobile', required: true },
 ]
+
 const UserCreateModal: ModalComponent<UserCreateDto> = ({ model }) => {
   const data = { ...model, initialPassword: '123456' }
   return (
     <Form
       initialValues={data}
-      api={adminApi.users.create}
+      request={adminApi.users.create}
       items={[
         { control: 'text', children: `用户初始密码为：${data.initialPassword}` },
         ...userFormItems,
@@ -43,18 +56,25 @@ const UserCreateModal: ModalComponent<UserCreateDto> = ({ model }) => {
 }
 
 const UserEditModal: ModalComponent<User> = (props) => {
-  return <Form initialValues={props.model} api={adminApi.users.update} items={userFormItems} />
+  return (
+    <Form
+      request={adminApi.users.update}
+      initialValues={props.model}
+      params={props.model.id}
+      items={userFormItems}
+    />
+  )
 }
 
 UserEditModal.modalProps = ({ model: user }) => {
   return { title: user.id ? userLabels.update : userLabels.create }
 }
 const UserPage: PageComponent = () => {
-  // const disabledUser = useCallback(async (user: UserDto) => {
-  //   if (await overlay.confirm('确定停用该该用户吗')) {
-  //     await adminApi.users.disable(user.id)
-  //   }
-  // }, [])
+  const disabledUser = useCallback(async (user: User) => {
+    if (await overlay.confirm('确定停用该该用户吗')) {
+      // await adminApi.users.disable(user.id)
+    }
+  }, [])
 
   return (
     <ApiTable
@@ -85,16 +105,16 @@ const UserPage: PageComponent = () => {
             { title: '编辑', component: UserEditModal },
             { title: '授权角色', actionName: 'authorizeRoles', component: AuthorizeRoles },
             { title: '重置密码', component: ResetPassword },
-            // {
-            //   onClick: disabledUser,
-            //   title: '启用',
-            //   hidden: (data) => !data.status,
-            // },
-            // {
-            //   onClick: disabledUser,
-            //   title: '禁用',
-            //   hidden: (data) => !!data.status,
-            // },
+            {
+              // onClick: disabledUser,
+              title: '启用',
+              hidden: (data) => !data.status,
+            },
+            {
+              // onClick: disabledUser,
+              title: '禁用',
+              hidden: (data) => !!data.status,
+            },
           ],
         },
       ]}

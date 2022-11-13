@@ -31,7 +31,7 @@ public abstract class AdminApplicationService<TEntity>: AdminApplicationService<
 public abstract class AdminApplicationService<TEntity, TDto> : AdminApplicationService<TEntity, TDto, TDto, TDto> where TEntity : class, IEntity { }
 
 public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> : ApplicationService,
-    IAdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> where TEntity : class, IEntity
+    IAdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> where TEntity : class, IEntity 
 {
     protected IRepository<TEntity> Repository => GetRequiredService<IRepository<TEntity>>();
 
@@ -71,10 +71,11 @@ public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdate
         return await query.ToPageListAsync(input);
     }
 
-    public virtual async Task<TDto> UpdateAsync(TUpdateDto updateDto)
+    public virtual async Task<TDto> UpdateAsync(long id, TUpdateDto updateDto)
     {
         ArgumentNullException.ThrowIfNull(updateDto);
-        var entity = Mapper.Map<TEntity>(updateDto);
+        var entity = await Repository.GetByIdAsync(id);
+        Mapper.Map(updateDto, entity);
         await Repository.UpdateAsync(entity);
         return await MapToDto(entity);
 

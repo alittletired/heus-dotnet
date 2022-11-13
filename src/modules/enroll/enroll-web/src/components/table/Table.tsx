@@ -19,6 +19,7 @@ export interface TableContext<T = any> {
   props: TableProps<T>
   columns: ColumnProps<T>[]
   dataSource: T[]
+  data?: Partial<T>
   setDataSource: Dispatch<SetStateAction<T[]>>
   reset: () => Promise<void>
   //当前的请求参数
@@ -28,6 +29,7 @@ export interface TableContext<T = any> {
 export const TableContext = React.createContext({} as TableContext)
 export const useTable = () => React.useContext(TableContext)
 export default function ApiTable<T extends object>(props: TableProps<T>) {
+  const { data } = props
   const [dataSource, setDataSource] = useState([] as T[])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -36,7 +38,7 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
     pageSize: props.pagination === false ? -1 : props.pagination?.pageSize || 10,
   })
   const pageContext = usePageContext()
-  const dataRef = useRef({ ...props.data })
+  const dataRef = useRef({ ...data })
   const propsRef = useRef(props)
   propsRef.current = props
   const loadingRef = useRef(loading)
@@ -148,6 +150,7 @@ export default function ApiTable<T extends object>(props: TableProps<T>) {
     setDataSource,
     columns,
     reset,
+    data,
     search,
   }
   let pageConfig = {

@@ -23,7 +23,10 @@ export const OverlayContainer: React.FC<PropsWithChildren> = (props) => {
   openModal = setModal
   return <div id="modal-root">{modal}</div>
 }
-export const OverlayContext = React.createContext({} as OverlayContext)
+export const OverlayContext = React.createContext({
+  onDismiss(data?: any) {},
+  setLoading(loading: boolean) {},
+} as OverlayContext)
 
 export interface ModalFormProps<M, P> {
   Component: ModalComponent<M, P>

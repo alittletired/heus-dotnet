@@ -17,11 +17,33 @@ interface PageList<T> {
   total: number
   items: T[]
 }
-type Api<D = any, R = any> = (data: D) => Promise<R>
-type ParamApi<D = any, P = any, R = any> = (params: P, data: D) => Promise<R>
-interface ApiProps<D = any, P = any, R = any> {
-  api?: Api<D, R> | ParamApi<D, P, R>
-  data?: D
+type IsValidArg<T> = T extends object ? (keyof T extends never ? false : true) : true
+
+type ApiRequest<D, T> = T extends (...args: any) => Promise<infer R>
+  ? {
+      request: T
+      onBefore?: (data: D) => Promise<D | boolean> | D | boolean
+      onSuccess?: (data: R) => any
+      onFail?(err: any): void
+      // params?: ApiRequestParamType<T>
+    } & ApiRequestParams<T>
+  : never
+
+type ApiRequestParams<T> = T extends (p: infer P, d: infer D) => any
+  ? D extends Object
+    ? { params: P }
+    : {}
+  : {}
+
+type ApiRequestParamsType<T> = T extends (p: infer P, d: infer D) => any
+  ? D extends Object
+    ? P
+    : never
+  : never
+
+type ApiParamRequest<D, R> = (params: any, data: D) => Promise<R>
+interface RequestProps<D, R> {
+  request?: ApiRequest<D, R> | ApiParamRequest<D, R>
   onBefore?: (data: D) => Promise<D | boolean> | D | boolean
   onSuccess?: (data: R) => any
   onFail?(err: any): void

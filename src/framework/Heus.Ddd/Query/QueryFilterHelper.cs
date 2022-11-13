@@ -8,9 +8,13 @@ internal static class QueryFilterHelper
 {
     private static ConcurrentDictionary<string, FilterMapping> _dynamicMappingCache = new();
 
-    public static FilterMapping GetDynamicMappings(Type dtoType, Type[] parameters)
+    public static FilterMapping GetDynamicMappings(Type dtoType,  Type elementType)
     {
-      
+        var parameters = new Type[] { elementType };
+        if (elementType.IsGenericType)
+        {
+            parameters=elementType.GetType().GetGenericArguments();
+        }
         var key = dtoType.Name + ":" + parameters.Select(t => t.Name).JoinAsString(":");
         return _dynamicMappingCache.GetOrAdd(key, k =>
         {

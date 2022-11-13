@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { ToolBarItem } from '../types'
-import { Divider, Button, Menu, Dropdown } from 'antd'
+import { Divider, Button, Menu, Dropdown, MenuProps } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { useTable } from '../Table'
 import ActionAnchor from '../../action/ActionAnchor'
@@ -16,7 +16,7 @@ export default function ActionColumn<T>(props: Props<T>) {
   const table = useTable()
   const auth = useAuth()
   actions = actions.filter((action) => auth.hasRight(action.actionName))
-  const moreDom: JSX.Element[] = []
+  const menuItems: MenuProps['items'] = []
   const actionDom: JSX.Element[] = []
   for (let index = 0; index < actions.length; index++) {
     let action = actions[index]
@@ -35,21 +35,15 @@ export default function ActionColumn<T>(props: Props<T>) {
     } else if (actions.length <= showCount) {
       actionDom.push(item)
     } else {
-      moreDom.push(item)
+      menuItems.push({ key: index, label: item })
     }
   }
-  if (moreDom.length) {
-    const menu = (
-      <Menu>
-        {moreDom.map((item, index) => (
-          <Menu.Item key={index}>{item}</Menu.Item>
-        ))}
-      </Menu>
-    )
+
+  if (menuItems.length)
     return (
       <>
         {actionDom}
-        <Dropdown overlay={menu}>
+        <Dropdown menu={{ items: menuItems }}>
           <Button type="link" className="ant-dropdown-link">
             更多
             <DownOutlined />
@@ -57,6 +51,6 @@ export default function ActionColumn<T>(props: Props<T>) {
         </Dropdown>
       </>
     )
-  }
+
   return <>{actionDom}</>
 }

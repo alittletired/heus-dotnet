@@ -16,8 +16,9 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
     public QueryExpressionVisitor(IQueryable queryable)
     {
         _queryable= queryable;
-        var genericArguments = _queryable.ElementType.GetGenericArguments();
-        _filterMapping = QueryFilterHelper.GetDynamicMappings(typeof(T), genericArguments);
+        var elementType = _queryable.ElementType;
+    
+        _filterMapping = QueryFilterHelper.GetDynamicMappings(typeof(T), elementType);
     }
 
     protected override Expression VisitMethodCall(MethodCallExpression methodCall)

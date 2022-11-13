@@ -3,13 +3,13 @@ using Heus.Core.Security;
 using Heus.Ddd.Entities;
 
 namespace Heus.Auth.Application;
-public interface IUserAdminAppService:IAdminApplicationService<User,User, UserCreateDto, User>
+public interface IUserAdminAppService:IAdminApplicationService<User,User, UserCreateDto,UserUpdateDto>
 {
     
     
 }
 
-internal class UserAdminAppService : AdminApplicationService<User, User, UserCreateDto, User>, IUserAdminAppService,IUserService
+internal class UserAdminAppService : AdminApplicationService<User, User, UserCreateDto, UserUpdateDto>, IUserAdminAppService,IUserService
 {
 
 
