@@ -127,7 +127,9 @@ internal class ResourceAdminAppService : AdminApplicationService<Resource>, IRes
             join ur in _userRoleRepository.Query on rar.RoleId equals ur.Id
             where ur.UserId == userId
             select new UserActionRight(r.Path, rar.Flag);
-        return await query1.ToListAsync();
+        var data1= await query1.ToListAsync();
+        return data1.GroupBy(s => s.ResourcePath)
+            .Select(s => new UserActionRight(s.Key, s.Sum(p => p.Flag)));
 
     }
 }

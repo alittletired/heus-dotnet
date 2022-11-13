@@ -38,7 +38,17 @@ export type FormProps<D, T extends (...args: any) => any> = Omit<
 // type FormProps = Parameters<Form>[0]
 
 function ApiForm<D, A extends (...args: any) => any>(props: FormProps<D, A>) {
-  const { noLabel, request, onBefore, onSuccess, labels, children, items, ...rest } = props
+  const {
+    noLabel,
+    request,
+    onRequestBefore,
+    onRequestSuccess,
+    onRequestFail,
+    labels,
+    children,
+    items,
+    ...rest
+  } = props
   let [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   let overlay = useContext(OverlayContext)
@@ -50,24 +60,25 @@ function ApiForm<D, A extends (...args: any) => any>(props: FormProps<D, A>) {
       setLoading(true)
       overlay.setLoading(true)
       // 通过onBefore 返回false 阻止发送请求
-      if (onBefore) formData = await onBefore?.(formData)
+      if (onRequestBefore) formData = await onRequestBefore?.(formData)
       if (values === false) {
         return
       }
-
       let data: ReturnType<A>
       if ('params' in props) {
         data = await request(props['params'], formData)
       } else {
         data = await request(formData)
       }
-      await onSuccess?.(data)
+      await onRequestSuccess?.(data)
       overlay.onDismiss(data)
     } catch (ex: any) {
       console.error('onFail', ex)
+      onRequestFail?.(ex)
       // if (!props.onFail && ex?.data?.msg) message.error(ex?.data?.msg, 4)
     } finally {
       setLoading(false)
+
       overlay.setLoading(false)
     }
   })

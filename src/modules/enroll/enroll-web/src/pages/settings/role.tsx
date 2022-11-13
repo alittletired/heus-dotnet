@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
-import adminApi, { RoleDto } from '@/api/admin'
+import adminApi, { Role } from '@/api/admin'
 import { ApiTable, Form, FormItem, overlay } from '@/components'
 import AuthorizeActionForm from './components/AuthorizeActionForm'
 
-const roleLables: Labels<RoleDto> = {
+const roleLables: Labels<Role> = {
   name: '角色名',
   remarks: '角色描述',
   create: '新增角色',
@@ -12,34 +12,33 @@ const roleLables: Labels<RoleDto> = {
 const RoleEdit: ModalComponent<Role> = (props) => {
   return (
     <Form
-      titles={roleLables}
       initialValues={props.model}
-      api={props.model?.id ? adminApi.roles.update : adminApi.roles.create}>
+      request={props.model?.id ? adminApi.roles.update : adminApi.roles.create}>
       <FormItem.Input name="name" required />
       <FormItem.Input name="remarks" />
     </Form>
   )
 }
-RoleEdit.defaultModalProps = (props) => {
-  return { title: props.model?.id ? roleLables.update : roleLables.create }
+RoleEdit.modalProps = (props) => {
+  return { title: props.model.id ? roleLables.update : roleLables.create }
 }
 const RolePage: PageComponent = () => {
   const deleteRole = useCallback(async (data: Role) => {
     if (await overlay.deleteConfirm()) {
-      return adminApi.roles.delete(data)
+      return adminApi.roles.delete(data.id)
     }
   }, [])
 
   return (
     <ApiTable
       titles={roleLables}
-      api={adminApi.roles.getPageList}
+      request={adminApi.roles.search}
       tableTitle="角色列表"
       toolBar={[
         {
           title: roleLables.create,
           component: RoleEdit,
-          buttonType: 'create',
+          actionName: 'create',
         },
       ]}
       columns={[
@@ -60,7 +59,7 @@ const RolePage: PageComponent = () => {
             {
               onClick: deleteRole,
               title: '删除',
-              hidden: (data) => data.systemRole,
+              hidden: (data) => data.isBuildIn,
             },
           ],
         },
@@ -68,5 +67,5 @@ const RolePage: PageComponent = () => {
     />
   )
 }
-RolePage.options = { name: '角色管理', labels: roleLables, code: '000103', isMenu: true }
+RolePage.options = { name: '角色管理', labels: roleLables, code: '000103' }
 export default RolePage

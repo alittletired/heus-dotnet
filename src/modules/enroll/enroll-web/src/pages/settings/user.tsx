@@ -57,14 +57,7 @@ const UserCreateModal: ModalComponent<UserCreateDto> = ({ model }) => {
 }
 
 const UserEditModal: ModalComponent<User> = (props) => {
-  return (
-    <Form
-      request={adminApi.users.update}
-      initialValues={props.model}
-      params={props.model.id}
-      items={userFormItems}
-    />
-  )
+  return <Form request={adminApi.users.update} initialValues={props.model} items={userFormItems} />
 }
 
 UserEditModal.modalProps = ({ model: user }) => {

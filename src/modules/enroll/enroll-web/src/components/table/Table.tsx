@@ -27,7 +27,9 @@ export interface TableContext<T = any> {
 }
 
 export const TableContext = React.createContext({} as TableContext)
+
 export const useTable = () => React.useContext(TableContext)
+
 export default function ApiTable<T extends object>(props: TableProps<T>) {
   const { data } = props
   const [dataSource, setDataSource] = useState([] as T[])

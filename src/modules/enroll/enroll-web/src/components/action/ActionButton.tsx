@@ -48,11 +48,11 @@ export default function ActionButton<T>(
       //   let res: any = await props.onClick?.(data)
       let res
       if (component) {
-        let showFn = overlay.showForm
+        let showFn = overlay.openForm
 
         let componentProps = { model: data }
         if (component.modalProps?.(componentProps).overlayType === 'drawer') {
-          showFn = overlay.showDrawer
+          showFn = overlay.openDrawer
         }
         res = await showFn(component, componentProps)
       } else {

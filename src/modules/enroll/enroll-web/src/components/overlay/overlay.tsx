@@ -145,11 +145,11 @@ export function openForm<M, P = any>(
 }
 
 export function confirm(content: string): Promise<boolean> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     return Modal.confirm({
       content,
-      onOk: resolve,
-      onCancel: reject,
+      onOk: () => resolve(true),
+      onCancel: () => resolve(false),
     })
   })
 }

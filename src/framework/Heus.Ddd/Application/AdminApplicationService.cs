@@ -9,8 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Ddd.Application;
 
-public interface IAdminApplicationService<TEntity>: IAdminApplicationService<TEntity, TEntity,  TEntity, TEntity> where TEntity : class, IEntity  { }
-public interface IAdminApplicationService<TEntity, TDto> : IAdminApplicationService<TEntity, TDto, TDto, TDto> where TEntity : class, IEntity { }
+public interface IAdminApplicationService<TEntity>: IAdminApplicationService<TEntity, TEntity,  TEntity, TEntity> 
+    where TEntity : class, IEntity  { }
+public interface IAdminApplicationService<TEntity, TDto> : IAdminApplicationService<TEntity, TDto, TDto, TDto>
+    where TEntity : class, IEntity { }
 public interface IAdminApplicationService<TEntity, TDto, in TCreateDto, in TUpdateDto> : IAdminApplicationService
     , IGetOneAppService<TDto>
     , ICreateAppService<TCreateDto, TDto>
@@ -27,8 +29,10 @@ public interface IAdminApplicationService<TEntity, TDto, in TCreateDto, in TUpda
 public abstract class AdminApplicationService: ApplicationService, IAdminApplicationService
 {
 }
-public abstract class AdminApplicationService<TEntity>: AdminApplicationService<TEntity, TEntity, TEntity, TEntity> where TEntity : class, IEntity { }
-public abstract class AdminApplicationService<TEntity, TDto> : AdminApplicationService<TEntity, TDto, TDto, TDto> where TEntity : class, IEntity { }
+public abstract class AdminApplicationService<TEntity>: AdminApplicationService<TEntity, TEntity, TEntity, TEntity> 
+    where TEntity : class, IEntity { }
+public abstract class AdminApplicationService<TEntity, TDto> : AdminApplicationService<TEntity, TDto, TDto, TDto> 
+    where TEntity : class, IEntity { }
 
 public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> : ApplicationService,
     IAdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> where TEntity : class, IEntity 
@@ -71,10 +75,20 @@ public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdate
         return await query.ToPageListAsync(input);
     }
 
-    public virtual async Task<TDto> UpdateAsync(long id, TUpdateDto updateDto)
+    public virtual async Task<TDto> UpdateAsync(TUpdateDto updateDto)
     {
         ArgumentNullException.ThrowIfNull(updateDto);
-        var entity = await Repository.GetByIdAsync(id);
+        var idProp = typeof(TUpdateDto).GetProperty("Id");
+        if (idProp == null)
+        {
+            throw new InvalidOperationException($"{typeof(TUpdateDto)}必须有Id属性");
+        }
+        var idObj= idProp.GetValue(updateDto);
+        if (idObj == null)
+        {
+          ArgumentNullException.ThrowIfNull(idObj);
+        }
+        var entity = await Repository.GetByIdAsync((long)idObj);
         Mapper.Map(updateDto, entity);
         await Repository.UpdateAsync(entity);
         return await MapToDto(entity);

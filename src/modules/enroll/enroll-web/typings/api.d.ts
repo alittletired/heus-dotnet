@@ -22,9 +22,9 @@ type IsValidArg<T> = T extends object ? (keyof T extends never ? false : true) :
 type ApiRequest<T> = T extends (...args: any) => Promise<infer R>
   ? {
       request: T
-      onBefore?: (data: ApiDataType<T>) => Promise<ApiDataType<T> | boolean>
-      onSuccess?: (data: R) => any
-      onFail?(err: any): void
+      onRequestBefore?: (data: ApiDataType<T>) => Promise<ApiDataType<T> | boolean>
+      onRequestSuccess?: (data: R) => any
+      onRequestFail?(err: any): void
       // params?: ApiRequestParamType<T>
     } & ApiRequestParams<T>
   : never

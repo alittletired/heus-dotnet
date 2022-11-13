@@ -6,5 +6,5 @@ namespace Heus.Ddd.Application.Services;
 public interface IUpdateAppService<  in TUpdateInput,TUpdateOutput>
     : IApplicationService
 {
-    Task<TUpdateOutput> UpdateAsync(long id,  TUpdateInput updateDto);
+    Task<TUpdateOutput> UpdateAsync(TUpdateInput updateDto);
 }

@@ -7,25 +7,29 @@ import { Action, ApiTable, overlay } from '@/components'
 const ResourcePage: PageComponent = () => {
   const menus = useRef([] as Resource[])
   const onEditMenu = useCallback(
-    async (resource?: Resource) => overlay.showForm(MenuEdit, resource, { menus: menus.current }),
+    async (resource?: Resource) =>
+      overlay.openForm(MenuEdit, {
+        model: resource,
+        menus: menus.current,
+      }),
     [],
   )
   const deleteMenu = useCallback(async (data: Resource) => {
     if (await overlay.deleteConfirm()) {
-      adminApi.resources.delete(data)
+      adminApi.resources.delete(data.id)
     }
   }, [])
 
   return (
     <ApiTable
-      api={adminApi.resources.getPageList}
+      request={adminApi.resources.search}
       titles={menuLabels}
-      OnApiSuccess={(data) => {
+      on={(data) => {
         menus.current = data.items
       }}
       pagination={{ pageSize: -1 }}
       tableTitle="菜单列表"
-      data={{ type: { $in: [1, 2] } }}
+      data={{ type: { in: [1, 2] } }}
       toolBar={[
         {
           title: '新增菜单',
@@ -36,7 +40,7 @@ const ResourcePage: PageComponent = () => {
       useTreeTable
       columns={[
         { dataIndex: 'name' },
-        { dataIndex: 'icon', valueType: 'image' },
+        // { dataIndex: 'icon', valueType: 'image' },
         { dataIndex: 'path' },
         {
           dataIndex: 'type',

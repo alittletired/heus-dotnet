@@ -1,9 +1,9 @@
-import React, {useState} from 'react'
-import adminApi, {Role, Resource} from '@/api/admin'
-import {FormItem, Form, Loading} from '@/components'
+import React, { useState } from 'react'
+import adminApi, { Role, Resource } from '@/api/admin'
+import { FormItem, Form, Loading } from '@/components'
 import withFormItem from '@/components/form/withFormItem'
 import TreeCheckGroup from './TreeCheckGroup'
-import {Card} from 'antd'
+import { Card } from 'antd'
 const ItemTreeCheckGroup = withFormItem(TreeCheckGroup)
 const AuthorizeActions: ModalComponent<Role> = (props) => {
   const [actionIds, setActionIds] = useState([] as number[])
@@ -23,7 +23,11 @@ const AuthorizeActions: ModalComponent<Role> = (props) => {
 
   return (
     <Loading loadData={loadData}>
-      <Form initialValues={{actionIds}} api={saveApi} noLabel>
+      <Form
+        initialValues={{ actionIds }}
+        params={props.model.id}
+        request={adminApi.roles.authorizeActionRights}
+        noLabel>
         <Card title={`角色:${props.model.name}`}>
           <ItemTreeCheckGroup name="actionIds" treeData={actions} />
         </Card>
@@ -32,7 +36,7 @@ const AuthorizeActions: ModalComponent<Role> = (props) => {
   )
 }
 
-AuthorizeActions.defaultModalProps = (props) => {
-  return {title: '角色授权', width: 800}
+AuthorizeActions.modalProps = (props) => {
+  return { title: '角色授权', width: 800 }
 }
 export default AuthorizeActions

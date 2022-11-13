@@ -1,22 +1,21 @@
-import React, {useCallback, useState, useMemo, useRef} from 'react'
-import {Card, Table} from 'antd'
-import adminApi, {Resource} from '@/api/admin'
-import {ApiTable, FormItem, Form} from '@/components'
+import React, { useCallback, useState, useMemo, useRef } from 'react'
+import adminApi, { Resource } from '@/api/admin'
+import { ApiTable, FormItem, Form } from '@/components'
 import EditTable from '@/components/EditTable'
-import {menuLabels, editMenuTypes} from '../menuData'
-type TreeResource = Resource & {children?: TreeResource[]}
+import { menuLabels, editMenuTypes } from '../menuData'
+type TreeResource = Resource & { children?: TreeResource[] }
 
 function getMenuGroups(menus: TreeResource[]) {
   return menus
     .filter((menu) => menu.type === 1)
     .map((menu) => {
-      let {id, name, type, children, ...rest} = menu
-      return {...rest, value: id, type, label: name, children}
+      let { id, name, type, children, ...rest } = menu
+      return { ...rest, value: id, type, label: name, children }
     })
 }
 
-const MenuEdit: ModalComponent<Resource, {menus: TreeResource[]}> = (props) => {
-  const [resource, setResource] = useState({type: 2, ...props.model})
+const MenuEdit: ModalComponent<Resource, { menus: TreeResource[] }> = (props) => {
+  const [resource, setResource] = useState({ type: 2, ...props.model })
   const disabled = !!resource?.id
   const parentItem = useMemo(() => {
     const treeData = getMenuGroups(props.menus)
@@ -31,14 +30,14 @@ const MenuEdit: ModalComponent<Resource, {menus: TreeResource[]}> = (props) => {
     )
   }, [resource, props.menus])
   const changeType = useCallback((type: any) => {
-    setResource((res) => ({...res, type}))
+    setResource((res) => ({ ...res, type }))
   }, [])
   return (
     <Form
       initialValues={resource}
       onSuccess={(data) => {
         if (data.id) return
-        setResource((res) => ({...res, ...data}))
+        setResource((res) => ({ ...res, ...data }))
         return false
       }}
       api={resource?.id ? adminApi.roles.update : adminApi.roles.create}>
@@ -60,29 +59,29 @@ const MenuEdit: ModalComponent<Resource, {menus: TreeResource[]}> = (props) => {
           deleteApi={adminApi.resources.delete}
           updateApi={adminApi.resources.update}
           createApi={adminApi.resources.create}
-          pagination={{pageSize: -1}}
+          pagination={{ pageSize: -1 }}
           tableTitle="权限列表"
-          data={{parentId: resource.id, type: 3, actionCode: {$neq: 'view'}}}
+          data={{ parentId: resource.id, type: 3, actionCode: { $neq: 'view' } }}
           columns={[
             {
               dataIndex: 'name',
               title: menuLabels.name,
               width: 100,
               editType: 'input',
-              editProps: {required: true},
+              editProps: { required: true },
             },
             {
               dataIndex: 'actionCode',
               width: 150,
               title: menuLabels.actionCode,
               editType: 'input',
-              editProps: {required: true},
+              editProps: { required: true },
             },
             {
               dataIndex: 'path',
               title: menuLabels.path,
               editType: 'input',
-              editProps: {required: true},
+              editProps: { required: true },
             },
           ]}
         />
@@ -90,7 +89,7 @@ const MenuEdit: ModalComponent<Resource, {menus: TreeResource[]}> = (props) => {
     </Form>
   )
 }
-MenuEdit.defaultModalProps = ({model}) => {
-  return {title: model?.id ? '修改菜单' : '新增菜单', width: 800}
+MenuEdit.defaultModalProps = ({ model }) => {
+  return { title: model?.id ? '修改菜单' : '新增菜单', width: 800 }
 }
 export default MenuEdit

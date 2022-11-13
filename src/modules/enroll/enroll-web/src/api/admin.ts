@@ -209,9 +209,9 @@ const adminApi = {
       const path = `/admin/resources/search`
       return http.post(path, data)
     },
-    update(id: long, data: Resource): Promise<Resource> {
+    update(data: Resource): Promise<Resource> {
       const path = `/admin/resources/update`
-      return http.put(path, data, { params: { id } })
+      return http.put(path, data)
     },
     create(data: Resource): Promise<Resource> {
       const path = `/admin/resources/create`
@@ -235,9 +235,9 @@ const adminApi = {
       const path = `/admin/roles/search`
       return http.post(path, data)
     },
-    update(id: long, data: Role): Promise<Role> {
+    update(data: Role): Promise<Role> {
       const path = `/admin/roles/update`
-      return http.put(path, data, { params: { id } })
+      return http.put(path, data)
     },
     create(data: Role): Promise<Role> {
       const path = `/admin/roles/create`
@@ -265,9 +265,9 @@ const adminApi = {
       const path = `/admin/users/search`
       return http.post(path, data)
     },
-    update(id: string, data: UserUpdateDto): Promise<User> {
+    update(data: UserUpdateDto): Promise<User> {
       const path = `/admin/users/update`
-      return http.put(path, data, { params: { id } })
+      return http.put(path, data)
     },
   },
 }
