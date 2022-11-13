@@ -60,6 +60,7 @@ axiosInstance.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status == 401) {
       logout()
+      if (location.pathname.startsWith(siteConfig.loginUrl)) return
       const redirect = encodeURIComponent(location.href.substring(location.origin.length))
       location.href = location.origin + siteConfig.loginUrl + '?redirect=' + redirect
     } else {

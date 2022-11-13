@@ -118,13 +118,13 @@ function ModalForm<M, P>({ onCancel, onDismiss, ...props }: ModalFormProps<M, P>
     </Drawer>
   )
 }
-export function showDrawer<M, P = any>(
+export function openDrawer<M, P = any>(
   Component: ModalComponent<M, P>,
   props: ModalComponentProps<M, P>,
 ): Promise<any> {
-  return showForm(Component, props, 'drawer')
+  return openForm(Component, props, 'drawer')
 }
-export function showForm<M, P = any>(
+export function openForm<M, P = any>(
   Component: ModalComponent<M, P>,
   props: ModalComponentProps<M, P>,
   overlayType: OverlayType = 'modal',
@@ -166,8 +166,8 @@ export function deleteConfirm<T>(content: string = '确定删除该记录吗?'):
   return confirm(content)
 }
 const overlay = {
-  showForm,
-  showDrawer,
+  openForm,
+  openDrawer,
   deleteConfirm,
   confirm,
 }

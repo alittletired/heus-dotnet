@@ -21,7 +21,7 @@ export const PageContextProvider: React.FC<PageProps & PropsWithChildren> = (pro
   const [user] = useUser()
   const [appConfig] = useAppConfig()
   const auth = useAuth()
-  if (!(user.isLogin && auth.hasRight('view')) && router.route !== appConfig.loginUrl) {
+  if (!(user.isLogin && auth.hasRight('view')) && !router.asPath.startsWith(appConfig.loginUrl)) {
     console.warn('redirect for login:', router, appConfig.loginUrl)
 
     router.replace(appConfig.loginUrl + '?redirect=' + encodeURIComponent(router.asPath))

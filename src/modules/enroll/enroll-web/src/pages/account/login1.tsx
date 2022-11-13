@@ -86,7 +86,7 @@ const Login: PageComponent = () => {
 
   return (
     <UserLayout containerClass={styles.main}>
-      <Form initialValues={model} noLabel api={login}>
+      <Form initialValues={model} noLabel request={login}>
         <Tabs
           destroyInactiveTabPane
           animated={false}
