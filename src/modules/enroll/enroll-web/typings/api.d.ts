@@ -19,10 +19,10 @@ interface PageList<T> {
 }
 type IsValidArg<T> = T extends object ? (keyof T extends never ? false : true) : true
 
-type ApiRequest<D, T> = T extends (...args: any) => Promise<infer R>
+type ApiRequest<T> = T extends (...args: any) => Promise<infer R>
   ? {
       request: T
-      onBefore?: (data: D) => Promise<D | boolean> | D | boolean
+      onBefore?: (data: ApiDataType<T>) => Promise<ApiDataType<T> | boolean>
       onSuccess?: (data: R) => any
       onFail?(err: any): void
       // params?: ApiRequestParamType<T>
@@ -40,6 +40,7 @@ type ApiRequestParamsType<T> = T extends (p: infer P, d: infer D) => any
     ? P
     : never
   : never
+type ApiDataType<T> = T extends (p: infer P, d: infer D) => any ? (D extends Object ? D : P) : p
 
 type ApiParamRequest<D, R> = (params: any, data: D) => Promise<R>
 interface RequestProps<D, R> {

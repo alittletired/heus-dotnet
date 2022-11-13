@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { ToolBarItem } from '../types'
+import { ColumnAction, ToolBarItem } from '../types'
 import { Divider, Button, Menu, Dropdown, MenuProps } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { useTable } from '../Table'
@@ -7,8 +7,8 @@ import ActionAnchor from '../../action/ActionAnchor'
 import { usePageContext } from '../../PageContext'
 import { useAuth } from '@/services/auth'
 interface Props<T> {
-  actions?: ToolBarItem<T>[]
-  data: any
+  actions?: ColumnAction<T>[]
+  data: T
   showCount?: number
 }
 export default function ActionColumn<T>(props: Props<T>) {

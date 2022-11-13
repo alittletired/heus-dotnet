@@ -10,7 +10,7 @@ type GetTitle<T> = (data: T) => string
 export interface ActionButtonProps<T> {
   actionName?: string
   component?: ModalComponent<T>
-  onClick?: (data?: T) => Promise<any>
+  onClick?: (data: T) => Promise<any>
   data?: T
   title?: string | GetTitle<T>
   icon?: IconKey

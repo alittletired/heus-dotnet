@@ -4,6 +4,7 @@ import { ActionComponentProps } from '../action'
 import { OptionsType, NameOption } from '../select'
 import { TreeNodeData } from '../tree/treeUtils'
 import { ColumnType } from 'antd/es/table'
+import { ActionButtonProps } from '../action/ActionButton'
 export type ValueType =
   | 'date'
   | 'money'
@@ -32,11 +33,15 @@ export interface TableProps<T> extends Omit<AntdTableProps<T>, 'columns'> {
   hiddenIndexColumn?: boolean
 }
 
+export type ColumnAction<T> = Omit<ActionButtonProps<T>, 'onClick' | 'data'> & {
+  autoReload?: boolean
+  onClick?: (data: T) => Promise<any>
+}
 export interface ColumnProps<T = any> extends Omit<ColumnType<T>, 'dataIndex'> {
   valueType?: ValueType
   options?: OptionsType
   optionsParam?: any
-  actions?: ToolBarItem<T>[]
+  actions?: ColumnAction<T>[]
   dataPath?: string
   operator?: Operator
   sortable?: boolean

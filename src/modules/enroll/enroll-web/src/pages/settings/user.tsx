@@ -7,7 +7,7 @@ import adminApi, {
   UserUpdateDto,
 } from '@/api/admin'
 
-import { ApiTable, FormItem, Form, overlay } from '@/components'
+import { ApiTable, Form, overlay } from '@/components'
 
 import AuthorizeRoles from './components/AuthorizeRoles'
 import ResetPassword from './components/ResetPassword'
@@ -51,7 +51,8 @@ const UserCreateModal: ModalComponent<UserCreateDto> = ({ model }) => {
       items={[
         { control: 'text', children: `用户初始密码为：${data.initialPassword}` },
         ...userFormItems,
-      ]}></Form>
+      ]}
+    />
   )
 }
 
@@ -106,12 +107,12 @@ const UserPage: PageComponent = () => {
             { title: '授权角色', actionName: 'authorizeRoles', component: AuthorizeRoles },
             { title: '重置密码', component: ResetPassword },
             {
-              // onClick: disabledUser,
+              onClick: disabledUser,
               title: '启用',
               hidden: (data) => !data.status,
             },
             {
-              // onClick: disabledUser,
+              onClick: disabledUser,
               title: '禁用',
               hidden: (data) => !!data.status,
             },

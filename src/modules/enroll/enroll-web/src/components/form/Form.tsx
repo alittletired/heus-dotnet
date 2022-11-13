@@ -22,13 +22,16 @@ type FormControlProps<D> = {
 }
 export type FormControlItem<D> = ValueOf<FormControlProps<D>>
 
-export type FormProps<D, T extends (...args: any) => any> = AntdFormProps<D> &
-  ApiRequest<D, T> & {
+export type FormProps<D, T extends (...args: any) => any> = Omit<
+  AntdFormProps<D>,
+  'initialValues'
+> &
+  ApiRequest<T> & {
     labels?: { [key in string]: string }
     noLabel?: boolean
     viewType?: ViewType
-    items?: FormControlItem<D>[]
-    initialValues: D
+    initialValues: ApiDataType<T>
+    items?: FormControlItem<ApiDataType<T>>[]
     children?: React.ReactNode
   }
 
