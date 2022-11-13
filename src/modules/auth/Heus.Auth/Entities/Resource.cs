@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Heus.Auth.Domain;
 using Heus.Ddd.Entities;
 
 namespace Heus.Auth.Entities;

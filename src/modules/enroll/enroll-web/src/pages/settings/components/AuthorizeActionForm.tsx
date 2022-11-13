@@ -10,7 +10,7 @@ const AuthorizeActions: ModalComponent<Role> = (props) => {
   const [actions, setActions] = useState([] as Resource[])
   const loadData = async () => {
     let [actionIds, actions] = await Promise.all([
-      adminApi.roles.getActionIds(props.model.id),
+      adminApi.users.get(props.model.id),
       adminApi.resources.pb.getList(),
     ])
     setActionIds(actionIds)
