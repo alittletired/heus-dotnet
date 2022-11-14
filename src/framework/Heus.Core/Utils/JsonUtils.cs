@@ -1,4 +1,5 @@
 using Heus.Core.JsonConverters;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -30,13 +31,19 @@ public static class JsonUtils
         
     }   
 
-
-    public static string Stringify<T>(T obj) 
+    public static byte[] SerializeToBytes<T>(T obj)
+    {
+        return Encoding.UTF8.GetBytes(Serialize(obj)); 
+    }
+    public static string Serialize<T>(T obj) 
     {
        return JsonSerializer.Serialize(obj, DefaultOptions);
     }
-
-    public static T? Parse<T>(string? json) {
+    public static T? Deserialize<T>(byte[] bytes)
+    {
+        return JsonSerializer.Deserialize<T>( Encoding.UTF8.GetString(bytes));
+    }
+    public static T? Deserialize<T>(string? json) {
 
         if (string.IsNullOrEmpty(json))
         {

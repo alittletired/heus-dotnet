@@ -26,7 +26,7 @@ internal class RemoteServiceProxy : DispatchProxy
         }
 
         var content = await response.Content.ReadAsStringAsync();
-        var data = JsonUtils.Parse<ApiResult<T>>(content);
+        var data = JsonUtils.Deserialize<ApiResult<T>>(content);
         if (data == null)
         {
             throw new BusinessException($"无法解析返回内容：{content},type:{typeof(ApiResult<T>)}");

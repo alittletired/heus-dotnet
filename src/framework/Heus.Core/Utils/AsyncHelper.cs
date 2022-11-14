@@ -2,6 +2,19 @@ using System.Reflection;
 
 namespace Heus.Core.Utils;
 
+/***
+ * 
+ * https://kubernetes.io/docs/tutorials/services/connect-applications-service/#environment-variables
+ * KUBERNETES_SERVICE_HOST
+ * /.dockerinit
+ * if File.exists?('/.dockerenv')
+  puts "I'm running in a docker container"
+end
+
+if File.exists?('/var/run/secrets/kubernetes.io')
+  puts "I'm also running in a Kubernetes pod"
+end
+*/
 /// <summary>
 /// Provides some helper methods to work with async methods.
 /// </summary>

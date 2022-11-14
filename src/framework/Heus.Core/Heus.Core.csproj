@@ -6,6 +6,12 @@
 	  <PackageId>Heus.Core</PackageId>
 	  <RootNamespace>Heus.Core</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Data\Internal\**" />
+    <Content Remove="Data\Internal\**" />
+    <EmbeddedResource Remove="Data\Internal\**" />
+    <None Remove="Data\Internal\**" />
+  </ItemGroup>
 
   <ItemGroup>
 	  <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
@@ -16,10 +22,6 @@
 	  <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.10.0" />
 	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.10.0" />
 	
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\Internal" />
   </ItemGroup>
 
 </Project>

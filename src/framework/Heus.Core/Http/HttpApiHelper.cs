@@ -140,7 +140,7 @@ public static class HttpApiHelper
         }
         else if (parameters.Count == 1)
         {
-            content = new StringContent(JsonUtils.Stringify(parameters.First().Value), Encoding.UTF8, MimeTypes.Application.Json);
+            content = new StringContent(JsonUtils.Serialize(parameters.First().Value), Encoding.UTF8, MimeTypes.Application.Json);
         }
         var request = new HttpRequestMessage(httpMethod, new Uri(url,UriKind.Relative))
         {

@@ -41,7 +41,7 @@ public class ExceptionHandlingMiddleware:IMiddleware
             httpContext.Response.StatusCode = 200;
             httpContext.Response.OnStarting(ClearCacheHeaders, httpContext.Response);
             httpContext.Response.Headers.Add("Content-Type", "application/json");
-            await httpContext.Response.WriteAsync(JsonUtils.Stringify(ApiResult.Error(exception)));
+            await httpContext.Response.WriteAsync(JsonUtils.Serialize(ApiResult.Error(exception)));
         
     }
       private Task ClearCacheHeaders(object state)

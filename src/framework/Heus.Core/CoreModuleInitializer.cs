@@ -30,5 +30,6 @@ public class CoreModuleInitializer : ModuleInitializerBase
         
         context.Services.Configure<JwtOptions>(context.Configuration.GetSection(JwtOptions.ConfigurationSection));
         context.Services.Configure<DbConnectionOptions>(context.Configuration);
+        context.Services.AddCache();
     }
 }

@@ -4,24 +4,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 
-namespace Heus.AspNetCore.ApiExploring
+namespace Heus.AspNetCore.ApiExploring;
+
+[Route("api/[controller]")]
+public class ApiDefinitionController : Controller, IRemoteService
 {
-    [Route("api/[controller]")]
-    public class ApiDefinitionController : Controller, IRemoteService
+    private readonly IApiDescriptionGroupCollectionProvider _descriptionProvider;
+
+    public ApiDefinitionController(IApiDescriptionGroupCollectionProvider descriptionProvider)
     {
-        private readonly IApiDescriptionGroupCollectionProvider _descriptionProvider;
+        _descriptionProvider = descriptionProvider;
+    }
 
-        public ApiDefinitionController(IApiDescriptionGroupCollectionProvider descriptionProvider)
-        {
-            _descriptionProvider = descriptionProvider;
-        }
+    [HttpGet]
+    public Task<string> Index()
+    {
+        var d = JsonUtils.Serialize(_descriptionProvider.ApiDescriptionGroups);
+        return Task.FromResult(d);
 
-        [HttpGet]
-        public Task<string> Index()
-        {
-            var d = JsonUtils.Stringify(_descriptionProvider.ApiDescriptionGroups);
-            return Task.FromResult(d);
-
-        }
     }
 }
