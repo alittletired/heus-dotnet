@@ -1,18 +1,12 @@
-﻿using Heus.Core;
-using Heus.Data;
-using Heus.Data.Options;
+﻿using Heus.Data.Options;
 using Heus.Data.EfCore.ValueConverters;
-using Heus.Ddd.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 namespace Heus.Data;
-
 public class DbContextConfigurationOptions
 {
     public DbProvider DbProvider { get; set; } = DbProvider.PostgreSql;
-
-    internal static Action<DbContextOptionsBuilder> DefaultConfigureAction => (options) =>
+    public IEnumerable<IDbConnectionProvider> ConnectionProviders { get;  }=new List<IDbConnectionProvider>();
+internal static Action<DbContextOptionsBuilder> DefaultConfigureAction => (options) =>
     {
         var logLevel = LogLevel.Information;
 #if DEBUG

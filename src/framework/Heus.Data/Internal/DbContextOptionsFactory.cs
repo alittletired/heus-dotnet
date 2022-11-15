@@ -1,29 +1,27 @@
-﻿using Heus.Data;
-using Heus.Data.Options;
-using Heus.Core.DependencyInjection;
+﻿using Heus.Core.DependencyInjection;
 using Heus.Core.Uow;
-using Heus.Ddd;
+using Heus.Data.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 namespace Heus.Data.EfCore.Internal;
-internal class DbContextOptionsFactory : ISingletonDependency
+internal class DbContextOptionsFactory : ISingletonDependency,IDisposable
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
-    private readonly IConnectionStringResolver _connectionStringResolver;
+    private readonly IDbConnectionManager _dbConnectionManager;
     private readonly ILogger<DbContextOptionsFactory> _logger;
     private readonly DbContextConfigurationOptions _options;
-    private readonly IEnumerable<IDbConnectionProvider> _dbConnectionProviders;
+  
 
     public DbContextOptionsFactory(
         IUnitOfWorkManager unitOfWorkManager
-        , IConnectionStringResolver connectionStringResolver
+,     IDbConnectionManager dbConnectionManager
         , ILogger<DbContextOptionsFactory> logger
-        , IEnumerable<IDbConnectionProvider> dbConnectionProviders
         , IOptions<DbContextConfigurationOptions> options)
     {
         _unitOfWorkManager = unitOfWorkManager;
-        _connectionStringResolver = connectionStringResolver;
-        _dbConnectionProviders = dbConnectionProviders;
+            _dbConnectionManager = dbConnectionManager;
+
+
         _logger = logger;
         _options = options.Value;
     }
@@ -49,4 +47,8 @@ internal class DbContextOptionsFactory : ISingletonDependency
         return builder.Options;
     }
 
+    public void Dispose()
+    {
+        
+    }
 }
