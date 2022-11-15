@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\common.props" />
+     <ItemGroup>
+	<PackageReference Include="EFCore.NamingConventions" Version="7.0.0" />
+    </ItemGroup>
+     <ItemGroup>
+       <ProjectReference Include="..\Heus.Ddd\Heus.Ddd.csproj" />
+     </ItemGroup>
+  
+   
+
+</Project>

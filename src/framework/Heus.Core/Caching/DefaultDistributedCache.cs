@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Heus.Core.Caching;
 
-internal class DefaultDistributedCache<TCacheItem> : DefaultDistributedCache<TCacheItem, string> where TCacheItem : class
+internal class DefaultDistributedCache<TCacheItem> : DefaultDistributedCache<TCacheItem, string>, IDistributedCache<TCacheItem> where TCacheItem : class
 {
     public DefaultDistributedCache(IDistributedCache cache, IOptions<DistributedCacheEntryOptions> options) : base(cache, options)
     {

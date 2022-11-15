@@ -1,6 +1,6 @@
 ﻿
 
-namespace Heus.Core.Data.Options;
+namespace Heus.Data.Options;
 
 internal class DbConnectionOptions
 {

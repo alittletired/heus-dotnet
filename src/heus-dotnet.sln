@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Enroll.Web", "modules\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Data.Mysql", "framework\Heus.Data.Mysql\Heus.Data.Mysql.csproj", "{42C239C3-63A5-4E83-8B00-6C11091165DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Data.EfCore", "framework\Heus.Data.EfCore\Heus.Data.EfCore.csproj", "{B689E0B4-FD42-4EBC-A7BC-E1A336824C7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Data", "framework\Heus.Data\Heus.Data.csproj", "{B689E0B4-FD42-4EBC-A7BC-E1A336824C7B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Auth.IntegratedTests", "modules\auth\Heus.Auth.IntegratedTests\Heus.Auth.IntegratedTests.csproj", "{BA096E99-5CE8-4E32-BAE9-F895B3FF5031}"
 EndProject
@@ -36,6 +36,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Data.Sqlite", "framework\Heus.Data.Sqlite\Heus.Data.Sqlite.csproj", "{20217119-D6AA-453A-8E0B-FAF862B1B9FB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Settings", "framework\Heus.Settings\Heus.Settings.csproj", "{000219DF-DBBF-4E90-929F-52E87073B273}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Data.Postgres", "framework\Heus.Data.Postgres\Heus.Data.Postgres.csproj", "{9557BDDA-BA9D-4EA2-BD64-417A6A8F72CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +97,10 @@ Global
 		{000219DF-DBBF-4E90-929F-52E87073B273}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{000219DF-DBBF-4E90-929F-52E87073B273}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{000219DF-DBBF-4E90-929F-52E87073B273}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9557BDDA-BA9D-4EA2-BD64-417A6A8F72CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9557BDDA-BA9D-4EA2-BD64-417A6A8F72CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9557BDDA-BA9D-4EA2-BD64-417A6A8F72CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9557BDDA-BA9D-4EA2-BD64-417A6A8F72CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{719ED3AF-5396-4A13-A49A-1D5838D4725F} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
 		{20217119-D6AA-453A-8E0B-FAF862B1B9FB} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
 		{000219DF-DBBF-4E90-929F-52E87073B273} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
+		{9557BDDA-BA9D-4EA2-BD64-417A6A8F72CF} = {CB1C7283-3152-4696-A6E0-2CE78B3ABDF3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {734361D4-560C-4467-BE8D-95EBDCA95E53}

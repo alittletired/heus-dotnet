@@ -3,9 +3,8 @@ using Heus.Ddd.Application.Services;
 using Heus.Ddd.Domain;
 using Heus.Ddd.Dtos;
 using Heus.Ddd.Entities;
-using Heus.Ddd.Query;
+
 using Heus.Ddd.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Ddd.Application;
 

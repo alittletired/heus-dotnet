@@ -1,4 +1,5 @@
 ﻿using Heus.Ddd.Data;
+
 namespace Heus.Auth;
 
 internal class AuthDbContext : DbContextBase<AuthDbContext>

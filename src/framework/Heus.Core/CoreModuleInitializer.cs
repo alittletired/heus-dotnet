@@ -1,5 +1,3 @@
-using System.Reflection;
-using Heus.Core.Data.Options;
 using Heus.Core.DependencyInjection;
 using Heus.Core.ObjectMapping;
 using Heus.Core.Security;
@@ -29,7 +27,7 @@ public class CoreModuleInitializer : ModuleInitializerBase
         context.Services.AddObjectMapper();
         
         context.Services.Configure<JwtOptions>(context.Configuration.GetSection(JwtOptions.ConfigurationSection));
-        context.Services.Configure<DbConnectionOptions>(context.Configuration);
+      
         context.Services.AddCache();
     }
 }

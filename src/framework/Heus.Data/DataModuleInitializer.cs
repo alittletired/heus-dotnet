@@ -1,4 +1,5 @@
 using System.Reflection;
+using Heus.Data.Options;
 using Heus.Core.DependencyInjection;
 using Heus.Data.EfCore.Internal;
 using Heus.Data.EfCore.Repositories;
@@ -7,26 +8,27 @@ using Heus.Ddd.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Heus.Data.EfCore;
-[DependsOn(typeof(DddModuleInitializer))]
-public class EfCoreModuleInitializer :ModuleInitializerBase {
-   
+namespace Heus.Data;
+
+public class DataModuleInitializer : ModuleInitializerBase
+{
+
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         AutoAddDbContextTypes(context.Services);
     }
 
-    private static readonly MethodInfo AddDbContextOptionsMethod = typeof(EfCoreModuleInitializer)
+    private static readonly MethodInfo AddDbContextOptionsMethod = typeof(DataModuleInitializer)
         .GetTypeInfo().DeclaredMethods.First(m => m.Name == nameof(AddDbContextOptions));
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-       
-        context.Services.AddScoped(typeof(IRepositoryProvider<>),typeof(EfCoreRepositoryProvider<>));
+        context.Services.Configure<DbConnectionOptions>(context.Configuration);
+        context.Services.AddScoped(typeof(IRepositoryProvider<>), typeof(EfCoreRepositoryProvider<>));
     }
     private static void AddDbContextOptions<TContext>(IServiceCollection services) where TContext : DbContext
     {
         services.AddScoped(sp => sp.GetRequiredService<DbContextOptionsFactory>().Create<TContext>());
-    
+
         // services.AddDbContext<TContext>(options =>
         // {
         //
@@ -36,7 +38,7 @@ public class EfCoreModuleInitializer :ModuleInitializerBase {
     {
         var entityTypes = new List<Type>();
         var entityDbContextMappings = new Dictionary<Type, Type>();
-        
+
         services.OnRegistered(type =>
         {
             if (typeof(DbContext).IsAssignableFrom(type))
@@ -47,20 +49,20 @@ public class EfCoreModuleInitializer :ModuleInitializerBase {
                     entityDbContextMappings.Add(entityType, type);
                     entityTypes.Add(entityType);
                 }
-             
+
                 var actualMethod = AddDbContextOptionsMethod.MakeGenericMethod(type);
                 actualMethod.Invoke(null, new object[] { services });
             }
         });
-        
+
         services.Configure<DbContextConfigurationOptions>(options =>
         {
             options.EntityDbContextMappings.AddRange(entityDbContextMappings);
         });
-        
+
         services.Configure<RepositoryRegistrationOptions>(options =>
         {
-            entityTypes.ForEach(t=>options.EntityTypes.Add(t)); 
+            entityTypes.ForEach(t => options.EntityTypes.Add(t));
         });
     }
 }

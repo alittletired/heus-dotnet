@@ -8,7 +8,7 @@
     </ItemGroup>
      <ItemGroup>
        <ProjectReference Include="..\Heus.AspNetCore\Heus.AspNetCore.csproj" />
-       <ProjectReference Include="..\Heus.Data.EfCore\Heus.Data.EfCore.csproj" />
+       <ProjectReference Include="..\Heus.Data.EfCore\Heus.Data.csproj" />
        <ProjectReference Include="..\Heus.Data.Sqlite\Heus.Data.Sqlite.csproj" />
      </ItemGroup>
 

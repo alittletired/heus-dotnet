@@ -5,7 +5,7 @@
    <NoWarn>$(NoWarn);8669</NoWarn> 
 </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\framework\Heus.Data.EfCore\Heus.Data.EfCore.csproj" />
+    <ProjectReference Include="..\..\..\framework\Heus.Data\Heus.Data.csproj" />
     <ProjectReference Include="..\..\..\framework\Heus.Ddd\Heus.Ddd.csproj" />
   </ItemGroup>
   <ItemGroup>

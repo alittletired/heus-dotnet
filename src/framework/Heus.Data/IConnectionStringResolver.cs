@@ -1,4 +1,4 @@
-﻿namespace Heus.Core.Data;
+﻿namespace Heus.Data;
 
 public interface IConnectionStringResolver
 {

@@ -1,7 +1,6 @@
-using Heus.Core.Data;
+using Heus.Data;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Data.EfCore.Repositories;
 
@@ -21,7 +20,7 @@ internal class EfCoreRepositoryProvider<TEntity> :
     public IQueryable<TEntity> Query => DbSet.AsQueryable().AsNoTracking();
 
     protected DbSet<TEntity> DbSet => _dbContext.Set<TEntity>();
-   
+
 
     public async Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
     {

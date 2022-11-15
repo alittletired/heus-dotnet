@@ -1,13 +1,13 @@
 using Heus.AspNetCore;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Http;
-using Heus.Data.EfCore;
+using Heus.Data;
 using Heus.Data.Sqlite;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.TestHost;
 
 namespace Heus.IntegratedTests;
-[DependsOn(typeof(AspNetModuleInitializer)   
+[DependsOn(typeof(AspNetModuleInitializer)
     , typeof(SqliteModuleInitializer))]
 public class IntegratedTestModuleInitializer : ModuleInitializerBase
 {

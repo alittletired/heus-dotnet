@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Data.Common;
-using Heus.Core.Data;
+using Heus.Data;
 using Heus.Core.Data.Options;
 using Heus.Core.DependencyInjection;
 using Microsoft.EntityFrameworkCore;

@@ -1,10 +1,7 @@
-using Heus.Core.Data.Options;
+using Heus.Data.Options;
 using System.Data.Common;
-using Microsoft.EntityFrameworkCore;
-
-namespace Heus.Core.Data;
-
-public interface IDbConnectionProvider:IDisposable
+namespace Heus.Data;
+public interface IDbConnectionProvider : IDisposable
 {
     DbConnection CreateConnection(string connectionStringName);
     void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection);

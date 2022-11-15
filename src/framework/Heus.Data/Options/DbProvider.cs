@@ -1,4 +1,4 @@
-namespace Heus.Core.Data.Options;
+namespace Heus.Data.Options;
 
 public enum DbProvider
 {

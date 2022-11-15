@@ -1,5 +1,5 @@
 ﻿using System.Net.NetworkInformation;
-namespace Heus.Core.Data;
+namespace Heus.Data;
 public class SnowflakeId
 {
     /// <summary>

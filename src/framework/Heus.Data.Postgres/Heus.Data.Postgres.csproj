@@ -7,11 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Heus.Data\Heus.Data.csproj" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.9" />
+      <ProjectReference Include="..\Heus.Data\Heus.Data.csproj" />
+   
     </ItemGroup>
 
 </Project>

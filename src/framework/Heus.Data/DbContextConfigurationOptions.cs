@@ -1,24 +1,34 @@
 ﻿using Heus.Core;
-using Heus.Core.Data;
-using Heus.Core.Data.Options;
+using Heus.Data;
+using Heus.Data.Options;
 using Heus.Data.EfCore.ValueConverters;
 using Heus.Ddd.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-
-namespace Heus.Data.EfCore;
+namespace Heus.Data;
 
 public class DbContextConfigurationOptions
 {
-    internal static readonly Action<DbContextOptionsBuilder> DefaultConfigureAction= (options) =>
+    public DbProvider DbProvider { get; set; } = DbProvider.PostgreSql;
+
+    internal static Action<DbContextOptionsBuilder> DefaultConfigureAction => (options) =>
     {
+        var logLevel = LogLevel.Information;
+#if DEBUG
+        logLevel = LogLevel.Debug;
+#endif
         options.UseSnakeCaseNamingConvention();
+        options.LogTo(Console.WriteLine, logLevel)
+           .EnableSensitiveDataLogging()
+           .EnableDetailedErrors();
     };
-    internal static readonly Action<ModelConfigurationBuilder> DefaultModelConfiguration = (options) => {
+    internal static readonly Action<ModelConfigurationBuilder> DefaultModelConfiguration = (options) =>
+    {
         var modelBuilder = options.CreateModelBuilder(null);
         var propertyTypes = modelBuilder.Model.GetEntityTypes()
             .SelectMany(e => e.ClrType.GetProperties())
-            .Where(p =>p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition()== typeof(EnumClass<>))
+            .Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(EnumClass<>))
             .Select(p => p.PropertyType)
             .Distinct();
 
@@ -32,9 +42,9 @@ public class DbContextConfigurationOptions
         // .HaveConversion<longConverter>().HaveMaxLength(24).AreUnicode(false);
     };
 
-    public  List<Action<DbContextOptionsBuilder>> DbContextOptionsActions { get; }= new() { DefaultConfigureAction };
+    public List<Action<DbContextOptionsBuilder>> DbContextOptionsActions { get; } = new() { DefaultConfigureAction };
     public List<Action<ModelConfigurationBuilder>> ModelConfiguration = new() { DefaultModelConfiguration };
-    public DbProvider? DefaultDbProvider { get; set; }
+
     public Dictionary<Type, Type> EntityDbContextMappings { get; } = new();
 
 }
