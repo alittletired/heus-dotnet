@@ -3,10 +3,10 @@
     "Heus.Core": {
       "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:58525;http://localhost:58526",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:58525;http://localhost:58526"
+      }
     }
   }
 }

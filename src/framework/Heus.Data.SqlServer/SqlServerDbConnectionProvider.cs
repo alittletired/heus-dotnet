@@ -21,7 +21,7 @@ internal class SqlServerDbConnectionProvider : IDbConnectionProvider
             });
     }
 
-    public DbProvider DbProvider => DbProvider.MySql;
+    public DbProvider DbProvider => DbProvider.SqlServer;
 
     public DbConnection CreateConnection(string connectionString)
     {

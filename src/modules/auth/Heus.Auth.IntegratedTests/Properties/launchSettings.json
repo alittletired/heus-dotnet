@@ -3,10 +3,10 @@
     "Heus.Auth.IntegratedTests": {
       "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:50081;http://localhost:50084",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:50081;http://localhost:50084"
+      }
     }
   }
 }
