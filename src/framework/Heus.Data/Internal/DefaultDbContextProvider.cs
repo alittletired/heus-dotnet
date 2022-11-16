@@ -1,6 +1,6 @@
 ﻿using Heus.Core.DependencyInjection;
 using Heus.Ddd.Entities;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -8,9 +8,9 @@ namespace Heus.Data.EfCore.Internal;
 
 internal class DefaultDbContextProvider : IDbContextProvider,IScopedDependency
 {
-    private readonly IOptions<DbContextConfigurationOptions> _options;
+    private readonly IOptions<DataConfigurationOptions> _options;
     private readonly IServiceProvider _serviceProvider;
-    public DefaultDbContextProvider( IOptions<DbContextConfigurationOptions> options
+    public DefaultDbContextProvider( IOptions<DataConfigurationOptions> options
         , IServiceProvider serviceProvider)
     {
         _options = options;

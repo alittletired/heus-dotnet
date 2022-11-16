@@ -1,5 +1,7 @@
 ﻿using Heus.Core.DependencyInjection;
 using Heus.Data;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 
 namespace Heus.Data.Postgres;
@@ -10,5 +12,10 @@ public class PostgresSqlModuleInitializer : ModuleInitializerBase
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        context.Services.Configure<DataConfigurationOptions>((options) =>
+        {
+            options.DbConnectionProviders.Add(new PostgresSqlDbConnectionProvider());
+        });
+
     }
 }

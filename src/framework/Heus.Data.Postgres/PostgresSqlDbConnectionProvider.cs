@@ -1,21 +1,16 @@
 ﻿using System.Data.Common;
-using Heus.Data;
 
-using Heus.Core.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using Heus.Data.Options;
 
 namespace Heus.Data.Postgres;
 
-internal class PostgresSqlDbConnectionProvider : IDbConnectionProvider, IScopedDependency
+internal class PostgresSqlDbConnectionProvider : IDbConnectionProvider
 {
 
 
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
     {
-
-
         dbContextOptions.UseNpgsql(shareConnection,
            options =>
             {
@@ -31,10 +26,7 @@ internal class PostgresSqlDbConnectionProvider : IDbConnectionProvider, IScopedD
         return new NpgsqlConnection(connectionString);
     }
 
-    public void Dispose()
-    {
-
-    }
+ 
 
 
 }

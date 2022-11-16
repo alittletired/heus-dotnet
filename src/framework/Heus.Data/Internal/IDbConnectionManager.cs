@@ -1,10 +1,8 @@
 ﻿
 
 using System.Data.Common;
-using Heus.Core.DependencyInjection;
-
 namespace Heus.Data.Internal;
-internal interface IDbConnectionManager
+internal interface IDbConnectionManager:IDisposable
 {
     DbConnection GetDbConnection<TDbContext>() where TDbContext : DbContext;
 }

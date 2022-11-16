@@ -10,6 +10,9 @@ public class MysqlModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-     
+        context.Services.Configure<DataConfigurationOptions>(options =>
+        {
+            options.DbConnectionProviders.Add(new MySqlDbConnectionProvider());
+        });
     }
 }

@@ -55,7 +55,7 @@ public class DataModuleInitializer : ModuleInitializerBase
             }
         });
 
-        services.Configure<DbContextConfigurationOptions>(options =>
+        services.Configure<DataConfigurationOptions>(options =>
         {
             options.EntityDbContextMappings.AddRange(entityDbContextMappings);
         });
