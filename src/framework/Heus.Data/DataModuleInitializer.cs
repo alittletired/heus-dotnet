@@ -25,7 +25,7 @@ public class DataModuleInitializer : ModuleInitializerBase
     }
     private static void AddDbContextOptions<TContext>(IServiceCollection services) where TContext : DbContext
     {
-        services.AddScoped(sp => sp.GetRequiredService<DbContextOptionsFactory>().Create<TContext>());
+        services.AddScoped(sp => sp.GetRequiredService<IDbContextOptionsFactory>().Create<TContext>());
           
     }
     private static void OnDbContextRegistered(IServiceCollection services)
@@ -47,7 +47,7 @@ public class DataModuleInitializer : ModuleInitializerBase
             }
         });
 
-        services.Configure<DataConfigurationOptions>(options =>
+        services.Configure<DataOptions>(options =>
         {
             options.EntityDbContextMappings.AddRange(entityDbContextMappings);
         });

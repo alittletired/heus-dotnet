@@ -2,6 +2,7 @@
 using Heus.Core.ObjectMapping;
 using Heus.Ddd.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Auth.Application;
 
@@ -96,14 +97,11 @@ internal class ResourceAdminAppService : AdminApplicationService<Resource>, IRes
         {
             return false;
         }
-
-        var resources = await Repository.FindAllAsync(s => true);
-        var actionRights = await _actionRightRepository.FindAllAsync(s => true);
         var insertResources = new List<Resource>();
         var insertActionRights = new List<ActionRight>();
         ExtractResourceTree(dtos, insertResources, insertActionRights,null);
-        await Repository.DeleteManyAsync(resources);
-        await _actionRightRepository.DeleteManyAsync(actionRights);
+        var deleteCount = await Repository.Query.ExecuteDeleteAsync();
+        var deleteActionRightCount = await _actionRightRepository.Query.ExecuteDeleteAsync();
         await Repository.InsertManyAsync(insertResources);
         await _actionRightRepository.InsertManyAsync(insertActionRights);
         return true;

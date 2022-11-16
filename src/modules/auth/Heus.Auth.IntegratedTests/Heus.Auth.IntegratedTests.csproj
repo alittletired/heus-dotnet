@@ -9,6 +9,12 @@
       <ProjectReference Include="..\..\enroll\Heus.Enroll.Web\Heus.Enroll.Web.csproj" />
       <ProjectReference Include="..\Heus.Auth\Heus.Auth.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+      <PackageReference Remove="coverlet.collector" />
+      <PackageReference Remove="xunit.runner.visualstudio" />
+      <PackageReference Remove="xunit" />
+    </ItemGroup>
 
 
    

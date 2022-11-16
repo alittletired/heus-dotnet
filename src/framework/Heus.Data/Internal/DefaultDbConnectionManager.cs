@@ -10,14 +10,14 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
     private readonly IConnectionStringResolver _connectionStringResolver;
-    private readonly DataConfigurationOptions _options;
+    private readonly DataOptions _options;
     private readonly ILogger<DefaultDbConnectionManager> _logger;
 
     private readonly Dictionary<string, DbConnection> _connections = new();
     public DefaultDbConnectionManager(IUnitOfWorkManager unitOfWorkManager
         , IConnectionStringResolver connectionStringResolver
 
-        , IOptions<DataConfigurationOptions> options,
+        , IOptions<DataOptions> options,
      ILogger<DefaultDbConnectionManager> logger)
     {
         _unitOfWorkManager = unitOfWorkManager;

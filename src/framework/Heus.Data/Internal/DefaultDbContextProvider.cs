@@ -7,9 +7,9 @@ namespace Heus.Data.Internal;
 
 internal class DefaultDbContextProvider : IDbContextProvider,IScopedDependency
 {
-    private readonly IOptions<DataConfigurationOptions> _options;
+    private readonly IOptions<DataOptions> _options;
     private readonly IServiceProvider _serviceProvider;
-    public DefaultDbContextProvider( IOptions<DataConfigurationOptions> options
+    public DefaultDbContextProvider( IOptions<DataOptions> options
         , IServiceProvider serviceProvider)
     {
         _options = options;

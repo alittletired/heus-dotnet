@@ -4,7 +4,7 @@ using Heus.Data.Options;
 using Heus.Core.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Heus.Data;
+namespace Heus.Data.Internal;
 internal class DefaultConnectionStringResolver : IConnectionStringResolver, ISingletonDependency
 {
     private readonly IOptions<DbConnectionOptions> _options;

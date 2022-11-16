@@ -23,7 +23,7 @@ public class DddModuleInitializer : ModuleInitializerBase
 
     public override void PostConfigureServices(ServiceConfigurationContext context)
     {
-        var dataOptions = context.Services.GetPostOption<DataConfigurationOptions>();
+        var dataOptions = context.Services.GetPostOption<DataOptions>();
         var options = context.Services.GetPostOption<RepositoryRegistrationOptions>();
         foreach (var entityType in dataOptions.EntityDbContextMappings.Keys)
         {

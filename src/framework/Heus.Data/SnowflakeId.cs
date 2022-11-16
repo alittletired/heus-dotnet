@@ -158,7 +158,9 @@ public class SnowflakeId
         NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
         //exclude virtual and Loopback
         var firstUpInterface = networkInterfaces.OrderByDescending(x => x.Speed)
-            .FirstOrDefault(x => !x.Description.Contains("Virtual") && x.NetworkInterfaceType != NetworkInterfaceType.Loopback && x.OperationalStatus == OperationalStatus.Up);
+            .FirstOrDefault(x => !x.Description.Contains("Virtual",StringComparison.OrdinalIgnoreCase) 
+            && x.NetworkInterfaceType != NetworkInterfaceType.Loopback 
+            && x.OperationalStatus == OperationalStatus.Up);
         if (firstUpInterface == null)
         {
             throw new Exception("no available mac found");

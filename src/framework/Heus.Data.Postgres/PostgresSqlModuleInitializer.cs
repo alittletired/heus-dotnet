@@ -12,7 +12,7 @@ public class PostgresSqlModuleInitializer : ModuleInitializerBase
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-        context.Services.Configure<DataConfigurationOptions>((options) =>
+        context.Services.Configure<DataOptions>((options) =>
         {
             options.DbConnectionProviders.Add(new PostgresSqlDbConnectionProvider());
         });

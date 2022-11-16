@@ -19,9 +19,9 @@ public class IntegratedTestModuleInitializer : ModuleInitializerBase
         services.AddSingleton<IProxyHttpClientFactory, TestProxyHttpClientFactory>();
         services.AddSingleton<IRemoteServiceProxyContributor, TestRemoteServiceProxyContributor>();
 
-        services.Configure<DbContextConfigurationOptions>(options =>
+        services.Configure<DataOptions>(options =>
         {
-            options.DefaultDbProvider = Core.Data.Options.DbProvider.Sqlite;
+            options.DbProvider = DbProvider.Sqlite;
         });
         base.ConfigureServices(context);
     }

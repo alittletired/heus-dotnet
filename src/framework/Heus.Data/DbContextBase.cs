@@ -20,9 +20,7 @@ public abstract class DbContextBase<TDbContext> : DbContext,IScopedDependency
 
        foreach (var propertyType in propertyTypes)
        {
-           
-           var converterType = typeof(EnumValueConverter<>).MakeGenericType(propertyType);
-
+           var converterType = typeof(EnumClassValueConverter<>).MakeGenericType(propertyType);
            configurationBuilder.Properties(propertyType)
                .HaveConversion(converterType);
        }
