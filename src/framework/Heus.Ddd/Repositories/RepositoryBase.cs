@@ -3,7 +3,6 @@ using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
 using Heus.Core.Uow;
 using Heus.Data;
-using Heus.Ddd.Domain;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories.Filtering;
 
@@ -11,7 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Repositories;
 
-public abstract class RepositoryBase<TEntity> : IRepository<TEntity> , IScopedDependency where TEntity : class, IEntity
+public abstract class RepositoryBase<TEntity> :
+    IRepository<TEntity> , IScopedDependency where TEntity : class, IEntity
 {
     protected IUnitOfWorkManager UnitOfWorkManager { get; }
     protected IDataFilter DataFilter=> ServiceProvider.GetRequiredService<IDataFilter>();
@@ -22,7 +22,7 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity> , IScopedDe
             {
                 throw new BusinessException("A Repository can only be created inside a unit of work!");
             }
-            return UnitOfWorkManager.Current.ServiceProvider; ;
+            return UnitOfWorkManager.Current.ServiceProvider;
 
         } } 
     public RepositoryBase(IUnitOfWorkManager unitOfWorkManager)

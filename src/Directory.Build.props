@@ -1,6 +1,6 @@
 <Project>
 <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <ImplicitUsings>enable</ImplicitUsings>
@@ -13,7 +13,7 @@
 
   <PropertyGroup>
     <!-- All Microsoft packages -->
-    <MicrosoftPackageVersion>6.0.0</MicrosoftPackageVersion>
+    <MicrosoftPackageVersion>7.0.0</MicrosoftPackageVersion>
 
     <!-- Microsoft.NET.Test.Sdk https://www.nuget.org/packages/Microsoft.NET.Test.Sdk -->
     <MicrosoftNETTestSdkPackageVersion>17.3.0</MicrosoftNETTestSdkPackageVersion>
