@@ -29,7 +29,7 @@ internal class UserAdminAppService : AdminApplicationService<User, User, UserCre
     }
     public async Task<ICurrentUser?> FindByNameAsync(string name)
     {
-        var user = await Repository.FindAsync(u => u.Name == name);
+        var user = await Repository.FindOneAsync(u => u.Name == name);
         if (user == null)
         {
             return null;

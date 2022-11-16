@@ -1,10 +1,9 @@
 ﻿using Heus.Core.DependencyInjection;
-using Heus.Ddd.Entities;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Heus.Data.EfCore.Internal;
+namespace Heus.Data.Internal;
 
 internal class DefaultDbContextProvider : IDbContextProvider,IScopedDependency
 {
@@ -16,7 +15,7 @@ internal class DefaultDbContextProvider : IDbContextProvider,IScopedDependency
         _options = options;
         _serviceProvider = serviceProvider;
     }
-    public  DbContext GetDbContext<TEntity>() where TEntity : class, IEntity
+    public  DbContext GetDbContext<TEntity>() 
     {
         var dbContextType = _options.Value.EntityDbContextMappings[typeof(TEntity)];
         //var connectionStringName = ConnectionStringNameAttribute.GetConnStringName(dbContextType);

@@ -1,12 +1,13 @@
 using System.Reflection;
 using Heus.Core.DependencyInjection;
+using Heus.Data;
 using Heus.Ddd.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Heus.Ddd;
 
-[DependsOn(typeof(CoreModuleInitializer))]
+[DependsOn(typeof(DataModuleInitializer))]
 public class DddModuleInitializer : ModuleInitializerBase
 {
 
@@ -22,8 +23,9 @@ public class DddModuleInitializer : ModuleInitializerBase
 
     public override void PostConfigureServices(ServiceConfigurationContext context)
     {
+        var dataOptions = context.Services.GetPostOption<DataConfigurationOptions>();
         var options = context.Services.GetPostOption<RepositoryRegistrationOptions>();
-        foreach (var entityType in options.EntityTypes)
+        foreach (var entityType in dataOptions.EntityDbContextMappings.Keys)
         {
             var entityRepositoryType = typeof(IRepository<>).MakeGenericType(entityType);
             if (!options.CustomRepositories.TryGetValue(entityType, out var repoType))

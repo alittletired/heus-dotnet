@@ -28,6 +28,7 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
 
     public void Dispose()
     {
+        _logger.LogInformation("Dispose connections");
         _connections.Values.ForEach(c => c.Dispose());
         _connections.Clear();
     }
@@ -39,7 +40,8 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
         {
             throw new BusinessException("A DbContextOptions can only be created inside a unit of work!");
         }
-        var connectionStringName = ConnectionStringNameAttribute.GetConnStringName<TDbContext>();
+        unitOfWork.Disposed += (o,e) => Dispose();
+         var connectionStringName = ConnectionStringNameAttribute.GetConnStringName<TDbContext>();
 
         var connectionString = _connectionStringResolver.Resolve(connectionStringName);
 

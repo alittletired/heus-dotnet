@@ -1,4 +1,6 @@
 
+using Heus.Core.Uow;
+
 namespace Heus.Auth.Domain;
 
 public interface IUserRepository : IRepository<User>
@@ -8,8 +10,12 @@ public interface IUserRepository : IRepository<User>
 }
 internal class UserRepository:RepositoryBase<User>,IUserRepository
 {
-   public async Task<User?> FindByNameAsync(string account)
+    public UserRepository(IUnitOfWorkManager unitOfWorkManager) : base(unitOfWorkManager)
+    {
+    }
+
+    public async Task<User?> FindByNameAsync(string account)
    {
-      return await FindAsync(s => s.Name== account);
+      return await FindOneAsync(s => s.Name== account);
    }
 }

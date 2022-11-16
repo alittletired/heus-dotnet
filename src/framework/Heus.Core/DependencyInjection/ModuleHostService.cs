@@ -16,8 +16,9 @@ internal class ModuleHostService : IHostedService
         {
             using var scope = _serviceProvider.CreateScope();
             var serviceProvider = scope.ServiceProvider;
+
             var unitOfWorkManager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-            var options = new UnitOfWorkOptions() { IsTransactional = true };
+            var options = new UnitOfWorkOptions(serviceProvider) { IsTransactional = true };
 
             using var unitOfWork = unitOfWorkManager.Begin(options);
 

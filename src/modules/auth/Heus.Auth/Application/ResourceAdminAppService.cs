@@ -97,8 +97,8 @@ internal class ResourceAdminAppService : AdminApplicationService<Resource>, IRes
             return false;
         }
 
-        var resources = await Repository.GetListAsync(s => true);
-        var actionRights = await _actionRightRepository.GetListAsync(s => true);
+        var resources = await Repository.FindAllAsync(s => true);
+        var actionRights = await _actionRightRepository.FindAllAsync(s => true);
         var insertResources = new List<Resource>();
         var insertActionRights = new List<ActionRight>();
         ExtractResourceTree(dtos, insertResources, insertActionRights,null);

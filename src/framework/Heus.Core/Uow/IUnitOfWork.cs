@@ -1,14 +1,16 @@
 
 
-using System.Data.Common;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Core.Uow;
 public interface IUnitOfWork :  IDisposable
 {
   
     UnitOfWorkOptions Options { get; }
-
-    Dictionary<string, DbConnection> DbConnections
+    IServiceProvider ServiceProvider { get; }
+    event EventHandler<UnitOfWorkEventArgs>? Disposed;
+    List<DbContext> DbContexts 
     {
         get;
     }

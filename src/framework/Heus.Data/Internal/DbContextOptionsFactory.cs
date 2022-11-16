@@ -28,9 +28,9 @@ internal class DbContextOptionsFactory : ISingletonDependency, IDisposable
         var builder = new DbContextOptionsBuilder<TDbContext>();
 
         var logLevel = LogLevel.Information;
-#if DEBUG
-        logLevel = LogLevel.Debug;
-#endif
+//#if DEBUG
+//        logLevel = LogLevel.Debug;
+//#endif
         builder.UseSnakeCaseNamingConvention();
         builder.LogTo(Console.WriteLine, logLevel)
            .EnableSensitiveDataLogging()

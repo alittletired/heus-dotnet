@@ -1,6 +1,4 @@
 ﻿using Heus.Core.Utils;
-using Heus.Ddd.Entities;
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 
@@ -12,9 +10,7 @@ internal static class DbContextHelper
     {
         return
             from property in dbContextType.GetTypeInfo().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            where
-                ReflectionHelper.IsAssignableToGenericType(property.PropertyType, typeof(DbSet<>)) &&
-                typeof(IEntity).IsAssignableFrom(property.PropertyType.GenericTypeArguments[0])
+            where ReflectionHelper.IsAssignableToGenericType(property.PropertyType, typeof(DbSet<>))
             select property.PropertyType.GenericTypeArguments[0];
     }
 }

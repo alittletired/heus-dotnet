@@ -2,32 +2,41 @@ using System.Linq.Expressions;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
 using Heus.Core.Uow;
+using Heus.Data;
 using Heus.Ddd.Domain;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories.Filtering;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Repositories;
 
-public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
-    , IInjectServiceProvider, IScopedDependency where TEntity : class, IEntity
+public abstract class RepositoryBase<TEntity> : IRepository<TEntity> , IScopedDependency where TEntity : class, IEntity
 {
-    public IServiceProvider ServiceProvider { get; set; } = null!;
-    protected IUnitOfWorkManager UnitOfWorkManager => ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
-    protected IDataFilter DataFilter => ServiceProvider.GetRequiredService<IDataFilter>();
+    protected IUnitOfWorkManager UnitOfWorkManager { get; }
+    protected IDataFilter DataFilter { get; }
+    protected ICurrentUser CurrentUser { get; }
+    protected DbContext DbContext { get; }
+    public IServiceProvider ServiceProvider { get; set; }
+    public RepositoryBase(IUnitOfWorkManager unitOfWorkManager)
+    {
+        UnitOfWorkManager = unitOfWorkManager;
+        if (UnitOfWorkManager.Current == null)
+        {
+             throw new BusinessException("A Repository can only be created inside a unit of work!");
+        }
+        ServiceProvider = UnitOfWorkManager.Current.ServiceProvider ;
+        DbContext= ServiceProvider.GetRequiredService<IDbContextProvider>().GetDbContext<TEntity>();
+        CurrentUser= ServiceProvider.GetRequiredService<ICurrentUser>();
+        DataFilter= ServiceProvider.GetRequiredService<IDataFilter>();
+    }
 
-    protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
-
-    protected IRepositoryProvider<TEntity> RepositoryProvider =>  ServiceProvider.GetRequiredService<IRepositoryProvider<TEntity>>();
-
-    public IQueryable<TEntity> Query => RepositoryProvider.Query;
-   
-
-    public Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public IQueryable<TEntity> Query => DbContext.Set<TEntity >(). AsQueryable().AsNoTracking();
+    public async Task<TEntity> InsertAsync(TEntity entity)
     {
         BeforeInsert(entity);
-        return RepositoryProvider.InsertAsync(entity, cancellationToken);
+        var entry= await DbContext.AddAsync(entity);
+        return entry.Entity;
     }
 
     private void BeforeInsert(TEntity entity)
@@ -39,7 +48,15 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
             BeforeUpdate(entity);
         }
     }
+    protected virtual void TrySetGuidId(TEntity entity)
+    {
+        if (entity.Id != default)
+        {
+            return;
+        }
 
+        entity.Id = SnowflakeId.Default.NextId();
+    }
     private void BeforeUpdate(TEntity entity)
     {
         if (entity is AuditEntity auditEntity)
@@ -49,68 +66,54 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
         }
     }
 
-    public Task InsertManyAsync(IEnumerable<TEntity> entities,
-        CancellationToken cancellationToken = default)
+    public async Task InsertManyAsync(IEnumerable<TEntity> entities        )
     {
         foreach (var entity in entities)
         {
             BeforeInsert(entity);
         }
-
-        return RepositoryProvider.InsertManyAsync(entities, cancellationToken);
+        await  DbContext.AddRangeAsync(entities);
     }
 
 
 
-    public Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public Task<TEntity> UpdateAsync(TEntity entity)
     {
+        DbContext.Attach(entity);
         BeforeUpdate(entity);
-        return RepositoryProvider.UpdateAsync(entity, cancellationToken);
+         DbContext.Update(entity);
+        return Task.FromResult(entity);
     }
 
-    public virtual Task UpdateManyAsync(IEnumerable<TEntity> entities,
-        CancellationToken cancellationToken = default)
+    public virtual Task UpdateManyAsync(IEnumerable<TEntity> entities)
     {
         foreach (var entity in entities)
         {
             BeforeUpdate(entity);
         }
 
-        return RepositoryProvider.UpdateManyAsync(entities, cancellationToken);
+         DbContext.UpdateRange(entities);
+        return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public Task DeleteAsync(TEntity entity)
     {
-        return RepositoryProvider.DeleteAsync(entity, cancellationToken);
+        DbContext.Remove(entity);
+        return Task.CompletedTask;
     }
 
 
-    public virtual Task DeleteManyAsync(IEnumerable<TEntity> entities,
-        CancellationToken cancellationToken = default)
+    public virtual Task DeleteManyAsync(IEnumerable<TEntity> entities)
     {
-        return RepositoryProvider.DeleteManyAsync(entities, cancellationToken);
+        DbContext.RemoveRange(entities);
+        return Task.CompletedTask;
     }
 
-    public async Task<TEntity?> FindAsync(
-        Expression<Func<TEntity, bool>> predicate,
-        CancellationToken cancellationToken = default)
+    public async Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate       )
     {
-
-        return await Query.FirstOrDefaultAsync(predicate, cancellationToken);
+        return await Query.FirstOrDefaultAsync(predicate);
     }
 
-    public async Task<TEntity> GetAsync(
-        Expression<Func<TEntity, bool>> predicate,
-        CancellationToken cancellationToken = default)
-    {
-        var entity = await FindAsync(predicate, cancellationToken);
-        if (entity == null)
-        {
-            throw new EntityNotFoundException(typeof(TEntity));
-        }
-
-        return entity;
-    }
 
 
     protected  TQueryable ApplyDataFilters<TQueryable>(TQueryable query)
@@ -131,4 +134,5 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity>
         return query;
     }
 
+  
 }

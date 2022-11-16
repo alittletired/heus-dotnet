@@ -20,13 +20,13 @@ internal class RoleAdminAppService : AdminApplicationService<Role>, IRoleAdminAp
 
     public async Task<IEnumerable<RoleActionRight>> GetActionIdsAsync(long id)
     {
-        var existsRoleActions = await _roleActionRightRepository.GetListAsync(r => r.RoleId == id);
+        var existsRoleActions = await _roleActionRightRepository.FindAllAsync(r => r.RoleId == id);
         return existsRoleActions;
 
     }
     public async  Task<bool> AuthorizeActionAsync(long id, IEnumerable<long> actionIds)
     {
-        var existsRoleActions = await _roleActionRightRepository.GetListAsync(r => r.RoleId == id);
+        var existsRoleActions = await _roleActionRightRepository.FindAllAsync(r => r.RoleId == id);
         var actionRights =await _actionRightRepository.Query.Where(ar => actionIds.Contains(ar.Id)).ToListAsync();
         var roleActionRights = actionRights.GroupBy(s => s.ResourceId)
             .Select(grp =>

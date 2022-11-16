@@ -8,6 +8,8 @@
   <ItemGroup>
 
     <ProjectReference Include="..\Heus.Core\Heus.Core.csproj" />
+
+    <ProjectReference Include="..\Heus.Data\Heus.Data.csproj" />
   </ItemGroup>
 
 </Project>

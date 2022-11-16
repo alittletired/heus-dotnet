@@ -1,4 +1,5 @@
 using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Core.Uow;
 
@@ -7,38 +8,57 @@ internal class UnitOfWork : IUnitOfWork
 
     private bool _isDisposed;
     private readonly ILogger<UnitOfWork> _logger;
+    public event EventHandler<UnitOfWorkEventArgs>? Disposed;
+    public IServiceProvider ServiceProvider { get; }
 
     public UnitOfWork(UnitOfWorkOptions options, ILogger<UnitOfWork> logger)
     {
         Options = options;
+
         _logger = logger;
+        ServiceProvider = options.ServiceProvider;
     }
 
-    public Dictionary<string, DbConnection> DbConnections { get; } = new();
-    public Dictionary<string, DbTransaction> DbTransactions { get; } = new();
-    public event EventHandler<UnitOfWorkEventArgs>? Disposed;
+    public List<DbContext> DbContexts { get; } = new();
+   
+   
     public UnitOfWorkOptions Options { get; }
-
+    private List<DbTransaction> _transactions=new();
     public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var dbTran in DbTransactions.Values)
-        {
-            await dbTran.CommitAsync(cancellationToken);
+        //foreach (var dbTran in DbTransactions.Values)
+        //{
+        //    await dbTran.CommitAsync(cancellationToken);
+        //}
+        try {
+            foreach (var dbContext in DbContexts)
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            foreach (var tran in _transactions)
+            {
+                tran.Commit();
+            }   
         }
-
+        catch
+        {
+            await RollbackAsync();
+            throw;
+        }
+      
     }
 
     public async Task RollbackAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var dbTran in DbTransactions)
+        foreach (var dbTran in _transactions)
         {
             try
             {
-                await dbTran.Value.RollbackAsync();
+                await dbTran.RollbackAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(RollbackAsync)}  Fail :{dbTran.Key}");
+                _logger.LogError(ex, $"{nameof(RollbackAsync)}  Fail :{dbTran.Connection?.ConnectionString}");
             }
         }
 
@@ -47,20 +67,20 @@ internal class UnitOfWork : IUnitOfWork
     private void DisposeTransactions()
     {
         // return DbTransaction == null ? Task.CompletedTask : DbTransaction.ReleaseAsync();
-        foreach (var dbTran in DbTransactions)
+        foreach (var dbTran in _transactions)
         {
             try
             {
-                dbTran.Value.Dispose();
+                dbTran.Dispose();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(DisposeTransactions)}  Fail :{dbTran.Key}");
+                _logger.LogError(ex, $"{nameof(DisposeTransactions)}  Fail :{dbTran.Connection?.ConnectionString}");
 
             }
         }
 
-        DbTransactions.Clear();
+        _transactions.Clear();
     }
 
 
@@ -70,7 +90,7 @@ internal class UnitOfWork : IUnitOfWork
         if (_isDisposed) return;
         _isDisposed = true;
         DisposeTransactions();
-        DbConnections.Values.ForEach(c => c.Dispose());
+    
         Disposed?.Invoke(this, new UnitOfWorkEventArgs(this));
     }
 }

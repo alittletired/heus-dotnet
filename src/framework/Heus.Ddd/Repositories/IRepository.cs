@@ -1,44 +1,25 @@
 using System.Linq.Expressions;
-using Heus.Core.DependencyInjection;
 using Heus.Ddd.Domain;
 using Heus.Ddd.Entities;
-using Microsoft.EntityFrameworkCore;
-
 namespace Heus.Ddd.Repositories;
 
-public interface ISupportSaveChanges
+public interface IRepository<TEntity> where TEntity : class, IEntity
 {
-    Task SaveChangesAsync(CancellationToken cancellationToken);
-}
+    IQueryable<TEntity> Query { get; }
 
-public interface IRepository<TEntity> : IRepositoryProvider<TEntity> where TEntity : class, IEntity
-{
+    Task<TEntity> InsertAsync(TEntity entity);
+    Task<TEntity> UpdateAsync(TEntity entity);
+    Task DeleteAsync(TEntity entity);
 
-    Task<TEntity?> FindAsync(
-        Expression<Func<TEntity, bool>> predicate,
-        CancellationToken cancellationToken = default
-    );
+    Task InsertManyAsync(IEnumerable<TEntity> entities);
 
-    /// <summary>
-    /// Get a single entity by the given <paramref name="predicate"/>.
-    /// <para>
-    /// It throws <see cref="EntityNotFoundException"/> if there is no entity with the given <paramref name="predicate"/>.
-    /// It throws <see cref="InvalidOperationException"/> if there are multiple entities with the given <paramref name="predicate"/>.
-    /// </para>
-    /// </summary>
-    /// <param name="predicate">A condition to filter entities</param>
-    /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken" /> to observe while waiting for the task to complete.</param>
-    Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default
-    );
-    /// <summary>
-    ///  Get a single entity by Id
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    /// <exception cref="EntityNotFoundException"></exception>
+    Task UpdateManyAsync(IEnumerable<TEntity> entities);
+
+    Task DeleteManyAsync(IEnumerable<TEntity> entities);
+    Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate);
     async Task<TEntity> GetByIdAsync(long id)
     {
-        var entity = await GetByIdOrDefaultAsync(id);
+        var entity = await FindOneAsync(s=>s.Id==id);
         if (entity == null)
         {
             throw new EntityNotFoundException(typeof(TEntity), id);
@@ -46,30 +27,22 @@ public interface IRepository<TEntity> : IRepositoryProvider<TEntity> where TEnti
 
         return entity;
     }
-
-    async Task<TEntity?> GetByIdOrDefaultAsync(long id)
+   
+    async Task DeleteByIdAsync(long id) 
     {
-      
-        return await Query.FirstOrDefaultAsync(s => s.Id == id);
-
-    }
-    async Task DeleteByIdAsync(long id,
-            CancellationToken cancellationToken = default) 
-    {
-        var entity = await GetByIdOrDefaultAsync(id);
+        var entity = await FindOneAsync(s=>s.Id==id);
         if (entity == null) return;
-        await DeleteAsync(entity, cancellationToken);
+        await DeleteAsync(entity);
 
     }
 
-   async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter,
-        CancellationToken cancellationToken = default)
+   async Task<List<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> filter)
     {
-        return await Query.Where(filter).ToListAsync(cancellationToken);
+        return await Query.Where(filter).ToListAsync();
     }
 
    async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter)
    {
-       return (await FindAsync(filter)) != null;
+       return (await FindOneAsync(filter)) != null;
    }
 }
