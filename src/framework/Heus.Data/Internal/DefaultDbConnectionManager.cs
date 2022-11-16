@@ -4,7 +4,7 @@ using Heus.Core.Uow;
 using Heus.Data.EfCore.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
+using System.Data;
 namespace Heus.Data.Internal;
 internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDependency
 {
@@ -28,8 +28,15 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
 
     public void Dispose()
     {
-        _logger.LogInformation("Dispose connections");
-        _connections.Values.ForEach(c => c.Dispose());
+      
+        _connections.Values.ForEach(c => {
+            //if (c.State != ConnectionState.Closed)
+            //{
+            //    _logger.LogInformation($"close connections,{c.ConnectionString}");
+            
+            //}
+            c.Dispose();
+        });
         _connections.Clear();
     }
 
@@ -49,7 +56,9 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
         {
             var dbContextOptionsProvider = _options.DbConnectionProviders.First(p => p.DbProvider == _options.DbProvider);
             _logger.LogDebug(" connectionString:{ConnectionString},DbContext:{DbContext}", connectionString, typeof(TDbContext).Name);
-            return dbContextOptionsProvider.CreateConnection(cs);
+            var connect= dbContextOptionsProvider.CreateConnection(cs);
+            //connect.Open();
+            return connect;
         });
 
 

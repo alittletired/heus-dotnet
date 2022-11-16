@@ -18,15 +18,17 @@ public class DataOptions
 //        logLevel = LogLevel.Debug;
 //#endif
                 builder.UseSnakeCaseNamingConvention();
-        builder.LogTo(Console.WriteLine,
-            (eventId, logLevel) => logLevel >= LogLevel.Information
-                                   || eventId == RelationalEventId.ConnectionOpened
-                                   || eventId == RelationalEventId.ConnectionClosed
-                                     || eventId == RelationalEventId.TransactionStarted
-                                     || eventId == RelationalEventId.TransactionRolledBack
-                                      || eventId == RelationalEventId.TransactionCommitted
-                                         || eventId == RelationalEventId.TransactionDisposed
-                                   )
+        builder.LogTo(Console.WriteLine
+            ,LogLevel.Debug)
+            //,new[] { DbLoggerCategory.Database.Name })
+            //(eventId, logLevel) => logLevel >= LogLevel.Information
+            //                       || eventId == RelationalEventId.ConnectionOpened
+            //                       || eventId == RelationalEventId.ConnectionClosed
+            //                         || eventId == RelationalEventId.TransactionStarted
+            //                         || eventId == RelationalEventId.TransactionRolledBack
+            //                          || eventId == RelationalEventId.TransactionCommitted
+            //                             || eventId == RelationalEventId.TransactionDisposed
+            //                       )
            .EnableSensitiveDataLogging()
            .EnableDetailedErrors();}
 

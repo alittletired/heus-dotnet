@@ -14,21 +14,20 @@ namespace Heus.Ddd.Repositories;
 public abstract class RepositoryBase<TEntity> : IRepository<TEntity> , IScopedDependency where TEntity : class, IEntity
 {
     protected IUnitOfWorkManager UnitOfWorkManager { get; }
-    protected IDataFilter DataFilter { get; }
-    protected ICurrentUser CurrentUser { get; }
-    protected DbContext DbContext { get; }
-    public IServiceProvider ServiceProvider { get; set; }
+    protected IDataFilter DataFilter=> ServiceProvider.GetRequiredService<IDataFilter>();
+    protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
+    protected DbContext DbContext => ServiceProvider.GetRequiredService<IDbContextProvider>().GetDbContext<TEntity>(); 
+    public IServiceProvider ServiceProvider { get {
+            if (UnitOfWorkManager.Current == null)
+            {
+                throw new BusinessException("A Repository can only be created inside a unit of work!");
+            }
+            return UnitOfWorkManager.Current.ServiceProvider; ;
+
+        } } 
     public RepositoryBase(IUnitOfWorkManager unitOfWorkManager)
     {
         UnitOfWorkManager = unitOfWorkManager;
-        if (UnitOfWorkManager.Current == null)
-        {
-             throw new BusinessException("A Repository can only be created inside a unit of work!");
-        }
-        ServiceProvider = UnitOfWorkManager.Current.ServiceProvider ;
-        DbContext= ServiceProvider.GetRequiredService<IDbContextProvider>().GetDbContext<TEntity>();
-        CurrentUser= ServiceProvider.GetRequiredService<ICurrentUser>();
-        DataFilter= ServiceProvider.GetRequiredService<IDataFilter>();
     }
 
     public IQueryable<TEntity> Query => DbContext.Set<TEntity >(). AsQueryable().AsNoTracking();
@@ -109,7 +108,7 @@ public abstract class RepositoryBase<TEntity> : IRepository<TEntity> , IScopedDe
         return Task.CompletedTask;
     }
 
-    public async Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate       )
+    public async Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate)
     {
         return await Query.FirstOrDefaultAsync(predicate);
     }
