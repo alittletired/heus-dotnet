@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Heus.Core\Heus.Core.csproj" />
+    <ProjectReference Include="..\Heus.Data\Heus.Data.csproj" />
+  </ItemGroup>
+
+</Project>

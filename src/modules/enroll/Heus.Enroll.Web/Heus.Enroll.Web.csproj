@@ -6,6 +6,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\framework\Heus.AspNetCore\Heus.AspNetCore.csproj" />
 	  <ProjectReference Include="..\..\..\framework\Heus.Data.Postgres\Heus.Data.Postgres.csproj" />
+	  <ProjectReference Include="..\..\..\framework\Heus.Data.SqlServer\Heus.Data.SqlServer.csproj" />
 	  <ProjectReference Include="..\Heus.Enroll\Heus.Enroll.csproj" />
 	</ItemGroup>
 	 <ItemGroup>
