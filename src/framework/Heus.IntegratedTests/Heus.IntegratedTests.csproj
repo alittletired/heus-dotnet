@@ -5,6 +5,10 @@
      <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.0" />
       <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+      <PackageReference Update="coverlet.collector" Version="3.2.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
      <ItemGroup>
        <ProjectReference Include="..\Heus.AspNetCore\Heus.AspNetCore.csproj" />
