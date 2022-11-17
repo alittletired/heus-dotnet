@@ -15,7 +15,7 @@ public static class OpenApiExtensions
 {
     private static string SchemaIdSelector(Type modelType)
     {
-        var name= TypeHelper.GetSimplifiedName(modelType);
+        var name= TypeUtils.GetSimplifiedName(modelType);
         return name;
     }
     public static void AddOpenApi(this IServiceCollection services)

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Heus.Core.Utils;
 
-public static class RandomHelper
+public static class RandomUtils
 {
     private const string Charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static Random random = new Random();

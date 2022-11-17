@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Heus.Core.Utils;
 
-public static class Md5Helper
+public static class Md5Utils
 {
     public static string ToHash(string input)
     {

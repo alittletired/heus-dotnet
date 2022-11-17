@@ -4,7 +4,7 @@ using System.Reflection;
 namespace Heus.Core.Utils
 {
     //TODO: Consider to make internal
-    public static class ReflectionHelper
+    public static class ReflectionUtils
     {
         //TODO: Ehhance summary
         /// <summary>

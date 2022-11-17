@@ -38,8 +38,8 @@ public class User : AuditEntity
     public bool IsSuperAdmin { get; set; }
     public void SetPassword(string newPassword)
     {
-        Salt = RandomHelper.GenerateString(10);
+        Salt = RandomUtils.GenerateString(10);
         var password = newPassword + Salt;
-        Password = Md5Helper.ToHash(password);
+        Password = Md5Utils.ToHash(password);
     }
 }

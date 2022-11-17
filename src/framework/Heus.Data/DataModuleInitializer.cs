@@ -2,7 +2,7 @@ using System.Reflection;
 using Heus.Data.Options;
 using Heus.Core.DependencyInjection;
 using Heus.Data.EfCore.Internal;
-
+using Heus.Data.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Data;

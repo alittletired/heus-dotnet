@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Heus.Core.Utils
 {
-    public static class TypeHelper
+    public static class TypeUtils
     {
         private static readonly HashSet<Type> FloatingTypes = new()
         {
@@ -94,7 +94,7 @@ namespace Heus.Core.Utils
         {
        
 
-            var enumerableTypes = ReflectionHelper.GetImplementedGenericTypes(type, typeof(IEnumerable<>));
+            var enumerableTypes = ReflectionUtils.GetImplementedGenericTypes(type, typeof(IEnumerable<>));
             if (enumerableTypes.Count == 1)
             {
                 itemType = enumerableTypes[0].GenericTypeArguments[0];
@@ -113,7 +113,7 @@ namespace Heus.Core.Utils
 
         public static bool IsDictionary(Type type, out Type? keyType, out Type? valueType)
         {
-            var dictionaryTypes = ReflectionHelper
+            var dictionaryTypes = ReflectionUtils
                 .GetImplementedGenericTypes(
                     type,
                     typeof(IDictionary<,>)

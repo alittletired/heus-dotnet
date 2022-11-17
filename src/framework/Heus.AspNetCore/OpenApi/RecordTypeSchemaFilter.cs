@@ -15,7 +15,7 @@ internal class RecordTypeSchemaFilter : ISchemaFilter
 {
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
-        if (!TypeHelper.IsRecordType(context.Type))
+        if (!TypeUtils.IsRecordType(context.Type))
             return;
         var properties = context.Type.GetProperties();
         foreach (var p in properties)
@@ -25,7 +25,7 @@ internal class RecordTypeSchemaFilter : ISchemaFilter
                 var type = p.PropertyType;
             }
           
-            if ( !TypeHelper.IsNullable(p))
+            if ( !TypeUtils.IsNullable(p))
             {
                 schema.Required.Add(p.Name.ToCamelCase());
             }

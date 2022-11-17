@@ -28,7 +28,7 @@ public abstract class EnumClass<TEnum> : IEnumClass, IEquatable<EnumClass<TEnum>
         }
     private static readonly Lazy<TEnum[]> EnumOptions =
         new(() => {
-            var options = TypeHelper.GetFields<TEnum>(typeof(TEnum));
+            var options = TypeUtils.GetFields<TEnum>(typeof(TEnum));
             return options.OrderBy(t => t.Name)            .ToArray();
             },  LazyThreadSafetyMode.ExecutionAndPublication);
 
