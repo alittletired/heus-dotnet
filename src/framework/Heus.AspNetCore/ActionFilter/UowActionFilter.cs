@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Heus.AspNetCore.ActionFilter;
 
-internal class UowActionFilter:IAsyncActionFilter,IScopedDependency
+internal class UowActionFilter : IAsyncActionFilter, IScopedDependency
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
     public UowActionFilter(IUnitOfWorkManager unitOfWorkManager)
@@ -20,12 +20,12 @@ internal class UowActionFilter:IAsyncActionFilter,IScopedDependency
         }
         var methodInfo = context.ActionDescriptor.GetMethodInfo();
         var unitOfWorkAttr = UnitOfWorkHelper.GetUnitOfWorkAttributeOrNull(methodInfo);
-        if (unitOfWorkAttr?.IsDisabled==true)
+        if (unitOfWorkAttr?.IsDisabled == true)
         {
             await next();
             return;
         }
-      
+
         var options = CreateOptions(context, unitOfWorkAttr);
         using var uow = _unitOfWorkManager.Begin(options);
         var result = await next();
@@ -40,12 +40,12 @@ internal class UowActionFilter:IAsyncActionFilter,IScopedDependency
     }
     private UnitOfWorkOptions CreateOptions(ActionExecutingContext context, UnitOfWorkAttribute? unitOfWorkAttribute)
     {
-        var options = new UnitOfWorkOptions{ServiceProvider = context.HttpContext.RequestServices};
+        var options = new UnitOfWorkOptions { ServiceProvider = context.HttpContext.RequestServices };
         unitOfWorkAttribute?.SetOptions(options);
         //context.HttpContext.RequestServices
         if (unitOfWorkAttribute?.IsTransactional == null)
         {
-            options.IsTransactional =  !string.Equals(context.HttpContext.Request.Method
+            options.IsTransactional = !string.Equals(context.HttpContext.Request.Method
                 , HttpMethod.Get.Method, StringComparison.OrdinalIgnoreCase);
         }
 

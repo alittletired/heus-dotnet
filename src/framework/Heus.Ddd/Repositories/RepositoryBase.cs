@@ -11,35 +11,38 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Heus.Ddd.Repositories;
 
 public abstract class RepositoryBase<TEntity> :
-    IRepository<TEntity> , IScopedDependency where TEntity : class, IEntity
+    IRepository<TEntity>, IScopedDependency where TEntity : class, IEntity
 {
     protected IUnitOfWorkManager UnitOfWorkManager { get; }
-    protected IDataFilter DataFilter=> ServiceProvider.GetRequiredService<IDataFilter>();
+    protected IDataFilter DataFilter => ServiceProvider.GetRequiredService<IDataFilter>();
     protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
-    protected DbContext DbContext => ServiceProvider.GetRequiredService<IDbContextProvider>().GetDbContext<TEntity>(); 
-    public IServiceProvider ServiceProvider { get {
+    protected DbContext DbContext => ServiceProvider.GetRequiredService<IDbContextProvider>().GetDbContext<TEntity>();
+    public IServiceProvider ServiceProvider {
+        get {
             if (UnitOfWorkManager.Current == null)
             {
                 throw new BusinessException("A Repository can only be created inside a unit of work!");
             }
             return UnitOfWorkManager.Current.ServiceProvider;
 
-        } } 
+        }
+    }
     public RepositoryBase(IUnitOfWorkManager unitOfWorkManager)
     {
         UnitOfWorkManager = unitOfWorkManager;
     }
 
-    public IQueryable<TEntity> Query => DbContext.Set<TEntity >(). AsQueryable().AsNoTracking();
+    public IQueryable<TEntity> Query => DbContext.Set<TEntity>().AsQueryable().AsNoTracking();
     public async Task<TEntity> InsertAsync(TEntity entity)
     {
         BeforeInsert(entity);
-        var entry= await DbContext.AddAsync(entity);
+        var entry = await DbContext.AddAsync(entity);
         return entry.Entity;
     }
 
     private void BeforeInsert(TEntity entity)
     {
+        TrySetId(entity);
         if (entity is AuditEntity auditEntity)
         {
             auditEntity.CreatedDate = DateTimeOffset.Now;
@@ -47,7 +50,7 @@ public abstract class RepositoryBase<TEntity> :
             BeforeUpdate(entity);
         }
     }
-    protected virtual void TrySetGuidId(TEntity entity)
+    protected virtual void TrySetId(TEntity entity)
     {
         if (entity.Id != default)
         {
@@ -65,13 +68,13 @@ public abstract class RepositoryBase<TEntity> :
         }
     }
 
-    public async Task InsertManyAsync(IEnumerable<TEntity> entities        )
+    public async Task InsertManyAsync(IEnumerable<TEntity> entities)
     {
         foreach (var entity in entities)
         {
             BeforeInsert(entity);
         }
-        await  DbContext.AddRangeAsync(entities);
+        await DbContext.AddRangeAsync(entities);
     }
 
 
@@ -80,7 +83,7 @@ public abstract class RepositoryBase<TEntity> :
     {
         DbContext.Attach(entity);
         BeforeUpdate(entity);
-         DbContext.Update(entity);
+        DbContext.Update(entity);
         return Task.FromResult(entity);
     }
 
@@ -91,7 +94,7 @@ public abstract class RepositoryBase<TEntity> :
             BeforeUpdate(entity);
         }
 
-         DbContext.UpdateRange(entities);
+        DbContext.UpdateRange(entities);
         return Task.CompletedTask;
     }
 
@@ -115,7 +118,7 @@ public abstract class RepositoryBase<TEntity> :
 
 
 
-    protected  TQueryable ApplyDataFilters<TQueryable>(TQueryable query)
+    protected TQueryable ApplyDataFilters<TQueryable>(TQueryable query)
         where TQueryable : IQueryable<TEntity>
     {
         return ApplyDataFilters<TQueryable, TEntity>(query);
@@ -133,5 +136,5 @@ public abstract class RepositoryBase<TEntity> :
         return query;
     }
 
-  
+
 }

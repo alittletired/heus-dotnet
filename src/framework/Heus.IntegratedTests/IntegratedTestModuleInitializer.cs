@@ -17,7 +17,7 @@ public class IntegratedTestModuleInitializer : ModuleInitializerBase
         services.AddSingleton<ITestServerAccessor, TestServerAccessor>();
         services.Remove(services.First(s => s.ServiceType == typeof(IProxyHttpClientFactory)));
         services.AddSingleton<IProxyHttpClientFactory, TestProxyHttpClientFactory>();
-        services.AddSingleton<IRemoteServiceProxyContributor, TestRemoteServiceProxyContributor>();
+        services.AddScoped<IRemoteServiceProxyContributor, TestRemoteServiceProxyContributor>();
 
         services.Configure<DataOptions>(options =>
         {

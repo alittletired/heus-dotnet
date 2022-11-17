@@ -1,10 +1,10 @@
 ﻿using Heus.Core.DependencyInjection;
 using Heus.Core.Uow;
 using Heus.Data.Internal;
-using Microsoft.Extensions.Logging;
+
 using Microsoft.Extensions.Options;
 namespace Heus.Data.EfCore.Internal;
-internal class DbContextOptionsFactory : IDbContextOptionsFactory,ISingletonDependency
+internal class DbContextOptionsFactory : IDbContextOptionsFactory, ISingletonDependency
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
     private readonly IDbConnectionManager _dbConnectionManager;
@@ -15,7 +15,7 @@ internal class DbContextOptionsFactory : IDbContextOptionsFactory,ISingletonDepe
     {
         _unitOfWorkManager = unitOfWorkManager;
         _dbConnectionManager = dbConnectionManager;
-        
+
         _options = options.Value;
     }
 
@@ -29,5 +29,5 @@ internal class DbContextOptionsFactory : IDbContextOptionsFactory,ISingletonDepe
         dbContextOptionsProvider.Configure(builder, dbConnection);
         return builder.Options;
     }
- 
+
 }
