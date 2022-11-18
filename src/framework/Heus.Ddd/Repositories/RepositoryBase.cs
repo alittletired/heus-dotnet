@@ -17,6 +17,7 @@ public abstract class RepositoryBase<TEntity> :
     protected IDataFilter DataFilter => ServiceProvider.GetRequiredService<IDataFilter>();
     protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
     protected DbContext DbContext => ServiceProvider.GetRequiredService<IDbContextProvider>().GetDbContext<TEntity>();
+   
     public IServiceProvider ServiceProvider {
         get {
             if (UnitOfWorkManager.Current == null)

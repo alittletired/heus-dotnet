@@ -16,7 +16,6 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
     private readonly Dictionary<string, DbConnection> _connections = new();
     public DefaultDbConnectionManager(IUnitOfWorkManager unitOfWorkManager
         , IConnectionStringResolver connectionStringResolver
-
         , IOptions<DataOptions> options,
      ILogger<DefaultDbConnectionManager> logger)
     {

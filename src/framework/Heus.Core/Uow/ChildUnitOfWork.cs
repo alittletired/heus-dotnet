@@ -1,6 +1,4 @@
 
-using System.Data.Common;
-using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Core.Uow;
 internal class ChildUnitOfWork : IUnitOfWork
@@ -11,8 +9,7 @@ internal class ChildUnitOfWork : IUnitOfWork
 
     public IServiceProvider ServiceProvider => _parent.ServiceProvider;
     public event EventHandler<UnitOfWorkEventArgs>? Disposed;
-    public List<DbContext> DbContexts => _parent.DbContexts;
-
+   
     public ChildUnitOfWork(IUnitOfWork parent)
     {
         _parent = parent;

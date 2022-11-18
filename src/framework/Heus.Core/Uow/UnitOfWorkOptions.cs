@@ -6,7 +6,7 @@ public class UnitOfWorkOptions : IUnitOfWorkOptions
 {
 
     public IsolationLevel? IsolationLevel { get; set; }
-    public bool? IsTransactional { get; set; }
+    public bool IsTransactional { get; set; }
     public required IServiceProvider ServiceProvider { get; init; }
 
     /// <summary>

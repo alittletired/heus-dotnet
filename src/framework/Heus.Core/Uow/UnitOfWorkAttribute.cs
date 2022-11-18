@@ -8,7 +8,7 @@ public class UnitOfWorkAttribute:Attribute, IUnitOfWorkOptions
     /// Is this UOW transactional?
     /// Uses default value if not supplied.
     /// </summary>
-    public bool? IsTransactional { get; set; }
+    public bool IsTransactional { get; set; }
     /// <summary>
     /// Timeout of UOW As milliseconds.
     /// Uses default value if not supplied.
@@ -27,10 +27,9 @@ public class UnitOfWorkAttribute:Attribute, IUnitOfWorkOptions
     public bool IsDisabled { get; set; }
     public virtual void SetOptions(UnitOfWorkOptions options)
     {
-        if (IsTransactional.HasValue)
-        {
-            options.IsTransactional = IsTransactional.Value;
-        }
+
+        options.IsTransactional= IsTransactional;
+        
 
         if (Timeout.HasValue)
         {

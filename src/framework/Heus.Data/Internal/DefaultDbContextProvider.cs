@@ -15,7 +15,7 @@ internal class DefaultDbContextProvider : IDbContextProvider,IScopedDependency
         _options = options;
         _unitOfWorkManager = unitOfWorkManager;
     }
-    public  DbContext GetDbContext<TEntity>() 
+    public   DbContext GetDbContext<TEntity>() 
     {
         var dbContextType = _options.Value.EntityDbContextMappings[typeof(TEntity)];
         //var connectionStringName = ConnectionStringNameAttribute.GetConnStringName(dbContextType);
@@ -26,7 +26,7 @@ internal class DefaultDbContextProvider : IDbContextProvider,IScopedDependency
               throw new BusinessException("A DbContext can only be created inside a unit of work!");
         }
         var dbContext= (DbContext)unitOfWork.ServiceProvider.GetRequiredService(dbContextType);
-        unitOfWork.DbContexts.TryAdd(dbContext);
+         unitOfWork.AddDbContext(dbContext);
         return dbContext;
     }
 }
