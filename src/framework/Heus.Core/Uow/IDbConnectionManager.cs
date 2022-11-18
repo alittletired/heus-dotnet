@@ -1,5 +1,9 @@
-﻿namespace Heus.Core.Uow;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
-public class IDbConnectionManager
+namespace Heus.Core.Uow;
+
+public interface IDbConnectionManager
 {
+    DbConnection GetDbConnection();
 }

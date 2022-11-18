@@ -1,7 +1,6 @@
 ﻿using System.Data.Common;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Uow;
-using Heus.Data.EfCore.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Data;

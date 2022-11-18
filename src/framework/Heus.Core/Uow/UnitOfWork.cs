@@ -13,7 +13,7 @@ internal class UnitOfWork : IUnitOfWork
     private readonly ILogger<UnitOfWork> _logger;
     public event EventHandler<UnitOfWorkEventArgs>? Disposed;
     public IServiceProvider ServiceProvider { get; }
-    private Dictionary<string,DbConnection> _dbConnections = new();
+   
     private Dictionary<string, DbTransaction> _dbDbTransactions = new();
     public UnitOfWork(UnitOfWorkOptions options, ILogger<UnitOfWork> logger)
     {
