@@ -1,6 +1,7 @@
 
 
-namespace Heus.Core.Uow;
+
+namespace Heus.Data.Uow;
 internal class ChildUnitOfWork : IUnitOfWork
 {
     private readonly IUnitOfWork _parent;
@@ -9,7 +10,10 @@ internal class ChildUnitOfWork : IUnitOfWork
 
     public IServiceProvider ServiceProvider => _parent.ServiceProvider;
     public event EventHandler<UnitOfWorkEventArgs>? Disposed;
-   
+
+    public DbContext GetDbContext<TEntity>()
+    {
+        return _parent.GetDbContext<TEntity>();}
     public ChildUnitOfWork(IUnitOfWork parent)
     {
         _parent = parent;

@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace Heus.Core.Uow;
+namespace Heus.Data.Uow;
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Interface)]
 public class UnitOfWorkAttribute:Attribute, IUnitOfWorkOptions
 {

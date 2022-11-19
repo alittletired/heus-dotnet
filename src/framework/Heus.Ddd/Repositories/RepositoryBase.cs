@@ -16,8 +16,18 @@ public abstract class RepositoryBase<TEntity> :
     protected IUnitOfWorkManager UnitOfWorkManager { get; }
     protected IDataFilter DataFilter => ServiceProvider.GetRequiredService<IDataFilter>();
     protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
-    protected DbContext DbContext => ServiceProvider.GetRequiredService<IDbContextProvider>().GetDbContext<TEntity>();
-   
+    protected DbContext DbContext
+    {
+        get
+        {
+            if (UnitOfWorkManager.Current == null)
+            {
+                throw new BusinessException("A DbContext can only be created inside a unit of work!");
+            }
+            return UnitOfWorkManager.Current.GetDbContext<TEntity>();
+        }
+    }
+
     public IServiceProvider ServiceProvider {
         get {
             if (UnitOfWorkManager.Current == null)

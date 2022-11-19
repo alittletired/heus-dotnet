@@ -13,7 +13,7 @@ public class DddModuleInitializer : ModuleInitializerBase
 
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
-        AutoAddEntityRepositoryR(context.Services);
+        AutoAddEntityRepository(context.Services);
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -36,7 +36,7 @@ public class DddModuleInitializer : ModuleInitializerBase
         }
     }
 
-    private static void AutoAddEntityRepositoryR(IServiceCollection services)
+    private static void AutoAddEntityRepository(IServiceCollection services)
     {
         var customRepositories = new Dictionary<Type, Type>();
         services.OnRegistered(type =>

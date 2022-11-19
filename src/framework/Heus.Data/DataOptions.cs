@@ -7,6 +7,7 @@ public class DataOptions
 {
     public DbProvider DbProvider { get; set; } = DbProvider.PostgreSql;
     public List<IDbConnectionProvider> DbConnectionProviders { get;  }=new ();
+    public List<IInterceptor> Interceptors { get; } = new();
     public List<Action<DbContextOptionsBuilder>> ConfigureDbContextOptions { get; }
     public DataOptions()
     {

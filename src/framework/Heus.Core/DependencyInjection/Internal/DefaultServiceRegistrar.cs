@@ -102,6 +102,6 @@ internal class DefaultServiceRegistrar : IServiceRegistrar {
 
     public void OnScan(Action<Type> scanAction)
     {
-        throw new NotImplementedException();
+        _scanActions.Add(scanAction);
     }
 }

@@ -2,24 +2,35 @@ using System.Collections.Generic;
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace Heus.Core.Uow;
+namespace Heus.Data.Uow;
 
 internal class UnitOfWork : IUnitOfWork
 {
 
     private bool _isDisposed;
-    private readonly ILogger<UnitOfWork> _logger;
+    
     public event EventHandler<UnitOfWorkEventArgs>? Disposed;
     public IServiceProvider ServiceProvider { get; }
-   
+    public UnitOfWorkOptions Options { get; }
+    private Dictionary<string,DbContext> _dbContexts = new();
+    private ILogger<UnitOfWork> _logger;
+    private Dictionary<string, DbTransaction> _dbTransactions = new();
+    public DbContext GetDbContext<TEntity>()
+    {
+        var provider = ServiceProvider.GetRequiredService<IDbContextProvider>();
+        return provider.GetDbContext<TEntity>();
+    }
+
     private Dictionary<string, DbTransaction> _dbDbTransactions = new();
-    public UnitOfWork(UnitOfWorkOptions options, ILogger<UnitOfWork> logger)
+    public UnitOfWork(UnitOfWorkOptions options)
     {
         Options = options;
-        _logger = logger;
         ServiceProvider = options.ServiceProvider;
+        _logger = ServiceProvider.GetRequiredService<ILogger<UnitOfWork>>();
     }
     public async Task EnsureTransaction(DbContext dbContext)
     {
@@ -33,17 +44,14 @@ internal class UnitOfWork : IUnitOfWork
             _transations.Add(connection, transation.GetDbTransaction());
         }
     }
-    public void AddDbContext(DbContext dbContext)
-    {
-        _dbContexts.TryAdd(dbContext);
-    }
-    private List<DbContext> _dbContexts = new();
+  
+    
     public IEnumerable<DbContext> GetDbContexts() {
         return _dbContexts;
         }
    
-    public UnitOfWorkOptions Options { get; }
   
+
     public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
         //foreach (var dbTran in DbTransactions.Values)

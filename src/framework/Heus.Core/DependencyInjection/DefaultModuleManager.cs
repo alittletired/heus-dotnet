@@ -10,21 +10,17 @@ public class DefaultModuleManager : IModuleManager
 {
     public Type StartupModuleType { get; }
     public List<ServiceModuleDescriptor> Modules { get; }
- 
+
     public DefaultModuleManager(IServiceCollection services, Type startupModuleType)
     {
-
         StartupModuleType = startupModuleType;
-
-        
         Modules = LoadModules();
-
     }
 
     private List<ServiceModuleDescriptor> LoadModules()
     {
         var moduleLoader = new ServiceModuleLoader();
-        var modules = moduleLoader.LoadModules(StartupModuleType,     ModuleCreateOptions.AdditionalModules);
+        var modules = moduleLoader.LoadModules(StartupModuleType, ModuleCreateOptions.AdditionalModules);
         return modules;
     }
 

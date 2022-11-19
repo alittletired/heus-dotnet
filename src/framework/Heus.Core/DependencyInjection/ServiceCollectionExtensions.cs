@@ -24,7 +24,11 @@ public static class ServiceCollectionExtensions
         var serviceRegistrar = services.GetSingletonInstance<IServiceRegistrar>();
         serviceRegistrar.OnRegistered(registrationAction);
     }
-
+    public static void OnScan(this IServiceCollection services, Action<Type> scanAction)
+    {
+        var serviceRegistrar = services.GetSingletonInstance<IServiceRegistrar>();
+        serviceRegistrar.OnScan(scanAction);
+    }
     public static TOptions GetPostOption<TOptions>(this IServiceCollection services) where TOptions:class,new()
     {
         var options = new TOptions();

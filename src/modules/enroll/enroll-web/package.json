@@ -13,9 +13,9 @@
     "tsc": "tsc --noEmit --incremental"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.7.0",
+    "@ant-design/icons": "^4.8.0",
     "@types/prettier": "^2.7.1",
-    "antd": "5.0.0-beta.0",
+    "antd": "5.0.0",
     "axios": "^1.1.3",
     "dayjs": "^1.11.6",
     "exceljs": "^4.3.0",

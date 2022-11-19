@@ -3,21 +3,21 @@ using Heus.Core.Uow;
 using Heus.Data.Internal;
 
 using Microsoft.Extensions.Options;
-namespace Heus.Data.EfCore.Internal;
+namespace Heus.Data.Internal;
 internal class DbContextOptionsFactory : IDbContextOptionsFactory, ISingletonDependency
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
-    private readonly IDbConnectionManager _dbConnectionManager;
     private readonly DataOptions _options;
-    private readonly IUnitofWorkDbConnectionInterceptor _dbConnectionInterceptor;
-    public DbContextOptionsFactory(IUnitOfWorkManager unitOfWorkManager
+  
+    public DbContextOptionsFactory(
+        IUnitOfWorkManager unitOfWorkManager
         , IDbConnectionManager dbConnectionManager
-        , IOptions<DataOptions> options,
-        IUnitofWorkDbConnectionInterceptor dbConnectionInterceptor)
+        , IOptions<DataOptions> options
+       )
     {
         _unitOfWorkManager = unitOfWorkManager;
         _dbConnectionManager = dbConnectionManager;
-        _dbConnectionInterceptor = dbConnectionInterceptor;
+      
         _options = options.Value;
     }
 
@@ -27,7 +27,7 @@ internal class DbContextOptionsFactory : IDbContextOptionsFactory, ISingletonDep
         var dbConnection = _dbConnectionManager.GetDbConnection<TDbContext>();
         var builder = new DbContextOptionsBuilder<TDbContext>();
         _options.ConfigureDbContextOptions.ForEach(configure => configure(builder));
-        builder.AddInterceptors(_dbConnectionInterceptor);
+        builder.AddInterceptors(_options.Interceptors);
         var dbContextOptionsProvider = _options.DbConnectionProviders.First(p => p.DbProvider == _options.DbProvider);
         dbContextOptionsProvider.Configure(builder, dbConnection);
         return builder.Options;

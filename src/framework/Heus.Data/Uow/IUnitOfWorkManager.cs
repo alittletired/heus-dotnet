@@ -1,6 +1,6 @@
 using Heus.Core.DependencyInjection;
 
-namespace Heus.Core.Uow;
+namespace Heus.Data.Uow;
 
 public interface IUnitOfWorkManager : ISingletonDependency
 {

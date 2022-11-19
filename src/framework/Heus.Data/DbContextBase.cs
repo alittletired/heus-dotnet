@@ -1,7 +1,7 @@
-using Heus.Core.DependencyInjection;
 using Heus.Data.EfCore.ValueConverters;
-namespace Heus.Ddd.Data;
-public abstract class DbContextBase<TDbContext> : DbContext,IScopedDependency
+namespace Heus.Data;
+public  interface IDbContext{}
+public abstract class DbContextBase<TDbContext> : DbContext,IDbContext
     where TDbContext : DbContext
 {
     protected DbContextBase(DbContextOptions<TDbContext> options)
