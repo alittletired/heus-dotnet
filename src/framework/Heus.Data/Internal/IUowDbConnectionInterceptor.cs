@@ -27,7 +27,7 @@ internal class UowDbConnectionInterceptor : DbConnectionInterceptor
     {
         if (eventData.Context != null && _unitOfWorkManager.Current != null)
         {
-            await _unitOfWorkManager.Current.EnsureTransaction(eventData.Context);
+            // await _unitOfWorkManager.Current.EnsureTransaction(eventData.Context);
         }
         await base.ConnectionOpenedAsync(connection, eventData, cancellationToken);
     }

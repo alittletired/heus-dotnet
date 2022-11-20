@@ -1,8 +1,10 @@
+using System.Reflection;
 using Heus.Data.Options;
 using Heus.Core.DependencyInjection;
 using Heus.Data.Internal;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
-using Heus.Data.Utils;
+
 
 namespace Heus.Data;
 [DependsOn(typeof(CoreModuleInitializer))]
@@ -10,13 +12,33 @@ public class DataModuleInitializer : ModuleInitializerBase
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
+        OnDbContextScan(context.Services);
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        context.Services.AddScoped(typeof(IDbContextOptionsFactory<>), typeof(DbContextOptionsFactory<>));
+        context.Services.AddScoped(typeof(IDbContextFactory<>), typeof(DefaultDbContextFactory<>));
         context.Services.Configure<DbConnectionOptions>(context.Configuration);
-        
     }
-  
 
+    private static MethodInfo _registerDbContext = typeof(DataModuleInitializer)
+        .GetTypeInfo().DeclaredMethods.First(m => m.Name == nameof(RegisterDbContext));
+    private static void RegisterDbContext<TContext>(IServiceCollection services)where TContext:DbContext
+    {
+        services.AddScoped(sp => sp.GetRequiredService<IDbContextFactory<TContext>>().CreateDbContext());
+    }
+    private static void OnDbContextScan(IServiceCollection services)
+    {
+        services.OnScan(type =>
+        {
+            if (!typeof(DbContext).IsAssignableFrom(type))
+            {
+                return;
+            }
+            var registerDbContext = _registerDbContext.MakeGenericMethod(type);
+            registerDbContext.Invoke(null, new object[] { services });
+
+        });
+    }
 }

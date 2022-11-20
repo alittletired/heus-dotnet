@@ -14,9 +14,9 @@ internal class ChildUnitOfWork : IUnitOfWork
         }
    
     public IServiceProvider ServiceProvider => _parent.ServiceProvider;
-    public Task EnsureTransaction(DbContext dbContext) { 
-        return _parent.EnsureTransaction(dbContext); 
-        }
+    // public Task EnsureTransaction(DbContext dbContext) { 
+    //     return _parent.EnsureTransaction(dbContext); 
+    //     }
     public event EventHandler<UnitOfWorkEventArgs>? Disposed;
     
     public ChildUnitOfWork(IUnitOfWork parent)

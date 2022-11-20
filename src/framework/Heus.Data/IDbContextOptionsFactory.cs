@@ -1,8 +1,7 @@
 ﻿
 namespace Heus.Data;
 
-public interface IDbContextOptionsFactory
+public interface IDbContextOptionsFactory<TContext> where TContext : DbContext
 {
-    DbContextOptions<TContext> CreateOptions<TContext>() where TContext : DbContext;
-    DbContextOptions CreateOptions(Type contextType);
+    DbContextOptions<TContext> CreateOptions();
 }

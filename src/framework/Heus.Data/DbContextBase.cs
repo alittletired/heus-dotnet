@@ -1,3 +1,4 @@
+using Heus.Core.DependencyInjection;
 using Heus.Data.EfCore.ValueConverters;
 namespace Heus.Data;
 public abstract class DbContextBase<TDbContext> : DbContext

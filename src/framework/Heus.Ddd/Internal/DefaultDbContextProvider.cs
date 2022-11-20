@@ -1,54 +1,49 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿
 using System.Reflection;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Uow;
-using Heus.Data;
 using Heus.Ddd.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-
 namespace Heus.Ddd.Internal;
 
 internal class DefaultDbContextProvider : IDbContextProvider, IScopedDependency
 {
     private readonly IOptions<DddOptions> _options;
     private readonly IUnitOfWorkManager _unitOfWorkManager;
-
     public DefaultDbContextProvider(IOptions<DddOptions> options
         , IUnitOfWorkManager unitOfWorkManager)
     {
         _options = options;
-        _unitOfWorkManager= unitOfWorkManager;
-     
+        _unitOfWorkManager = unitOfWorkManager;
+
     }
-
-
-    private static DbContext CreateDbContext(IServiceProvider serviceProvider,Type dbContextType)
+    private static DbContext CreateDbContextInternal<TContext>(IServiceProvider serviceProvider)
+        where TContext : DbContext
     {
-        var optionFactory = serviceProvider.GetRequiredService<IDbContextOptionsFactory>();
-        var options = optionFactory.CreateOptions(dbContextType);
-        return  (DbContext)Activator.CreateInstance(dbContextType, options )!;
+        var contextFactory = serviceProvider.GetRequiredService<IDbContextFactory<TContext>>();
+        return contextFactory.CreateDbContext();
     }
 
- 
-    public  DbContext CreateDbContext<TEntity>() where TEntity : IEntity
+    private static readonly MethodInfo _createDbContext = typeof(DefaultDbContextProvider)
+        .GetTypeInfo().DeclaredMethods
+        .First(m => m.Name == nameof(CreateDbContextInternal));
+
+    public DbContext CreateDbContext<TEntity>() where TEntity : IEntity
     {
         var dbContextType = _options.Value.EntityDbContextMappings[typeof(TEntity)];
-      
+
         if (_unitOfWorkManager.Current == null)
         {
             throw new BusinessException("A DbContext can only be created inside a unit of work!");
         }
         return _unitOfWorkManager.Current.AddDbContext(dbContextType.Name, (key) =>
         {
-            return CreateDbContext(_unitOfWorkManager.Current.ServiceProvider, dbContextType);
+            var activator = _createDbContext.MakeGenericMethod(dbContextType);
+            var dbContext = activator.Invoke(null, new object[] { _unitOfWorkManager.Current.ServiceProvider });
+            return (DbContext)dbContext!;
         });
-      
+
     }
-  
+
 }

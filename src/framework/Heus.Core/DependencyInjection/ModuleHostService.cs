@@ -1,4 +1,5 @@
 ﻿
+using System.Data;
 using Heus.Core.Uow;
 
 namespace Heus.Core.DependencyInjection;
@@ -20,7 +21,7 @@ internal class ModuleHostService : IHostedService
             var serviceProvider = scope.ServiceProvider;
 
             var unitOfWorkManager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-            var options = new UnitOfWorkOptions { IsTransactional = true, ServiceProvider = serviceProvider };
+            var options = new UnitOfWorkOptions { IsTransactional = true,IsolationLevel = IsolationLevel.ReadCommitted , ServiceProvider = serviceProvider };
 
             using var unitOfWork = unitOfWorkManager.Begin(options);
 

@@ -1,14 +1,11 @@
-﻿using System.Reflection;
-using Heus.Core.DependencyInjection;
+﻿
 using Microsoft.Extensions.Options;
 namespace Heus.Data.Internal;
-internal class DbContextOptionsFactory : IDbContextOptionsFactory,IScopedDependency {
+internal class DbContextOptionsFactory<TContext> : IDbContextOptionsFactory<TContext> where TContext : DbContext {
 
-    private static MethodInfo _createOptions = typeof(DbContextOptionsFactory).GetTypeInfo()
-        .DeclaredMethods.First(s => s.Name == nameof(CreateOptions) && s.IsGenericMethod);
+   
     private readonly DataOptions _options;
     private readonly IDbConnectionManager _dbConnectionManager;
-
     private readonly IUowDbConnectionInterceptor _uowDbConnectionInterceptor;
     public DbContextOptionsFactory(IOptions<DataOptions> options
         , IDbConnectionManager dbConnectionManager
@@ -18,11 +15,8 @@ internal class DbContextOptionsFactory : IDbContextOptionsFactory,IScopedDepende
         _dbConnectionManager = dbConnectionManager;
         _uowDbConnectionInterceptor = uowDbConnectionInterceptor;
     }
-    public DbContextOptions CreateOptions(Type contextType)
-    {
-        return (DbContextOptions)_createOptions.MakeGenericMethod(contextType).Invoke(this,null)!;
-    }
-    public DbContextOptions<TContext> CreateOptions<TContext>() where TContext : DbContext
+
+    public DbContextOptions<TContext> CreateOptions()
     {
         var dbConnection = _dbConnectionManager.GetDbConnection<TContext>();
         var builder = new DbContextOptionsBuilder<TContext>();

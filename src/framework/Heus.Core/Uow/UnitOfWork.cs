@@ -1,6 +1,9 @@
 using System.Data.Common;
 using System.Transactions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using IsolationLevel = System.Data.IsolationLevel;
+
 namespace Heus.Core.Uow;
 internal class UnitOfWork : IUnitOfWork
 {
@@ -27,25 +30,30 @@ internal class UnitOfWork : IUnitOfWork
         return DbContexts.GetOrAdd(key, (t) =>
         {
             var context = func(t);
+            EnsureTransaction(context);
             return context;
         });
     }
-    public async Task EnsureTransaction(DbContext dbContext)
+
+    private void EnsureTransaction(DbContext dbContext)
     {
         if (!Options.IsTransactional)
         {
             return;
         }
-        if (dbContext.Database.GetEnlistedTransaction() != null) return;
+
+        if (dbContext.Database.CurrentTransaction != null)
+            return;
         var connStr = dbContext.Database.GetConnectionString();
         if (connStr == null) return;
         if (!_dbTransactions.TryGetValue(connStr, out var dbTransaction))
         {
-            dbTransaction = await dbContext.Database.GetDbConnection().BeginTransactionAsync();
-            _dbTransactions.Add(connStr, dbTransaction);
+            var transaction = dbContext.Database.GetDbConnection().BeginTransaction(IsolationLevel.ReadCommitted);
+            _dbTransactions.Add(connStr, transaction);
 
         }
-        await dbContext.Database.UseTransactionAsync(dbTransaction);
+
+        dbContext.Database.UseTransactionAsync(dbTransaction);
 
     }
 
