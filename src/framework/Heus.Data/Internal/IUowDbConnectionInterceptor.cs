@@ -12,7 +12,7 @@ internal interface IUowDbConnectionInterceptor : IDbConnectionInterceptor
 }
 
 internal class UowDbConnectionInterceptor : DbConnectionInterceptor
-    , IUowDbConnectionInterceptor
+    , IUowDbConnectionInterceptor,ISingletonDependency
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
 
@@ -25,10 +25,10 @@ internal class UowDbConnectionInterceptor : DbConnectionInterceptor
         , ConnectionEndEventData eventData
         , CancellationToken cancellationToken = default)
     {
-        // if (eventData.Context != null && _unitOfWorkManager.Current != null)
-        // {
-        //     await _unitOfWorkManager.Current.EnsureTransaction(eventData.Context);
-        // }
+        if (eventData.Context != null && _unitOfWorkManager.Current != null)
+        {
+            await _unitOfWorkManager.Current.EnsureTransaction(eventData.Context);
+        }
         await base.ConnectionOpenedAsync(connection, eventData, cancellationToken);
     }
 

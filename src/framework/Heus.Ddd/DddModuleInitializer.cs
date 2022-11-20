@@ -1,6 +1,7 @@
 using System.Reflection;
 using Heus.Core.DependencyInjection;
 using Heus.Data;
+using Heus.Data.Utils;
 using Heus.Ddd.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -13,7 +14,8 @@ public class DddModuleInitializer : ModuleInitializerBase
 
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
-        AutoAddEntityRepository(context.Services);
+        OnDbContextScan(context.Services);
+        OnRepositoryRegistered(context.Services);
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -23,9 +25,9 @@ public class DddModuleInitializer : ModuleInitializerBase
 
     public override void PostConfigureServices(ServiceConfigurationContext context)
     {
-        var dataOptions = context.Services.GetPostOption<DataOptions>();
-        var options = context.Services.GetPostOption<RepositoryRegistrationOptions>();
-        foreach (var entityType in dataOptions.EntityDbContextMappings.Keys)
+      
+        var options = context.Services.GetPostOption<DddOptions>();
+        foreach (var entityType in options.EntityDbContextMappings.Keys)
         {
             var entityRepositoryType = typeof(IRepository<>).MakeGenericType(entityType);
             if (!options.CustomRepositories.TryGetValue(entityType, out var repoType))
@@ -35,9 +37,30 @@ public class DddModuleInitializer : ModuleInitializerBase
             context.Services.AddScoped(entityRepositoryType, repoType);
         }
     }
-
-    private static void AutoAddEntityRepository(IServiceCollection services)
+    private static void OnDbContextScan(IServiceCollection services)
     {
+        var entityDbContextMappings = new Dictionary<Type, Type>();
+        services.OnScan(type =>
+        {
+            if (!typeof(DbContext).IsAssignableFrom(type))
+            {
+                return;
+            }
+
+            var types = DbContextUtils.GetEntityTypes(type);
+            foreach (var entityType in types)
+            {
+                entityDbContextMappings.Add(entityType, type);
+            }
+        });
+        services.Configure<DddOptions>(options =>
+        {
+            options.EntityDbContextMappings.AddRange(entityDbContextMappings);
+        });
+    }
+    private static void OnRepositoryRegistered(IServiceCollection services)
+    {
+
         var customRepositories = new Dictionary<Type, Type>();
         services.OnRegistered(type =>
         {
@@ -46,11 +69,10 @@ public class DddModuleInitializer : ModuleInitializerBase
             if (repoType != null)
             {
                 var entityType = repoType.GenericTypeArguments[0];
-
                 customRepositories.Add(entityType, type);
             }
         });
-        services.Configure<RepositoryRegistrationOptions>(options =>
+        services.Configure<DddOptions>(options =>
         {
             options.CustomRepositories.AddRange(customRepositories);
         });

@@ -1,24 +1,20 @@
 ﻿using System.Data.Common;
 using Heus.Core.DependencyInjection;
-using Heus.Core.Uow;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Data;
+
 namespace Heus.Data.Internal;
 internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDependency
 {
-    private readonly IUnitOfWorkManager _unitOfWorkManager;
     private readonly IConnectionStringResolver _connectionStringResolver;
     private readonly DataOptions _options;
     private readonly ILogger<DefaultDbConnectionManager> _logger;
 
     private readonly Dictionary<string, DbConnection> _connections = new();
-    public DefaultDbConnectionManager(IUnitOfWorkManager unitOfWorkManager
-        , IConnectionStringResolver connectionStringResolver
+    public DefaultDbConnectionManager(IConnectionStringResolver connectionStringResolver
         , IOptions<DataOptions> options,
      ILogger<DefaultDbConnectionManager> logger)
     {
-        _unitOfWorkManager = unitOfWorkManager;
         _connectionStringResolver = connectionStringResolver;
         _options = options.Value;
         _logger = logger;
@@ -41,12 +37,7 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
 
     public DbConnection GetDbConnection<TDbContext>() where TDbContext : DbContext
     {
-        var unitOfWork = _unitOfWorkManager.Current;
-        if (unitOfWork == null)
-        {
-            throw new BusinessException("A DbContextOptions can only be created inside a unit of work!");
-        }
-        unitOfWork.Disposed += (o, e) => Dispose();
+     
         var connectionStringName = ConnectionStringNameAttribute.GetConnStringName<TDbContext>();
 
         var connectionString = _connectionStringResolver.Resolve(connectionStringName);

@@ -1,7 +1,7 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace Heus.Data.Uow;
+namespace Heus.Core.Uow;
 
 internal class UnitOfWorkManager : IUnitOfWorkManager
 {

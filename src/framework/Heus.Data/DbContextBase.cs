@@ -1,14 +1,12 @@
 using Heus.Data.EfCore.ValueConverters;
 namespace Heus.Data;
-public  interface IDbContext{}
-public abstract class DbContextBase<TDbContext> : DbContext,IDbContext
+public abstract class DbContextBase<TDbContext> : DbContext
     where TDbContext : DbContext
 {
     protected DbContextBase(DbContextOptions<TDbContext> options)
       : base(options)
     {
     }
-
    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
    {
        var modelBuilder = configurationBuilder.CreateModelBuilder(null);

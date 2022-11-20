@@ -1,4 +1,6 @@
 ﻿
+using Heus.Core.Uow;
+
 namespace Heus.Core.DependencyInjection;
 
 internal class ModuleHostService : IHostedService
@@ -17,14 +19,14 @@ internal class ModuleHostService : IHostedService
             using var scope = _serviceProvider.CreateScope();
             var serviceProvider = scope.ServiceProvider;
 
-            // var unitOfWorkManager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-            // var options = new UnitOfWorkOptions { IsTransactional = true, ServiceProvider = serviceProvider };
+            var unitOfWorkManager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
+            var options = new UnitOfWorkOptions { IsTransactional = true, ServiceProvider = serviceProvider };
 
-            // using var unitOfWork = unitOfWorkManager.Begin(options);
+            using var unitOfWork = unitOfWorkManager.Begin(options);
 
             await module.Instance.InitializeAsync(serviceProvider);
 
-            // await unitOfWork.CompleteAsync();
+             await unitOfWork.CompleteAsync();
 
         }
     }

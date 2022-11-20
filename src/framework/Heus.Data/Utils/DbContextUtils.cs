@@ -1,8 +1,8 @@
 ﻿using Heus.Core.Utils;
 using System.Reflection;
-namespace Heus.Data.Internal;
+namespace Heus.Data.Utils;
 
-internal static class DbContextHelper
+public static class DbContextUtils
 {
     public static IEnumerable<Type> GetEntityTypes(Type dbContextType)
     {

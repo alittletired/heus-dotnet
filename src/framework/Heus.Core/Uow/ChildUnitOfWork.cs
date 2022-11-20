@@ -1,19 +1,24 @@
 
 
 
-namespace Heus.Data.Uow;
+using Microsoft.EntityFrameworkCore;
+
+namespace Heus.Core.Uow;
 internal class ChildUnitOfWork : IUnitOfWork
 {
     private readonly IUnitOfWork _parent;
 
     public UnitOfWorkOptions Options => _parent.Options;
-
+    public DbContext AddDbContext(string key, Func<string,DbContext> func) { 
+        return _parent.AddDbContext(key, func);
+        }
+   
     public IServiceProvider ServiceProvider => _parent.ServiceProvider;
+    public Task EnsureTransaction(DbContext dbContext) { 
+        return _parent.EnsureTransaction(dbContext); 
+        }
     public event EventHandler<UnitOfWorkEventArgs>? Disposed;
-
-    public DbContext GetDbContext<TEntity>()
-    {
-        return _parent.GetDbContext<TEntity>();}
+    
     public ChildUnitOfWork(IUnitOfWork parent)
     {
         _parent = parent;

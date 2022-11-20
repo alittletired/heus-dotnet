@@ -4,6 +4,7 @@ using Heus.Core.Security;
 using Heus.Core.Uow;
 using Heus.Data;
 using Heus.Ddd.Entities;
+using Heus.Ddd.Internal;
 using Heus.Ddd.Repositories.Filtering;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +17,7 @@ public abstract class RepositoryBase<TEntity> :
     protected IUnitOfWorkManager UnitOfWorkManager { get; }
     protected IDataFilter DataFilter => ServiceProvider.GetRequiredService<IDataFilter>();
     protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
-    protected DbContext DbContext
+    protected  DbContext DbContext
     {
         get
         {
@@ -24,7 +25,7 @@ public abstract class RepositoryBase<TEntity> :
             {
                 throw new BusinessException("A DbContext can only be created inside a unit of work!");
             }
-            return UnitOfWorkManager.Current.GetDbContext<TEntity>();
+            return ServiceProvider.GetRequiredService<IDbContextProvider>().CreateDbContext<TEntity>();
         }
     }
 

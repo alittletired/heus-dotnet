@@ -1,4 +1,4 @@
-using Heus.Ddd.Data;
+using Heus.Data;
 using Microsoft.EntityFrameworkCore;
 namespace Heus.Business;
 public class EnrollDbContext : DbContextBase<EnrollDbContext>

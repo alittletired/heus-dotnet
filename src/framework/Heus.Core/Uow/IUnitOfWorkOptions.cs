@@ -1,5 +1,5 @@
 ﻿using System.Data;
-namespace Heus.Data.Uow;
+namespace Heus.Core.Uow;
 
 public interface IUnitOfWorkOptions
 {

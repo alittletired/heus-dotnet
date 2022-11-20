@@ -1,11 +1,14 @@
-namespace Heus.Data.Uow;
+using Microsoft.EntityFrameworkCore;
+
+namespace Heus.Core.Uow;
 public interface IUnitOfWork :  IDisposable
 {
   
     UnitOfWorkOptions Options { get; }
     IServiceProvider ServiceProvider { get; }
+    Task EnsureTransaction(DbContext dbContext);
     event EventHandler<UnitOfWorkEventArgs>? Disposed;
-    DbContext GetDbContext<TEntity>();
+    DbContext AddDbContext(string key, Func<string,DbContext> func);
     Task CompleteAsync(CancellationToken cancellationToken = default);
     Task RollbackAsync(CancellationToken cancellationToken = default);
 

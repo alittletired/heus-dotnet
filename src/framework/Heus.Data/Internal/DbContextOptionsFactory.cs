@@ -1,33 +1,35 @@
-﻿using Heus.Core.DependencyInjection;
-using Heus.Core.Uow;
-using Heus.Data.Internal;
-
+﻿using System.Reflection;
+using Heus.Core.DependencyInjection;
 using Microsoft.Extensions.Options;
 namespace Heus.Data.Internal;
-internal class DbContextOptionsFactory : IDbContextOptionsFactory, ISingletonDependency
-{
-    private readonly IUnitOfWorkManager _unitOfWorkManager;
-    private readonly DataOptions _options;
-  
-    public DbContextOptionsFactory(
-        IUnitOfWorkManager unitOfWorkManager
-        , IDbConnectionManager dbConnectionManager
-        , IOptions<DataOptions> options
-       )
-    {
-        _unitOfWorkManager = unitOfWorkManager;
-        _dbConnectionManager = dbConnectionManager;
-      
-        _options = options.Value;
-    }
+internal class DbContextOptionsFactory : IDbContextOptionsFactory,IScopedDependency {
 
-    public DbContextOptions<TDbContext> Create<TDbContext>() where TDbContext : DbContext
+    private static MethodInfo _createOptions = typeof(DbContextOptionsFactory).GetTypeInfo()
+        .DeclaredMethods.First(s => s.Name == nameof(CreateOptions) && s.IsGenericMethod);
+    private readonly DataOptions _options;
+    private readonly IDbConnectionManager _dbConnectionManager;
+
+    private readonly IUowDbConnectionInterceptor _uowDbConnectionInterceptor;
+    public DbContextOptionsFactory(IOptions<DataOptions> options
+        , IDbConnectionManager dbConnectionManager
+        , IUowDbConnectionInterceptor uowDbConnectionInterceptor)
     {
-        var unitOfWork = _unitOfWorkManager.Current;
-        var dbConnection = _dbConnectionManager.GetDbConnection<TDbContext>();
-        var builder = new DbContextOptionsBuilder<TDbContext>();
+        _options = options.Value;
+        _dbConnectionManager = dbConnectionManager;
+        _uowDbConnectionInterceptor = uowDbConnectionInterceptor;
+    }
+    public DbContextOptions CreateOptions(Type contextType)
+    {
+        return (DbContextOptions)_createOptions.MakeGenericMethod(contextType).Invoke(this,null)!;
+    }
+    public DbContextOptions<TContext> CreateOptions<TContext>() where TContext : DbContext
+    {
+        var dbConnection = _dbConnectionManager.GetDbConnection<TContext>();
+        var builder = new DbContextOptionsBuilder<TContext>();
         _options.ConfigureDbContextOptions.ForEach(configure => configure(builder));
-        builder.AddInterceptors(_options.Interceptors);
+        //todo: 目前没有想好如何填充中间件实例，故先使用构造函数传入
+        //builder.AddInterceptors(_options.Interceptors);
+        builder.AddInterceptors(_uowDbConnectionInterceptor);
         var dbContextOptionsProvider = _options.DbConnectionProviders.First(p => p.DbProvider == _options.DbProvider);
         dbContextOptionsProvider.Configure(builder, dbConnection);
         return builder.Options;

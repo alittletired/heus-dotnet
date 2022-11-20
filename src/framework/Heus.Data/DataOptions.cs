@@ -57,6 +57,6 @@ public class DataOptions
 
 
     public List<Action<ModelConfigurationBuilder>> ModelConfigurations { get; } 
-    public Dictionary<Type, Type> EntityDbContextMappings { get; } = new();
+   
 
 }

@@ -1,5 +1,3 @@
-
-
 using Heus.Data.Options;
 using Heus.Core.DependencyInjection;
 using Microsoft.Extensions.Options;
