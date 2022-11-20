@@ -2,10 +2,7 @@ using System.Reflection;
 using Heus.Data.Options;
 using Heus.Core.DependencyInjection;
 using Heus.Data.Internal;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
-
-
 namespace Heus.Data;
 [DependsOn(typeof(CoreModuleInitializer))]
 public class DataModuleInitializer : ModuleInitializerBase

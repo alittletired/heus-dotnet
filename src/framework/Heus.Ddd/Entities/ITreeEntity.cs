@@ -1,6 +1,6 @@
 namespace Heus.Ddd.Entities;
 
-public interface ITreeEntity
+public interface ITreeEntity:IEntity
 {
     public int Sort { get; set; }
     public  string Code { get; set; }

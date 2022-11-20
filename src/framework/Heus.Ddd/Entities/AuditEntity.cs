@@ -4,20 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Heus.Ddd.Entities;
 
-public abstract class AuditEntity:IAuditEntity
+public abstract class AuditEntity:EntityBase,IAuditEntity
 {
-    /// <summary>
-    /// 唯一主键，数据库为varchar(24)
-    /// </summary>
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    public long Id { get; set; }
-    
     /// <summary>
     /// 创建人
     /// </summary>
     public long? CreatedBy { get; set; }
-    
     /// <summary>
     /// 更新人
     /// </summary>
