@@ -50,8 +50,6 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
             connect.Open();
             return connect;
         });
-
-
         return dbConnection;
     }
 }

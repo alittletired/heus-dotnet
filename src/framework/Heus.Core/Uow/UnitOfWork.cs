@@ -48,9 +48,9 @@ internal class UnitOfWork : IUnitOfWork
         if (connStr == null) return;
         if (!_dbTransactions.TryGetValue(connStr, out var dbTransaction))
         {
-            dbTransaction = dbContext.Database.GetDbConnection().BeginTransaction(IsolationLevel.ReadCommitted);
+            dbTransaction = dbContext.Database.GetDbConnection()
+                .BeginTransaction();
             _dbTransactions.Add(connStr, dbTransaction);
-
         }
 
         dbContext.Database.UseTransactionAsync(dbTransaction);
