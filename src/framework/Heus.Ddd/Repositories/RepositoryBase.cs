@@ -44,7 +44,20 @@ public abstract class RepositoryBase<TEntity> :
         UnitOfWorkManager = unitOfWorkManager;
     }
 
-    public IQueryable<TEntity> Query => DbContext.Set<TEntity>().AsQueryable().AsNoTracking();
+    public IQueryable<TEntity> Query
+    {
+        get
+        {
+            var query = DbContext.Set<TEntity>().AsQueryable();
+            if (UnitOfWorkManager.Current?.Options.IsTransactional == true)
+            {
+                return query;
+            }
+            return  query.AsNoTracking();
+        }
+    }
+
+   
     public async Task<TEntity> InsertAsync(TEntity entity)
     {
         BeforeInsert(entity);

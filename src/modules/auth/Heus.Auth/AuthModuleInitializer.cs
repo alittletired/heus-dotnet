@@ -1,6 +1,4 @@
 ﻿using Heus.Auth.Application;
-using Heus.Auth.Domain;
-using Heus.Auth.Entities;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
 namespace Heus.Auth;
@@ -18,8 +16,8 @@ public class AuthModuleInitializer : ModuleInitializerBase
     public override async Task InitializeAsync(IServiceProvider serviceProvider)
     {
         var authDbContext = serviceProvider.GetRequiredService<AuthDbContext>();
-        //await authDbContext.Database.EnsureDeletedAsync();
-        // await authDbContext.Database.EnsureCreatedAsync();
+        // await authDbContext.Database.EnsureDeletedAsync();
+        await authDbContext.Database.EnsureCreatedAsync();
         await AddUsers(serviceProvider);
         await AddRoles(serviceProvider);
     }
