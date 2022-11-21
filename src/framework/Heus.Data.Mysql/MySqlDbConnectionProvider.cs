@@ -10,7 +10,7 @@ namespace Heus.Data.Mysql;
 internal class MySqlDbConnectionProvider : IDbConnectionProvider
 {
     private static readonly ConcurrentDictionary<string, ServerVersion> _serverVersions = new();
-
+    public DbProviderFactory DbProviderFactory => MySqlConnectorFactory.Instance;
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
     {
 

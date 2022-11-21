@@ -15,6 +15,9 @@ internal class SqliteDbConnectionProvider : IDbConnectionProvider, ISingletonDep
     }
 
     public DbProvider DbProvider { get; } = DbProvider.Sqlite;
+
+    public DbProviderFactory DbProviderFactory => SqliteFactory.Instance;
+
     public DbConnection CreateConnection(string connectionString)
     {
         return new SqliteConnection(connectionString);

@@ -19,7 +19,9 @@ internal class PostgresSqlDbConnectionProvider : IDbConnectionProvider
             });
     }
 
-    public DbProvider DbProvider => DbProvider.PostgreSql;
+    public DbProvider DbProvider => DbProvider.Postgres;
+
+    public DbProviderFactory DbProviderFactory => NpgsqlFactory.Instance;
 
     public DbConnection CreateConnection(string connectionString)
     {

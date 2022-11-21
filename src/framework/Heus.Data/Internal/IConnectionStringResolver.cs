@@ -1,7 +1,9 @@
-﻿namespace Heus.Data.Internal;
+﻿using Heus.Data.Options;
 
-public interface IConnectionStringResolver
+namespace Heus.Data.Internal;
+
+public interface IConnectionInfoResolver
 {
-    string Resolve(string? connectionStringName = null);
+    DbConnectionInfo Resolve(string? connectionStringName = null);
 }
 

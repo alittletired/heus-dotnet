@@ -2,10 +2,10 @@ namespace Heus.Data;
 
 public enum DbProvider
 {
-    SqlServer,
+    MsSql,
     MySql,
     Oracle,
-    PostgreSql,
+    Postgres,
     Sqlite,
     InMemory,
     Cosmos,

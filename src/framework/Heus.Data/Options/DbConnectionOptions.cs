@@ -4,5 +4,5 @@ namespace Heus.Data.Options;
 
 internal class DbConnectionOptions
 {
-    public ConnectionStrings ConnectionStrings { get; set; } = new ();
+    public Dictionary<string, string> ConnectionStrings { get; set; } = new (StringComparer.OrdinalIgnoreCase);
 }

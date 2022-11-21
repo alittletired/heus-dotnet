@@ -14,10 +14,6 @@ public class WebModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.Configure<DataOptions>(options =>
-        {
-            options.DbProvider = DbProvider.PostgreSql;
-
-        });
+      
     }
 }

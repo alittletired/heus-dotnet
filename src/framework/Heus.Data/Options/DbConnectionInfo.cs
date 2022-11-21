@@ -3,13 +3,13 @@
 public class DbConnectionInfo
 {
     
-    public DbConnectionInfo(string connectionString, DbProvider provider)
+    public DbConnectionInfo(DbProvider provider,string connectionString)
     {
         ConnectionString = connectionString;
-        Provider = provider;
+        DbProvider = provider;
     }
-
+    public DbConnectionInfo(string provider, string connectionString) : this(Enum.Parse<DbProvider>(provider,true), connectionString) { }
     public string ConnectionString { get; set; }
 
-    public DbProvider Provider { get; set; }
+    public DbProvider DbProvider { get; set; }
 }

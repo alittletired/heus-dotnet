@@ -6,16 +6,16 @@ using Microsoft.Extensions.Options;
 namespace Heus.Data.Internal;
 internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDependency
 {
-    private readonly IConnectionStringResolver _connectionStringResolver;
+    private readonly IConnectionInfoResolver _connectionInfoResolver;
     private readonly DataOptions _options;
     private readonly ILogger<DefaultDbConnectionManager> _logger;
 
     private readonly Dictionary<string, DbConnection> _connections = new();
-    public DefaultDbConnectionManager(IConnectionStringResolver connectionStringResolver
+    public DefaultDbConnectionManager(IConnectionInfoResolver connectionInfoResolver
         , IOptions<DataOptions> options,
      ILogger<DefaultDbConnectionManager> logger)
     {
-        _connectionStringResolver = connectionStringResolver;
+        _connectionInfoResolver = connectionInfoResolver;
         _options = options.Value;
         _logger = logger;
     }
@@ -35,21 +35,21 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
         _connections.Clear();
     }
 
-    public DbConnection GetDbConnection<TDbContext>() where TDbContext : DbContext
+    public (DbConnection, DbProvider) GetDbConnection<TDbContext>() where TDbContext : DbContext
     {
      
         var connectionStringName = ConnectionStringNameAttribute.GetConnStringName<TDbContext>();
-
-        var connectionString = _connectionStringResolver.Resolve(connectionStringName);
+        var connectionInfo = _connectionInfoResolver.Resolve(connectionStringName);
+        var connectionString = connectionInfo.ConnectionString;
 
         var dbConnection = _connections.GetOrAdd(connectionString, (cs) =>
         {
-            var dbContextOptionsProvider = _options.DbConnectionProviders.First(p => p.DbProvider == _options.DbProvider);
+            var dbContextOptionsProvider = _options.DbConnectionProviders.First(p => p.DbProvider == connectionInfo.DbProvider);
             _logger.LogDebug(" connectionString:{ConnectionString},DbContext:{DbContext}", connectionString, typeof(TDbContext).Name);
             var connect = dbContextOptionsProvider.CreateConnection(cs);
             connect.Open();
             return connect;
         });
-        return dbConnection;
+        return (dbConnection, connectionInfo.DbProvider);
     }
 }

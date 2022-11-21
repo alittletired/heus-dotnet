@@ -18,11 +18,6 @@ public class IntegratedTestModuleInitializer : ModuleInitializerBase
         services.Remove(services.First(s => s.ServiceType == typeof(IProxyHttpClientFactory)));
         services.AddSingleton<IProxyHttpClientFactory, TestProxyHttpClientFactory>();
         services.AddScoped<IRemoteServiceProxyContributor, TestRemoteServiceProxyContributor>();
-
-        services.Configure<DataOptions>(options =>
-        {
-            options.DbProvider = DbProvider.Sqlite;
-        });
         base.ConfigureServices(context);
     }
 

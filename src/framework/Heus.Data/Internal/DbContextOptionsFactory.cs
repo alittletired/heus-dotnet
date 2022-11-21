@@ -21,13 +21,13 @@ internal class DbContextOptionsFactory<TContext> : IDbContextOptionsFactory<TCon
 
     public DbContextOptions<TContext> CreateOptions()
     {
-        var dbConnection = _dbConnectionManager.GetDbConnection<TContext>();
+        var (dbConnection,dbProvider) = _dbConnectionManager.GetDbConnection<TContext>();
         var builder = new DbContextOptionsBuilder<TContext>();
         _options.ConfigureDbContextOptions.ForEach(configure => configure(builder));
         //todo: 目前没有想好如何填充中间件实例，故先使用构造函数传入
         //builder.AddInterceptors(_options.Interceptors);
-        builder.AddInterceptors(_uowDbConnectionInterceptor,_commandInterceptor);
-        var dbContextOptionsProvider = _options.DbConnectionProviders.First(p => p.DbProvider == _options.DbProvider);
+        builder.AddInterceptors(_uowDbConnectionInterceptor, _commandInterceptor);
+        var dbContextOptionsProvider = _options.DbConnectionProviders.First(p => p.DbProvider == dbProvider);
         dbContextOptionsProvider.Configure(builder, dbConnection);
         return builder.Options;
     }
