@@ -1,7 +1,7 @@
 ﻿using Heus.Data;
 namespace Heus.Auth;
 
-internal class AuthDbContext : DbContextBase<AuthDbContext>
+public class AuthDbContext : DbContextBase<AuthDbContext>
 {
     public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
     {

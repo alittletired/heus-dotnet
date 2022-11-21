@@ -45,7 +45,8 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
         var dbConnection = _connections.GetOrAdd(connectionString, (cs) =>
         {
             var dbContextOptionsProvider = _options.DbConnectionProviders.First(p => p.DbProvider == connectionInfo.DbProvider);
-            _logger.LogDebug(" connectionString:{ConnectionString},DbContext:{DbContext}", connectionString, typeof(TDbContext).Name);
+            _logger.LogDebug(" connectionString:{ConnectionString},DbContext:{DbContext},DbProvider:{DbProvider}", 
+                connectionString, typeof(TDbContext).Name, connectionInfo.DbProvider);
             var connect = dbContextOptionsProvider.CreateConnection(cs);
             connect.Open();
             return connect;
