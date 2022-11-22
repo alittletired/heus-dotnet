@@ -5,5 +5,5 @@ namespace Heus.Core.Uow;
 public interface IUnitOfWorkManager : ISingletonDependency
 {
     IUnitOfWork? Current { get; }
-    IUnitOfWork Begin(UnitOfWorkOptions options, bool requiresNew = false);
+    IUnitOfWork Begin(UnitOfWorkOptions? options=default, bool requiresNew = false);
 }
