@@ -38,9 +38,10 @@ public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdate
 {
     protected IRepository<TEntity> Repository => GetRequiredService<IRepository<TEntity>>();
 
-    public virtual async Task DeleteAsync(long id)
+    public virtual async Task<long> DeleteAsync(long id)
     {
         await Repository.DeleteByIdAsync(id);
+        return id;
     }
 
     /// <summary>

@@ -65,16 +65,20 @@ public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>, IAsyncL
     [InlineData("13712345568")]
     public async Task UpdateAsync(string phone)
     {
-       
-        User updateDto = new User()
+      var user=  await _userService.GetAsync(_existId);
+        user.Phone.ShouldNotBe(phone);
+        var updateDto = new UserUpdateDto()
         {
             Id =_existId ,
-            Phone = phone
+            Phone = phone,Name=user.Name,
+            NickName=user.NickName,
 
         };
-        var user = await _userRepository.FindOneAsync(s=>s.Phone == phone);
-        user.ShouldNotBeNull();
-        user.Id.ShouldBe(_existId);
+     var updateUser  = await _userService.UpdateAsync(updateDto);
+
+        updateUser.ShouldNotBeNull();
+        updateUser.Phone.ShouldBe(phone);
+      
     }
     [Fact]
     
