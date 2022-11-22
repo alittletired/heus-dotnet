@@ -3,12 +3,8 @@ using Microsoft.AspNetCore.TestHost;
 
 namespace Heus.IntegratedTests;
 
-public interface ITestServerAccessor
-{
-    TestServer Server { get; set; }
-}
 
-public class TestServerAccessor : ITestServerAccessor, ISingletonDependency
+public static class TestServerAccessor 
 {
-    public TestServer Server { get; set; } = null!;
+    public static TestServer Server { get; set; } = null!;
 }

@@ -4,6 +4,7 @@ using Heus.IntegratedTests;
 
 namespace Heus.Auth.IntegratedTests;
 
+[UseUnitOfWork]
 public class AccountAppServiceTests:IClassFixture<IntegratedTest<Program>>
 {
     private readonly IntegratedTest<Program> _factory;

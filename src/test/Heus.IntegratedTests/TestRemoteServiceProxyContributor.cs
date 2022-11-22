@@ -27,8 +27,8 @@ internal class TestRemoteServiceProxyContributor : IRemoteServiceProxyContributo
         if (_token.IsNullOrEmpty())
         {
 
-            var options = new UnitOfWorkOptions() { ServiceProvider = _serviceProvider, IsTransactional = true };
-            using var unitOfWork = _unitOfWorkManager.Begin(options);
+            //var options = new UnitOfWorkOptions() { ServiceProvider = _serviceProvider, IsTransactional = true };
+            //using var unitOfWork = _unitOfWorkManager.Begin(options);
             var user = await _userService.FindByNameAsync("admin");
             var principal = _tokenProvider.CreatePrincipal(user!, TokenType.Admin);
             _token = _tokenProvider.CreateToken(principal);
