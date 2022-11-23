@@ -6,20 +6,26 @@ using Heus.Ddd.Dtos;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Repositories;
 using Heus.IntegratedTests;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Shouldly;
+
 
 namespace Heus.Auth.IntegratedTests;
 [UseUnitOfWork]
+[Collection(nameof(IntegratedTestCollection))]
 [TestCaseOrderer("Heus.IntegratedTests.PriorityOrderer", "Heus.IntegratedTests")]
-public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>, IAsyncLifetime
-
+public class UserAppServiceTests: IAsyncLifetime
 {
-    private readonly IntegratedTest<Program> _factory;
+    IntegratedTest<Program> _factory;
     private readonly IUserAdminAppService _userService;
-    public  const string NotExistName = "test2";
-    public  const string ExistName ="test1" ;
-    private long _existId=300;
+    public const string NotExistName = "test2";
+    public const string ExistName = "test1";
+    private long _existId = 300;
+    public UserAppServiceTests(IntegratedTest<Program> factory)
+    {
+        _factory = factory;
+        _userService = _factory.GetServiceProxy<IUserAdminAppService>(AuthConstants.ServiceName);
+
+    }
+
     public async  Task InitializeAsync()
     {
         using var uow = UnitOfWorkManagerAccessor.Begin();
@@ -32,12 +38,7 @@ public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>, IAsyncL
     {
          await _userService.DeleteAsync(_existId);
     }
-    public UserAppServiceTests(IntegratedTest<Program> factory )
-    {
-        _factory = factory;
-        _userService = _factory.GetServiceProxy<IUserAdminAppService>(AuthConstants.ServiceName);
 
-    }
 
     protected IRepository<User> _userRepository => _factory.Services.GetRequiredService<IRepository<User>>();
     [Fact, TestPriority(-5)]

@@ -5,7 +5,8 @@ using Heus.IntegratedTests;
 namespace Heus.Auth.IntegratedTests;
 
 [UseUnitOfWork]
-public class AccountAppServiceTests:IClassFixture<IntegratedTest<Program>>
+[Collection(nameof(IntegratedTestCollection))]
+public class AccountAppServiceTests
 {
     private readonly IntegratedTest<Program> _factory;
     private readonly  IAccountAdminAppService _accountService;
