@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Shouldly;
 
 namespace Heus.Auth.IntegratedTests;
-
+[UseUnitOfWork]
+[TestCaseOrderer("Heus.IntegratedTests.PriorityOrderer", "Heus.IntegratedTests")]
 public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>, IAsyncLifetime
 
 {
@@ -18,11 +19,13 @@ public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>, IAsyncL
     private readonly IUserAdminAppService _userService;
     public  const string NotExistName = "test2";
     public  const string ExistName ="test1" ;
-    private long _existId;
-    public async Task InitializeAsync()
+    private long _existId=300;
+    public async  Task InitializeAsync()
     {
+        using var uow = UnitOfWorkManagerAccessor.Begin();
         var user = await _userService.CreateAsync(new UserCreateDto { InitialPassword = "123456", Name = ExistName, NickName = ExistName, Phone = "123456" });
         _existId = user.Id;
+       await uow.CompleteAsync();
     }
 
     public async Task DisposeAsync()
@@ -37,6 +40,11 @@ public class UserAppServiceTests:IClassFixture<IntegratedTest<Program>>, IAsyncL
     }
 
     protected IRepository<User> _userRepository => _factory.Services.GetRequiredService<IRepository<User>>();
+    [Fact, TestPriority(-5)]
+    public  Task Create() {
+        //var user = await _userService.CreateAsync(new UserCreateDto { InitialPassword = "123456", Name = ExistName, NickName = ExistName, Phone = "123456" });
+        return Task.CompletedTask;
+    }
     [Fact]
     public async Task  GetAsync( )
     {

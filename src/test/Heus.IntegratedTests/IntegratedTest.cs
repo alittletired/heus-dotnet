@@ -1,8 +1,8 @@
 ﻿using Heus.Core.DependencyInjection;
 using Heus.Core.Http;
-using Heus.Core.Uow;
+
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Heus.IntegratedTests;
 

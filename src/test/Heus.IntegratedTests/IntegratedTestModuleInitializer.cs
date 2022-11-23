@@ -16,6 +16,8 @@ public class IntegratedTestModuleInitializer : ModuleInitializerBase
     {
         var services = context.Services;
         services.Remove(services.First(s => s.ServiceType == typeof(IProxyHttpClientFactory)));
+        services.AddSingleton<ITestServerAccessor, TestServerAccessor>();
+
         services.AddSingleton<IProxyHttpClientFactory, TestProxyHttpClientFactory>();
         services.AddScoped<IRemoteServiceProxyContributor, TestRemoteServiceProxyContributor>();
         base.ConfigureServices(context);
@@ -23,7 +25,7 @@ public class IntegratedTestModuleInitializer : ModuleInitializerBase
 
     public override void Configure(IApplicationBuilder app)
     {
-        TestServerAccessor.Server = (TestServer)app.ApplicationServices.GetRequiredService<IServer>();
+        app.ApplicationServices.GetRequiredService<ITestServerAccessor>().Server = (TestServer)app.ApplicationServices.GetRequiredService<IServer>();
         UnitOfWorkManagerAccessor.UnitOfWorkManager= app.ApplicationServices.GetRequiredService<IUnitOfWorkManager>();
     }
 }

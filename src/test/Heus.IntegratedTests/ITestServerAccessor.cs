@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.TestHost;
 
 namespace Heus.IntegratedTests;
 
-
-public static class TestServerAccessor 
+public interface ITestServerAccessor { TestServer Server { get; set; } }
+public  class TestServerAccessor : ITestServerAccessor
 {
-    public static TestServer Server { get; set; } = null!;
+    public  TestServer Server { get; set; } = null!;
 }
