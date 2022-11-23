@@ -4,6 +4,9 @@
 	  <PackageId>Heus.Ddd</PackageId>
 	  <RootNamespace>Heus.Ddd</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="11.1.0" />
+  </ItemGroup>
  
   <ItemGroup>
 

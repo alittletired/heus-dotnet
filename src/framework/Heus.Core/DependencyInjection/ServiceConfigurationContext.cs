@@ -7,12 +7,8 @@ namespace Heus.Core.DependencyInjection;
 public class ServiceConfigurationContext
 {
     
-    public IServiceCollection Services { get; }
-    public IConfiguration Configuration { get; }
-    public ServiceConfigurationContext(IServiceCollection services, IConfiguration configuration)
-    {
-        Services = services;
-        Configuration = configuration;
-    }
+    public required  IServiceCollection Services { get; init; }
+    public required IConfiguration Configuration { get; init; }
+    public required IServiceRegistrar ServiceRegistrar { get;init; }
 
 }

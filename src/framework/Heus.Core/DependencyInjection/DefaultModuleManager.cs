@@ -30,8 +30,8 @@ public class DefaultModuleManager : IModuleManager
         services.AddHostedService<ModuleHostService>();
         var serviceRegistrar = new DefaultServiceRegistrar();
         services.AddSingleton<IServiceRegistrar>(serviceRegistrar);
-        var context = new ServiceConfigurationContext(services, configuration);
-        var serviceTypes = new HashSet<Type>();
+        var context = new ServiceConfigurationContext { ServiceRegistrar = serviceRegistrar, Configuration = configuration, Services = services };
+      
         foreach (var preConfigureServices in Modules)
         {
             preConfigureServices.Instance.PreConfigureServices(context);
@@ -43,18 +43,7 @@ public class DefaultModuleManager : IModuleManager
         foreach (var module in Modules)
         {
             var assembly = module.Type.Assembly;
-
-            var types = assembly.GetTypes()
-                .Where(type => !serviceTypes.Contains(type) &&
-                               type.IsClass &&
-                               !type.IsAbstract &&
-                               !type.IsGenericType).ToList();
-            foreach (var type in types)
-            {
-                serviceRegistrar.Registrar(context.Services, type);
-                serviceTypes.Add(type);
-            }
-
+            serviceRegistrar.RegistrarModule(context.Services, assembly);
             module.Instance.ConfigureServices(context);
         }
 

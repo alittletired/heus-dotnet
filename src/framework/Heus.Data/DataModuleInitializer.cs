@@ -9,7 +9,7 @@ public class DataModuleInitializer : ModuleInitializerBase
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
-        OnDbContextScan(context.Services);
+        OnDbContextScan(context);
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -25,17 +25,18 @@ public class DataModuleInitializer : ModuleInitializerBase
     {
         services.AddScoped(sp => sp.GetRequiredService<IDbContextFactory<TContext>>().CreateDbContext());
     }
-    private static void OnDbContextScan(IServiceCollection services)
+    private static void OnDbContextScan(ServiceConfigurationContext context)
     {
-        services.OnScan(type =>
+        context.ServiceRegistrar.TypeScaning += (obj, type) =>
         {
             if (!typeof(DbContext).IsAssignableFrom(type))
             {
                 return;
             }
             var registerDbContext = _registerDbContext.MakeGenericMethod(type);
-            registerDbContext.Invoke(null, new object[] { services });
+            registerDbContext.Invoke(null, new object[] { context.Services });
 
-        });
+        };
     }
+   
 }

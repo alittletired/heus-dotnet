@@ -4,29 +4,38 @@ namespace Heus.Core.DependencyInjection.Internal;
 internal class DefaultServiceRegistrar : IServiceRegistrar { 
 
     private readonly List<IServiceRegistrarMiddleware> _middlewares = new();
-    private readonly List<Action<Type>> _registrationActions = new();
-    private readonly List<Action<Type>> _scanActions = new();
-    public void OnRegistered(Action<Type> registrationAction)
-    {
-        _registrationActions.Add(registrationAction);
-    }
+    public event EventHandler<Type>? ServiceRegistered;
+    public event EventHandler<Type>? TypeScaning;
+    public event EventHandler<Assembly>? ModuleInitialized;
 
+    public void RegistrarModule(IServiceCollection services, Assembly assembly)
+    {
+        ModuleInitialized?.Invoke(services, assembly);
+        var types = assembly.GetTypes()
+              .Where(type => type.IsClass &&
+                             !type.IsAbstract &&
+                             !type.IsGenericType).ToList();
+        foreach (var type in types)
+        {
+
+            Registrar(services, type);
+
+        }
+    }
     public void AddMiddlewares(IServiceRegistrarMiddleware middleware)
     {
         throw new NotImplementedException();
     }
 
-    public void Registrar(IServiceCollection services, Type type)
+    private void Registrar(IServiceCollection services, Type type)
     {
-        _scanActions.ForEach(s => s(type));
-
+        TypeScaning?.Invoke(services, type);
         var dependencyAttribute = type.GetCustomAttribute<DependencyAttribute>(true);
         var lifeTime = dependencyAttribute?.Lifetime ?? GetServiceLifetime(type);
         if (lifeTime == null)
         {
             return;
         }
-
         
         foreach (var serviceType in GetServiceTypes(type))
         {
@@ -48,7 +57,7 @@ internal class DefaultServiceRegistrar : IServiceRegistrar {
         }
 
         // _middlewares.ForEach(m => m.OnRegister(context));
-        _registrationActions.ForEach(action => action(type));
+        ServiceRegistered?.Invoke(services, type);
     }
 
     protected ServiceLifetime? GetServiceLifetime(Type type)
@@ -96,12 +105,5 @@ internal class DefaultServiceRegistrar : IServiceRegistrar {
         return serviceTypes;
     }
 
-   
-
- 
-
-    public void OnScan(Action<Type> scanAction)
-    {
-        _scanActions.Add(scanAction);
-    }
+  
 }

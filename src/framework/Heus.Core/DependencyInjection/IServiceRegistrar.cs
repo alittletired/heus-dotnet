@@ -1,11 +1,14 @@
+using System.Reflection;
+
 namespace Heus.Core.DependencyInjection;
 
-internal interface IServiceRegistrar { 
+public interface IServiceRegistrar {
 
-   
-    void OnRegistered(Action<Type> registrationAction);
+
+    event EventHandler<Type>? ServiceRegistered;
+    event EventHandler<Type>? TypeScaning;
+    event EventHandler<Assembly>? ModuleInitialized;
     void AddMiddlewares(IServiceRegistrarMiddleware middleware);
-    void OnScan(Action<Type> scanAction);
-    void Registrar(IServiceCollection services, Type type);
+    void RegistrarModule(IServiceCollection services, Assembly assembly);
 
 }
