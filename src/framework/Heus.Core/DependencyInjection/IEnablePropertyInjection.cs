@@ -5,5 +5,5 @@ namespace Heus.Core.DependencyInjection;
 /// </summary>
 public interface IInjectServiceProvider
 {
-    IServiceProvider ServiceProvider { get; set; }
+    void SetServiceProvider(IServiceProvider serviceProvider);
 }

@@ -13,7 +13,7 @@ internal class ServiceInjectMethodMiddleware : IResolveMiddleware
         if( context.Instance is IInjectServiceProvider initialization)
         {
             var serviceProvider = context.Resolve<IServiceProvider>();
-            initialization.ServiceProvider=serviceProvider;
+            initialization.SetServiceProvider(serviceProvider);
         }
     }
 }

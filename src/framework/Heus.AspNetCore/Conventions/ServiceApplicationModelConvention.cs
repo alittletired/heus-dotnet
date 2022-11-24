@@ -127,10 +127,6 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
             }
         }
     }
-   
-  
-
-
     private void RemoveEmptySelectors(IList<SelectorModel> selectors)
     {
         for (var i = selectors.Count - 1; i >= 0; i--)

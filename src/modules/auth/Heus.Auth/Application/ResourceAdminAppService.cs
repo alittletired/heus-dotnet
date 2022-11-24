@@ -42,7 +42,7 @@ internal class ResourceAdminAppService : AdminApplicationService<Resource>, IRes
     private readonly IRepository<UserRole> _userRoleRepository;
     private readonly IRepository<RoleActionRight> _roleActionRightRepository;
     private readonly IRepository<Resource> _resourceRepository;
-
+    
     public ResourceAdminAppService(IRepository<ActionRight> actionRightRepository
         , IRepository<User> userRepository
         , IRepository<RoleActionRight> roleActionRightRepository

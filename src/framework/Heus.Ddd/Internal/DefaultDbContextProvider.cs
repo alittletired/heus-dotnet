@@ -2,6 +2,7 @@
 using System.Reflection;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Uow;
+using Heus.Core.Utils;
 using Heus.Ddd.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -41,7 +42,8 @@ internal class DefaultDbContextProvider : IDbContextProvider, IScopedDependency
         {
             var activator = _createDbContext.MakeGenericMethod(dbContextType);
             var dbContext = activator.Invoke(null, new object[] { _unitOfWorkManager.Current.ServiceProvider });
-            return (DbContext)dbContext!;
+            ThrowHelper.ThrowIfNull(dbContext);
+            return (DbContext)dbContext;
         });
 
     }
