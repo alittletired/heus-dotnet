@@ -26,17 +26,15 @@ public static class AsyncHelper
     /// <param name="method">A method to check</param>
     public static bool IsAsync( this MethodInfo method)
     {
-      
-
         return method.ReturnType.IsTaskOrTaskOfT();
     }
 
-    public static bool IsTaskOrTaskOfT( this Type type)
+    private static bool IsTaskOrTaskOfT( this Type type)
     {
         return type == typeof(Task) || (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>));
     }
 
-    public static bool IsTaskOfT( this Type type)
+    private static bool IsTaskOfT( this Type type)
     {
         return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>);
     }
@@ -46,9 +44,8 @@ public static class AsyncHelper
     /// Return T, if given type is Task{T}.
     /// Returns given type otherwise.
     /// </summary>
-    public static Type UnwrapTask( Type type)
+    public static Type UnwrapTask(this Type type)
     {
-       
 
         if (type == typeof(Task))
         {

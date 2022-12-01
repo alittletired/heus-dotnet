@@ -69,15 +69,9 @@ namespace Heus.Core.Utils
             return nullabilityInfo.WriteState is NullabilityState.Nullable;
         }
     
-
-      
-
-
         public static bool IsNullable(Type type)
         {
-
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-
         }
 
         public static Type GetFirstGenericArgumentIfNullable(this Type t)
@@ -92,8 +86,6 @@ namespace Heus.Core.Utils
 
         public static bool IsEnumerable(Type type, out Type? itemType)
         {
-       
-
             var enumerableTypes = ReflectionUtils.GetImplementedGenericTypes(type, typeof(IEnumerable<>));
             if (enumerableTypes.Count == 1)
             {
@@ -170,7 +162,6 @@ namespace Heus.Core.Utils
 
             return null;
         }
-
 
         public static string GetFullNameHandlingNullableAndGenerics( Type type)
         {
@@ -303,9 +294,6 @@ namespace Heus.Core.Utils
             }
 
             var converter = TypeDescriptor.GetConverter(targetType);
-
-    
-
             return converter.ConvertFromString(value);
         }
 

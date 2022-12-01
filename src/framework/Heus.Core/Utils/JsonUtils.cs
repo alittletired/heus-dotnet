@@ -9,16 +9,18 @@ public static class JsonUtils
 {
     public static JsonSerializerOptions DefaultOptions { get; } = new()
     {
-        PropertyNameCaseInsensitive=true,
+        PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-      NumberHandling = JsonNumberHandling.WriteAsString
+        NumberHandling = JsonNumberHandling.WriteAsString
     };
+
     static JsonUtils()
     {
         DefaultOptions.Converters.Add(new LongToStringJsonConverter());
         DefaultOptions.Converters.Add(new EnumJsonConverterFactory());
     }
+
     public static void ApplyDefaultSettings(this JsonSerializerOptions options)
     {
         options.PropertyNameCaseInsensitive = true;
@@ -26,37 +28,45 @@ public static class JsonUtils
         options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         foreach (var converter in DefaultOptions.Converters)
         {
-            options.Converters.Add(converter);    
+            options.Converters.Add(converter);
         }
-        
-    }   
+
+    }
 
     public static byte[] SerializeToBytes<T>(T obj)
     {
-        return Encoding.UTF8.GetBytes(Serialize(obj)); 
+        return Encoding.UTF8.GetBytes(Serialize(obj));
     }
-    public static string Serialize<T>(T obj) 
+
+    public static string Serialize<T>(T obj)
     {
-       return JsonSerializer.Serialize(obj, DefaultOptions);
+        return JsonSerializer.Serialize(obj, DefaultOptions);
     }
+
     public static T? Deserialize<T>(byte[] bytes)
     {
-        return JsonSerializer.Deserialize<T>( Encoding.UTF8.GetString(bytes));
+        return JsonSerializer.Deserialize<T>(Encoding.UTF8.GetString(bytes));
     }
-    public static T? Deserialize<T>(string? json) {
+
+    public static T? Deserialize<T>(string? json)
+    {
 
         if (string.IsNullOrEmpty(json))
         {
             return default!;
         }
+
         return JsonSerializer.Deserialize<T>(json, DefaultOptions);
     }
-    public static object? Parse( string? json,Type type) {
+
+    public static object? Deserialize(string? json, Type type)
+    {
 
         if (string.IsNullOrEmpty(json))
         {
             return default!;
         }
-        return JsonSerializer.Deserialize(json,type, DefaultOptions);
+
+        return JsonSerializer.Deserialize(json, type, DefaultOptions);
     }
 }
