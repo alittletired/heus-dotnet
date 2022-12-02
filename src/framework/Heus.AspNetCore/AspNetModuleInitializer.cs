@@ -63,32 +63,29 @@ public class AspNetModuleInitializer : ModuleInitializerBase
         });
 
     }
-
-    public override void Configure(IApplicationBuilder app)
+    public override  Task InitializeAsync(IServiceProvider serviceProvider)
     {
-        var partManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
+        var partManager = serviceProvider.GetRequiredService<ApplicationPartManager>();
         partManager.FeatureProviders.Add(new ServiceControllerFeatureProvider());
+        var moduleContainer =serviceProvider.GetRequiredService<IModuleManager>();
+        var moduleAssemblies = moduleContainer.Modules.Select(s => s.Assembly).Distinct();
+        foreach (var moduleAssembly in moduleAssemblies)
+        {
+            if (!partManager.ApplicationParts.Any(p => p is AssemblyPart assemblyPart && assemblyPart.Assembly == moduleAssembly))
+            {
+                partManager.ApplicationParts.Add(new AssemblyPart(moduleAssembly));
+            }
 
-        var moduleContainer= app.ApplicationServices.GetRequiredService<IModuleManager>();
-       var moduleAssemblies = moduleContainer.Modules.Select(s => s.Assembly).Distinct();
-       foreach (var moduleAssembly in moduleAssemblies)
-       {
-           if (partManager.ApplicationParts.Any(
-                   p => p is AssemblyPart assemblyPart && assemblyPart.Assembly == moduleAssembly))
-           {
-               continue;
-           }
+        }
 
-           partManager.ApplicationParts.Add(new AssemblyPart(moduleAssembly));
-       }
-
-        IWebHostEnvironment env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
+        var app= serviceProvider.GetApplicationBuilder();
+        IWebHostEnvironment env =serviceProvider.GetRequiredService<IWebHostEnvironment>();
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
             app.UseOpenApi();
         }
-       
+
         // app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
@@ -106,8 +103,9 @@ public class AspNetModuleInitializer : ModuleInitializerBase
             endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             endpoints.MapRazorPages();
         });
-       
+        return Task.CompletedTask;
     }
+    
 
    
 

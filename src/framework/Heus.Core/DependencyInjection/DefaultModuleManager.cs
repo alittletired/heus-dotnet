@@ -2,6 +2,8 @@
 using Autofac.Extensions.DependencyInjection;
 using Heus.Core.DependencyInjection.Autofac;
 using Heus.Core.DependencyInjection.Internal;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Heus.Core.DependencyInjection;
@@ -11,7 +13,7 @@ public class DefaultModuleManager : IModuleManager
     public Type StartupModuleType { get; }
     public List<ServiceModuleDescriptor> Modules { get; }
 
-    public DefaultModuleManager(IServiceCollection services, Type startupModuleType)
+    public DefaultModuleManager(Type startupModuleType)
     {
         StartupModuleType = startupModuleType;
         Modules = LoadModules();
@@ -27,18 +29,20 @@ public class DefaultModuleManager : IModuleManager
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IModuleManager>(this);
-        services.AddHostedService<ModuleHostService>();
         var serviceRegistrar = new DefaultServiceRegistrar();
         services.AddSingleton<IServiceRegistrar>(serviceRegistrar);
-        var context = new ServiceConfigurationContext { ServiceRegistrar = serviceRegistrar, Configuration = configuration, Services = services };
+        var context = new ServiceConfigurationContext
+        {
+            ServiceRegistrar = serviceRegistrar,
+            Configuration = configuration,
+            Services = services
+        };
       
         foreach (var preConfigureServices in Modules)
         {
             preConfigureServices.Instance.PreConfigureServices(context);
 
         }
-
-        //ConfigureServices
 
         foreach (var module in Modules)
         {
@@ -54,20 +58,20 @@ public class DefaultModuleManager : IModuleManager
         }
     }
 
-    public void ConfigureServices(WebApplicationBuilder builder)
-    {
-        builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory(containerBuilder =>
-        {
-            containerBuilder.RegisterServiceMiddlewareSource(new ServiceInjectMethodMiddlewareSource());
-        }));
-        ConfigureServices(builder.Services, builder.Configuration);
-    }
+    //public void ConfigureServices(WebApplicationBuilder builder)
+    //{
+    //    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory(containerBuilder =>
+    //    {
+    //        containerBuilder.RegisterServiceMiddlewareSource(new ServiceInjectMethodMiddlewareSource());
+    //    }));
+    //    ConfigureServices(builder.Services, builder.Configuration);
+    //}
 
-    public void Configure(IApplicationBuilder applicationBuilder)
+    public async Task InitializeModulesAsync(IServiceProvider serviceProvider)
     {
         foreach (var module in Modules)
         {
-            module.Instance.Configure(applicationBuilder);
+         await   module.Instance.InitializeAsync(serviceProvider);
         }
 
     }

@@ -3,24 +3,23 @@ using Autofac.Core.Registration;
 using Autofac.Core.Resolving.Pipeline;
 
 
-namespace Heus.Core.DependencyInjection.Autofac
+namespace Heus.Core.DependencyInjection.Autofac;
+
+internal class ServiceInjectMethodMiddlewareSource : IServiceMiddlewareSource
 {
-    internal class ServiceInjectMethodMiddlewareSource : IServiceMiddlewareSource
+    private readonly IResolveMiddleware _middleware=new ServiceInjectMethodMiddleware();
+    public void ProvideMiddleware(Service service, IComponentRegistryServices availableServices, IResolvePipelineBuilder pipelineBuilder)
     {
-        private readonly IResolveMiddleware _middleware=new ServiceInjectMethodMiddleware();
-        public void ProvideMiddleware(Service service, IComponentRegistryServices availableServices, IResolvePipelineBuilder pipelineBuilder)
+        
+        
+        if (service is TypedService typedService)
         {
-            
-            
-            if (service is TypedService typedService)
+            // && typedService.ServiceType.IsAssignableTo<IInjectServiceProvider>()
+           if( typedService.Description.Contains("Heus"))
             {
-                // && typedService.ServiceType.IsAssignableTo<IInjectServiceProvider>()
-               if( typedService.Description.Contains("Heus"))
-                {
-                    pipelineBuilder.Use(_middleware);     
-                }
-               
+                pipelineBuilder.Use(_middleware);     
             }
+           
         }
     }
 }

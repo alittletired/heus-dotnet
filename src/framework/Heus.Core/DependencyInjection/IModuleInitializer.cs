@@ -18,12 +18,6 @@ public interface IModuleInitializer
     /// <param name="context"></param>
     void ConfigureServices(ServiceConfigurationContext context);
 
-    /// <summary>
-    /// 配置应用
-    /// </summary>
-    /// <param name="app"></param>
-    void Configure(IApplicationBuilder app);
-
     Task InitializeAsync(IServiceProvider serviceProvider);
 
 

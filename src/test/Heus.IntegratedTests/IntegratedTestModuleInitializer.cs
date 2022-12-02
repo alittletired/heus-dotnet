@@ -23,9 +23,10 @@ public class IntegratedTestModuleInitializer : ModuleInitializerBase
         base.ConfigureServices(context);
     }
 
-    public override void Configure(IApplicationBuilder app)
+    public override Task InitializeAsync(IServiceProvider serviceProvider)
     {
-        app.ApplicationServices.GetRequiredService<ITestServerAccessor>().Server = (TestServer)app.ApplicationServices.GetRequiredService<IServer>();
-        UnitOfWorkManagerAccessor.UnitOfWorkManager= app.ApplicationServices.GetRequiredService<IUnitOfWorkManager>();
+        serviceProvider.GetRequiredService<ITestServerAccessor>().Server = (TestServer)serviceProvider.GetRequiredService<IServer>();
+        UnitOfWorkManagerAccessor.UnitOfWorkManager= serviceProvider.GetRequiredService<IUnitOfWorkManager>();
+        return Task.CompletedTask;
     }
 }

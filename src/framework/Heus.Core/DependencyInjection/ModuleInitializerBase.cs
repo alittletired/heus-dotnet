@@ -16,10 +16,6 @@ public abstract class ModuleInitializerBase : IModuleInitializer
         
     }
 
-    public virtual void Configure(IApplicationBuilder app)
-    {
-        
-    }
 
     public virtual Task InitializeAsync(IServiceProvider serviceProvider)
     {

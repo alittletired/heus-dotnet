@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Heus.Core.Utils;
 using Heus.Ddd.Application;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Heus.Core.Http;
 
@@ -100,6 +101,16 @@ public static class HttpApiHelper
         }
 
         return routeTemplate.ToString();
+    }
+    /// <summary>
+    /// 是否允许匿名访问
+    /// </summary>
+    /// <param name="targetType"></param>
+    /// <param name="action"></param>
+    /// <returns></returns>
+    public static bool IsAllowAnonymous(Type targetType, MethodInfo action)
+    {
+        return action.GetCustomAttribute<AllowAnonymousAttribute>() != null || targetType.GetCustomAttribute<AllowAnonymousAttribute>() != null;
     }
     public static HttpRequestMessage CreateHttpRequest(Type targetType, MethodInfo action, object?[]? args)
     {

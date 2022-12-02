@@ -1,7 +1,7 @@
 using System.Data.Common;
 using System.Transactions;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Logging;
 
 namespace Heus.Core.Uow;
 internal class UnitOfWork : IUnitOfWork

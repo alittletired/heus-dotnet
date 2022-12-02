@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Heus.Core.DependencyInjection;
 
 namespace Heus.Core.Security;
 
