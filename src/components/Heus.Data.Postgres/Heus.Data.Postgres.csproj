@@ -5,7 +5,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Heus.Data\Heus.Data.csproj" />
+      <ProjectReference Include="..\..\framework\Heus.Data\Heus.Data.csproj" />
    
     </ItemGroup>
 
