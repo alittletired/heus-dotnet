@@ -27,7 +27,7 @@ public class CoreModuleInitializer : ModuleInitializerBase
         context.Services.AddObjectMapper();
         
         context.Services.Configure<JwtOptions>(context.Configuration.GetSection(JwtOptions.ConfigurationSection));
-      
+        context.Services.AddHttpClient();
         context.Services.AddCache();
     }
 }

@@ -19,7 +19,7 @@ public class IntegratedTestModuleInitializer : ModuleInitializerBase
         services.AddSingleton<ITestServerAccessor, TestServerAccessor>();
 
         services.AddSingleton<IProxyHttpClientFactory, TestProxyHttpClientFactory>();
-        services.AddScoped<IRemoteServiceProxyContributor, TestRemoteServiceProxyContributor>();
+      
         base.ConfigureServices(context);
     }
 

@@ -4,6 +4,7 @@ using Heus.Core.DependencyInjection.Autofac;
 using Heus.Core.DependencyInjection.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
 namespace Heus.Core.DependencyInjection;
@@ -58,14 +59,14 @@ public class DefaultModuleManager : IModuleManager
         }
     }
 
-    //public void ConfigureServices(WebApplicationBuilder builder)
-    //{
-    //    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory(containerBuilder =>
-    //    {
-    //        containerBuilder.RegisterServiceMiddlewareSource(new ServiceInjectMethodMiddlewareSource());
-    //    }));
-    //    ConfigureServices(builder.Services, builder.Configuration);
-    //}
+    public void AddAutofac(IHostBuilder host)
+    {
+        host.UseServiceProviderFactory(new AutofacServiceProviderFactory(containerBuilder =>
+        {
+            containerBuilder.RegisterServiceMiddlewareSource(new ServiceInjectMethodMiddlewareSource());
+        }));
+
+    }
 
     public async Task InitializeModulesAsync(IServiceProvider serviceProvider)
     {

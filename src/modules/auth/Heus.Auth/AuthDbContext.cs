@@ -24,37 +24,5 @@ public class AuthDbContext : DbContextBase<AuthDbContext>
         base.ConfigureConventions(configurationBuilder);
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-       // SeedUsers(modelBuilder);
-      //  SeedRoles(modelBuilder);
-    }
-
-    private void SeedUsers(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-        var adminUser = new User()
-        {
-            Name = "admin",
-            Id = 1,
-            IsSuperAdmin = true,
-            NickName = "超级管理员",
-            Phone = "13900000000"
-
-        };
-        adminUser.SetPassword("1");
-        modelBuilder.Entity<User>().HasData(adminUser);
-        
-    }
-
-    private void SeedRoles(ModelBuilder modelBuilder)
-    {
-        var roles = new List<Role>
-        {
-            new() { Id = 1,Name = "super_admin", Remarks = "超级管理员", IsBuildIn = true },
-            new() { Id = 2,Name = "common_user", Remarks = "普通用户", IsBuildIn = true }
-        };
-        modelBuilder.Entity<Role>().HasData(roles);
-    }
+  
 }

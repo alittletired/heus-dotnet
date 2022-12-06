@@ -7,12 +7,13 @@ using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
 
 namespace Heus.Core.Http;
-internal class DefaultRemoteServiceProxyContributor : IRemoteServiceProxyContributor, IScopedDependency
+internal class DefaultRemoteServiceProxyContributor : IRemoteServiceProxyContributor,ISingletonDependency
 {
     private readonly ICurrentPrincipalAccessor _currentPrincipalAccessor;
     private readonly ITokenProvider _tokenProvider;
 
-    public DefaultRemoteServiceProxyContributor(ICurrentPrincipalAccessor currentPrincipalAccessor, ITokenProvider tokenProvider)
+    public DefaultRemoteServiceProxyContributor(ICurrentPrincipalAccessor currentPrincipalAccessor, 
+        ITokenProvider tokenProvider)
     {
         _currentPrincipalAccessor = currentPrincipalAccessor;
         _tokenProvider = tokenProvider;

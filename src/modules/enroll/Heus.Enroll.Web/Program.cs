@@ -1,4 +1,4 @@
 using Heus.Enroll.Web;
 await WebApplication.CreateBuilder(args)
-    .UseModuleAndRunAsync<WebModuleInitializer>();
+    .RunWithModuleAsync<WebModuleInitializer>();
 public partial class Program { }

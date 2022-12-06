@@ -1,3 +1,4 @@
+using Heus.Core.DependencyInjection;
 using Heus.Core.Http;
 using Heus.Core.Security;
 using Heus.Core.Uow;
@@ -7,7 +8,7 @@ using Heus.Ddd.Repositories;
 namespace Heus.IntegratedTests;
 
 
-internal class TestRemoteServiceProxyContributor : IRemoteServiceProxyContributor
+internal class TestRemoteServiceProxyContributor : IRemoteServiceProxyContributor,ISingletonDependency
 {
     private readonly ITokenProvider _tokenProvider;
     private readonly IUserService _userService;

@@ -12,6 +12,7 @@ public static class WebApplicationExtensions
     public static WebApplicationBuilder AddModule(this WebApplicationBuilder builder, Type startModuleType)
     {
         var moduleManager = new DefaultModuleManager(startModuleType);
+        moduleManager.AddAutofac(builder.Host);
         moduleManager.ConfigureServices(builder.Services, builder.Configuration);
         return builder;
     }
@@ -29,7 +30,7 @@ public static class WebApplicationExtensions
         return app;
     }
 
-    public static async Task UseModuleAndRunAsync<TModule>(this WebApplicationBuilder builder)
+    public static async Task RunWithModuleAsync<TModule>(this WebApplicationBuilder builder)
     {
         var app = builder.AddModule<TModule>().Build();
         await app.UseModule();

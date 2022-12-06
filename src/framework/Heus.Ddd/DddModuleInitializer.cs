@@ -4,6 +4,7 @@ using Heus.Core.DependencyInjection;
 using Heus.Data;
 using Heus.Data.Utils;
 using Heus.Ddd.Repositories;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -17,6 +18,7 @@ public class DddModuleInitializer : ModuleInitializerBase
     {
         OnDbContextScan(context);
         OnRepositoryRegistered(context);
+        OnModuleInitialized(context);
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -79,5 +81,11 @@ public class DddModuleInitializer : ModuleInitializerBase
             options.CustomRepositories.AddRange(customRepositories);
         });
 
+    }
+    private static void OnModuleInitialized(ServiceConfigurationContext context)
+    {
+        context.ServiceRegistrar.ModuleInitialized += (obj, assembly) => {
+            context.Services.AddMediatR(assembly);
+            };
     }
 }

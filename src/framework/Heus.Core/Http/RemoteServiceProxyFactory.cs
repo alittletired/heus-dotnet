@@ -13,15 +13,16 @@ public class RemoteServiceProxyFactory : ISingletonDependency
     private readonly IProxyHttpClientFactory _httpClientFactory;
   
       private readonly IEnumerable<IRemoteServiceProxyContributor> _proxyContributors;
-    public RemoteServiceProxyFactory(        IProxyHttpClientFactory httpClientFactory,
-      IEnumerable<IRemoteServiceProxyContributor> proxyContributors)
-    {
-       
-        _httpClientFactory = httpClientFactory;
-        _proxyContributors = proxyContributors;
-    }
 
-    public async Task PopulateRequestHeaders(HttpRequestMessage request)
+      public RemoteServiceProxyFactory(IProxyHttpClientFactory httpClientFactory,
+          IEnumerable<IRemoteServiceProxyContributor> proxyContributors)
+      {
+
+          _httpClientFactory = httpClientFactory;
+          _proxyContributors = proxyContributors;
+      }
+
+      public async Task PopulateRequestHeaders(HttpRequestMessage request)
     {
         foreach (var contributor in _proxyContributors)
         {

@@ -4,7 +4,7 @@ using Heus.Core.Security;
 
 namespace Heus.AspNetCore;
 
-public class HttpRemoteServiceProxyContributor : IRemoteServiceProxyContributor, IScopedDependency
+public class HttpRemoteServiceProxyContributor : IRemoteServiceProxyContributor,ISingletonDependency
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 

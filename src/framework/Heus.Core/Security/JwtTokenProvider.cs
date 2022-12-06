@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Heus.Core.Security;
 
-internal class JwtTokenProvider : ITokenProvider, IScopedDependency
+internal class JwtTokenProvider : ITokenProvider, ISingletonDependency
 {
     private readonly IOptions<JwtOptions> _jwtOptions;
 
@@ -29,17 +29,17 @@ internal class JwtTokenProvider : ITokenProvider, IScopedDependency
         var claims = new List<Claim>
         {
 
-              //ÁîÅÆ°ä·¢Õß¡£±íÊ¾¸ÃÁîÅÆÓÉË­´´½¨
+              //ä»¤ç‰Œé¢å‘è€…ã€‚è¡¨ç¤ºè¯¥ä»¤ç‰Œç”±è°åˆ›å»º
              new(JwtRegisteredClaimNames.Iss,  _jwtOptions.Value.Issuer),
-               //ÁîÅÆµÄÊÜÖÚ£¬·Ö´óĞ¡Ğ´µÄ×Ö·û´®Êı×é
+               //ä»¤ç‰Œçš„å—ä¼—ï¼Œåˆ†å¤§å°å†™çš„å­—ç¬¦ä¸²æ•°ç»„
              new(JwtRegisteredClaimNames.Aud, tokenType.ToString()),
-                //Subject Identifier£¬issÌá¹©µÄÖÕ¶ËÓÃ»§µÄ±êÊ¶£¬ÔÚiss·¶Î§ÄÚÎ¨Ò»£¬×î³¤Îª255¸öASCII¸ö×Ö·û£¬Çø·Ö´óĞ¡Ğ´
+                //Subject Identifierï¼Œissæä¾›çš„ç»ˆç«¯ç”¨æˆ·çš„æ ‡è¯†ï¼Œåœ¨issèŒƒå›´å†…å”¯ä¸€ï¼Œæœ€é•¿ä¸º255ä¸ªASCIIä¸ªå­—ç¬¦ï¼ŒåŒºåˆ†å¤§å°å†™
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()!),
-              //Expiration time£¬ÁîÅÆµÄ¹ıÆÚÊ±¼ä´Á¡£³¬¹ı´ËÊ±¼äµÄtoken»á×÷·Ï£¬ ¸ÃÉùÃ÷ÊÇÒ»¸öÕûÊı£¬ÊÇ1970Äê1ÔÂ1ÈÕÒÔÀ´µÄÃëÊı
+              //Expiration timeï¼Œä»¤ç‰Œçš„è¿‡æœŸæ—¶é—´æˆ³ã€‚è¶…è¿‡æ­¤æ—¶é—´çš„tokenä¼šä½œåºŸï¼Œ è¯¥å£°æ˜æ˜¯ä¸€ä¸ªæ•´æ•°ï¼Œæ˜¯1970å¹´1æœˆ1æ—¥ä»¥æ¥çš„ç§’æ•°
             new(JwtRegisteredClaimNames.Exp, expiration.ToString()),
-            //ÁîÅÆµÄÎ¨Ò»±êÊ¶£¬¸ÃÉùÃ÷µÄÖµÔÚÁîÅÆ°ä·¢Õß´´½¨µÄÃ¿Ò»¸öÁîÅÆÖĞ¶¼ÊÇÎ¨Ò»µÄ£¬ÎªÁË·ÀÖ¹³åÍ»£¬ËüÍ¨³£ÊÇÒ»¸öÃÜÂëÑ§Ëæ»úÖµ¡£Õâ¸öÖµÏàµ±ÓÚÏò½á¹¹»¯ÁîÅÆÖĞ¼ÓÈëÁËÒ»¸ö¹¥»÷ÕßÎŞ·¨»ñµÃµÄËæ»úìØ×é¼ş£¬ÓĞÀûÓÚ·ÀÖ¹ÁîÅÆ²Â²â¹¥»÷ºÍÖØ·Å¹¥»÷¡£
+            //ä»¤ç‰Œçš„å”¯ä¸€æ ‡è¯†ï¼Œè¯¥å£°æ˜çš„å€¼åœ¨ä»¤ç‰Œé¢å‘è€…åˆ›å»ºçš„æ¯ä¸€ä¸ªä»¤ç‰Œä¸­éƒ½æ˜¯å”¯ä¸€çš„ï¼Œä¸ºäº†é˜²æ­¢å†²çªï¼Œå®ƒé€šå¸¸æ˜¯ä¸€ä¸ªå¯†ç å­¦éšæœºå€¼ã€‚è¿™ä¸ªå€¼ç›¸å½“äºå‘ç»“æ„åŒ–ä»¤ç‰Œä¸­åŠ å…¥äº†ä¸€ä¸ªæ”»å‡»è€…æ— æ³•è·å¾—çš„éšæœºç†µç»„ä»¶ï¼Œæœ‰åˆ©äºé˜²æ­¢ä»¤ç‰ŒçŒœæµ‹æ”»å‡»å’Œé‡æ”¾æ”»å‡»ã€‚
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            //ÁîÅÆµÄ°ä·¢Ê±¼ä£¬¸ÃÉùÃ÷ÊÇÒ»¸öÕûÊı£¬ÊÇ1970Äê1ÔÂ1ÈÕÒÔÀ´µÄÃëÊı
+            //ä»¤ç‰Œçš„é¢å‘æ—¶é—´ï¼Œè¯¥å£°æ˜æ˜¯ä¸€ä¸ªæ•´æ•°ï¼Œæ˜¯1970å¹´1æœˆ1æ—¥ä»¥æ¥çš„ç§’æ•°
             new(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()),
 
 
