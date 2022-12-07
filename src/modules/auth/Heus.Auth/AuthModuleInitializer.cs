@@ -33,7 +33,7 @@ public class AuthModuleInitializer : ModuleInitializerBase
             var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
             await databaseCreator.EnsureCreatedAsync();
 
-            await databaseCreator.CreateTablesAsync();
+            //await databaseCreator.CreateTablesAsync();
             //  await authDbContext.Database.EnsureDeletedAsync();
             
         });

@@ -63,6 +63,7 @@ internal class DefaultDistributedCache<TCacheItem, TCacheKey> : IDistributedCach
     }
     public async Task SetAsync(TCacheKey key, TCacheItem value, DistributedCacheEntryOptions? options = null)
     {
+        options = options ?? _options.Value;
         var cacheKey= NormalizeKey(key);
         var item = JsonUtils.Serialize(value);
         options = options ?? _options.Value;
