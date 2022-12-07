@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\..\common.props" />
       <ItemGroup>
-        <ProjectReference Include="..\..\..\framework\Heus.Data.Sqlite\Heus.Data.Sqlite.csproj" />
         <ProjectReference Include="..\..\auth\Heus.Auth\Heus.Auth.csproj" />
       </ItemGroup>
 

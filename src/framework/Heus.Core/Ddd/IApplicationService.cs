@@ -1,4 +1,3 @@
-using Heus.Core.DependencyInjection;
 using Heus.Core.Http;
 
 namespace Heus.Ddd.Application;

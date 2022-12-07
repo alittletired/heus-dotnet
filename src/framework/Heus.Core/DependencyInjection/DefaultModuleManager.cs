@@ -30,6 +30,7 @@ public class DefaultModuleManager : IModuleManager
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IModuleManager>(this);
+        //services.AddHostedService
         var serviceRegistrar = new DefaultServiceRegistrar();
         services.AddSingleton<IServiceRegistrar>(serviceRegistrar);
         var context = new ServiceConfigurationContext

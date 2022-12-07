@@ -5,7 +5,7 @@ namespace Heus.Auth.Dtos;
 [MapTo(typeof(User))]
 public record class UserCreateDto: UserBaseDto
 {
-    public required string InitialPassword { get; init; } = null!;
+    public required string PlaintextPassword { get; init; } 
 }
 public record UserUpdateDto : UserBaseDto
 {

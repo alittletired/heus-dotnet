@@ -9,9 +9,5 @@
       <ProjectReference Include="..\..\enroll\Heus.Enroll.Web\Heus.Enroll.Web.csproj" />
       <ProjectReference Include="..\Heus.Auth\Heus.Auth.csproj" />
     </ItemGroup>
-  
-
-
-   
 
 </Project>

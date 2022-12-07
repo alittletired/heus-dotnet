@@ -29,7 +29,7 @@ public class UserAppServiceTests: IAsyncLifetime
     public async  Task InitializeAsync()
     {
         using var uow = UnitOfWorkManagerAccessor.Begin();
-        var user = await _userService.CreateAsync(new UserCreateDto { InitialPassword = "123456", Name = ExistName, NickName = ExistName, Phone = "123456" });
+        var user = await _userService.CreateAsync(new UserCreateDto { PlaintextPassword = "123456", Name = ExistName, NickName = ExistName, Phone = "123456" });
         _existId = user.Id;
        await uow.CompleteAsync();
     }

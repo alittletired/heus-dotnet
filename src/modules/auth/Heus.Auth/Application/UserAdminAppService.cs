@@ -1,5 +1,6 @@
 
 using Heus.Core.Security;
+using Heus.Core.Utils;
 using Heus.Ddd.Entities;
 
 namespace Heus.Auth.Application;
@@ -23,7 +24,7 @@ internal class UserAdminAppService : AdminApplicationService<User, User, UserCre
     public override async Task<User> CreateAsync(UserCreateDto createDto)
     {
         var entity = Mapper.Map<User>(createDto);
-        entity.SetPassword(createDto.InitialPassword);
+        entity.SetPassword(createDto.PlaintextPassword);
         await Repository.InsertAsync(entity);
         return entity;
     }
