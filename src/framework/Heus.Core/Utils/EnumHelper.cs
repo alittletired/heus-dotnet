@@ -1,16 +1,18 @@
 using System.Collections.Concurrent;
 using System.Xml;
+using System;
 
 namespace Heus.Core.Utils;
 
 public static class EnumHelper
 {
-    public  static readonly ConcurrentDictionary<Type, Dictionary<string, string>> _enumSummaries= new();
+    private  readonly static ConcurrentDictionary<Type, Dictionary<string, string>> EnumSummaries= new();
 
+   
     public static string GetSummary<TEnum>(TEnum enumValue) where TEnum: Enum
     {
         if (!typeof(TEnum).IsEnum) throw new ArgumentException("T must be an enumerated type");
-        var enumSummaries = _enumSummaries.GetOrAdd(typeof(TEnum), GetEnumSummaries);
+        var enumSummaries = EnumSummaries.GetOrAdd(typeof(TEnum), GetEnumSummaries);
         if (enumSummaries.TryGetValue(enumValue.ToString(), out var summary))
         {
             return summary;
@@ -22,7 +24,7 @@ public static class EnumHelper
         var dict = new Dictionary<string, string>();
         var fieldPrefix = $"F:{type.FullName}.";
         var fileName = type.Assembly.Location;
-        var xmlFile = fileName.Substring(0, fileName.Length - 4) + ".xml";
+        var xmlFile = string.Concat(fileName.AsSpan(0, fileName.Length - 4), ".xml");
       
         var doc = new XmlDocument();
         doc.Load(xmlFile);
@@ -38,7 +40,7 @@ public static class EnumHelper
                     var sonNode = node.ChildNodes[j]!;
                     if (sonNode.Name == "summary")
                     {
-                        dict[name.Replace(fieldPrefix, "")] = sonNode.InnerText.Trim(' ','\n');
+                        dict[name.Replace(fieldPrefix, "")] = sonNode.InnerText.Trim(' ','\r','\n');
                     }
                 }
             }

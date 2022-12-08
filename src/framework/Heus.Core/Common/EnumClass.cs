@@ -26,16 +26,16 @@ public abstract class EnumClass<TEnum> : IEnumClass, IEquatable<EnumClass<TEnum>
     public static TEnum[] GetEnumOptions() {
         return EnumOptions.Value;
         }
-    private static readonly Lazy<TEnum[]> EnumOptions =
+    private readonly static Lazy<TEnum[]> EnumOptions =
         new(() => {
             var options = TypeUtils.GetFields<TEnum>(typeof(TEnum));
             return options.OrderBy(t => t.Name)            .ToArray();
             },  LazyThreadSafetyMode.ExecutionAndPublication);
 
-    private static readonly Lazy<Dictionary<string, TEnum>> FromNames =
+    private readonly static Lazy<Dictionary<string, TEnum>> FromNames =
         new(() => EnumOptions.Value.ToDictionary(item => item.Name, StringComparer.OrdinalIgnoreCase));
 
-    private static readonly Lazy<Dictionary<int, TEnum>> FromValues =
+    private readonly static Lazy<Dictionary<int, TEnum>> FromValues =
         new(() => EnumOptions.Value.ToDictionary(e => e.Value));
 
 

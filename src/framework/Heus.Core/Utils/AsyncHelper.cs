@@ -24,17 +24,19 @@ public static class AsyncHelper
     /// Checks if given method is an async method.
     /// </summary>
     /// <param name="method">A method to check</param>
-    public static bool IsAsync( this MethodInfo method)
+    public static bool IsAsync(this MethodInfo method)
     {
+        ArgumentNullException.ThrowIfNull(method);
         return method.ReturnType.IsTaskOrTaskOfT();
     }
 
-    private static bool IsTaskOrTaskOfT( this Type type)
+    private static bool IsTaskOrTaskOfT(this Type type)
     {
-        return type == typeof(Task) || (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>));
+        return type == typeof(Task) ||
+               (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>));
     }
 
-    private static bool IsTaskOfT( this Type type)
+    private static bool IsTaskOfT(this Type type)
     {
         return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>);
     }
@@ -46,19 +48,14 @@ public static class AsyncHelper
     /// </summary>
     public static Type UnwrapTask(this Type type)
     {
-
+        ArgumentNullException.ThrowIfNull(type);
         if (type == typeof(Task))
         {
             return typeof(void);
         }
 
-        if (type.IsTaskOfT())
-        {
-            return type.GenericTypeArguments[0];
-        }
-
-        return type;
+        return !type.IsTaskOfT() ? type : type.GenericTypeArguments[0];
     }
 
-    
+
 }

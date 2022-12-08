@@ -40,7 +40,7 @@ public class User : AuditEntity
     
     public void SetPassword(string plaintextPassword)
     {
-        Salt = RandomUtils.GenerateString(10);
+        Salt = RandomUtils.GenerateNumberString(8);
       
         var password = plaintextPassword + Salt;
         Password = Md5Utils.ToHash(password);

@@ -13,6 +13,10 @@ public class TestClass
     {
         return Task.FromResult(1);
     }
+    public int TestReturnInt()
+    {
+        return 1;
+    }
 }
 
 public class AsyncHelper_Tests
@@ -32,6 +36,9 @@ public class AsyncHelper_Tests
         _testType.DeclaredMethods.First(s => s.Name == nameof(TestClass.TestVoidAsync)).ReturnType.UnwrapTask()
             .ShouldBe(typeof(void));
         _testType.DeclaredMethods.First(s => s.Name == nameof(TestClass.TestReturnAsync)).ReturnType.UnwrapTask()
+            .ShouldBe(typeof(int));
+        
+        _testType.DeclaredMethods.First(s => s.Name == nameof(TestClass.TestReturnInt)).ReturnType.UnwrapTask()
             .ShouldBe(typeof(int));
     }
 }

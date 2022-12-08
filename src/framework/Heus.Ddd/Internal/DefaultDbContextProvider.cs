@@ -42,7 +42,7 @@ internal class DefaultDbContextProvider : IDbContextProvider, IScopedDependency
         {
             var activator = _createDbContext.MakeGenericMethod(dbContextType);
             var dbContext = activator.Invoke(null, new object[] { _unitOfWorkManager.Current.ServiceProvider });
-            ThrowHelper.ThrowIfNull(dbContext);
+           ArgumentNullException.ThrowIfNull(dbContext); 
             return (DbContext)dbContext;
         });
 

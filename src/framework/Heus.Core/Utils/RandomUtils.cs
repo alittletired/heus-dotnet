@@ -1,18 +1,22 @@
-﻿namespace Heus.Core.Utils;
+﻿using System.Security.Cryptography;
+
+namespace Heus.Core.Utils;
 
 public static class RandomUtils
 {
-    private const string Charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static Random random = new ();
-
-    public static string GenerateString(int len)
+    public static string GenerateNumberString(int len)
     {
-        if (len <= 0)
+        switch (len)
         {
-            throw new InvalidDataException($"num must be a positive integer.input: {len}");
+            case <= 0:
+                throw new InvalidDataException($"num must be a positive integer.input: {len}");
+            case >= 10:
+                throw new InvalidDataException($"num must less than 10.input: {len}");
         }
 
-        return new string(Enumerable.Repeat(Charset, len)
-            .Select(s => s[random.Next(s.Length)]).ToArray());
+        var  lowerBound = (int)Math.Pow(10, len-1);
+        var upperBound = (int)Math.Pow(10, len);
+        return RandomNumberGenerator.GetInt32(lowerBound, upperBound).ToString();
+
     }
 }

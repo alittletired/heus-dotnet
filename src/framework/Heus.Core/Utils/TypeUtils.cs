@@ -8,39 +8,12 @@ namespace Heus.Core.Utils
 {
     public static class TypeUtils
     {
-        private static readonly HashSet<Type> FloatingTypes = new()
-        {
-            typeof(float),
-            typeof(double),
-            typeof(decimal)
-        };
-
-        private static readonly HashSet<Type> NonNullablePrimitiveTypes = new()
-        {
-            typeof(byte),
-            typeof(short),
-            typeof(int),
-            typeof(long),
-            typeof(sbyte),
-            typeof(ushort),
-            typeof(uint),
-            typeof(ulong),
-            typeof(bool),
-            typeof(float),
-            typeof(decimal),
-            typeof(DateTime),
-            typeof(DateTimeOffset),
-            typeof(TimeSpan),
-            typeof(Guid)
-        };
         public static bool IsRecordType(Type type)
         {
+            ArgumentNullException.ThrowIfNull(type);
             return type.GetMethods().Any(m => m.Name == "<Clone>$");
         }
-        public static bool IsNonNullablePrimitiveType(Type type)
-        {
-            return NonNullablePrimitiveTypes.Contains(type);
-        }
+     
 
         public static bool IsFunc(object? obj)
         {
@@ -62,10 +35,10 @@ namespace Heus.Core.Utils
         {
             return obj != null && obj.GetType() == typeof(Func<TReturn>);
         }
-        private static NullabilityInfoContext _nullabilityContext = new NullabilityInfoContext();
+        private readonly static NullabilityInfoContext NullabilityContext = new ();
         public static bool IsNullable(PropertyInfo property)
         {
-            var nullabilityInfo = _nullabilityContext.Create(property);
+            var nullabilityInfo = NullabilityContext.Create(property);
             return nullabilityInfo.WriteState is NullabilityState.Nullable;
         }
     
@@ -297,8 +270,6 @@ namespace Heus.Core.Utils
             return converter.ConvertFromString(value);
         }
 
-      
-
         public static object? ConvertFrom<TTargetType>(object value)
         {
             return ConvertFrom(typeof(TTargetType), value);
@@ -310,9 +281,6 @@ namespace Heus.Core.Utils
                 .GetConverter(targetType)?
                 .ConvertFrom(value);
         }
-
-   
-
         public static bool IsDefaultValue(object? obj)
         {
             if (obj == null)
