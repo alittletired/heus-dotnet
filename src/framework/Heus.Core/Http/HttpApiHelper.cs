@@ -58,7 +58,7 @@ public static class HttpApiHelper
             controllerName = controllerName[..^"AppService".Length];
         }
 
-        controllerName = HumanizerUtils.Pluralize(controllerName).ToKebabCase();
+        controllerName = HumanizerUtils.Kebaberize(controllerName);
         routeTemplate.Append($"/{controllerName}");
 
         // id 部分
@@ -97,7 +97,7 @@ public static class HttpApiHelper
 
         if (!string.IsNullOrEmpty(actionName))
         {
-            routeTemplate.Append($"/{actionName.ToCamelCase()}");
+            routeTemplate.Append($"/{HumanizerUtils.Camelize(actionName)}");
         }
 
         return routeTemplate.ToString();

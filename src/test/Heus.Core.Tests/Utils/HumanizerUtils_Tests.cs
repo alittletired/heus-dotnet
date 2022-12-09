@@ -17,4 +17,37 @@ public class HumanizerUtils_Tests
         HumanizerUtils.Pluralize(orig).ShouldBe(dest);
         HumanizerUtils.Singularize(dest).ShouldBe(orig);
     }
+    [Theory]
+    [InlineData("some_title", "SomeTitle")]
+    [InlineData("someTitle", "SomeTitle")]
+    public void Pascalize_Test(string orig, string dest)
+    {
+        HumanizerUtils.Pascalize(orig).ShouldBe(dest);
+        
+    }
+    [Theory]
+    [InlineData("some_title", "someTitle")]
+    [InlineData("SomeTitle", "someTitle")]
+    public void Camelize_Test(string orig, string dest)
+    {
+        HumanizerUtils.Camelize(orig).ShouldBe(dest);
+        
+    }
+    [Theory]
+    [InlineData("someTitle", "some_title")]
+    [InlineData("SomeTitle", "some_title")]
+    public void Underscore_Test(string orig, string dest)
+    {
+        HumanizerUtils.Underscore(orig).ShouldBe(dest);
+        
+    }
+    [Theory]
+    [InlineData("someTitle", "some-title")]
+    [InlineData("SomeTitle", "some-title")]
+    [InlineData("some_title", "some-title")]
+    public void Kebaberize_Test(string orig, string dest)
+    {
+        HumanizerUtils.Kebaberize(orig).ShouldBe(dest);
+        
+    }
 }

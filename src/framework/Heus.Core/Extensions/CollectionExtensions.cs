@@ -1,5 +1,6 @@
 
-namespace System;
+namespace System.Collections.Generic;
+
 /// <summary>
 /// Extension methods for Collections.
 /// </summary>
@@ -22,6 +23,7 @@ public static class CollectionExtensions
     /// <returns>Returns True if added, returns False if not.</returns>
     public static bool TryAdd<T>(this ICollection<T> source, T item)
     {
+        ArgumentNullException.ThrowIfNull(source);
         if (source.Contains(item))
         {
             return false;
@@ -31,19 +33,17 @@ public static class CollectionExtensions
         return true;
     }
 
-    public static void AddIfNotContains<T>(this ICollection<T> source, T item)
+    public static void ForEach<T>(this IEnumerable<T>? source, Action<T> action)
     {
-        if (source.Contains(item))
+        ArgumentNullException.ThrowIfNull(action);
+        if (source == null)
+        {
             return;
-        source.Add(item);
-    }
-
-    public static void ForEach<T>(this IEnumerable<T>? source, Action<T> action) {
-        if (source == null) return;
-        foreach(var item in source)
+        }
+        foreach (var item in source)
         {
             action(item);
         }
-        }
+    }
 }
 

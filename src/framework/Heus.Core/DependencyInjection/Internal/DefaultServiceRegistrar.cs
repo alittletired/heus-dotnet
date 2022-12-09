@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Heus.Core.DependencyInjection.Internal;
 internal class DefaultServiceRegistrar : IServiceRegistrar { 
 
-    private readonly List<IServiceRegistrarMiddleware> _middlewares = new();
+   
     public event EventHandler<Type>? ServiceRegistered;
     public event EventHandler<Type>? TypeScaning;
     public event EventHandler<Assembly>? ModuleInitialized;
@@ -22,11 +22,7 @@ internal class DefaultServiceRegistrar : IServiceRegistrar {
 
         }
     }
-    public void AddMiddlewares(IServiceRegistrarMiddleware middleware)
-    {
-        throw new NotImplementedException();
-    }
-
+    
     private void Registrar(IServiceCollection services, Type type)
     {
         TypeScaning?.Invoke(services, type);

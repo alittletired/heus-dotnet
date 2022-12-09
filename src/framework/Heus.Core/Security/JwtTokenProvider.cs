@@ -42,7 +42,6 @@ internal class JwtTokenProvider : ITokenProvider, ISingletonDependency
             //令牌的颁发时间，该声明是一个整数，是1970年1月1日以来的秒数
             new(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()),
 
-
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);

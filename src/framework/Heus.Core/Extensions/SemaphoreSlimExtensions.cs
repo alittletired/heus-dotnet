@@ -2,7 +2,7 @@
 
 public static class SemaphoreSlimExtensions
 {
-    public static async Task<IDisposable> LockAsync(this SemaphoreSlim semaphoreSlim)
+    public async static Task<IDisposable> LockAsync(this SemaphoreSlim semaphoreSlim)
     {
         await semaphoreSlim.WaitAsync();
         return GetDispose(semaphoreSlim);
@@ -16,12 +16,12 @@ public static class SemaphoreSlimExtensions
     }
 
 
-    public static async Task<IDisposable> LockAsync(this SemaphoreSlim semaphoreSlim, TimeSpan timeout)
+    public async static Task<IDisposable> LockAsync(this SemaphoreSlim semaphoreSlim, TimeSpan timeout)
     {
         await semaphoreSlim.WaitAsync(timeout);
         return GetDispose(semaphoreSlim);
     }
-    public static async Task<IDisposable> LockAsync(this SemaphoreSlim semaphoreSlim, int millisecondsTimeout)
+    public async static Task<IDisposable> LockAsync(this SemaphoreSlim semaphoreSlim, int millisecondsTimeout)
     {
         await semaphoreSlim.WaitAsync(millisecondsTimeout);
         return GetDispose(semaphoreSlim);

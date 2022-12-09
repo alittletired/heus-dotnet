@@ -8,33 +8,33 @@ namespace Heus.Core.Utils
 {
     public static class TypeUtils
     {
+        private readonly static Dictionary<Type, string> _simplifiedNames = new() { 
+            {typeof(string), "string" },
+            {typeof(int),"number"},
+            {typeof(long),"number"},
+            {typeof(bool), "boolean" },
+            {typeof(char), "string" },
+            {typeof(double), "number" },
+            {typeof(float),"number"},
+            {typeof(decimal), "number" },
+            {typeof(DateTime), "string" },
+            { typeof(DateTimeOffset),"string" },
+            { typeof(TimeSpan),"string"},
+            { typeof(Guid),"string"}
+            ,{ typeof(byte),"number"},
+            { typeof(sbyte),"number"},
+            { typeof(short),"number"},
+            { typeof(ushort),"number"},
+            { typeof(uint),"number"},
+            { typeof(ulong),"number"},
+            { typeof(object),"object"}
+    };
         public static bool IsRecordType(Type type)
         {
             ArgumentNullException.ThrowIfNull(type);
             return type.GetMethods().Any(m => m.Name == "<Clone>$");
         }
-     
-
-        public static bool IsFunc(object? obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            var type = obj.GetType();
-            if (!type.GetTypeInfo().IsGenericType)
-            {
-                return false;
-            }
-
-            return type.GetGenericTypeDefinition() == typeof(Func<>);
-        }
-
-        public static bool IsFunc<TReturn>(object? obj)
-        {
-            return obj != null && obj.GetType() == typeof(Func<TReturn>);
-        }
+   
         private readonly static NullabilityInfoContext NullabilityContext = new ();
         public static bool IsNullable(PropertyInfo property)
         {
@@ -47,84 +47,21 @@ namespace Heus.Core.Utils
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
-        public static Type GetFirstGenericArgumentIfNullable(this Type t)
-        {
-            if (t.GetGenericArguments().Length > 0 && t.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                return t.GetGenericArguments().First();
-            }
-
-            return t;
-        }
-
-        public static bool IsEnumerable(Type type, out Type? itemType)
+        public static Type? GetEnumerableItemType(Type type)
         {
             var enumerableTypes = ReflectionUtils.GetImplementedGenericTypes(type, typeof(IEnumerable<>));
             if (enumerableTypes.Count == 1)
             {
-                itemType = enumerableTypes[0].GenericTypeArguments[0];
-                return true;
+                return enumerableTypes[0].GenericTypeArguments[0];
             }
 
             if (typeof(IEnumerable).IsAssignableFrom(type))
             {
-                itemType = typeof(object);
-                return true;
+               return typeof(object);
             }
-
-            itemType = null;
-            return false;
+            return null;
+          
         }
-
-        public static bool IsDictionary(Type type, out Type? keyType, out Type? valueType)
-        {
-            var dictionaryTypes = ReflectionUtils
-                .GetImplementedGenericTypes(
-                    type,
-                    typeof(IDictionary<,>)
-                );
-
-            if (dictionaryTypes.Count == 1)
-            {
-                keyType = dictionaryTypes[0].GenericTypeArguments[0];
-                valueType = dictionaryTypes[0].GenericTypeArguments[1];
-                return true;
-            }
-
-            if (typeof(IDictionary).IsAssignableFrom(type))
-            {
-                keyType = typeof(object);
-                valueType = typeof(object);
-                return true;
-            }
-
-            keyType = null;
-            valueType = null;
-
-            return false;
-        }
-
-        private static bool IsPrimitiveExtendedInternal(Type type, bool includeEnums)
-        {
-            if (type.IsPrimitive)
-            {
-                return true;
-            }
-
-            if (includeEnums && type.IsEnum)
-            {
-                return true;
-            }
-
-            return type == typeof(string) ||
-                   type == typeof(decimal) ||
-                   type == typeof(DateTime) ||
-                   type == typeof(DateTimeOffset) ||
-                   type == typeof(TimeSpan) ||
-                   type == typeof(Guid);
-        }
-
-
 
         public static object? GetDefaultValue(Type type)
         {
@@ -135,24 +72,15 @@ namespace Heus.Core.Utils
 
             return null;
         }
-
-        public static string GetFullNameHandlingNullableAndGenerics( Type type)
+        public static bool IsDefaultValue(object? obj)
         {
-
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (obj == null)
             {
-                return type.GenericTypeArguments[0].FullName + "?";
+                return true;
             }
 
-            if (type.IsGenericType)
-            {
-                var genericType = type.GetGenericTypeDefinition();
-                return $"{genericType.FullName!.Substring(0,genericType.FullName.IndexOf('`'))}<{type.GenericTypeArguments.Select(GetFullNameHandlingNullableAndGenerics).JoinAsString(",")}>";
-            }
-
-            return type.FullName ?? type.Name;
+            return obj.Equals(GetDefaultValue(obj.GetType()));
         }
-
         public static string GetSimplifiedName(Type type)
         {
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -165,92 +93,10 @@ namespace Heus.Core.Utils
                 var genericType = type.GetGenericTypeDefinition();
                 return $"{genericType.Name.Substring(0,genericType.Name.IndexOf('`'))}<{type.GenericTypeArguments.Select(GetSimplifiedName).JoinAsString(",")}>";
             }
-
-            if (type == typeof(string))
+            if (_simplifiedNames.TryGetValue(type, out var simplifiedName))
             {
-                return "string";
+                return simplifiedName;
             }
-            else if (type == typeof(int))
-            {
-                return "number";
-            }
-            else if (type == typeof(long))
-            {
-                return "number";
-            }
-            else if (type == typeof(bool))
-            {
-                return "boolean";
-            }
-            else if (type == typeof(char))
-            {
-                return "string";
-            }
-            else if (type == typeof(double))
-            {
-                return "number";
-            }
-            else if (type == typeof(float))
-            {
-                return "number";
-            }
-            else if (type == typeof(decimal))
-            {
-                return "number";
-            }
-            else if (type == typeof(DateTime))
-            {
-                return "string";
-            }
-            else if (type == typeof(DateTimeOffset))
-            {
-                return "string";
-            }
-            else if (type == typeof(TimeSpan))
-            {
-                return "string";
-            }
-            else if (type == typeof(Guid))
-            {
-                return "string";
-            }
-            else if (type == typeof(byte))
-            {
-                return "number";
-            }
-            else if (type == typeof(sbyte))
-            {
-                return "number";
-            }
-            else if (type == typeof(short))
-            {
-                return "number";
-            }
-            else if (type == typeof(ushort))
-            {
-                return "number";
-            }
-            else if (type == typeof(uint))
-            {
-                return "number";
-            }
-            else if (type == typeof(ulong))
-            {
-                return "number";
-            }
-            else if (type == typeof(IntPtr))
-            {
-                return "number";
-            }
-            else if (type == typeof(UIntPtr))
-            {
-                return "number";
-            }
-            else if (type == typeof(object))
-            {
-                return "object";
-            }
-
             return  type.Name;
         }
 
@@ -281,15 +127,7 @@ namespace Heus.Core.Utils
                 .GetConverter(targetType)?
                 .ConvertFrom(value);
         }
-        public static bool IsDefaultValue(object? obj)
-        {
-            if (obj == null)
-            {
-                return true;
-            }
-
-            return obj.Equals(GetDefaultValue(obj.GetType()));
-        }
+        
         public static List<TFieldType> GetFields<TFieldType>(Type type)
         {
             return type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)

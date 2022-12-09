@@ -14,7 +14,11 @@ public static class CurrentUserExtensions
         where T : struct
     {
         var value = principal.FindClaimValue(claimType);
-        if (value == null) return default;
+        if (value == null)
+        {
+            return default;
+        }
+
         return value.ConvertTo<T>();
 
     }

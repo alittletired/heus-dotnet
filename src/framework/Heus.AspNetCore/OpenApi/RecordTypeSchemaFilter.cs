@@ -27,7 +27,7 @@ internal class RecordTypeSchemaFilter : ISchemaFilter
           
             if ( !TypeUtils.IsNullable(p))
             {
-                schema.Required.Add(p.Name.ToCamelCase());
+                schema.Required.Add(HumanizerUtils.Camelize(p.Name));
             }
 
         }
