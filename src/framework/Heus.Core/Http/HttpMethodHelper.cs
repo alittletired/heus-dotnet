@@ -6,7 +6,7 @@ public static class HttpMethodHelper
 {
     public readonly static HttpMethod DefaultHttpVerb = HttpMethod.Post;
 
-    public static Dictionary<HttpMethod, string[]> ConventionalPrefixes { get; set; } = new ()
+    public static Dictionary<HttpMethod, string[]> ConventionalPrefixes { get;  } = new ()
     {
         {HttpMethod.Get, new[] {"GetList", "GetAll", "Get"}},
         {HttpMethod.Put , new[] {"Put", "Update"}},

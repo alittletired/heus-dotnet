@@ -110,7 +110,8 @@ public static class HttpApiHelper
     /// <returns></returns>
     public static bool IsAllowAnonymous(Type targetType, MethodInfo action)
     {
-        return action.GetCustomAttribute<AllowAnonymousAttribute>() != null || targetType.GetCustomAttribute<AllowAnonymousAttribute>() != null;
+        return action.GetCustomAttribute<AllowAnonymousAttribute>() != null
+               || targetType.GetCustomAttribute<AllowAnonymousAttribute>() != null;
     }
     public static HttpRequestMessage CreateHttpRequest(Type targetType, MethodInfo action, object?[]? args)
     {

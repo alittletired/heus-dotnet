@@ -14,13 +14,7 @@ public static class SemaphoreSlimExtensions
             semaphoreSlim.Release();
         });
     }
-
-
-    public async static Task<IDisposable> LockAsync(this SemaphoreSlim semaphoreSlim, TimeSpan timeout)
-    {
-        await semaphoreSlim.WaitAsync(timeout);
-        return GetDispose(semaphoreSlim);
-    }
+  
     public async static Task<IDisposable> LockAsync(this SemaphoreSlim semaphoreSlim, int millisecondsTimeout)
     {
         await semaphoreSlim.WaitAsync(millisecondsTimeout);

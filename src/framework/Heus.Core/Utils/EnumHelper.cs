@@ -11,7 +11,7 @@ public static class EnumHelper
    
     public static string GetSummary<TEnum>(TEnum enumValue) where TEnum: Enum
     {
-        if (!typeof(TEnum).IsEnum) throw new ArgumentException("T must be an enumerated type");
+     
         var enumSummaries = EnumSummaries.GetOrAdd(typeof(TEnum), GetEnumSummaries);
         if (enumSummaries.TryGetValue(enumValue.ToString(), out var summary))
         {

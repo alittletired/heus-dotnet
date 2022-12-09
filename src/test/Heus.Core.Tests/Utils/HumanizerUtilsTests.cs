@@ -2,7 +2,7 @@ using Heus.Core.Utils;
 
 namespace Heus.Core.Tests.Utils;
 
-public class HumanizerUtils_Tests
+public class HumanizerUtilsTests
 {
     [Theory]
     [InlineData("boy", "boys")]

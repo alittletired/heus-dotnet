@@ -51,14 +51,18 @@ internal class JwtTokenProvider : ITokenProvider, ISingletonDependency
 
     public string CreateToken(ClaimsPrincipal principal)
     {
-        var expiration = principal.FindClaimValue<long>(JwtRegisteredClaimNames.Exp);
+        var expiration = principal.FindClaimValue<double>(JwtRegisteredClaimNames.Exp);
+        if (expiration == null)
+        {
+            throw new InvalidDataException("exp claims is missing in principal");
+        }
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.SignKey));
         var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
             principal.FindClaimValue(JwtRegisteredClaimNames.Iss),
             principal.FindClaimValue(JwtRegisteredClaimNames.Aud),
             principal.Claims,
-            expires: DateTime.UnixEpoch.AddMilliseconds(expiration),
+            expires: DateTime.UnixEpoch.AddMilliseconds(expiration.Value),
             signingCredentials: signIn);
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

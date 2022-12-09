@@ -19,7 +19,7 @@ public class TestClass
     }
 }
 
-public class AsyncHelper_Tests
+public class AsyncHelperTests
 {
     private static TypeInfo _testType = typeof(TestClass).GetTypeInfo();
 

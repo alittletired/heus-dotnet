@@ -4,5 +4,8 @@
     <ProjectReference Include="..\..\framework\Heus.Core\Heus.Core.csproj" />
     <ProjectReference Include="..\Heus.TestBase\Heus.TestBase.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Http" />
+  </ItemGroup>
 
 </Project>

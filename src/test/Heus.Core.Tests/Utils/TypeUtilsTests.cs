@@ -89,6 +89,7 @@ public class TypeUtilsTests
     public void ConvertFromString_Test()
     {
         TypeUtils.ConvertFromString<bool>("True").ShouldBe(true);
+        TypeUtils.ConvertFromString(typeof(bool), null).ShouldBeNull();
 
     }
     [Fact]

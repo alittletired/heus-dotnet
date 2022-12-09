@@ -5,7 +5,7 @@ public interface IDistributedCache<TCacheItem> : IDistributedCache<TCacheItem, s
 {
    
 }
-public interface IDistributedCache<TCacheItem, TCacheKey> where TCacheItem : class
+public interface IDistributedCache<TCacheItem, in TCacheKey> where TCacheItem : class
 {
 
     Task<TCacheItem?> GetAsync(TCacheKey key);

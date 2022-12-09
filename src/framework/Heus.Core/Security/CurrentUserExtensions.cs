@@ -5,13 +5,10 @@ namespace Heus.Core.Security;
 
 public static class CurrentUserExtensions
 {
-    public static bool IsAuthenticated(this ICurrentUser currentUser)
-    {
-        return currentUser.Id!=default;
-    }
+    
 
-    public static T FindClaimValue<T>(this ClaimsPrincipal? principal, string claimType)
-        where T : struct
+    public static T? FindClaimValue<T>(this ClaimsPrincipal? principal, string claimType)
+      where T:struct
     {
         var value = principal.FindClaimValue(claimType);
         if (value == null)

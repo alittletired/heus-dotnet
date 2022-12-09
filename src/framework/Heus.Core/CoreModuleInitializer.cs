@@ -1,3 +1,4 @@
+using Heus.Core.Caching;
 using Heus.Core.DependencyInjection;
 using Heus.Core.ObjectMapping;
 using Heus.Core.Security;

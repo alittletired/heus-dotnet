@@ -2,7 +2,7 @@ using Heus.Core.Utils;
 
 namespace Heus.Core.Tests.Utils;
 
-public class AsyncLocalUtils_Tests
+public class AsyncLocalUtilsTests
 {
     private static AsyncLocal<int?> _asyncLocal = new();
 

@@ -1,34 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Heus.Core.DependencyInjection;
+﻿using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
-
 namespace Heus.Core.Http;
-internal class DefaultRemoteServiceProxyContributor : IRemoteServiceProxyContributor,ISingletonDependency
+
+internal class DefaultRemoteServiceProxyContributor : IRemoteServiceProxyContributor, ISingletonDependency
 {
-    private readonly ICurrentPrincipalAccessor _currentPrincipalAccessor;
+    private readonly ICurrentUser _currentUser;
     private readonly ITokenProvider _tokenProvider;
 
-    public DefaultRemoteServiceProxyContributor(ICurrentPrincipalAccessor currentPrincipalAccessor, 
+    public DefaultRemoteServiceProxyContributor(ICurrentUser currentUser,
         ITokenProvider tokenProvider)
     {
-        _currentPrincipalAccessor = currentPrincipalAccessor;
+        _currentUser = currentUser;
         _tokenProvider = tokenProvider;
     }
 
     public Task PopulateRequestHeaders(HttpRequestMessage request)
     {
-        if (!request.Headers.Contains("Authorization"))
+        if (!request.Headers.Contains("Authorization") && _currentUser.IsAuthenticated)
         {
-            var principal = _currentPrincipalAccessor.Principal;
-            if (principal != null)
-            {
-                request.Headers.Add("Authorization", "Bearer " + _tokenProvider.CreateToken(principal));
-            }
+            var token = _tokenProvider.CreateToken(_currentUser.Principal!);
+            request.Headers.Add("Authorization", "Bearer " + token);
         }
+
         return Task.CompletedTask;
     }
 }

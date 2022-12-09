@@ -1,4 +1,5 @@
 
+using System.IdentityModel.Tokens.Jwt;
 using Heus.Core.Security;
 using Microsoft.AspNetCore.Authorization;
 namespace Heus.Auth.Application;
@@ -42,8 +43,8 @@ internal class AccountAdminAppService : AdminApplicationService, IAccountAdminAp
         }
         var principal = _tokenProvider.CreatePrincipal(Mapper.Map<ICurrentUser>(user), TokenType.Admin, input.RememberMe);
         _currentPrincipalAccessor.Change(principal);
-        var unixTimestamp = principal.FindClaimValue<long>(SecurityClaimNames.Expiration);
-        LoginResult authToken = new(user.Id, user.NickName, _tokenProvider.CreateToken(principal), unixTimestamp);
+        var unixTimestamp = principal.FindClaimValue<long>(JwtRegisteredClaimNames.Exp);
+        LoginResult authToken = new(user.Id, user.NickName, _tokenProvider.CreateToken(principal), unixTimestamp!.Value);
         return authToken;
     }
 

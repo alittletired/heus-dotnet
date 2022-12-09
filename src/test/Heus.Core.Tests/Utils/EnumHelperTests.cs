@@ -14,7 +14,7 @@ public enum TestEnum
     Two,
     Three
 }
-public class EnumHelper_Tests
+public class EnumHelperTests
 {
     [Theory]
     [InlineData(TestEnum.One,"value1")]

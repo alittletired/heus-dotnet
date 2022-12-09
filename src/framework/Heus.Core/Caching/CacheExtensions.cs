@@ -1,7 +1,6 @@
-﻿using Heus.Core.Caching;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.Extensions.Caching.Distributed;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Heus.Core.Caching;
 
 public static  class CacheExtensions
 {

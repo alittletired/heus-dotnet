@@ -32,40 +32,14 @@ public static class StringExtensions
     /// <summary>
     /// Converts line endings in the string to <see cref="Environment.NewLine"/>.
     /// </summary>
-    public static string NormalizeLineEndings(this string str)
+    public static string NormalizeLineEndings(string str)
     {
         return str.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", Environment.NewLine);
     }
-
-    /// <summary>
-    /// Converts string to enum value.
-    /// </summary>
-    /// <typeparam name="T">Type of enum</typeparam>
-    /// <param name="value">String value to convert</param>
-    /// <returns>Returns enum object</returns>
-    public static T ToEnum<T>(this string value)
-        where T : struct
-    {
-        return (T)Enum.Parse(typeof(T), value);
-    }
-
-    /// <summary>
-    /// Converts string to enum value.
-    /// </summary>
-    /// <typeparam name="T">Type of enum</typeparam>
-    /// <param name="value">String value to convert</param>
-    /// <param name="ignoreCase">Ignore case</param>
-    /// <returns>Returns enum object</returns>
-    public static T ToEnum<T>(this string value, bool ignoreCase)
-        where T : struct
-    {
-        return (T)Enum.Parse(typeof(T), value, ignoreCase);
-    }
-   
     /// <summary>
     /// Converts given string to a byte array using the given <paramref name="encoding"/>
     /// </summary>
-    public static byte[] GetBytes(this string str, Encoding? encoding = null)
+    public static byte[] GetBytes(this string str, Encoding? encoding =null)
     {
         if (encoding == null)
         {
