@@ -1,4 +1,5 @@
 using Heus.Core;
+using Heus.Core.Common;
 using Heus.Core.DependencyInjection;
 using Heus.Ddd.Application;
 using Microsoft.AspNetCore.Mvc;

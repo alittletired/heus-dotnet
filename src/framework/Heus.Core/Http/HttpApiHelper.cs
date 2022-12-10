@@ -6,16 +6,20 @@ using Heus.Ddd.Application;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Heus.Core.Http;
-
 public static class HttpApiHelper
 {
     public static string GetGroupName(Type type)
     {
 
         if (type.IsAssignableTo<IAdminApplicationService>())
+        {
             return "admin";
-        else if (type.IsAssignableTo<IApplicationService>())
+        }
+        if (type.IsAssignableTo<IApplicationService>())
+        {
             return "api";
+        }
+
         return "default";
     }
     //public static string GetAreaName(Type targetType)
@@ -26,24 +30,18 @@ public static class HttpApiHelper
     public static string CalculateRouteTemplate(Type targetType, MethodInfo methodInfo)
     {
         var routeTemplate = new StringBuilder();
-        if (targetType.IsAssignableTo<IAdminApplicationService>() == true)
-        {
-            routeTemplate.Append("admin");
-        }
-        else
-        {
-            routeTemplate.Append("api");
-        }
-
+        routeTemplate.Append(GetGroupName(targetType));
         // 控制器名称部分
         var controllerName = targetType.Name;
         if (targetType.IsInterface && controllerName.StartsWith("I"))
         {
-            controllerName = controllerName.Substring(1);
-            if (targetType.IsGenericType) {
+            controllerName = controllerName[1..];
+            if (targetType.IsGenericType)
+            {
                 throw new InvalidOperationException($"不支持泛型控制器,{targetType.FullName}");
-                }
+            }
         }
+
         if (controllerName.EndsWith("ApplicationService"))
         {
             controllerName = controllerName[..^"ApplicationService".Length];
@@ -74,27 +72,6 @@ public static class HttpApiHelper
             actionName = actionName.Substring(0, actionName.Length - "Async".Length);
         }
 
-        // var trimPrefixes = new[]
-        // {
-        //     "GetAll", "GetList", "Get",
-        //     "Post", "Create", "Add", "Insert",
-        //     "Put", "Update",
-        //     "Delete", "Remove",
-        //     "Patch"
-        // };
-        // if (char.IsLower(actionName[0]))
-        // {
-        //     throw new BusinessException($"{methodInfo.DeclaringType!.Name} 不符合命名规范，必须是大写字母开头");
-        //
-        // }
-        //
-        // foreach (var trimPrefix in trimPrefixes)
-        // {
-        //     if (!actionName.StartsWith(trimPrefix)) continue;
-        //     actionName = actionName[trimPrefix.Length..];
-        //     break;
-        // }
-
         if (!string.IsNullOrEmpty(actionName))
         {
             routeTemplate.Append($"/{HumanizerUtils.Camelize(actionName)}");
@@ -102,6 +79,7 @@ public static class HttpApiHelper
 
         return routeTemplate.ToString();
     }
+
     /// <summary>
     /// 是否允许匿名访问
     /// </summary>
@@ -113,9 +91,10 @@ public static class HttpApiHelper
         return action.GetCustomAttribute<AllowAnonymousAttribute>() != null
                || targetType.GetCustomAttribute<AllowAnonymousAttribute>() != null;
     }
+
     public static HttpRequestMessage CreateHttpRequest(Type targetType, MethodInfo action, object?[]? args)
     {
-        var routeTemplate = CalculateRouteTemplate(targetType,action);
+        var routeTemplate = CalculateRouteTemplate(targetType, action);
         var httpMethod = HttpMethodHelper.GetHttpMethod(action);
         StringContent? content = null;
 
@@ -152,12 +131,11 @@ public static class HttpApiHelper
         }
         else if (parameters.Count == 1)
         {
-            content = new StringContent(JsonUtils.Serialize(parameters.First().Value), Encoding.UTF8, MimeTypes.Application.Json);
+            content = new StringContent(JsonUtils.Serialize(parameters.First().Value), Encoding.UTF8,
+                "application/json");
         }
-        var request = new HttpRequestMessage(httpMethod, new Uri(url,UriKind.Relative))
-        {
-            Content = content
-        };
+
+        var request = new HttpRequestMessage(httpMethod, new Uri(url, UriKind.Relative)) { Content = content };
         return request;
     }
 

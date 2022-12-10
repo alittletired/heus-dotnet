@@ -1,14 +1,12 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using Heus.Core.DependencyInjection;
-using Heus.Core.Security;
-
 
 namespace Heus.Core.Http;
 
 public class RemoteServiceProxyFactory : ISingletonDependency
 {
-    private readonly ConcurrentDictionary<Type, object> _proxies = new();
+    private readonly ConcurrentDictionary<string, object> _proxies = new();
     
     private readonly IProxyHttpClientFactory _httpClientFactory;
   
@@ -17,7 +15,6 @@ public class RemoteServiceProxyFactory : ISingletonDependency
       public RemoteServiceProxyFactory(IProxyHttpClientFactory httpClientFactory,
           IEnumerable<IRemoteServiceProxyContributor> proxyContributors)
       {
-
           _httpClientFactory = httpClientFactory;
           _proxyContributors = proxyContributors;
       }
@@ -36,14 +33,15 @@ public class RemoteServiceProxyFactory : ISingletonDependency
     }
     public T CreateProxy<T>(string remoteServiceName) where T : IRemoteService
     {
-        var proxy = _proxies.GetOrAdd(typeof(T), t =>
+        var key = $"{remoteServiceName}:{typeof(T).FullName}";
+        var proxy = _proxies.GetOrAdd(key, _ =>
         {
             var proxy = DispatchProxy.Create<T, RemoteServiceProxy>();
+            // ReSharper disable once SuspiciousTypeConversion.Global
             var serviceProxy = proxy as RemoteServiceProxy ?? throw new InvalidCastException("无法创建代理");
             serviceProxy.ProxyFactory = this;
             serviceProxy.ProxyType= typeof(T);
-
-
+            serviceProxy.RemoteServiceName = remoteServiceName;
             return proxy;
         });
         return (T)proxy;

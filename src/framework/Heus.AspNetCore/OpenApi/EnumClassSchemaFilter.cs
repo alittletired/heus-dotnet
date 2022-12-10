@@ -1,3 +1,5 @@
+using Heus.Core.Common;
+
 namespace Heus.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;

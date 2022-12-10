@@ -1,5 +1,5 @@
 using System.Reflection;
-using Heus.Core;
+using Heus.Core.Common;
 using Heus.Core.Utils;
 
 namespace Heus.Core.Http;
@@ -9,7 +9,7 @@ internal class RemoteServiceProxy : DispatchProxy
     internal RemoteServiceProxyFactory ProxyFactory { get; set; } = null!;
     internal Type ProxyType { get; set; } = null!;
     internal string RemoteServiceName{ get; set; } = null!;
-    internal HttpClient HttpClient => ProxyFactory.GetHttpClient(RemoteServiceName);
+    private HttpClient HttpClient => ProxyFactory.GetHttpClient(RemoteServiceName);
 
     private  readonly MethodInfo _invokeAsyncGeneric = typeof(RemoteServiceProxy).GetTypeInfo()
         .DeclaredMethods.First(s => s.Name == nameof(InvokeAsync));
@@ -32,9 +32,9 @@ internal class RemoteServiceProxy : DispatchProxy
             throw new BusinessException($"无法解析返回内容：{content},type:{typeof(ApiResult<T>)}");
         }
 
-        if (data?.Code != 0)
+        if (data.Code != 0)
         {
-            throw new BusinessException(data?.Message!);
+            throw new BusinessException(data.Message!);
         }
 
         return data.Data;

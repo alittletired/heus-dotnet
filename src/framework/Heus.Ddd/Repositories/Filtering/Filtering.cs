@@ -1,5 +1,6 @@
 ﻿using Heus.Core.DependencyInjection;
 using System.Collections.Concurrent;
+using Heus.Core.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Repositories.Filtering;

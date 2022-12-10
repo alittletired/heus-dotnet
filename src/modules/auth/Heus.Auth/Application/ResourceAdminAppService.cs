@@ -1,12 +1,9 @@
 ﻿
 using Heus.Core.ObjectMapping;
-using Heus.Ddd.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-
 namespace Heus.Auth.Application;
 
-[MapTo(typeof(Resource))]
+[ObjectMapping(typeof(Resource), MapType.MapTo)]
 public record ResourceDto(string Code, string Name, string Path)
 {
     public int? Sort { get; init; }
@@ -15,7 +12,7 @@ public record ResourceDto(string Code, string Name, string Path)
 
 }
 
-[MapTo(typeof(ActionRight))]
+[ObjectMapping(typeof(ActionRight), MapType.MapTo)]
 public record ActionDto(string Name, int Flag, string Title, string? Url)
 {
 }

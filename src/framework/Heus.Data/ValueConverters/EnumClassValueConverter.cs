@@ -1,3 +1,4 @@
+using Heus.Core.Common;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Heus.Data.EfCore.ValueConverters;
 

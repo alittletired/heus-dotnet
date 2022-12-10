@@ -1,3 +1,5 @@
+using Heus.Core.Common;
+
 namespace Heus.Auth.Domain;
 
 /// <summary>

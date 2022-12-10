@@ -1,4 +1,6 @@
-﻿namespace Heus.Core.Utils;
+﻿using Heus.Core.Common;
+
+namespace Heus.Core.Utils;
 public static class AsyncLocalUtils
 {
     public static IDisposable BeginScope<T>(AsyncLocal<T?> asyncLocal, T? newValue)

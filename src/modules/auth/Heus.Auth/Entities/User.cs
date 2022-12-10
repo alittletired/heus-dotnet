@@ -1,4 +1,3 @@
-using Heus.Auth.Domain;
 using Heus.Core.Utils;
 
 namespace Heus.Auth.Entities;
@@ -11,7 +10,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 [Table("auth_user")]
-[MapTo(typeof(ICurrentUser))]
+[ObjectMapping(typeof(ICurrentUser), MapType.MapTo)]
 public class User : AuditEntity
 {
     /// <summary>

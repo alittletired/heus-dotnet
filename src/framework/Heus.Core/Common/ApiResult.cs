@@ -1,34 +1,31 @@
-namespace Heus.Core;
+namespace Heus.Core.Common;
 
-public abstract class ApiResult
+public  class ApiResult
 {
-    public int Code { get; set; }
-    public string? Message { get; set; }
-    public abstract  object? GetData();
+    public int Code { get; }
+    public string? Message { get;  }
 
-    public static ApiResult<object> Error(Exception ex)
+    public ApiResult(int code, string? message)
     {
-        return new ApiResult<object>() { Message = ex.Message, Code = 500 };
+        Code = code;
+        Message = message;
+    }
+    public static ApiResult Error(Exception ex)
+    {
+        return new ApiResult (500,ex.Message) ;
     }
     public static ApiResult<T> Ok<T>(T? data)
     {
-        return new ApiResult<T>() { Data = data};
+        return new ApiResult<T>( data);
     }
 }
 
 public class ApiResult<T> : ApiResult
 {
-
-    public T? Data { get; set; }
-
-    public override object? GetData()
+    public ApiResult(T? data) : base(0, null)
     {
-        return Data;
+        Data = data;
     }
-
-    public ApiResult()
-    {
-     
-    }
-
+    public T? Data { get;  }
+   
 }

@@ -11,5 +11,7 @@ public interface IUnitOfWork :  IDisposable
     DbContext AddDbContext(string key, Func<string,DbContext> func);
     Task CompleteAsync(CancellationToken cancellationToken = default);
     Task RollbackAsync(CancellationToken cancellationToken = default);
+    void OnCompleted(Func<Task> handler);
+    event EventHandler<UnitOfWorkFailedEventArgs>? Failed;
 
 }

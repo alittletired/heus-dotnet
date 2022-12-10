@@ -1,4 +1,5 @@
-﻿using Heus.Data.EfCore.ValueConverters;
+﻿using Heus.Core.Common;
+using Heus.Data.EfCore.ValueConverters;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 

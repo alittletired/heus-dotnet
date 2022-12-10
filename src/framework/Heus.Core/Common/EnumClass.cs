@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Heus.Core.Utils;
-namespace Heus.Core;
+
+namespace Heus.Core.Common;
 
 public  interface IEnumClass{
      string Name { get; }
@@ -63,10 +64,16 @@ public abstract class EnumClass<TEnum> : IEnumClass, IEquatable<EnumClass<TEnum>
 
     #region overrides
 
-    public override string ToString() => Name;
+    public override string ToString()
+    {
+        return Name;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override int GetHashCode() => Value.GetHashCode();
+    public override int GetHashCode()
+    {
+        return Value.GetHashCode();
+    }
 
     public bool Equals(EnumClass<TEnum>? other)
     {
@@ -87,44 +94,60 @@ public abstract class EnumClass<TEnum> : IEnumClass, IEquatable<EnumClass<TEnum>
         return Value.CompareTo(other?.Value);
     }
 
-    public override bool Equals(object? obj) => obj is EnumClass<TEnum> other && Equals(other);
+    public override bool Equals(object? obj)
+    {
+        return obj is EnumClass<TEnum> other && Equals(other);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(EnumClass<TEnum> left, EnumClass<TEnum> right)
     {
-
-
         // Equals handles null on right side
         return left.Equals(right);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(EnumClass<TEnum> left, EnumClass<TEnum> right) =>
-        !(left == right);
+    public static bool operator !=(EnumClass<TEnum> left, EnumClass<TEnum> right)
+    {
+        return !(left == right);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(EnumClass<TEnum> left, EnumClass<TEnum> right) =>
-        left.CompareTo(right) < 0;
+    public static bool operator <(EnumClass<TEnum> left, EnumClass<TEnum> right)
+    {
+        return left.CompareTo(right) < 0;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(EnumClass<TEnum> left, EnumClass<TEnum> right) =>
-        left.CompareTo(right) <= 0;
+    public static bool operator <=(EnumClass<TEnum> left, EnumClass<TEnum> right)
+    {
+        return left.CompareTo(right) <= 0;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(EnumClass<TEnum> left, EnumClass<TEnum> right) =>
-        left.CompareTo(right) > 0;
+    public static bool operator >(EnumClass<TEnum> left, EnumClass<TEnum> right)
+    {
+        return left.CompareTo(right) > 0;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(EnumClass<TEnum> left, EnumClass<TEnum> right) =>
-        left.CompareTo(right) >= 0;
+    public static bool operator >=(EnumClass<TEnum> left, EnumClass<TEnum> right)
+    {
+        return left.CompareTo(right) >= 0;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator int(EnumClass<TEnum> enumBase) => enumBase.Value;
+    public static implicit operator int(EnumClass<TEnum> enumBase)
+    {
+        return enumBase.Value;
+    }
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator EnumClass<TEnum>(int value) =>
-        FromValue(value);
+    public static explicit operator EnumClass<TEnum>(int value)
+    {
+        return FromValue(value);
+    }
 
     #endregion
 }

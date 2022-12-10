@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Heus.Core.ObjectMapping;
 namespace Heus.Auth.Dtos;
 
-[MapTo(typeof(User))]
+[ObjectMapping(typeof(User), MapType.MapTo)]
 public record class UserCreateDto: UserBaseDto
 {
     public required string PlaintextPassword { get; init; } 

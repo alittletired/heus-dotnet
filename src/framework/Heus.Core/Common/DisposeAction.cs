@@ -1,9 +1,9 @@
-﻿namespace Heus.Core;
+﻿namespace Heus.Core.Common;
 /// <summary>
 /// This class can be used to provide an action when
 /// Dispose method is called.
 /// </summary>
-public class DisposeAction : IDisposable
+public sealed class DisposeAction : IDisposable
 {
     private readonly Action _action;
 

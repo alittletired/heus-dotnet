@@ -1,3 +1,4 @@
+using System.Reflection;
 using Heus.Core.Caching;
 using Heus.Core.DependencyInjection;
 using Heus.Core.ObjectMapping;
@@ -11,15 +12,15 @@ public class CoreModuleInitializer : ModuleInitializerBase
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         
-        // context.ServiceRegistrar.OnScan(type =>
-        // {
+        // context.ServiceRegistrar.TypeScaning += (_,type) => {
+        //     
         //     if (type.GetTypeInfo().GetCustomAttributes()
         //             .FirstOrDefault(t=>t.GetType().IsAssignableTo<IMapInfo>()) is IMapInfo mapInfo)
         //     {
         //         MapperHelper.AddObjectMap(type,mapInfo.MappingType, mapInfo.MapType);     
         //     }        
-        // });
-        //
+        // };
+        
        
     }
 

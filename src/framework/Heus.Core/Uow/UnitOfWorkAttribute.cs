@@ -27,9 +27,7 @@ public class UnitOfWorkAttribute:Attribute, IUnitOfWorkOptions
     public bool IsDisabled { get; set; }
     public virtual void SetOptions(UnitOfWorkOptions options)
     {
-
         options.IsTransactional= IsTransactional;
-        
 
         if (Timeout.HasValue)
         {

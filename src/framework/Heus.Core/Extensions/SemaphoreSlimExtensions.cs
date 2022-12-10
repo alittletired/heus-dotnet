@@ -1,4 +1,6 @@
-﻿namespace System.Threading;
+﻿using Heus.Core.Common;
+
+namespace System.Threading;
 
 public static class SemaphoreSlimExtensions
 {
