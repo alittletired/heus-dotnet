@@ -37,9 +37,7 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
 
     public (DbConnection, DbProvider) GetDbConnection<TDbContext>() where TDbContext : DbContext
     {
-     
-        var connectionStringName = ConnectionStringNameAttribute.GetConnStringName<TDbContext>();
-        var connectionInfo = _connectionInfoResolver.Resolve(connectionStringName);
+        var connectionInfo = _connectionInfoResolver.Resolve(null);
         var connectionString = connectionInfo.ConnectionString;
 
         var dbConnection = _connections.GetOrAdd(connectionString, (cs) =>

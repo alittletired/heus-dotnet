@@ -59,13 +59,13 @@ public class EnumClassTests
         TestEnumClass.Disabled.Title.ShouldNotBeNull();
         TestEnumClass.Disabled.Equals(30).ShouldBeFalse();
         TestEnumClass.Disabled.Equals(null).ShouldBeFalse();
-        TestEnumClass.Disabled.Equals( TestEnumClass.Normal).ShouldBeFalse();
-        TestEnumClass.Disabled.Equals( TestEnumClass.Disabled).ShouldBeTrue();
-        
-        (TestEnumClass.Disabled>TestEnumClass.Normal).ShouldBeTrue();
-        (TestEnumClass.Disabled<TestEnumClass.Normal).ShouldBeFalse();
-        (TestEnumClass.Disabled>=TestEnumClass.Normal).ShouldBeTrue();
-        (TestEnumClass.Disabled<=TestEnumClass.Normal).ShouldBeFalse();
+        TestEnumClass.Disabled?.Equals( TestEnumClass.Normal).ShouldBeFalse();
+        TestEnumClass.Disabled?.Equals( TestEnumClass.Disabled).ShouldBeTrue();
+      
+        (TestEnumClass.Disabled!>TestEnumClass.Normal!).ShouldBeTrue();
+        (TestEnumClass.Disabled!<TestEnumClass.Normal).ShouldBeFalse();
+        (TestEnumClass.Disabled!>=TestEnumClass.Normal).ShouldBeTrue();
+        (TestEnumClass.Disabled!<=TestEnumClass.Normal).ShouldBeFalse();
     }
 
 }

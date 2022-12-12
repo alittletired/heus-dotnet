@@ -18,7 +18,7 @@ internal class DefaultConnectionInfoResolver : IConnectionInfoResolver, ISinglet
         //}
 
         //return _options.Value.ConnectionStrings[connectionStringName];
-        //todo:链接字符串不支持数据库类型，目前把类型作为key来传递，暂时不支持connectionStringName
+        //todo:閾炬帴瀛楃涓蹭笉鏀寔鏁版嵁搴撶被鍨嬶紝鐩墠鎶婄被鍨嬩綔涓簁ey鏉ヤ紶閫掞紝鏆傛椂涓嶆敮鎸乧onnectionStringName
         var (provider,connStr)= _options.Value.ConnectionStrings.First();
         return new DbConnectionInfo(provider, connStr);
     }
