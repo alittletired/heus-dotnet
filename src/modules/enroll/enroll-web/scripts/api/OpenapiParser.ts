@@ -17,7 +17,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
     let { config, docs } = this.apiConext
     for (let path in docs.paths) {
       try {
-        this.parsePath(path, docs.paths[path]!)
+        this.parsePath(path, docs.paths[path])
       } catch (err) {
         console.error(`${path}`)
         throw err
@@ -26,7 +26,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
   }
 
   protected parsePath(path: string, pathInfo: OpenAPIV3.PathItemObject) {
-    let pathParts = path.split('/').slice(this.apiConext.config.pathSplitIndex)
+    let pathParts = path.substring(1).split('/').slice(this.apiConext.config.pathSplitIndex)
     pathParts = pathParts.filter((p) => p[0] !== '{')
     let operations: [string, OpenAPIV3.OperationObject | undefined][] = [
       ['get', pathInfo.get],
@@ -43,6 +43,9 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
       let methodParts = [...pathParts]
       for (let i = 0; i < methodParts.length; i++) {
         let pathPart = methodParts[i]
+        if (!pathPart) {
+          console.warn(`${path},methodParts:${methodParts},pathParts:${pathParts}}`)
+        }
         let name = toLowerCamelCase(pathPart)
         if (!apiClasses[name]) {
           apiClasses[name] = {}
@@ -92,7 +95,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
           }
           let type: string = ''
           if ('$ref' in p) {
-            type = this.getType(p)
+            type = this.getType(p as any)
           } else {
             type = this.getType(p.schema as any)
           }
@@ -162,7 +165,7 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
           throw new Error(`无法识别的属性类型 ${type} ${JSON.stringify(property)}`)
       }
     }
-    throw new Error(`不识别的对象${property}`)
+    throw new Error(`不识别的对象 propName:${propName}, ${JSON.stringify(property)}`)
   }
 
   protected checkRefType(name: string, schema: OpenAPIV3.SchemaObject) {
@@ -183,7 +186,9 @@ export default class OpenapiParser implements ApiParser<OpenAPIV3.Document> {
       name: finalName,
       format: schema.format,
     }
-
+    if (!config.ignoreTypes) {
+      console.warn(`config:${JSON.stringify(config)}`)
+    }
     //先插入 防止递归引用类型
     let hasIgnore = config.ignoreTypes.some(
       (ignore) => ignore === finalName || finalName.startsWith(ignore + '<'),

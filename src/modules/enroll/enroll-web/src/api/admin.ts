@@ -5,29 +5,7 @@ export interface ActionDto {
   url?: string
 }
 
-export interface ActionRight {
-  /** 唯一主键，数据库为varchar(24) */
-  id: long
-  /** 创建人 */
-  createdBy?: long
-  /** 更新人 */
-  updateBy?: long
-  /** 创建时间 */
-  createdDate?: string
-  /** 更新时间 */
-  updateDate?: string
-  resourceId: long
-  name: string
-  flag: number
-  title: string
-  url?: string
-  isDeleted: boolean
-}
-
-export interface ICurrentUser {
-  id?: long
-  name: string
-}
+export interface IDomainEvent {}
 
 export interface LoginInput {
   userName: string
@@ -45,6 +23,7 @@ export interface LoginResult {
 export interface Resource {
   /** 唯一主键，数据库为varchar(24) */
   id: long
+  domainEvents: IDomainEvent[]
   /** 创建人 */
   createdBy?: long
   /** 更新人 */
@@ -97,6 +76,7 @@ export const getResourceTypeTitle = (resourceType: ResourceType) =>
 export interface Role {
   /** 唯一主键，数据库为varchar(24) */
   id: long
+  domainEvents: IDomainEvent[]
   /** 创建人 */
   createdBy?: long
   /** 更新人 */
@@ -114,9 +94,27 @@ export interface Role {
   remarks?: string
 }
 
+export interface RoleActionRight {
+  /** 唯一主键，数据库为varchar(24) */
+  id: long
+  domainEvents: IDomainEvent[]
+  /** 创建人 */
+  createdBy?: long
+  /** 更新人 */
+  updateBy?: long
+  /** 创建时间 */
+  createdDate?: string
+  /** 更新时间 */
+  updateDate?: string
+  resourceId: long
+  roleId: long
+  flag: number
+}
+
 export interface User {
   /** 唯一主键，数据库为varchar(24) */
   id: long
+  domainEvents: IDomainEvent[]
   /** 创建人 */
   createdBy?: long
   /** 更新人 */
@@ -143,7 +141,7 @@ export interface UserCreateDto {
   name: string
   phone: string
   nickName: string
-  initialPassword: string
+  plaintextPassword: string
 }
 
 /** 用户状态 */
@@ -178,95 +176,95 @@ export interface UserUpdateDto {
 }
 
 const adminApi = {
-  accounts: {
+  account: {
     login(data: LoginInput): Promise<LoginResult> {
-      const path = `/admin/accounts/login`
+      const path = `/admin/account/login`
       return http.post(path, data)
     },
     sendVerifyCode(phone: string): Promise<boolean> {
-      const path = `/admin/accounts/sendVerifyCode`
+      const path = `/admin/account/sendVerifyCode`
       return http.post(path, { params: { phone } })
     },
   },
-  resources: {
+  resource: {
     syncResources(data: ResourceDto[]): Promise<boolean> {
-      const path = `/admin/resources/syncResources`
+      const path = `/admin/resource/syncResources`
       return http.post(path, data)
     },
     getUserActionRights(userId: long): Promise<UserActionRight[]> {
-      const path = `/admin/resources/getUserActionRights`
+      const path = `/admin/resource/getUserActionRights`
       return http.get(path, { params: { userId } })
     },
-    delete(id: long): Promise<void> {
-      const path = `/admin/resources/delete`
+    delete(id: long): Promise<long> {
+      const path = `/admin/resource/delete`
       return http.delete(path, { params: { id } })
     },
     get(id: long): Promise<Resource> {
-      const path = `/admin/resources/get`
+      const path = `/admin/resource/get`
       return http.get(path, { params: { id } })
     },
     search(data: DynamicSearch<Resource>): Promise<PageList<Resource>> {
-      const path = `/admin/resources/search`
+      const path = `/admin/resource/search`
       return http.post(path, data)
     },
     update(data: Resource): Promise<Resource> {
-      const path = `/admin/resources/update`
+      const path = `/admin/resource/update`
       return http.put(path, data)
     },
     create(data: Resource): Promise<Resource> {
-      const path = `/admin/resources/create`
+      const path = `/admin/resource/create`
       return http.post(path, data)
     },
   },
-  roles: {
-    authorizeActionRights(id: long, data: ActionRight[]): Promise<boolean> {
-      const path = `/admin/roles/authorizeActionRights`
+  role: {
+    getActionIds(id: long): Promise<RoleActionRight[]> {
+      const path = `/admin/role/getActionIds`
+      return http.get(path, { params: { id } })
+    },
+    authorizeAction(id: long, data: long[]): Promise<boolean> {
+      const path = `/admin/role/authorizeAction`
       return http.post(path, data, { params: { id } })
     },
-    delete(id: long): Promise<void> {
-      const path = `/admin/roles/delete`
+    delete(id: long): Promise<long> {
+      const path = `/admin/role/delete`
       return http.delete(path, { params: { id } })
     },
     get(id: long): Promise<Role> {
-      const path = `/admin/roles/get`
+      const path = `/admin/role/get`
       return http.get(path, { params: { id } })
     },
     search(data: DynamicSearch<Role>): Promise<PageList<Role>> {
-      const path = `/admin/roles/search`
+      const path = `/admin/role/search`
       return http.post(path, data)
     },
     update(data: Role): Promise<Role> {
-      const path = `/admin/roles/update`
+      const path = `/admin/role/update`
       return http.put(path, data)
     },
     create(data: Role): Promise<Role> {
-      const path = `/admin/roles/create`
+      const path = `/admin/role/create`
       return http.post(path, data)
     },
   },
-  users: {
+  user: {
     create(data: UserCreateDto): Promise<User> {
-      const path = `/admin/users/create`
+      const path = `/admin/user/create`
       return http.post(path, data)
     },
-    findByName(name: string): Promise<ICurrentUser> {
-      const path = `/admin/users/findByName`
-      return http.post(path, { params: { name } })
-    },
-    delete(id: long): Promise<void> {
-      const path = `/admin/users/delete`
+    delete(id: long): Promise<long> {
+      const path = `/admin/user/delete`
       return http.delete(path, { params: { id } })
     },
     get(id: long): Promise<User> {
-      const path = `/admin/users/get`
+      const path = `/admin/user/get`
       return http.get(path, { params: { id } })
     },
     search(data: DynamicSearch<User>): Promise<PageList<User>> {
-      const path = `/admin/users/search`
+      const path = `/admin/user/search`
       return http.post(path, data)
     },
     update(data: UserUpdateDto): Promise<User> {
-      const path = `/admin/users/update`
+      const path = `/admin/user/update`
       return http.put(path, data)
     },
   },

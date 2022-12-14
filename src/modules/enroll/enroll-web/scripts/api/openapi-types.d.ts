@@ -62,7 +62,7 @@ export declare namespace OpenAPIV3 {
     description?: string
   }
   interface PathsObject {
-    [pattern: string]: PathItemObject | undefined
+    [pattern: string]: PathItemObject
   }
   interface PathItemObject {
     $ref?: string

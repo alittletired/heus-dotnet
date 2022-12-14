@@ -1,9 +1,10 @@
-import axios from 'axios'
 import path from 'path'
+import http from 'http'
+import fs from 'fs'
+import url from 'node:url'
 import { ApiConfig } from './api'
 import ApiCodeGen from './ApiCodeGen'
-
-let defaultConfig = {
+const defaultConfig = {
   mapTypes: { Timestamp: 'number', Int64: 'string' },
   codegenType: 'ts',
   pathSplitIndex: 2,
@@ -12,12 +13,26 @@ let defaultConfig = {
   outputDir: 'src/api',
   ignoreTypes: ['DynamicSearch', 'PageList', 'PageRequest'],
 }
-let config = require(path.resolve('apiconfig.json'))
-let { apis = [], ...restConfig } = { ...defaultConfig, ...config }
+const apiconfigJson = require(path.resolve('apiconfig.json'))
 
-apis.forEach(async (api: ApiConfig) => {
-  let config = { ...restConfig, ...api }
-  let docs = (await axios.get(config.url)).data
-  let codeGen = new ApiCodeGen({ docs, config, classes: {}, models: {} })
-  codeGen.generate()
+apiconfigJson.apis.forEach(async (api: ApiConfig) => {
+  const config = { ...defaultConfig, ...api }
+  const url = new URL(config.url!)
+  const req = http.request(url, (res) => {
+    var str = ''
+    res.on('data', function (chunk) {
+      str += chunk
+    })
+
+    res.on('end', function () {
+      // fs.writeFileSync('D:\\log\\1.txt', str)
+      var docs = JSON.parse(str)
+      let codeGen = new ApiCodeGen({ docs, config, classes: {}, models: {} })
+      codeGen.generate()
+    })
+  })
+
+  req.end()
 })
+
+//http://localhost:6001/swagger/admin/swagger.json
