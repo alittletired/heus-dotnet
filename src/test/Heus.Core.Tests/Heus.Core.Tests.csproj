@@ -1,11 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 <Import Project="..\..\common.test.props" />
+
   <ItemGroup>
     <ProjectReference Include="..\..\framework\Heus.Core\Heus.Core.csproj" />
     <ProjectReference Include="..\Heus.TestBase\Heus.TestBase.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Http" />
-  </ItemGroup>
+
 
 </Project>

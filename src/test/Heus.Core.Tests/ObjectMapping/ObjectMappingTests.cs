@@ -25,7 +25,7 @@ public class Object4
     public int B { get; set; } 
 }
 
-public class ObjectMappingTests : UnitTest<CoreModuleInitializer>
+public class ObjectMappingTests : IntegratedTestBase<CoreModuleInitializer>
 {
     private IObjectMapper ObjectMapper => ServiceProvider.GetRequiredService<IObjectMapper>();
 

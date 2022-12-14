@@ -1,19 +1,17 @@
 using Heus.Auth.Application;
 using Heus.Auth.Dtos;
-using Heus.IntegratedTests;
+
+using Heus.TestBase;
 
 namespace Heus.Auth.IntegratedTests;
 
-[UseUnitOfWork]
-[Collection(nameof(IntegratedTestCollection))]
-public class AccountAppServiceTests
+public class AccountAppServiceTests : IntegratedTestBase<AuthTestModule>
 {
-    private readonly IntegratedTest<Program> _factory;
+  
     private readonly  IAccountAdminAppService _accountService;
-    public AccountAppServiceTests(IntegratedTest<Program> factory)
+    public AccountAppServiceTests()
     {
-        _factory = factory;
-        _accountService = _factory.GetServiceProxy<IAccountAdminAppService>(AuthConstants.ServiceName);
+        _accountService = GetRequiredService<IAccountAdminAppService>();
     }
 
     [Theory]

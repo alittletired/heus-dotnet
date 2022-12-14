@@ -32,12 +32,11 @@ internal class DefaultDbContextProvider : IDbContextProvider, IScopedDependency
 
     public DbContext CreateDbContext<TEntity>() where TEntity : IEntity
     {
-        var dbContextType = _options.Value.EntityDbContextMappings[typeof(TEntity)];
-
         if (_unitOfWorkManager.Current == null)
         {
             throw new BusinessException("A DbContext can only be created inside a unit of work!");
         }
+        var dbContextType = _options.Value.EntityDbContextMappings[typeof(TEntity)];
         return _unitOfWorkManager.Current.AddDbContext(dbContextType.Name, (key) =>
         {
             var activator = _createDbContext.MakeGenericMethod(dbContextType);

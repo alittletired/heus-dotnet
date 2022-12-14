@@ -5,8 +5,9 @@
 		<!-- <GenerateProgramFile>false</GenerateProgramFile> -->
 	</PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\..\test\Heus.IntegratedTests\Heus.IntegratedTests.csproj" />
-      <ProjectReference Include="..\..\enroll\Heus.Enroll.Web\Heus.Enroll.Web.csproj" />
+     
+      <ProjectReference Include="..\..\..\test\Heus.TestBase\Heus.TestBase.csproj" />
+     
       <ProjectReference Include="..\Heus.Auth\Heus.Auth.csproj" />
     </ItemGroup>
 

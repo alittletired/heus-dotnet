@@ -21,10 +21,6 @@ public abstract class RepositoryBase<TEntity> :
     {
         get
         {
-            if (UnitOfWorkManager.Current == null)
-            {
-                throw new BusinessException("A DbContext can only be created inside a unit of work!");
-            }
             return ServiceProvider.GetRequiredService<IDbContextProvider>().CreateDbContext<TEntity>();
         }
     }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Core.Tests.Uow;
 
-public class UnitOfWork_Scope_Tests:UnitTest<CoreModuleInitializer>
+public class UnitOfWork_Scope_Tests: IntegratedTestBase<CoreModuleInitializer>
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
 

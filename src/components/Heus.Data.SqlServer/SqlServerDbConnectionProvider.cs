@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Data.Common;
+﻿using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,11 +7,8 @@ namespace Heus.Data.SqlServer;
 
 internal class SqlServerDbConnectionProvider : IDbConnectionProvider
 {
-  
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
     {
-
-     
         dbContextOptions.UseSqlServer(shareConnection,
             options =>
             {

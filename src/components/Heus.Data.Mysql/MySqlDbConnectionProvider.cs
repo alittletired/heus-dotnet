@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Data.Common;
-
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 

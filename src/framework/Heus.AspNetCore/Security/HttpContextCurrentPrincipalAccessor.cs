@@ -5,7 +5,7 @@ using Heus.Core.Security.Internal;
 
 namespace Heus.AspNetCore.Security;
 
-internal class HttpContextCurrentPrincipalAccessor:CurrentPrincipalAccessorBase,ISingletonDependency
+internal class HttpContextCurrentPrincipalAccessor:ThreadCurrentPrincipalAccessor,ISingletonDependency
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -16,6 +16,6 @@ internal class HttpContextCurrentPrincipalAccessor:CurrentPrincipalAccessorBase,
 
     protected override ClaimsPrincipal? GetClaimsPrincipal()
     {
-      return  _httpContextAccessor.HttpContext?.User;
+      return _httpContextAccessor.HttpContext?.User ?? base.GetClaimsPrincipal();
     }
 }

@@ -54,6 +54,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Data.Sqlite", "src\com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Data.SqlServer", "src\components\Heus.Data.SqlServer\Heus.Data.SqlServer.csproj", "{FD5467DE-AAEE-47B7-8736-2F7CDC86198B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heus.Ddd.Tests", "src\test\Heus.Ddd.Tests\Heus.Ddd.Tests.csproj", "{38D2CF0C-93A2-471E-819A-99296731B5FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +130,10 @@ Global
 		{FD5467DE-AAEE-47B7-8736-2F7CDC86198B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD5467DE-AAEE-47B7-8736-2F7CDC86198B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD5467DE-AAEE-47B7-8736-2F7CDC86198B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38D2CF0C-93A2-471E-819A-99296731B5FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38D2CF0C-93A2-471E-819A-99296731B5FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38D2CF0C-93A2-471E-819A-99296731B5FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38D2CF0C-93A2-471E-819A-99296731B5FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +158,7 @@ Global
 		{C8E4E292-6BD2-4821-B710-06DD20C26552} = {B0269F47-BCB6-4E21-B69D-DEAD007A1A5E}
 		{A44FF0E0-7F5B-44F4-A4BA-3F0C8C07B2FA} = {B0269F47-BCB6-4E21-B69D-DEAD007A1A5E}
 		{FD5467DE-AAEE-47B7-8736-2F7CDC86198B} = {B0269F47-BCB6-4E21-B69D-DEAD007A1A5E}
+		{38D2CF0C-93A2-471E-819A-99296731B5FE} = {1508B14F-9151-4608-8BE9-8F0833A705E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {883DA1C4-8BAC-4BDF-9464-3ADA8779B364}
