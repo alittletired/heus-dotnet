@@ -2,6 +2,7 @@
 using Heus.Core.Security;
 using Heus.Core.Utils;
 using Heus.Ddd.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Heus.Auth.Application;
 public interface IUserAdminAppService:IAdminApplicationService<User,User, UserCreateDto,UserUpdateDto>
@@ -28,6 +29,7 @@ internal class UserAdminAppService : AdminApplicationService<User, User, UserCre
         await Repository.InsertAsync(entity);
         return entity;
     }
+    [NonAction]
     public async Task<ICurrentUser?> FindByNameAsync(string name)
     {
         var user = await Repository.FindOneAsync(u => u.Name == name);
