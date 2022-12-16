@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Heus.Core.DependencyInjection;
 using Heus.Core.DependencyInjection.Autofac;
 using Heus.Core.Uow;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 namespace Heus.TestBase;
@@ -83,13 +84,17 @@ public abstract class IntegratedTestBase<TStartupModule> :  IDisposable where TS
         }
 
     }
-    public Task InitializeAsync()
+
+   
+    [TestInitialize]
+    public Task TestInitialize()
     {
         UnitOfWorkManager.Begin();
         return Task.CompletedTask;
     }
+    [TestCleanup]
 
-    public Task DisposeAsync()
+    public Task TestCleanup()
     {
         var uow = UnitOfWorkManager.Current;
         if (uow != null)

@@ -26,15 +26,18 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
     {
         _userService = GetRequiredService<IUserAdminAppService>();
         _userRepository = GetRequiredService<IRepository<User>>();
+        BeforeTest().ConfigureAwait(false).GetAwaiter().GetResult();
     }
-    [ClassInitialize]
+   
     protected async  Task BeforeTest()
     {
-        _existsUser = await _userService.CreateAsync(existsDto);
+       await WithUnitOfWorkAsync(async()=> {
+           _existsUser = await _userService.CreateAsync(existsDto);
+           });
+       
 
     }
     [TestMethod]
-
     public async Task Create()
     {
         var dto = noExistsDto;
