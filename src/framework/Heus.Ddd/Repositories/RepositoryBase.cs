@@ -14,6 +14,7 @@ namespace Heus.Ddd.Repositories;
 public abstract class RepositoryBase<TEntity> :
     IRepository<TEntity>, IScopedDependency where TEntity : class, IEntity
 {
+    protected  IServiceProvider ServiceProvider { get; }
     protected IUnitOfWorkManager UnitOfWorkManager { get; }
     protected IDataFilter DataFilter => ServiceProvider.GetRequiredService<IDataFilter>();
     protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
@@ -25,19 +26,10 @@ public abstract class RepositoryBase<TEntity> :
         }
     }
 
-    public IServiceProvider ServiceProvider {
-        get {
-            if (UnitOfWorkManager.Current == null)
-            {
-                throw new BusinessException("A Repository can only be created inside a unit of work!");
-            }
-            return UnitOfWorkManager.Current.ServiceProvider;
-
-        }
-    }
-    public RepositoryBase(IUnitOfWorkManager unitOfWorkManager)
+    public RepositoryBase(IServiceProvider serviceProvider)
     {
-        UnitOfWorkManager = unitOfWorkManager;
+        ServiceProvider = serviceProvider;
+        UnitOfWorkManager = ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
     }
 
     public IQueryable<TEntity> Query

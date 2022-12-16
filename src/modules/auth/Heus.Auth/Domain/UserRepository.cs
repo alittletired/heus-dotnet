@@ -10,7 +10,7 @@ public interface IUserRepository : IRepository<User>
 }
 internal class UserRepository : RepositoryBase<User>, IUserRepository
 {
-    public UserRepository(IUnitOfWorkManager unitOfWorkManager) : base(unitOfWorkManager)
+    public UserRepository(IServiceProvider serviceProvider) : base(serviceProvider)
     {
     }
 

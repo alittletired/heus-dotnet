@@ -25,10 +25,10 @@ internal class UnitOfWork : IUnitOfWork
         CompletedHandlers.Add(handler);
     }
 
-    public UnitOfWork(UnitOfWorkOptions options)
+    public UnitOfWork(IServiceProvider serviceProvider, UnitOfWorkOptions options)
     {
         Options = options;
-        ServiceProvider = options.ServiceProvider;
+        ServiceProvider = serviceProvider;
         _logger = ServiceProvider.GetRequiredService<ILogger<UnitOfWork>>();
     }
 

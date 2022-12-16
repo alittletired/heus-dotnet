@@ -64,7 +64,7 @@ public class DefaultModuleManager : IModuleManager
     {
         host.UseServiceProviderFactory(new AutofacServiceProviderFactory(containerBuilder =>
         {
-            containerBuilder.RegisterServiceMiddlewareSource(new ServiceInjectMethodMiddlewareSource());
+            //containerBuilder.RegisterServiceMiddlewareSource(new ServiceInjectMethodMiddlewareSource());
         }));
 
     }

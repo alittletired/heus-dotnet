@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Heus.Core.ObjectMapping;
 namespace Heus.Auth.Dtos;
 

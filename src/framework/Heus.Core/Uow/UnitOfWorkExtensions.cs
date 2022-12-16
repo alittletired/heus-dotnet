@@ -8,7 +8,7 @@ public static class UnitOfWorkExtensions
     {
        using var scope = serviceProvider.CreateScope();
         var manager = scope.ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
-        using var uow= manager.Begin(new() { ServiceProvider = scope.ServiceProvider });
+        using var uow= manager.Begin();
         await task(scope);
         await uow.CompleteAsync();
 

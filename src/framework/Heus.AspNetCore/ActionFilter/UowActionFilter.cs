@@ -40,7 +40,7 @@ internal class UowActionFilter : IAsyncActionFilter, IScopedDependency
     }
     private UnitOfWorkOptions CreateOptions(ActionExecutingContext context, UnitOfWorkAttribute? unitOfWorkAttribute)
     {
-        var options = new UnitOfWorkOptions { ServiceProvider = context.HttpContext.RequestServices };
+        var options = new UnitOfWorkOptions();
         unitOfWorkAttribute?.SetOptions(options);
         //context.HttpContext.RequestServices
         if (unitOfWorkAttribute?.IsTransactional == null)

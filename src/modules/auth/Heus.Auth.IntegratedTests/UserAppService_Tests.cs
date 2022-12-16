@@ -7,6 +7,7 @@ using Heus.Ddd.Dtos;
 
 using Heus.Ddd.Repositories;
 using Heus.TestBase;
+using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Auth.IntegratedTests;
 public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
@@ -15,33 +16,28 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
     private readonly IUserAdminAppService _userService;
     public const string NotExistName = "test2";
     public const string ExistName = "test1";
-    private long _existId = 300;
+    private UserCreateDto existsDto = new() { PlaintextPassword = "123456", Name = "test1", NickName = "测试用户1", Phone = "18912345678" };
+    private UserCreateDto noExistsDto = new() { PlaintextPassword = "123456", Name = "test2", NickName = "测试用户2", Phone = "18922345678" };
     public UserAppServiceTests()
     {
         _userService = GetRequiredService<IUserAdminAppService>();
         _userRepository = GetRequiredService<IRepository<User>>();
     }
-
-    public override async Task InitializeAsync()
+    protected override Task BeforeTest()
     {
-        using var uow = GetRequiredService<IUnitOfWorkManager>().Begin();
-        var user = await _userService.CreateAsync(new UserCreateDto { PlaintextPassword = "123456", Name = ExistName, NickName = ExistName, Phone = "123456" });
-        _existId = user.Id;
-        await uow.CompleteAsync();
+        return base.BeforeTest();
     }
-
-    public override async Task DisposeAsync()
-    {
-        await _userService.DeleteAsync(_existId);
-    }
-
-
-
     [Fact]
-    public Task Create()
+
+    public async Task Create()
     {
-        //var user = await _userService.CreateAsync(new UserCreateDto { InitialPassword = "123456", Name = ExistName, NickName = ExistName, Phone = "123456" });
-        return Task.CompletedTask;
+        var dto = noExistsDto;
+        await WithUnitOfWorkAsync(() => _userService.CreateAsync(dto));
+        var user = await _userRepository.Query.FirstAsync(s => s.Name == dto.Name);
+        user.NickName.ShouldBe(dto.NickName);
+        user.Phone.ShouldBe(dto.Phone);
+        user.Password.ShouldNotBeNull();
+        user.Password.ShouldNotBe("123456");
     }
     [Fact]
     public async Task GetAsync()
@@ -72,7 +68,7 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
     public async Task UpdateAsync(string phone)
     {
         var user = await _userService.GetAsync(_existId);
-        user.Phone.ShouldNotBe(phone);
+        
         var updateDto = new UserUpdateDto()
         {
             Id = _existId,
