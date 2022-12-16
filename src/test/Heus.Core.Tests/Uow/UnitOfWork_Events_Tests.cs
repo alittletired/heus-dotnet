@@ -3,17 +3,17 @@ using Heus.TestBase;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Core.Tests.Uow;
-
-public class UnitOfWork_Events_Tests: IntegratedTestBase<CoreModuleInitializer>
+[TestClass]
+public class UnitOfWork_Events_Tests : IntegratedTestBase<CoreModuleInitializer>
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
 
     public UnitOfWork_Events_Tests()
     {
-        
-        _unitOfWorkManager = RootServiceProvider.GetRequiredService<IUnitOfWorkManager>();;
+
+        _unitOfWorkManager = RootServiceProvider.GetRequiredService<IUnitOfWorkManager>(); ;
     }
-    [Fact]
+    [TestMethod]
     public async Task Should_Trigger_Complete_On_Success()
     {
         var completed = false;
@@ -36,7 +36,7 @@ public class UnitOfWork_Events_Tests: IntegratedTestBase<CoreModuleInitializer>
 
         disposed.ShouldBeTrue();
     }
-    [Fact]
+    [TestMethod]
     public async Task Should_Trigger_Complete_On_Success_In_Child_Uow()
     {
         var completed = false;
@@ -72,7 +72,7 @@ public class UnitOfWork_Events_Tests: IntegratedTestBase<CoreModuleInitializer>
         disposed.ShouldBeTrue();
     }
 
-    [Fact]
+    [TestMethod]
     public void Should_Not_Trigger_Complete_If_Uow_Is_Not_Completed()
     {
         var completed = false;
@@ -96,14 +96,14 @@ public class UnitOfWork_Events_Tests: IntegratedTestBase<CoreModuleInitializer>
         disposed.ShouldBeTrue();
     }
 
-    [Fact]
+    [TestMethod]
     public void Should_Trigger_Failed_If_Uow_Throws_Exception()
     {
         var completed = false;
         var failed = false;
         var disposed = false;
 
-        Assert.Throws<Exception>(new Action(() =>
+        Assert.ThrowsException<Exception>(new Action(() =>
         {
             using (var uow = _unitOfWorkManager.Begin())
             {
@@ -125,9 +125,9 @@ public class UnitOfWork_Events_Tests: IntegratedTestBase<CoreModuleInitializer>
         disposed.ShouldBeTrue();
     }
 
-    [InlineData(true)]
-    [InlineData(false)]
-    [Theory]
+    [DataRow(true)]
+    [DataRow(false)]
+    [TestMethod]
     public async Task Should_Trigger_Failed_If_Rolled_Back(bool callComplete)
     {
         var completed = false;

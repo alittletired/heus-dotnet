@@ -16,17 +16,18 @@ public class Class1
     public int A { get; } = 1;
     public Class2 B { get; } = new Class2();
 }
+[TestClass]
 public class ReflectionUtilsTests
 {
     private readonly object _obj = new Class1();
 
-    [Theory]
-    [InlineData("A", 1)]
-    [InlineData("B.C", 4)]
-    [InlineData("B.D.E", "e")]
+    [TestMethod]
+    [DataRow("A", 1)]
+    [DataRow("B.C", 4)]
+    [DataRow("B.D.E", "e")]
     public void GetValueByPathTests(string path, object value)
     {
         ReflectionUtils.GetValueByPath(_obj, path).ShouldBe(value);
     }
-    
+
 }

@@ -10,9 +10,10 @@ public class TestEnumClass: EnumClass<TestEnumClass>
     public readonly static TestEnumClass Normal = new(nameof(Normal),  0, "正常");
     public readonly static TestEnumClass Disabled = new(nameof(Disabled), 1, "禁用");
 }
+[TestClass]
 public class EnumClassTests
 {
-    [Fact]
+    [TestMethod]
     public void GetEnumOptions_Test()
     {
         TestEnumClass.GetEnumOptions().Length.ShouldBe(2);
@@ -20,7 +21,7 @@ public class EnumClassTests
 
     }
 
-    [Fact]
+    [TestMethod]
     public void FromName_Test()
     {
       var disabled=  TestEnumClass.FromName(nameof(TestEnumClass.Disabled));
@@ -36,7 +37,7 @@ public class EnumClassTests
       TestEnumClass.Disabled.ShouldBeGreaterThan(TestEnumClass.Normal);
       
     }
-    [Fact]
+    [TestMethod]
     public void TryFromName_Test()
     {
         TestEnumClass.TryFromName(nameof(TestEnumClass.Disabled),out var disabled).ShouldBeTrue();
@@ -45,14 +46,14 @@ public class EnumClassTests
         notexists.ShouldBeNull();
     }
 
-    [Fact]
+    [TestMethod]
     public void TryFromValue_Test()
     {
         TestEnumClass.TryFromValue(1,out var disabled).ShouldBeTrue();
         disabled.ShouldBe(TestEnumClass.Disabled);
     }
 
-    [Fact]
+    [TestMethod]
     public void EqualsTest()
     {
         TestEnumClass.Disabled.GetHashCode().ShouldBe(TestEnumClass.Disabled.Value.GetHashCode());

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 
 namespace Heus.Core.Tests.Threading;
-
+[TestClass]
 public class SemaphoreSlimExtensionsTests
 {
     private static SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
@@ -30,20 +30,20 @@ public class SemaphoreSlimExtensionsTests
 
     };
 
-    [Fact]
+    [TestMethod]
     public void LockAsync_Test()
     {
         var watch = Stopwatch.StartNew();
-         Task.Run(_action);
-         Task.Run(_action);
+        Task.Run(_action);
+        Task.Run(_action);
 
     }
 
-    [Fact]
+    [TestMethod]
     public void LockAsync_Test1()
     {
-         Task.Run(_action);
-         Task.Run(_action);
+        Task.Run(_action);
+        Task.Run(_action);
 
     }
 }

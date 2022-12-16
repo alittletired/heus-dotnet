@@ -7,27 +7,33 @@ using Heus.Ddd.Dtos;
 
 using Heus.Ddd.Repositories;
 using Heus.TestBase;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Auth.IntegratedTests;
+[TestClass]
 public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
 {
     protected readonly IRepository<User> _userRepository;
     private readonly IUserAdminAppService _userService;
     public const string NotExistName = "test2";
     public const string ExistName = "test1";
-    private UserCreateDto existsDto = new() { PlaintextPassword = "123456", Name = "test1", NickName = "测试用户1", Phone = "18912345678" };
-    private UserCreateDto noExistsDto = new() { PlaintextPassword = "123456", Name = "test2", NickName = "测试用户2", Phone = "18922345678" };
+    private UserCreateDto existsDto = new() { PlaintextPassword = "123456", Name = "test1", NickName = "test1", Phone = "18912345678" };
+    private UserCreateDto noExistsDto = new() { PlaintextPassword = "123456", Name = "test2", NickName = "test2", Phone = "18922345678" };
+    private User _existsUser = null!;
+
     public UserAppServiceTests()
     {
         _userService = GetRequiredService<IUserAdminAppService>();
         _userRepository = GetRequiredService<IRepository<User>>();
     }
-    protected override Task BeforeTest()
+    [ClassInitialize]
+    protected async  Task BeforeTest()
     {
-        return base.BeforeTest();
+        _existsUser = await _userService.CreateAsync(existsDto);
+
     }
-    [Fact]
+    [TestMethod]
 
     public async Task Create()
     {
@@ -39,18 +45,18 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
         user.Password.ShouldNotBeNull();
         user.Password.ShouldNotBe("123456");
     }
-    [Fact]
+    [TestMethod]
     public async Task GetAsync()
     {
-        var result = await _userService.GetAsync(_existId);
+        var result = await _userService.GetAsync(_existsUser.Id);
         result.ShouldNotBeNull();
     }
-    [Fact]
+    [TestMethod]
     public void GetAsync_ThrowEntityNotFound()
     {
-        Assert.ThrowsAsync<EntityNotFoundException>(() => _userService.GetAsync(300));
+        Assert.ThrowsExceptionAsync<EntityNotFoundException>(() => _userService.GetAsync(300));
     }
-    [Fact]
+    [TestMethod]
     public async Task GetListAsync()
     {
         var dynamicQuery = new DynamicSearch<User>();
@@ -63,15 +69,15 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
 
 
 
-    [Theory]
-    [InlineData("13712345568")]
+    [TestMethod]
+    [DataRow("13712345568")]
     public async Task UpdateAsync(string phone)
     {
-        var user = await _userService.GetAsync(_existId);
-        
+        var user = await _userService.GetAsync(_existsUser.Id);
+
         var updateDto = new UserUpdateDto()
         {
-            Id = _existId,
+            Id = _existsUser.Id,
             Phone = phone,
             Name = user.Name,
             NickName = user.NickName,
@@ -83,11 +89,11 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
         updateUser.Phone.ShouldBe(phone);
 
     }
-    [Fact]
+    [TestMethod]
 
     public async Task DeleteAsync()
     {
-        await _userService.DeleteAsync(_existId);
+        await _userService.DeleteAsync(_existsUser.Id);
 
     }
 

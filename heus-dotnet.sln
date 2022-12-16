@@ -54,7 +54,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Data.Sqlite", "src\com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Data.SqlServer", "src\components\Heus.Data.SqlServer\Heus.Data.SqlServer.csproj", "{FD5467DE-AAEE-47B7-8736-2F7CDC86198B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heus.Ddd.Tests", "src\test\Heus.Ddd.Tests\Heus.Ddd.Tests.csproj", "{38D2CF0C-93A2-471E-819A-99296731B5FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Ddd.Tests", "src\test\Heus.Ddd.Tests\Heus.Ddd.Tests.csproj", "{38D2CF0C-93A2-471E-819A-99296731B5FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

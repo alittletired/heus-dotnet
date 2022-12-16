@@ -1,10 +1,9 @@
 using System.Reflection;
 using Heus.Core.Utils;
-using Shouldly;
-using Xunit;
+
 
 namespace Heus.Core.Tests.Utils;
-
+[TestClass]
 public class TestClass
 {
     public Task TestVoidAsync(){return  Task.CompletedTask;}
@@ -23,14 +22,14 @@ public class AsyncHelperTests
 {
     private static TypeInfo _testType = typeof(TestClass).GetTypeInfo();
 
-    [Fact]
+    [TestMethod]
     public void IsAsync()
     {
         _testType.DeclaredMethods.First(s => s.Name == nameof(TestClass.TestVoidAsync)).IsAsync().ShouldBeTrue();
         _testType.DeclaredMethods.First(s => s.Name == nameof(TestClass.TestReturnAsync)).IsAsync().ShouldBeTrue();
     }
 
-    [Fact]
+    [TestMethod]
     public void UnwrapTask()
     {
         _testType.DeclaredMethods.First(s => s.Name == nameof(TestClass.TestVoidAsync)).ReturnType.UnwrapTask()

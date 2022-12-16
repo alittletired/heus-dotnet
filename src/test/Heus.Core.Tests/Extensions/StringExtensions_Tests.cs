@@ -1,40 +1,40 @@
 ﻿using System.Text;
 
 namespace Heus.Core.Tests.Extensions;
-
+[TestClass]
 public class StringExtensions_Tests
 {
-    [Theory]
-    [InlineData("a", true)]
-    [InlineData("", false)]
-    [InlineData(" ", true)]
-    [InlineData(null, false)]
+    [TestMethod]
+    [DataRow("a", true)]
+    [DataRow("", false)]
+    [DataRow(" ", true)]
+    [DataRow(null, false)]
     public void HasText_Test(string? obj, bool expect)
     {
         obj.HasText().ShouldBe(expect);
     }
 
-    [Theory]
-    [InlineData("a", false)]
-    [InlineData("", true)]
-    [InlineData(" ", false)]
-    [InlineData(null, true)]
+    [TestMethod]
+    [DataRow("a", false)]
+    [DataRow("", true)]
+    [DataRow(" ", false)]
+    [DataRow(null, true)]
     public void IsNullOrEmpty_Test(string? obj, bool expect)
     {
         obj.IsNullOrEmpty().ShouldBe(expect);
     }
 
-    [Theory]
-    [InlineData("a", false)]
-    [InlineData("", true)]
-    [InlineData(" ", true)]
-    [InlineData(null, true)]
+    [TestMethod]
+    [DataRow("a", false)]
+    [DataRow("", true)]
+    [DataRow(" ", true)]
+    [DataRow(null, true)]
     public void IsNullOrWhiteSpace_Test(string? obj, bool expect)
     {
         obj.IsNullOrWhiteSpace().ShouldBe(expect);
     }
 
-    [Fact]
+    [TestMethod]
 
     public void NormalizeLineEndingsTest()
     {
@@ -42,17 +42,17 @@ public class StringExtensions_Tests
         StringExtensions.NormalizeLineEndings(obj).ShouldBe($"{Environment.NewLine}a{Environment.NewLine}b");
     }
 
-    [Theory]
-    [InlineData("a")]
+    [TestMethod]
+    [DataRow("a")]
     public void GetBytesTest(string str)
     {
         str.GetBytes().ShouldNotBeNull();
         str.GetBytes(Encoding.UTF8).ShouldNotBeNull();
     }
-    [Fact]
+    [TestMethod]
     public void JoinAsStringTest()
     {
-        IEnumerable<string> str = new List<string>(){"a", "b", "c"};
+        IEnumerable<string> str = new List<string>() { "a", "b", "c" };
         str.JoinAsString(",").ShouldBe("a,b,c");
     }
 }

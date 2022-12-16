@@ -16,13 +16,13 @@ public enum TestEnum
 }
 public class EnumHelperTests
 {
-    [Theory]
-    [InlineData(TestEnum.One,"value1")]
-    [InlineData(TestEnum.Two,"value2")]
-    [InlineData(TestEnum.Three,"Three")]
-    public void GetSummary(TestEnum enumValue,string text)
+    [TestMethod]
+    [DataRow(TestEnum.One, "value1")]
+    [DataRow(TestEnum.Two, "value2")]
+    [DataRow(TestEnum.Three, "Three")]
+    public void GetSummary(TestEnum enumValue, string text)
     {
         EnumHelper.GetSummary(enumValue).ShouldBe(text);
-        
+
     }
 }

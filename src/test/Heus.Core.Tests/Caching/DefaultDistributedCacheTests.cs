@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
 namespace Heus.Core.Tests.Caching;
-
+[TestClass]
 public class DefaultDistributedCacheTests
 {
    private readonly IDistributedCache<string> _cache;
@@ -17,8 +17,8 @@ public class DefaultDistributedCacheTests
       _cache = new DefaultDistributedCache<string>(cache, options);
       
    }
-   [Theory]
-   [InlineData(nameof(GetAsync_Test),null,"test")]
+    [TestMethod]
+    [DataRow(nameof(GetAsync_Test),null,"test")]
    public async Task GetAsync_Test(string key,object value,string newValue)
    {
        var res = await _cache.GetAsync(key);
@@ -29,9 +29,9 @@ public class DefaultDistributedCacheTests
        res1.ShouldBe(newValue);
    }
 
-   [Theory]
-   [InlineData("key1", "1")]
-   [InlineData("key2", "2")]
+   [TestMethod]
+   [DataRow("key1", "1")]
+   [DataRow("key2", "2")]
    public async Task GetOrAddAsync_Test(string key, string value)
    {
      var res=await  _cache.GetOrAddAsync(key, ()=>Task.FromResult(value));
@@ -39,9 +39,9 @@ public class DefaultDistributedCacheTests
      await  _cache.GetOrAddAsync(key, ()=>Task.FromResult(value));
    }
 
-   [Theory]
-   [InlineData("key3", "3")]
-   [InlineData("key4", "4")]
+    [TestMethod]
+    [DataRow("key3", "3")]
+   [DataRow("key4", "4")]
    public async Task RemoveAsync_Test(string key, string value)
    {
         var res=  await  _cache.GetOrAddAsync(key,()=> Task.FromResult(value));

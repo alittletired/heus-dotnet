@@ -1,10 +1,10 @@
 ﻿using Heus.Core.Common;
 
 namespace Heus.Core.Tests.Common;
-
+[TestClass]
 public class ApiResultTests
 {
-    [Fact]
+    [TestMethod]
     public void Test_Error()
     {
 
@@ -14,7 +14,7 @@ public class ApiResultTests
 
     
     }
-    [Fact]
+    [TestMethod]
     public void Test_Ok()
     {
         var ok = ApiResult.Ok(new List<string>());

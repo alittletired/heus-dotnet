@@ -2,14 +2,13 @@
 using Autofac.Extensions.DependencyInjection;
 using Heus.Core.DependencyInjection;
 using Heus.Core.DependencyInjection.Autofac;
-using Heus.Core.Security;
 using Heus.Core.Uow;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 namespace Heus.TestBase;
-public class IntegratedTestBase<TStartupModule> : IAsyncLifetime, IDisposable where TStartupModule : IModuleInitializer
+public abstract class IntegratedTestBase<TStartupModule> :  IDisposable where TStartupModule : IModuleInitializer
 {
+    private DefaultModuleManager _moduleManager;
     protected IntegratedTestBase()
     {
         var serviceFactory = new AutofacServiceProviderFactoryFacade();
@@ -24,13 +23,9 @@ public class IntegratedTestBase<TStartupModule> : IAsyncLifetime, IDisposable wh
         ServiceProvider = TestServiceScope.ServiceProvider;
         UnitOfWorkManager = ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
         _moduleManager.InitializeModulesAsync(ServiceProvider).ConfigureAwait(false).GetAwaiter().GetResult();
-        WithUnitOfWorkAsync(BeforeTest).ConfigureAwait(false).GetAwaiter().GetResult();
     }
-    protected virtual Task BeforeTest()
-    {
-        return Task.CompletedTask;
-    }
-    private DefaultModuleManager _moduleManager;
+
+   
     protected virtual void AfterConfigureServices(IServiceCollection services)
     {
         var claims = new List<Claim>() {
@@ -88,8 +83,6 @@ public class IntegratedTestBase<TStartupModule> : IAsyncLifetime, IDisposable wh
         }
 
     }
-
-
     public Task InitializeAsync()
     {
         UnitOfWorkManager.Begin();

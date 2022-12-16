@@ -1,12 +1,12 @@
 using Heus.Core.Utils;
 
 namespace Heus.Core.Tests.Utils;
-
+[TestClass]
 public class AsyncLocalUtilsTests
 {
     private static AsyncLocal<int?> _asyncLocal = new();
 
-    [Fact]
+    [TestMethod]
     public void BeginScope_Test()
     {
         using (  AsyncLocalUtils.BeginScope(_asyncLocal,1))

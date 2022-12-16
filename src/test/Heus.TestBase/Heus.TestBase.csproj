@@ -5,6 +5,10 @@
 	  <ProjectReference Include="..\..\framework\Heus.Core\Heus.Core.csproj" />
 	  <ProjectReference Include="..\..\framework\Heus.Data\Heus.Data.csproj" />
 	</ItemGroup>
- 
-
+	<PropertyGroup>
+		<IsTestProject>false</IsTestProject>
+	</PropertyGroup>
+	<ItemGroup>
+		
+	</ItemGroup>
 </Project>

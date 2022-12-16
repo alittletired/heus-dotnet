@@ -3,16 +3,16 @@ using Heus.TestBase;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Core.Tests.Uow;
-
-public class UnitOfWork_Scope_Tests: IntegratedTestBase<CoreModuleInitializer>
+[TestClass]
+public class UnitOfWork_Scope_Tests : IntegratedTestBase<CoreModuleInitializer>
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
 
     public UnitOfWork_Scope_Tests()
     {
-        _unitOfWorkManager = RootServiceProvider.GetRequiredService<IUnitOfWorkManager>();;
+        _unitOfWorkManager = RootServiceProvider.GetRequiredService<IUnitOfWorkManager>(); ;
     }
-    [Fact]
+    [TestMethod]
     public async Task UnitOfWorkManager_Current_Should_Set_Correctly()
     {
         _unitOfWorkManager.Current.ShouldBeNull();
@@ -25,7 +25,7 @@ public class UnitOfWork_Scope_Tests: IntegratedTestBase<CoreModuleInitializer>
             using (var uow2 = _unitOfWorkManager.Begin())
             {
                 _unitOfWorkManager.Current.ShouldNotBeNull();
-            await uow2.CompleteAsync();
+                await uow2.CompleteAsync();
             }
 
             _unitOfWorkManager.Current.ShouldNotBeNull();
@@ -37,7 +37,7 @@ public class UnitOfWork_Scope_Tests: IntegratedTestBase<CoreModuleInitializer>
         _unitOfWorkManager.Current.ShouldBeNull();
     }
 
-    [Fact]
+    [TestMethod]
     public async Task Should_Create_Nested_UnitOfWorks()
     {
         _unitOfWorkManager.Current.ShouldBeNull();
@@ -50,7 +50,7 @@ public class UnitOfWork_Scope_Tests: IntegratedTestBase<CoreModuleInitializer>
             using (var uow2 = _unitOfWorkManager.Begin(requiresNew: true))
             {
                 _unitOfWorkManager.Current.ShouldNotBeNull();
-             
+
 
                 await uow2.CompleteAsync();
             }
@@ -63,5 +63,5 @@ public class UnitOfWork_Scope_Tests: IntegratedTestBase<CoreModuleInitializer>
 
         _unitOfWorkManager.Current.ShouldBeNull();
     }
-    
+
 }

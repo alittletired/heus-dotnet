@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 <Import Project="..\..\..\common.test.props" />
 	<PropertyGroup>
@@ -7,7 +7,6 @@
     <ItemGroup>
      
       <ProjectReference Include="..\..\..\test\Heus.TestBase\Heus.TestBase.csproj" />
-     
       <ProjectReference Include="..\Heus.Auth\Heus.Auth.csproj" />
     </ItemGroup>
 
