@@ -4,7 +4,7 @@ using System;
 
 namespace Heus.Core.Utils;
 
-public static class EnumHelper
+public static class EnumUtils
 {
     private  readonly static ConcurrentDictionary<Type, Dictionary<string, string>> EnumSummaries= new();
 

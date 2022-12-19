@@ -1,29 +1,28 @@
 ﻿using System.Security.Claims;
-using Autofac.Extensions.DependencyInjection;
 using Heus.Core.DependencyInjection;
 using Heus.Core.DependencyInjection.Autofac;
 using Heus.Core.Uow;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 namespace Heus.TestBase;
 public abstract class IntegratedTestBase<TStartupModule> :  IDisposable where TStartupModule : IModuleInitializer
 {
-    private DefaultModuleManager _moduleManager;
+   
+    protected virtual bool AutoCreateUow => true;
     protected IntegratedTestBase()
     {
         var serviceFactory = new AutofacServiceProviderFactoryFacade();
         var services = new ServiceCollection();
         var config = new ConfigurationManager();
-        _moduleManager = new DefaultModuleManager(typeof(TStartupModule));
-        _moduleManager.ConfigureServices(services, config);
+       var  moduleManager = new DefaultModuleManager(typeof(TStartupModule));
+        moduleManager.ConfigureServices(services, config);
         AfterConfigureServices(services);
         var containerBuilder = serviceFactory.CreateBuilder(services);
         RootServiceProvider = serviceFactory.CreateServiceProvider(containerBuilder);
         TestServiceScope = RootServiceProvider.CreateScope();
         ServiceProvider = TestServiceScope.ServiceProvider;
         UnitOfWorkManager = ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
-        _moduleManager.InitializeModulesAsync(ServiceProvider).ConfigureAwait(false).GetAwaiter().GetResult();
+        moduleManager.InitializeModulesAsync(ServiceProvider).ConfigureAwait(false).GetAwaiter().GetResult();
     }
 
    
@@ -89,19 +88,27 @@ public abstract class IntegratedTestBase<TStartupModule> :  IDisposable where TS
     [TestInitialize]
     public Task TestInitialize()
     {
-        UnitOfWorkManager.Begin();
+        if (AutoCreateUow)
+        {
+            UnitOfWorkManager.Begin();
+        }
+       
         return Task.CompletedTask;
     }
     [TestCleanup]
 
     public Task TestCleanup()
     {
-        var uow = UnitOfWorkManager.Current;
-        if (uow != null)
+        if (AutoCreateUow)
         {
-            uow.CompleteAsync();
-            uow.Dispose();
+            var uow = UnitOfWorkManager.Current;
+            if (uow != null)
+            {
+                uow.CompleteAsync();
+                uow.Dispose();
+            }
         }
+
         return Task.CompletedTask;
     }
 

@@ -7,6 +7,7 @@ namespace Heus.Core.Tests.Uow;
 public class UnitOfWork_Events_Tests : IntegratedTestBase<CoreModuleInitializer>
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
+    protected override bool AutoCreateUow => false;
 
     public UnitOfWork_Events_Tests()
     {
@@ -31,9 +32,9 @@ public class UnitOfWork_Events_Tests : IntegratedTestBase<CoreModuleInitializer>
 
             await uow.CompleteAsync();
 
-            completed.ShouldBeTrue();
+            
         }
-
+        completed.ShouldBeTrue();
         disposed.ShouldBeTrue();
     }
     [TestMethod]

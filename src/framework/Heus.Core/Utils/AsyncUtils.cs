@@ -18,7 +18,7 @@ end
 /// <summary>
 /// Provides some helper methods to work with async methods.
 /// </summary>
-public static class AsyncHelper
+public static class AsyncUtils
 {
     /// <summary>
     /// Checks if given method is an async method.

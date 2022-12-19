@@ -14,6 +14,7 @@ public enum TestEnum
     Two,
     Three
 }
+[TestClass]
 public class EnumHelperTests
 {
     [TestMethod]
@@ -22,7 +23,7 @@ public class EnumHelperTests
     [DataRow(TestEnum.Three, "Three")]
     public void GetSummary(TestEnum enumValue, string text)
     {
-        EnumHelper.GetSummary(enumValue).ShouldBe(text);
+        EnumUtils.GetSummary(enumValue).ShouldBe(text);
 
     }
 }

@@ -17,8 +17,8 @@ public class TestClass
         return 1;
     }
 }
-
-public class AsyncHelperTests
+[TestClass]
+public class AsyncUtilsTests
 {
     private static TypeInfo _testType = typeof(TestClass).GetTypeInfo();
 

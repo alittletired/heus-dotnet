@@ -7,7 +7,7 @@ namespace Heus.Core.Tests.Uow;
 public class UnitOfWork_Scope_Tests : IntegratedTestBase<CoreModuleInitializer>
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
-
+    protected override bool AutoCreateUow => false;
     public UnitOfWork_Scope_Tests()
     {
         _unitOfWorkManager = RootServiceProvider.GetRequiredService<IUnitOfWorkManager>(); ;
