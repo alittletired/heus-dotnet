@@ -3,7 +3,7 @@ using System.Reflection;
 using Heus.Core.Utils;
 
 namespace Heus.Core.Tests.Utils;
-[TestClass]
+
 public class TestTypeUtilsClass
 {
     public static Func<int> Func1 { get; } = () => 1;
@@ -17,7 +17,7 @@ record TestRecord(int Prop1)
 {
 
 }
-
+[TestClass]
 public class TypeUtilsTests
 {
     [TestMethod]

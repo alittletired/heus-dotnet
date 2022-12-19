@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\common.test.props" />
+	<ItemGroup>
+	  <ProjectReference Include="..\..\framework\Heus.AspNetCore\Heus.AspNetCore.csproj" />
+	</ItemGroup>
+
+</Project>
