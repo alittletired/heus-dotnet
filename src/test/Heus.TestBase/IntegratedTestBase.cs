@@ -5,10 +5,12 @@ using Heus.Core.Uow;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 namespace Heus.TestBase;
-//[TestScope]
-public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServiceProvider,IAsyncLifetime where TStartupModule : IModuleInitializer
+public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServiceProvider,IAsyncLifetime,IDisposable where TStartupModule : IModuleInitializer
 {
-   
+
+    /// <summary>
+    /// 基本上所有集成测试的操作都需要在工作单元里，故默认开启一个工作单元
+    /// </summary>
     protected virtual bool AutoCreateUow => true;
     private readonly DefaultModuleManager _moduleManager;
 
@@ -24,8 +26,11 @@ public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServicePr
         RootServiceProvider = serviceFactory.CreateServiceProvider(containerBuilder);
         TestServiceScope = RootServiceProvider.CreateScope();
         ServiceProvider = TestServiceScope.ServiceProvider;
-        UnitOfWorkManagerAccessor.UnitOfWorkManager = UnitOfWorkManager;
-        UnitOfWorkManager.Begin();
+        // xunit框架每个方法都会从新实例化对象，没有其他合适的地方开启工作单元作用域
+        if (AutoCreateUow) { 
+            UnitOfWorkManager.Begin(); 
+            }
+      
     }
     protected virtual Task BeforeTestAsync() {
         return Task.CompletedTask;
@@ -40,7 +45,7 @@ public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServicePr
 
     public Task DisposeAsync()
     {
-        TestServiceScope.Dispose();
+       
         return Task.CompletedTask;
     }
     protected virtual void AfterConfigureServices(IServiceCollection services)
@@ -57,8 +62,6 @@ public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServicePr
     }
     protected IServiceScope TestServiceScope { get; }
     protected IServiceProvider RootServiceProvider { get; }
-    
-    
 
     protected Task<TResult> WithUnitOfWorkAsync<TResult>(Func<Task<TResult>> func)
     {
@@ -76,7 +79,13 @@ public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServicePr
 
     }
 
-   
-
-  
+    public void Dispose()
+    {
+        if (AutoCreateUow)
+        {
+            UnitOfWorkManager.Current?.CompleteAsync();
+            UnitOfWorkManager.Current?.Dispose();
+        }
+        TestServiceScope.Dispose();
+    }
 }
