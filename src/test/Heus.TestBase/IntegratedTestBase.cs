@@ -34,7 +34,8 @@ public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServicePr
     {
         await _moduleManager.InitializeModulesAsync(ServiceProvider);
        await WithUnitOfWorkAsync(BeforeTestAsync);
-      
+        
+
     }
 
     public Task DisposeAsync()
