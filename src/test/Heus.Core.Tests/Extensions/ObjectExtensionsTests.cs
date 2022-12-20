@@ -1,8 +1,8 @@
 ﻿namespace Heus.Core.Tests.Extensions;
-[TestClass]
+
 public class ObjectExtensionsTests
 {
-    [TestMethod]
+    [Fact]
     public void ConvertToTest()
     {
         var id = Guid.NewGuid();

@@ -1,61 +1,81 @@
 ﻿using System.Diagnostics;
+using System.Threading;
 using Newtonsoft.Json.Linq;
 
 namespace Heus.Core.Tests.Threading;
 public class LockValue
 {
-    public int Value { get; set; }
-    [TestClass]
+    public volatile int Value;
+
     public class SemaphoreSlimExtensionsTests
     {
-
-        private Func<SemaphoreSlim, LockValue, Task> _action = async (semaphore, value) =>
+        private async Task DelayAction(int delay, SemaphoreSlim semaphore, LockValue value)
         {
-            using var scope =await semaphore.LockAsync();
-            await Task.Delay(100);
-            value.Value++;
-
-        };
-        private Func<SemaphoreSlim, LockValue, Task> _action2 = async (semaphore, value) =>
+            using var scope = await semaphore.LockAsync();
+            await Task.Delay(delay);
+            Interlocked.Increment(ref value.Value);
+        }
+        private async Task TimoutAction(int delay, SemaphoreSlim semaphore, LockValue value,int timeout)
         {
-            using var scope = await semaphore.LockAsync(50);
-            await Task.Delay(100);
-            value.Value++;
-
-        };
-    
-
-        [TestMethod]
-        [DataRow(150, false)]
-        [DataRow(510, true)]
-        public async Task LockAsync_Test(int expired,bool completed)
-        {
-            var semaphore = new SemaphoreSlim(1, 1);
-            var value = new LockValue { Value = 0 };
-            var tasks = Task.WhenAll(_action(semaphore, value), _action(semaphore, value), _action(semaphore, value));
-            await Task.WhenAny(tasks, Task.Delay(expired));
-            if (completed)
-            {
-                value.Value.ShouldBe(3);
-            }
-            else { value.Value.ShouldBeLessThan(3); }
-   
+            using var scope = await semaphore.LockAsync(timeout);
+            await Task.Delay(delay);
+            Interlocked.Increment(ref value.Value);
         }
 
-        [TestMethod]
-        [DataRow(120, false)]
-        [DataRow(250, true)]
-        public async Task LockAsync_TestTimeout(int expired, bool completed)
+        [Theory]
+        [InlineData(50, 4)]
+        [InlineData(50, 3)]
+        [InlineData(50, 6)]
+
+        public async Task LockAsync_WaitAll(int delay, int repeat)
         {
-            var semaphore = new SemaphoreSlim(1, 1);
+            using var semaphore = new SemaphoreSlim(1, 1);
             var value = new LockValue { Value = 0 };
-            var tasks = Task.WhenAll(_action2(semaphore, value), _action2(semaphore, value), _action2(semaphore, value));
-            await Task.WhenAny(tasks, Task.Delay(expired));
-            if (completed)
-            {
-                value.Value.ShouldBe(3);
-            }
-            else { value.Value.ShouldBeLessThan(3); }
+            var tasks = Enumerable.Repeat(value, repeat).Select(s => DelayAction(delay, semaphore, value));
+            await Task.WhenAll(tasks);
+            value.Value.ShouldBe(repeat);
+
+        }
+
+        [Theory]
+        [InlineData(50,4)]
+        [InlineData(50, 5)]
+        public async Task LockAsync_WaitAll_Expired(int delay, int repeat)
+        {
+            using var semaphore = new SemaphoreSlim(1, 1);
+            var value = new LockValue { Value = 0 };
+            var tasks = Enumerable.Repeat(value, repeat).Select(s => DelayAction(delay, semaphore, value));
+            var expired = delay * (repeat / 2);
+            await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(expired));
+            value.Value.ShouldBeLessThan(repeat);
+         
+
+        }
+
+        [Theory]
+        [InlineData(50, 10, 4)]
+        [InlineData(50, 10, 5)]
+        public async Task LockAsync_WithTimeout(int delay, int timeout, int repeat)
+        {
+            using var semaphore = new SemaphoreSlim(1, 1);
+            var value = new LockValue { Value = 0 };
+            var tasks = Enumerable.Repeat(value, repeat).Select(s => TimoutAction(delay, semaphore, value, timeout));
+            await Task.WhenAll(tasks);
+            value.Value.ShouldBe(repeat);
+        }
+
+
+        [Theory]
+        [InlineData(50,10,4)]
+        [InlineData(50, 10, 5)]
+        public async Task LockAsync_WithTimeout_Expired(int delay,int timeout,int repeat)
+        {
+            using var semaphore = new SemaphoreSlim(1, 1);
+            var value = new LockValue { Value = 0 };
+            var tasks = Enumerable.Repeat(value, repeat).Select(s => TimoutAction(delay, semaphore, value, timeout));
+            var expired = delay*(repeat/2);
+            await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(expired));
+         value.Value.ShouldBe(repeat); 
         }
     }
 }

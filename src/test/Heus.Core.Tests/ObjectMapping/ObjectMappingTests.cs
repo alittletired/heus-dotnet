@@ -24,14 +24,14 @@ public class Object4
 {
     public int B { get; set; }
 }
-[TestClass]
+
 public class ObjectMappingTests : IntegratedTestBase<CoreModuleInitializer>
 {
     private IObjectMapper ObjectMapper => ServiceProvider.GetRequiredService<IObjectMapper>();
 
 
 
-    [TestMethod]
+    [Fact]
     public void MapToTest()
     {
         var object2 = new Object2() { B = 3 };

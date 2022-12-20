@@ -19,7 +19,11 @@ public static class SemaphoreSlimExtensions
   
     public async static Task<IDisposable> LockAsync(this SemaphoreSlim semaphoreSlim, int millisecondsTimeout)
     {
-        await semaphoreSlim.WaitAsync(millisecondsTimeout);
-        return GetDispose(semaphoreSlim);
+     var result=   await semaphoreSlim.WaitAsync(millisecondsTimeout);
+        if (result)
+        {
+            return GetDispose(semaphoreSlim);
+        }
+        return NullDisposable.Instance;
     }
 }

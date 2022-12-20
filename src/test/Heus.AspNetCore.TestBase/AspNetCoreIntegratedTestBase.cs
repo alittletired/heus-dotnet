@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.TestHost;
 
 namespace Heus.AspNetCore.TestBase;
 
-public class AspNetCoreIntegratedTestBase:IntegratedTestBase<TStartupModule>  where TStartupModule : IModuleInitializer
+public abstract class AspNetCoreIntegratedTestBase<TStartup> : TestBaseWithServiceProvider, IDisposable where TStartup : class
 {
     protected TestServer Server { get; }
 
@@ -16,15 +16,11 @@ public class AspNetCoreIntegratedTestBase:IntegratedTestBase<TStartupModule>  wh
     protected AspNetCoreIntegratedTestBase()
     {
         var builder = CreateHostBuilder();
-
         _host = builder.Build();
         _host.Start();
-
         Server = _host.GetTestServer();
         Client = _host.GetTestClient();
-
         ServiceProvider = Server.Services;
-
         ServiceProvider.GetRequiredService<ITestServerAccessor>().Server = Server;
     }
     protected virtual IHostBuilder CreateHostBuilder()
@@ -33,21 +29,14 @@ public class AspNetCoreIntegratedTestBase:IntegratedTestBase<TStartupModule>  wh
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<TStartup>();
-           
+
             }).ConfigureServices(services =>
             {
                 services.AddScoped<IServer, TestServer>();
-            })
-            .ConfigureServices(ConfigureServices);
+            });
+       
     }
-    private static IWebHostBuilder UseAbpTestServer( IWebHostBuilder builder)
-    {
-        return builder.ConfigureServices(services =>
-        {
-      
-            services.AddScoped<IServer, TestServer>();
-        });
-    }
+
     protected virtual void ConfigureServices(HostBuilderContext context, IServiceCollection services)
     {
 

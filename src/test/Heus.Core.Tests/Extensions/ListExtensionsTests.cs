@@ -1,5 +1,5 @@
 ﻿namespace Heus.Core.Tests.Extensions;
-[TestClass]
+
 public class ListExtensionsTests
 {
     private List<string> _data = new() {
@@ -11,16 +11,16 @@ public class ListExtensionsTests
     };
 
 
-    [TestMethod]
-    [DataRow("a")]
+    [Theory]
+    [InlineData("a")]
     public void AddFirst_Test(string value)
     {
         var data = new List<string>(_data);
         data.AddFirst(value);
         data[0].ShouldBe(value);
     }
-    [TestMethod]
-    [DataRow("z")]
+    [Theory]
+    [InlineData("z")]
     public void AddLast_Test(string value)
     {
         var data = new List<string>(_data);

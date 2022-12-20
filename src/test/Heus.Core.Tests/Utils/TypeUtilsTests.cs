@@ -17,12 +17,12 @@ record TestRecord(int Prop1)
 {
 
 }
-[TestClass]
+
 public class TypeUtilsTests
 {
-    [TestMethod]
-    [DataRow(typeof(TestRecord), true)]
-    [DataRow(typeof(TypeUtilsTests), false)]
+    [Theory]
+    [InlineData(typeof(TestRecord), true)]
+    [InlineData(typeof(TypeUtilsTests), false)]
     public void IsRecordType(Type type, bool isRecord)
     {
         TypeUtils.IsRecordType(type).ShouldBe(isRecord);
@@ -30,7 +30,7 @@ public class TypeUtilsTests
 
 
 
-    [TestMethod]
+    [Fact]
     public void IsNullable_Property()
     {
         var props = typeof(TestTypeUtilsClass).GetTypeInfo().DeclaredProperties;
@@ -39,7 +39,7 @@ public class TypeUtilsTests
 
 
     }
-    [TestMethod]
+    [Fact]
     public void IsNullable_Type()
     {
         var props = typeof(TestTypeUtilsClass).GetTypeInfo().DeclaredProperties;
@@ -48,23 +48,23 @@ public class TypeUtilsTests
         TypeUtils.IsNullable(props.First(s => s.Name == nameof(TestTypeUtilsClass.NullableInt)).PropertyType).ShouldBe(true);
     }
 
-    [TestMethod]
-    [DataRow(typeof(List<string>), typeof(string))]
-    [DataRow(typeof(ArrayList), typeof(object))]
-    [DataRow(typeof(object), null)]
+    [Theory]
+    [InlineData(typeof(List<string>), typeof(string))]
+    [InlineData(typeof(ArrayList), typeof(object))]
+    [InlineData(typeof(object), null)]
     public void TryGetEnumerableType_Test(Type type, Type? itemType)
     {
         TypeUtils.GetEnumerableItemType(type).ShouldBe(itemType);
     }
-    [TestMethod]
-    [DataRow(typeof(List<string>), null)]
-    [DataRow(typeof(int), 0)]
-    [DataRow(typeof(object), null)]
+    [Theory]
+    [InlineData(typeof(List<string>), null)]
+    [InlineData(typeof(int), 0)]
+    [InlineData(typeof(object), null)]
     public void GetDefaultValue_Test(Type type, object? value)
     {
         TypeUtils.GetDefaultValue(type).ShouldBe(value);
     }
-    [TestMethod]
+    [Fact]
     public void IsDefaultValue_Test()
     {
         var a = 2;
@@ -75,24 +75,24 @@ public class TypeUtilsTests
         TypeUtils.IsDefaultValue(TestTypeUtilsClass.Instance).ShouldBe(true);
 
     }
-    [TestMethod]
-    [DataRow(typeof(List<string>), "List<string>")]
-    [DataRow(typeof(int), "number")]
-    [DataRow(typeof(bool), "boolean")]
-    [DataRow(typeof(Guid), "string")]
-    [DataRow(typeof(int?), "number?")]
+    [Theory]
+    [InlineData(typeof(List<string>), "List<string>")]
+    [InlineData(typeof(int), "number")]
+    [InlineData(typeof(bool), "boolean")]
+    [InlineData(typeof(Guid), "string")]
+    [InlineData(typeof(int?), "number?")]
     public void GetSimplifiedName_Test(Type type, string value)
     {
         TypeUtils.GetSimplifiedName(type).ShouldBe(value);
     }
-    [TestMethod]
+    [Fact]
     public void ConvertFromString_Test()
     {
         TypeUtils.ConvertFromString<bool>("True").ShouldBe(true);
         TypeUtils.ConvertFromString(typeof(bool), null).ShouldBeNull();
 
     }
-    [TestMethod]
+    [Fact]
     public void ConvertFrom_Test()
     {
         TypeUtils.ConvertFrom<bool>("True").ShouldBe(true);

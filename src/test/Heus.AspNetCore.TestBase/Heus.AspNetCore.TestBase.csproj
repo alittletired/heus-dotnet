@@ -9,6 +9,7 @@
 	  <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.1" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\..\framework\Heus.AspNetCore\Heus.AspNetCore.csproj" />
 	  <ProjectReference Include="..\Heus.TestBase\Heus.TestBase.csproj" />
 	</ItemGroup>
 

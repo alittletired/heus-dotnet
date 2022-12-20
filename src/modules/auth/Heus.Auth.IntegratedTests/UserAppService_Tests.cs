@@ -11,7 +11,7 @@ using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Auth.IntegratedTests;
-[TestClass]
+
 public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
 {
     protected readonly IRepository<User> _userRepository;
@@ -26,19 +26,15 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
     {
         _userService = GetRequiredService<IUserAdminAppService>();
         _userRepository = GetRequiredService<IRepository<User>>();
-        BeforeTest().ConfigureAwait(false).GetAwaiter().GetResult();
+       
     }
 
-    protected async Task BeforeTest()
+    protected override async Task BeforeTestAsync()
     {
-        await WithUnitOfWorkAsync(async () =>
-        {
+        if (!await _userRepository.ExistsAsync(s => s.Name == existsDto.Name))
             _existsUser = await _userService.CreateAsync(existsDto);
-        });
-
-
     }
-    [TestMethod]
+    [Fact]
     public async Task Create()
     {
         var dto = noExistsDto;
@@ -49,18 +45,18 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
         user.Password.ShouldNotBeNull();
         user.Password.ShouldNotBe("123456");
     }
-    [TestMethod]
+    [Fact]
     public async Task GetAsync()
     {
         var result = await _userService.GetAsync(_existsUser.Id);
         result.ShouldNotBeNull();
     }
-    [TestMethod]
+    [Fact]
     public void GetAsync_ThrowEntityNotFound()
     {
-        Assert.ThrowsExceptionAsync<EntityNotFoundException>(() => _userService.GetAsync(300));
+        Assert.ThrowsAsync<EntityNotFoundException>(() => _userService.GetAsync(300));
     }
-    [TestMethod]
+    [Fact]
     public async Task GetListAsync()
     {
         var dynamicQuery = new DynamicSearch<User>();
@@ -73,8 +69,8 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
 
 
 
-    [TestMethod]
-    [DataRow("13712345568")]
+    [Theory]
+    [InlineData("13712345568")]
     public async Task UpdateAsync(string phone)
     {
         var user = await _userService.GetAsync(_existsUser.Id);
@@ -93,7 +89,7 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
         updateUser.Phone.ShouldBe(phone);
 
     }
-    [TestMethod]
+    [Fact]
 
     public async Task DeleteAsync()
     {
@@ -101,4 +97,5 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
 
     }
 
+   
 }

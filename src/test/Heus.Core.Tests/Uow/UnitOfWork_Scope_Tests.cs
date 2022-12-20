@@ -3,7 +3,7 @@ using Heus.TestBase;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Core.Tests.Uow;
-[TestClass]
+
 public class UnitOfWork_Scope_Tests : IntegratedTestBase<CoreModuleInitializer>
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -12,7 +12,7 @@ public class UnitOfWork_Scope_Tests : IntegratedTestBase<CoreModuleInitializer>
     {
         _unitOfWorkManager = RootServiceProvider.GetRequiredService<IUnitOfWorkManager>(); ;
     }
-    [TestMethod]
+    [Fact]
     public async Task UnitOfWorkManager_Current_Should_Set_Correctly()
     {
         _unitOfWorkManager.Current.ShouldBeNull();
@@ -37,7 +37,7 @@ public class UnitOfWork_Scope_Tests : IntegratedTestBase<CoreModuleInitializer>
         _unitOfWorkManager.Current.ShouldBeNull();
     }
 
-    [TestMethod]
+    [Fact]
     public async Task Should_Create_Nested_UnitOfWorks()
     {
         _unitOfWorkManager.Current.ShouldBeNull();

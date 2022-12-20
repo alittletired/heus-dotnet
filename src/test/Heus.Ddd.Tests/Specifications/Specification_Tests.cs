@@ -11,7 +11,7 @@ public class TestEntity : EntityBase
 
 public class Specification_Tests
 {
-    [TestMethod]
+    [Fact]
     public void And_Test()
     {
 

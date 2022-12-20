@@ -1,11 +1,11 @@
 ﻿namespace Heus.Core.Tests.Extensions;
-[TestClass]
+
 public class CollectionExtensionsTests
 {
     private readonly ICollection<int> _emptyList = new List<int>();
     private readonly ICollection<int> _nullList = null!;
     private ICollection<int> TestList => new List<int>() { 1, 2, 3 };
-    [TestMethod]
+    [Fact]
     public void IsNullOrEmpty_Test()
     {
         _nullList.IsNullOrEmpty().ShouldBe(true);
@@ -13,14 +13,14 @@ public class CollectionExtensionsTests
         TestList.IsNullOrEmpty().ShouldBe(false);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryAdd_Test()
     {
         TestList.TryAdd(5).ShouldBe(true);
         TestList.TryAdd(3).ShouldBe(false);
     }
 
-    [TestMethod]
+    [Fact]
     public void ForEach_Test()
     {
         var list = TestList;

@@ -4,7 +4,7 @@ using Heus.Auth.Dtos;
 using Heus.TestBase;
 
 namespace Heus.Auth.IntegratedTests;
-[TestClass]
+
 public class AccountAppServiceTests : IntegratedTestBase<AuthTestModule>
 {
 
@@ -14,8 +14,8 @@ public class AccountAppServiceTests : IntegratedTestBase<AuthTestModule>
         _accountService = GetRequiredService<IAccountAdminAppService>();
     }
 
-    [TestMethod]
-    [DataRow("admin", "1", true)]
+    [Theory]
+    [InlineData("admin", "1", true)]
     public async Task LoginAsync(string account, string password, bool rememberMe)
     {
         var input = new LoginInput(account, password, rememberMe);
@@ -24,8 +24,8 @@ public class AccountAppServiceTests : IntegratedTestBase<AuthTestModule>
 
     }
 
-    // [TestMethod]
-    // [DataRow("admin", "1", true)]
+    // [Fact]
+    // [InlineData("admin", "1", true)]
     // public async Task RefreshTokenAsync(string account, string password, bool rememberMe)
     // {
     //     var input = new LoginInput(account, password, rememberMe);
@@ -34,8 +34,8 @@ public class AccountAppServiceTests : IntegratedTestBase<AuthTestModule>
     //     newToken.AccessToken.ShouldNotBeNullOrWhiteSpace();
     //     newToken.AccessToken.ShouldNotBe(result.AccessToken);
     // }
-    //  [TestMethod]
-    //  [DataRow("")]
+    //  [Fact]
+    //  [InlineData("")]
     // public Task SendVerifyCodeAsync(string phone)
     //  {
     //      

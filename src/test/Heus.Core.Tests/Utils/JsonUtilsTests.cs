@@ -1,13 +1,13 @@
 ﻿using Heus.Core.Utils;
 
 namespace Heus.Core.Tests.Utils;
-[TestClass]
+
 public class JsonUtilsTests
 {
     private const string _arrJson = """
 [1,2,3]
 """;
-    [TestMethod]
+    [Fact]
     public void Deserialize_Tests()
     {
 
