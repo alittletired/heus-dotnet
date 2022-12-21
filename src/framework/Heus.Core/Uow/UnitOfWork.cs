@@ -1,5 +1,4 @@
 using System.Data.Common;
-using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -10,7 +9,7 @@ internal class UnitOfWork : IUnitOfWork
     
     private bool _isDisposed;
     private bool _isCompleted;
-    private bool _isRolledback;
+    private bool _isRollback;
     
     public event EventHandler<UnitOfWorkFailedEventArgs>? Failed;
     protected List<Func<Task>> CompletedHandlers { get; } = new();
@@ -18,9 +17,9 @@ internal class UnitOfWork : IUnitOfWork
     public IServiceProvider ServiceProvider { get; }
     public UnitOfWorkOptions Options { get; }
     public Dictionary<string, DbContext> DbContexts { get; } = new();
-    private ILogger<UnitOfWork> _logger;
-    private Dictionary<string, DbTransaction> _dbTransactions = new();
-    public virtual void OnCompleted(Func<Task> handler)
+    private readonly ILogger<UnitOfWork> _logger;
+    private readonly Dictionary<string, DbTransaction> _dbTransactions = new();
+    public  void OnCompleted(Func<Task> handler)
     {
         CompletedHandlers.Add(handler);
     }
@@ -66,7 +65,7 @@ internal class UnitOfWork : IUnitOfWork
 
     public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
-        if (_isRolledback)
+        if (_isRollback)
         {
             return;
         }
@@ -98,11 +97,11 @@ internal class UnitOfWork : IUnitOfWork
 
     public async Task RollbackAsync(CancellationToken cancellationToken = default)
     {
-        if (_isRolledback)
+        if (_isRollback)
         {
             return;
         }
-        _isRolledback = true;
+        _isRollback = true;
         foreach (var dbTran in _dbTransactions)
         {
             try
@@ -149,7 +148,7 @@ internal class UnitOfWork : IUnitOfWork
         DbContexts.Values.ForEach(c => c.Dispose());
         if (!_isCompleted || _exception != null)
         {
-            Failed?.Invoke(this,new UnitOfWorkFailedEventArgs(this,_exception,_isRolledback));
+            Failed?.Invoke(this,new UnitOfWorkFailedEventArgs(this,_exception,_isRollback));
         }
 
         Disposed?.Invoke(this, new UnitOfWorkEventArgs(this));

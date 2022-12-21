@@ -13,7 +13,7 @@ internal class ChildUnitOfWork : IUnitOfWork
         return _parent.AddDbContext(key, func);
         }
    
-    public IServiceProvider ServiceProvider => _parent.ServiceProvider;
+  
     // public Task EnsureTransaction(DbContext dbContext) { 
     //     return _parent.EnsureTransaction(dbContext); 
     //     }

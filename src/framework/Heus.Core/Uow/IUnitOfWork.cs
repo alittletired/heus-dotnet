@@ -5,7 +5,7 @@ public interface IUnitOfWork :  IDisposable
 {
   
     UnitOfWorkOptions Options { get; }
-    IServiceProvider ServiceProvider { get; }
+  
     // Task EnsureTransaction(DbContext dbContext);
     event EventHandler<UnitOfWorkEventArgs>? Disposed;
     DbContext AddDbContext(string key, Func<string,DbContext> func);
