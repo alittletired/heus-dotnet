@@ -5,7 +5,7 @@ using Heus.Core.Uow;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 namespace Heus.TestBase;
-public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServiceProvider,IAsyncLifetime,IDisposable where TStartupModule : IModuleInitializer
+public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServiceProvider, IAsyncLifetime, IDisposable where TStartupModule : IModuleInitializer
 {
 
     /// <summary>
@@ -26,26 +26,29 @@ public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServicePr
         RootServiceProvider = serviceFactory.CreateServiceProvider(containerBuilder);
         TestServiceScope = RootServiceProvider.CreateScope();
         ServiceProvider = TestServiceScope.ServiceProvider;
-        // xunit框架每个方法都会从新实例化对象，没有其他合适的地方开启工作单元作用域
-        if (AutoCreateUow) { 
-            UnitOfWorkManager.Begin(); 
-            }
-      
+        // xunit框架每个方法都会从新实例化对象，工作单元作用域在IAsyncLifetime开启并不生效，故只能放在此处
+        if (AutoCreateUow)
+        {
+            UnitOfWorkManager.Begin();
+        }
+
     }
-    protected virtual Task BeforeTestAsync() {
+    protected virtual Task BeforeTestAsync()
+    {
         return Task.CompletedTask;
     }
     public async Task InitializeAsync()
     {
-        await _moduleManager.InitializeModulesAsync(ServiceProvider);
-       await WithUnitOfWorkAsync(BeforeTestAsync);
         
+        await _moduleManager.InitializeModulesAsync(ServiceProvider);
+        //超类的初始化逻辑只能在此处调用，原因是，超类的构造函数中赋值的字段还没执行，导致空引用
+        await WithUnitOfWorkAsync(BeforeTestAsync);
 
     }
 
     public Task DisposeAsync()
     {
-       
+
         return Task.CompletedTask;
     }
     protected virtual void AfterConfigureServices(IServiceCollection services)

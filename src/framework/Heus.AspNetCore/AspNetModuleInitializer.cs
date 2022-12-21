@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.AspNetCore;
 
@@ -38,7 +39,21 @@ public class AspNetModuleInitializer : ModuleInitializerBase
                 options.Filters.AddService(typeof(UowActionFilter));
 
 
-            }).AddControllersAsServices()
+            }).ConfigureApplicationPartManager(partManager =>
+            {
+                var moduleContainer = services.GetSingleton<IModuleManager>()!;
+                var moduleAssemblies = moduleContainer.Modules.Select(s => s.Assembly).Distinct();
+                foreach (var moduleAssembly in moduleAssemblies)
+                {
+                    if (!partManager.ApplicationParts.Any(p => p is AssemblyPart assemblyPart && assemblyPart.Assembly == moduleAssembly))
+                    {
+                        partManager.ApplicationParts.Add(new AssemblyPart(moduleAssembly));
+                    }
+
+                }
+
+            })
+            .AddControllersAsServices()
             .AddJsonOptions(options => { options.JsonSerializerOptions.ApplyDefaultSettings(); });
         services.AddHttpContextAccessor();
         services.AddOpenApi();
@@ -67,17 +82,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
     {
         var partManager = serviceProvider.GetRequiredService<ApplicationPartManager>();
         partManager.FeatureProviders.Add(new ServiceControllerFeatureProvider());
-        var moduleContainer =serviceProvider.GetRequiredService<IModuleManager>();
-        var moduleAssemblies = moduleContainer.Modules.Select(s => s.Assembly).Distinct();
-        foreach (var moduleAssembly in moduleAssemblies)
-        {
-            if (!partManager.ApplicationParts.Any(p => p is AssemblyPart assemblyPart && assemblyPart.Assembly == moduleAssembly))
-            {
-                partManager.ApplicationParts.Add(new AssemblyPart(moduleAssembly));
-            }
-
-        }
-
+   
         var app= serviceProvider.GetApplicationBuilder();
         IWebHostEnvironment env =serviceProvider.GetRequiredService<IWebHostEnvironment>();
         if (env.IsDevelopment())

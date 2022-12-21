@@ -1,7 +1,7 @@
 using Heus.Ddd.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Heus.Auth.Entities;
+namespace Heus.Auth.Domain;
 [Table("auth_role")]
 public class Role : AuditEntity,ISoftDelete
 {

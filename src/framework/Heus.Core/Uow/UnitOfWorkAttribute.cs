@@ -2,13 +2,13 @@ using System.Data;
 
 namespace Heus.Core.Uow;
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Interface)]
-public class UnitOfWorkAttribute:Attribute, IUnitOfWorkOptions
+public class UnitOfWorkAttribute:Attribute
 {
     /// <summary>
     /// Is this UOW transactional?
     /// Uses default value if not supplied.
     /// </summary>
-    public bool IsTransactional { get; set; }
+    public bool? IsTransactional { get; set; }
     /// <summary>
     /// Timeout of UOW As milliseconds.
     /// Uses default value if not supplied.
@@ -27,7 +27,10 @@ public class UnitOfWorkAttribute:Attribute, IUnitOfWorkOptions
     public bool IsDisabled { get; set; }
     public virtual void SetOptions(UnitOfWorkOptions options)
     {
-        options.IsTransactional= IsTransactional;
+        if (IsTransactional.HasValue)
+        {
+            options.IsTransactional = IsTransactional.Value;
+        }
 
         if (Timeout.HasValue)
         {

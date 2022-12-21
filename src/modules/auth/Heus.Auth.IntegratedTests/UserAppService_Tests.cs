@@ -1,6 +1,6 @@
 using Heus.Auth.Application;
+using Heus.Auth.Domain;
 using Heus.Auth.Dtos;
-using Heus.Auth.Entities;
 using Heus.Core.Uow;
 using Heus.Ddd.Domain;
 using Heus.Ddd.Dtos;
@@ -32,7 +32,9 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
     protected override async Task BeforeTestAsync()
     {
         if (!await _userRepository.ExistsAsync(s => s.Name == existsDto.Name))
+        {
             _existsUser = await _userService.CreateAsync(existsDto);
+        }
     }
     [Fact]
     public async Task Create()

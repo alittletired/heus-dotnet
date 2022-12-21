@@ -23,6 +23,9 @@
     <Generated Remove="Api\**" />
     <None Remove="Api\**" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Entities\" />
+  </ItemGroup>
   <Target Name="CleanGenerated">
     <Delete Files="@(Generated)" />
   </Target>

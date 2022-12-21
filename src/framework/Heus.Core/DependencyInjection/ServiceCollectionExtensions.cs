@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 
 namespace Heus.Core.DependencyInjection;
 public static class ServiceCollectionExtensions
@@ -15,6 +14,11 @@ public static class ServiceCollectionExtensions
        optionActions.ForEach(s=>s?.Configure(options));
        postOptionActions.ForEach(s=>s?.PostConfigure(Options.DefaultName,options));
        return options;
+    }
+    public static T? GetSingleton<T>(this IServiceCollection services) where T : class
+    {
+        var serviceDescriptor = services.FirstOrDefault(s => s.ServiceType == typeof(T));
+        return (T?) serviceDescriptor?.ImplementationInstance; 
     }
 }
 

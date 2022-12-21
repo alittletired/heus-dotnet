@@ -1,6 +1,6 @@
 using Heus.Core.Utils;
 
-namespace Heus.Auth.Entities;
+namespace Heus.Auth.Domain;
 
 using Heus.Core.ObjectMapping;
 using Heus.Core.Security;

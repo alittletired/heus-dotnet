@@ -1,7 +1,7 @@
 ﻿using Heus.Ddd.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Heus.Auth.Entities;
+namespace Heus.Auth.Domain;
 
 [Index(nameof(ResourceId))]
 [Table("auth_action_right")]

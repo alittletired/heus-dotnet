@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Heus.Ddd.Entities;
 
-namespace Heus.Auth.Entities;
+namespace Heus.Auth.Domain;
 [Table("auth_resource")]
 [Index(nameof(Path), IsUnique = true)]
 [Index(nameof(Code), IsUnique = true)]

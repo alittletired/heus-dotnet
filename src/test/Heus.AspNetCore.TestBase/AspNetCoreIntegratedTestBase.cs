@@ -1,49 +1,23 @@
-﻿using Heus.Core.DependencyInjection;
-using Heus.TestBase;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.TestHost;
-
+﻿
+using System.Net;
+using Heus.Core.DependencyInjection;
+using Heus.Core.Http;
+using Microsoft.AspNetCore.Mvc.Testing;
 namespace Heus.AspNetCore.TestBase;
 
-public abstract class AspNetCoreIntegratedTestBase<TStartup> : TestBaseWithServiceProvider, IDisposable where TStartup : class
+public abstract class AspNetCoreIntegratedTestBase<TStartup,TTestModule> : WebApplicationFactory<TStartup> where TStartup : class
 {
-    protected TestServer Server { get; }
-
-    protected HttpClient Client { get; }
-
-    private readonly IHost _host;
-    protected AspNetCoreIntegratedTestBase()
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        var builder = CreateHostBuilder();
-        _host = builder.Build();
-        _host.Start();
-        Server = _host.GetTestServer();
-        Client = _host.GetTestClient();
-        ServiceProvider = Server.Services;
-        ServiceProvider.GetRequiredService<ITestServerAccessor>().Server = Server;
+        ModuleCreateOptions.AdditionalModules.Add(typeof(TTestModule));
+        builder.UseEnvironment("Testing");
+        base.ConfigureWebHost(builder);
     }
-    protected virtual IHostBuilder CreateHostBuilder()
+    public HttpClient HttpClient => CreateClient();
+
+
+    public T GetServiceProxy<T>(string remoteServiceName) where T : IRemoteService
     {
-        return Host.CreateDefaultBuilder()
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<TStartup>();
-
-            }).ConfigureServices(services =>
-            {
-                services.AddScoped<IServer, TestServer>();
-            });
-       
-    }
-
-    protected virtual void ConfigureServices(HostBuilderContext context, IServiceCollection services)
-    {
-
-    }
-
-    public void Dispose()
-    {
-        _host.Dispose();
+        return Services.GetRequiredService<RemoteServiceProxyFactory>().CreateProxy<T>(remoteServiceName);
     }
 }

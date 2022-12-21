@@ -8,5 +8,4 @@ global using Microsoft.EntityFrameworkCore;
 
 global using Heus.Auth.Domain;
 global using Heus.Auth.Dtos;
-global using Heus.Auth.Entities;
 
