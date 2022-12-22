@@ -7,12 +7,9 @@ namespace Heus.Core.JsonConverters
     {
         public override long Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return reader.TokenType switch
-            {
-                JsonTokenType.Number when reader.TryGetInt64(out var l) => l,
-                JsonTokenType.Number => (long)reader.GetDouble(),
-                JsonTokenType.String => long.Parse(reader.GetString()!),
-                _ => throw new InvalidCastException(reader.TokenType.ToString())
+            return reader.TokenType switch {
+                JsonTokenType.Number => reader.GetInt64(),
+                _ => long.Parse(reader.GetString()!)
             };
         }
 

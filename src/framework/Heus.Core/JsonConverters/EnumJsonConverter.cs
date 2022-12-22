@@ -11,8 +11,7 @@ public class EnumJsonConverter<T>: JsonConverter<T> where T:EnumClass<T>
         return reader.TokenType switch
         {
             JsonTokenType.Number =>EnumClass<T>.FromValue(reader.GetInt32()),
-            JsonTokenType.String => EnumClass<T>.FromName(reader.GetString()!),
-            _ => throw new InvalidCastException(reader.TokenType.ToString())
+            _ =>  EnumClass<T>.FromName(reader.GetString()!)
         };
     }
 

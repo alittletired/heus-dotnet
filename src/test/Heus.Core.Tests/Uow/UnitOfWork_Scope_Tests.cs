@@ -12,6 +12,17 @@ public class UnitOfWork_Scope_Tests : IntegratedTestBase<CoreModuleInitializer>
     {
         _unitOfWorkManager = RootServiceProvider.GetRequiredService<IUnitOfWorkManager>(); ;
     }
+
+    [Fact]
+    public  void UnitOfWork_Dispose_Twice()
+    {
+        var disposed = false;
+        var uow = _unitOfWorkManager.Begin(ServiceProvider);
+        uow.Disposed += (sender, args) => disposed = true;
+        uow.Dispose();
+        uow.Dispose();
+        disposed.ShouldBeTrue();
+    }
     [Fact]
     public async Task UnitOfWorkManager_Current_Should_Set_Correctly()
     {

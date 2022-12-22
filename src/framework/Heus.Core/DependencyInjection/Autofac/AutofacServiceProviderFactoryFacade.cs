@@ -7,11 +7,11 @@ public class AutofacServiceProviderFactoryFacade : IServiceProviderFactory<Conta
 {
     private static void ConfigurationContainerBuilder(ContainerBuilder builder)
     {
-        builder.ComponentRegistryBuilder.Registered += (sender, args) =>
+        builder.ComponentRegistryBuilder.Registered += (_, args) =>
         {
             // The PipelineBuilding event fires just before the pipeline is built, and
             // middleware can be added inside it.
-            args.ComponentRegistration.PipelineBuilding += (sender2, pipeline) =>
+            args.ComponentRegistration.PipelineBuilding += (_, pipeline) =>
             {
                 pipeline.Use(new AutowiredPropertyMiddleware());
             };
@@ -24,11 +24,7 @@ public class AutofacServiceProviderFactoryFacade : IServiceProviderFactory<Conta
 
         return builder;
     }
-    private bool CanPropertiesAutowired(Type type)
-    {
-        return type.GetTypeInfo().GetRuntimeProperties()
-            .Any(p => p.GetCustomAttribute(typeof(AutowiredAttribute), true) != null);
-    }
+
 
     public IServiceProvider CreateServiceProvider(ContainerBuilder containerBuilder)
     {
