@@ -20,7 +20,7 @@ public class UnitOfWork_Events_Tests : IntegratedTestBase<CoreModuleInitializer>
         var completed = false;
         var disposed = false;
 
-        using (var uow = _unitOfWorkManager.Begin())
+        using (var uow = _unitOfWorkManager.Begin(ServiceProvider))
         {
             uow.OnCompleted(() =>
             {
@@ -43,9 +43,9 @@ public class UnitOfWork_Events_Tests : IntegratedTestBase<CoreModuleInitializer>
         var completed = false;
         var disposed = false;
 
-        using (var uow = _unitOfWorkManager.Begin())
+        using (var uow = _unitOfWorkManager.Begin(ServiceProvider))
         {
-            using (var childUow = _unitOfWorkManager.Begin())
+            using (var childUow = _unitOfWorkManager.Begin(ServiceProvider))
             {
                 childUow.OnCompleted(() =>
                 {
@@ -80,7 +80,7 @@ public class UnitOfWork_Events_Tests : IntegratedTestBase<CoreModuleInitializer>
         var failed = false;
         var disposed = false;
 
-        using (var uow = _unitOfWorkManager.Begin())
+        using (var uow = _unitOfWorkManager.Begin(ServiceProvider))
         {
             uow.OnCompleted(() =>
             {
@@ -106,7 +106,7 @@ public class UnitOfWork_Events_Tests : IntegratedTestBase<CoreModuleInitializer>
 
         Assert.Throws<Exception>(new Action(() =>
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            using (var uow = _unitOfWorkManager.Begin(ServiceProvider))
             {
                 uow.OnCompleted(() =>
                 {
@@ -135,7 +135,7 @@ public class UnitOfWork_Events_Tests : IntegratedTestBase<CoreModuleInitializer>
         var failed = false;
         var disposed = false;
 
-        using (var uow = _unitOfWorkManager.Begin())
+        using (var uow = _unitOfWorkManager.Begin(ServiceProvider))
         {
             uow.OnCompleted(() =>
             {

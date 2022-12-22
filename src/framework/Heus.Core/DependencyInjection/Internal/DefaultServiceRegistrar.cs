@@ -40,11 +40,6 @@ internal class DefaultServiceRegistrar : IServiceRegistrar {
             {
                 services.Replace(descriptor);
             }
-            else if (dependencyAttribute?.TryRegister == true)
-            {
-                services.TryAdd(descriptor);
-
-            }
             else
             {
                 services.Add(descriptor);

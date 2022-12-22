@@ -25,6 +25,7 @@ public class ReflectionUtilsTests
     [InlineData("A", 1)]
     [InlineData("B.C", 4)]
     [InlineData("B.D.E", "e")]
+    [InlineData("B.D.E.F", null)]
     public void GetValueByPathTests(string path, object value)
     {
         ReflectionUtils.GetValueByPath(_obj, path).ShouldBe(value);

@@ -79,15 +79,7 @@ public static class ReflectionUtils
     {
         var value = obj;
         var currentType = obj.GetType();
-        var objectPath = currentType.FullName;
         var absolutePropertyPath = propertyPath;
-        if (objectPath != null && absolutePropertyPath.StartsWith(objectPath))
-        {
-
-            absolutePropertyPath = absolutePropertyPath.Replace(objectPath + ".", "");
-
-        }
-
         foreach (var propertyName in absolutePropertyPath.Split('.'))
         {
             var property = currentType.GetProperty(propertyName);

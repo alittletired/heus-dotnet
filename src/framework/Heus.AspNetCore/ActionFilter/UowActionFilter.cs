@@ -27,7 +27,7 @@ internal class UowActionFilter : IAsyncActionFilter, IScopedDependency
         }
 
         var options = CreateOptions(context, unitOfWorkAttr);
-        using var uow = _unitOfWorkManager.Begin(options);
+        using var uow = _unitOfWorkManager.Begin(context.HttpContext.RequestServices, options);
         var result = await next();
         if (Succeed(result))
         {

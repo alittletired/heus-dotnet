@@ -12,12 +12,14 @@ internal class DefaultDbContextProvider : IDbContextProvider, IScopedDependency
 {
     private readonly IOptions<DddOptions> _options;
     private readonly IUnitOfWorkManager _unitOfWorkManager;
+    private readonly IServiceProvider _serviceProvider;
     public DefaultDbContextProvider(IOptions<DddOptions> options
-        , IUnitOfWorkManager unitOfWorkManager)
+        , IUnitOfWorkManager unitOfWorkManager,
+IServiceProvider serviceProvider)
     {
         _options = options;
         _unitOfWorkManager = unitOfWorkManager;
-
+        _serviceProvider = serviceProvider;
     }
     private static DbContext CreateDbContextInternal<TContext>(IServiceProvider serviceProvider)
         where TContext : DbContext
@@ -40,7 +42,7 @@ internal class DefaultDbContextProvider : IDbContextProvider, IScopedDependency
         return _unitOfWorkManager.Current.AddDbContext(dbContextType.Name, (key) =>
         {
             var activator = _createDbContext.MakeGenericMethod(dbContextType);
-            var dbContext = activator.Invoke(null, new object[] { _unitOfWorkManager.Current.ServiceProvider });
+            var dbContext = activator.Invoke(null, new object[] { _serviceProvider });
            ArgumentNullException.ThrowIfNull(dbContext); 
             return (DbContext)dbContext;
         });

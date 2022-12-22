@@ -17,12 +17,12 @@ public class UnitOfWork_Scope_Tests : IntegratedTestBase<CoreModuleInitializer>
     {
         _unitOfWorkManager.Current.ShouldBeNull();
 
-        using (var uow1 = _unitOfWorkManager.Begin())
+        using (var uow1 = _unitOfWorkManager.Begin(ServiceProvider))
         {
             _unitOfWorkManager.Current.ShouldNotBeNull();
             _unitOfWorkManager.Current.ShouldBe(uow1);
 
-            using (var uow2 = _unitOfWorkManager.Begin())
+            using (var uow2 = _unitOfWorkManager.Begin(ServiceProvider))
             {
                 _unitOfWorkManager.Current.ShouldNotBeNull();
                 await uow2.CompleteAsync();
@@ -42,12 +42,12 @@ public class UnitOfWork_Scope_Tests : IntegratedTestBase<CoreModuleInitializer>
     {
         _unitOfWorkManager.Current.ShouldBeNull();
 
-        using (var uow1 = _unitOfWorkManager.Begin())
+        using (var uow1 = _unitOfWorkManager.Begin(ServiceProvider))
         {
             _unitOfWorkManager.Current.ShouldNotBeNull();
             _unitOfWorkManager.Current.ShouldBe(uow1);
 
-            using (var uow2 = _unitOfWorkManager.Begin(requiresNew: true))
+            using (var uow2 = _unitOfWorkManager.Begin( ServiceProvider,requiresNew: true))
             {
                 _unitOfWorkManager.Current.ShouldNotBeNull();
 

@@ -29,7 +29,7 @@ public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServicePr
         // xunit框架每个方法都会从新实例化对象，工作单元作用域在IAsyncLifetime开启并不生效，故只能放在此处
         if (AutoCreateUow)
         {
-            UnitOfWorkManager.Begin();
+            UnitOfWorkManager.Begin(ServiceProvider);
         }
 
     }
@@ -73,7 +73,7 @@ public abstract class IntegratedTestBase<TStartupModule> : TestBaseWithServicePr
 
     protected async Task<TResult> WithUnitOfWorkAsync<TResult>(UnitOfWorkOptions options, Func<Task<TResult>> func)
     {
-        using (var uow = UnitOfWorkManager.Begin(options, true))
+        using (var uow = UnitOfWorkManager.Begin(ServiceProvider, options, true))
         {
             var result = await func();
             await uow.CompleteAsync();

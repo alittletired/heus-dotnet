@@ -2,12 +2,8 @@
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Heus.Core.Utils;
-
 namespace Heus.Auth;
-
 [DependsOn(typeof(DddModuleInitializer))]
 public class AuthModuleInitializer : ModuleInitializerBase
 {
@@ -27,9 +23,9 @@ public class AuthModuleInitializer : ModuleInitializerBase
           //    await authDbContext.Database.EnsureDeletedAsync();
           
       //  });
-        await serviceProvider.PerformUowTask(async scope =>
+        await serviceProvider.PerformUowTask(async (sp) =>
         {
-            var dbContext = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+            var dbContext = sp.GetRequiredService<AuthDbContext>();
             var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
             await databaseCreator.EnsureCreatedAsync();
 
@@ -37,11 +33,11 @@ public class AuthModuleInitializer : ModuleInitializerBase
             //  await authDbContext.Database.EnsureDeletedAsync();
             
         });
-        await serviceProvider.PerformUowTask(async scope =>
+        await serviceProvider.PerformUowTask(async sp =>
         {
            
-            await SeedUsers(scope.ServiceProvider);
-            await SeedRoles(scope.ServiceProvider);
+            await SeedUsers(sp);
+            await SeedRoles(sp);
         });
 
     }

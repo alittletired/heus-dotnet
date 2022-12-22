@@ -26,7 +26,7 @@ public abstract class TestBaseWithServiceProvider
 
     protected async Task WithUnitOfWorkAsync(UnitOfWorkOptions options, Func<Task> action)
     {
-        using (var uow = UnitOfWorkManager.Begin(options, true))
+        using (var uow = UnitOfWorkManager.Begin(ServiceProvider,options, true))
         {
             await action();
             await uow.CompleteAsync();
