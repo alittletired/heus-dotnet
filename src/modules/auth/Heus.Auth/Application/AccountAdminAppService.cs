@@ -41,7 +41,8 @@ internal class AccountAdminAppService : AdminApplicationService, IAccountAdminAp
         {
             throw new BusinessException(err);
         }
-        var principal = _tokenProvider.CreatePrincipal(Mapper.Map<ICurrentUser>(user), TokenType.Admin, input.RememberMe);
+
+        var principal = _tokenProvider.CreatePrincipal(Mapper.Map<ICurrentUser>(user),  input.RememberMe);
         _currentPrincipalAccessor.Change(principal);
         var unixTimestamp = principal.FindClaimValue<long>(JwtRegisteredClaimNames.Exp);
         LoginResult authToken = new(user.Id, user.NickName, _tokenProvider.CreateToken(principal), unixTimestamp!.Value);

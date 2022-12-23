@@ -5,7 +5,10 @@ using Heus.Core.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 namespace Heus.AspNetCore.TestBase;
 
-public abstract class AspNetCoreIntegratedTestBase<TStartup,TTestModule> : WebApplicationFactory<TStartup> where TStartup : class
+public interface IWebApplicationFactory {
+    IServiceProvider Services { get; }
+    }
+public  class WebApplicationFactory<TStartup,TTestModule> : WebApplicationFactory<TStartup>, IWebApplicationFactory where TStartup : class
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -16,7 +19,7 @@ public abstract class AspNetCoreIntegratedTestBase<TStartup,TTestModule> : WebAp
     public HttpClient HttpClient => CreateClient();
 
 
-    public T GetServiceProxy<T>(string remoteServiceName) where T : IRemoteService
+    public T GetServiceProxy<T>(string? remoteServiceName=null) where T : IRemoteService
     {
         return Services.GetRequiredService<RemoteServiceProxyFactory>().CreateProxy<T>(remoteServiceName);
     }

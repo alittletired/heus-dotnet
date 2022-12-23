@@ -4,6 +4,6 @@ namespace Heus.Core.Security;
 
 public interface ITokenProvider 
 {
-    ClaimsPrincipal CreatePrincipal(ICurrentUser user, TokenType tokenType, bool rememberMe=false);
+    ClaimsPrincipal CreatePrincipal(ICurrentUser user,  bool rememberMe=false);
     string CreateToken(ClaimsPrincipal principal);
 }

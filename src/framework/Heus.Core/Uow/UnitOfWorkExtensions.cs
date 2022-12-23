@@ -14,4 +14,14 @@ public static class UnitOfWorkExtensions
         await uow.CompleteAsync();
 
     }
+    public async static Task PerformUowTask(this IServiceProvider serviceProvider, Func< Task> task)
+    {
+
+        var manager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
+        //集成测试会开启作用域，导致此处的工作单位为childunitofwork无效，故需创建新的作用域
+        using var uow = manager.Begin(serviceProvider, requiresNew: true);
+        await task();
+        await uow.CompleteAsync();
+
+    }
 }

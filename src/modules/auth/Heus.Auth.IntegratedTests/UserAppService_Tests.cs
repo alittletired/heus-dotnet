@@ -1,25 +1,22 @@
 using Heus.Auth.Application;
 using Heus.Auth.Domain;
 using Heus.Auth.Dtos;
-using Heus.Core.Uow;
 using Heus.Ddd.Domain;
 using Heus.Ddd.Dtos;
-
 using Heus.Ddd.Repositories;
 using Heus.TestBase;
-using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Auth.IntegratedTests;
 
 public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
 {
-    protected readonly IRepository<User> _userRepository;
+    private readonly IRepository<User> _userRepository;
     private readonly IUserAdminAppService _userService;
     public const string NotExistName = "test2";
     public const string ExistName = "test1";
-    private UserCreateDto existsDto = new() { PlaintextPassword = "123456", Name = "test1", NickName = "test1", Phone = "18912345678" };
-    private UserCreateDto noExistsDto = new() { PlaintextPassword = "123456", Name = "test2", NickName = "test2", Phone = "18922345678" };
+    private readonly UserCreateDto _existsDto = new() { PlaintextPassword = "123456", Name = "test1", NickName = "test1", Phone = "18912345678" };
+    private readonly UserCreateDto _noExistsDto = new() { PlaintextPassword = "123456", Name = "test2", NickName = "test2", Phone = "18922345678" };
     private User _existsUser = null!;
 
     public UserAppServiceTests()
@@ -29,17 +26,17 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
        
     }
 
-    protected override async Task BeforeTestAsync()
+    protected async override Task BeforeTestAsync()
     {
-        if (!await _userRepository.ExistsAsync(s => s.Name == existsDto.Name))
+        if (!await _userRepository.ExistsAsync(s => s.Name == _existsDto.Name))
         {
-            _existsUser = await _userService.CreateAsync(existsDto);
+            _existsUser = await _userService.CreateAsync(_existsDto);
         }
     }
     [Fact]
-    public async Task Create()
+    public async Task Create_Test()
     {
-        var dto = noExistsDto;
+        var dto = _noExistsDto;
         await WithUnitOfWorkAsync(() => _userService.CreateAsync(dto));
         var user = await _userRepository.Query.FirstAsync(s => s.Name == dto.Name);
         user.NickName.ShouldBe(dto.NickName);
@@ -48,7 +45,7 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
         user.Password.ShouldNotBe("123456");
     }
     [Fact]
-    public async Task GetAsync()
+    public async Task GetAsync_Test()
     {
         var result = await _userService.GetAsync(_existsUser.Id);
         result.ShouldNotBeNull();
@@ -59,12 +56,12 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
         Assert.ThrowsAsync<EntityNotFoundException>(() => _userService.GetAsync(300));
     }
     [Fact]
-    public async Task GetListAsync()
+    public async Task GetListAsync_Test()
     {
         var dynamicQuery = new DynamicSearch<User>();
         var result = await _userService.SearchAsync(dynamicQuery);
         result.Total.ShouldBeGreaterThan(0);
-        dynamicQuery.Filters[nameof(User.Name)] = new DynamicSearchFilter("eq", "admin1", null);
+        dynamicQuery.AddEqualFilter(s => s.Name, "admin1");
         var result2 = await _userService.SearchAsync(dynamicQuery);
         result2.Total.ShouldBe(0);
     }
@@ -73,7 +70,7 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
 
     [Theory]
     [InlineData("13712345568")]
-    public async Task UpdateAsync(string phone)
+    public async Task UpdateAsync_Test(string phone)
     {
         var user = await _userService.GetAsync(_existsUser.Id);
 
@@ -93,7 +90,7 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
     }
     [Fact]
 
-    public async Task DeleteAsync()
+    public async Task DeleteAsync_Test()
     {
         await _userService.DeleteAsync(_existsUser.Id);
 

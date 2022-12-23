@@ -31,8 +31,9 @@ public class RemoteServiceProxyFactory : ISingletonDependency
     {
         return _httpClientFactory.CreateClient(remoteServiceName);
     }
-    public T CreateProxy<T>(string remoteServiceName) where T : IRemoteService
+    public T CreateProxy<T>(string? remoteServiceName=null) where T : IRemoteService
     {
+        var serviceName=  remoteServiceName ?? typeof(T).Assembly.FullName;
         var key = $"{remoteServiceName}:{typeof(T).FullName}";
         var proxy = _proxies.GetOrAdd(key, _ =>
         {
@@ -41,7 +42,7 @@ public class RemoteServiceProxyFactory : ISingletonDependency
             var serviceProxy = proxy as RemoteServiceProxy ?? throw new InvalidCastException("无法创建代理");
             serviceProxy.ProxyFactory = this;
             serviceProxy.ProxyType= typeof(T);
-            serviceProxy.RemoteServiceName = remoteServiceName;
+            serviceProxy.RemoteServiceName = serviceName!;
             return proxy;
         });
         return (T)proxy;

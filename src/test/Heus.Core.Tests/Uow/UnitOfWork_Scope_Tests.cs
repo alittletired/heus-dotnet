@@ -10,7 +10,7 @@ public class UnitOfWork_Scope_Tests : IntegratedTestBase<CoreModuleInitializer>
     protected override bool AutoCreateUow => false;
     public UnitOfWork_Scope_Tests()
     {
-        _unitOfWorkManager = RootServiceProvider.GetRequiredService<IUnitOfWorkManager>(); ;
+        _unitOfWorkManager = UnitOfWorkManager;
     }
 
     [Fact]

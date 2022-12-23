@@ -17,7 +17,7 @@ internal class JwtTokenProvider : ITokenProvider, ISingletonDependency
         _jwtOptions = jwtOptions;
     }
 
-    public ClaimsPrincipal CreatePrincipal(ICurrentUser user, TokenType tokenType, bool rememberMe = false)
+    public ClaimsPrincipal CreatePrincipal(ICurrentUser user,  bool rememberMe = false)
     {
         var expirationMinutes = _jwtOptions.Value.ExpirationMinutes;
         if (rememberMe)
@@ -32,7 +32,7 @@ internal class JwtTokenProvider : ITokenProvider, ISingletonDependency
               //令牌颁发者。表示该令牌由谁创建
              new(JwtRegisteredClaimNames.Iss,  _jwtOptions.Value.Issuer),
                //令牌的受众，分大小写的字符串数组
-             new(JwtRegisteredClaimNames.Aud, tokenType.ToString()),
+             new(JwtRegisteredClaimNames.Aud, _jwtOptions.Value.Audience),
                 //Subject Identifier，iss提供的终端用户的标识，在iss范围内唯一，最长为255个ASCII个字符，区分大小写
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()!),
               //Expiration time，令牌的过期时间戳。超过此时间的token会作废， 该声明是一个整数，是1970年1月1日以来的秒数

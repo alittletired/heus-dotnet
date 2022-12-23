@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Heus.AspNetCore.TestBase;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Heus.AspNetCore.Tests.ActionFilter;
-public class UnitOfWorkMiddleware_Tests : IClassFixture<AspNetCoreIntegratedTest>
+public class UnitOfWorkMiddleware_Tests : WebIntegratedTestBase<AspNetWebApplicationFactory>
 {
-    private readonly AspNetCoreIntegratedTest _factory;
-    public UnitOfWorkMiddleware_Tests(AspNetCoreIntegratedTest factory)
+  
+    public UnitOfWorkMiddleware_Tests(AspNetWebApplicationFactory factory):base(factory)
     {
-        _factory = factory;
+  
     }
     [Fact]
     public async Task Get_Actions_Should_Not_Be_Transactional()

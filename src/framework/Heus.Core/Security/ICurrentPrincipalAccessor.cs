@@ -6,5 +6,5 @@ public interface ICurrentPrincipalAccessor
 {
     ClaimsPrincipal? Principal { get; }
 
-    IDisposable Change(ClaimsPrincipal principal);
+    IDisposable Change(ClaimsPrincipal? principal);
 }

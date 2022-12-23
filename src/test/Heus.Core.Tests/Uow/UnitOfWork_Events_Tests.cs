@@ -12,7 +12,7 @@ public class UnitOfWork_Events_Tests : IntegratedTestBase<CoreModuleInitializer>
     public UnitOfWork_Events_Tests()
     {
 
-        _unitOfWorkManager = RootServiceProvider.GetRequiredService<IUnitOfWorkManager>(); ;
+        _unitOfWorkManager = UnitOfWorkManager;
     }
     [Fact]
     public async Task Should_Trigger_Complete_On_Success()
