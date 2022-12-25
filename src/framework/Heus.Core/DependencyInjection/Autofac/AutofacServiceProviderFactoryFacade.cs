@@ -5,8 +5,15 @@ using Autofac.Extensions.DependencyInjection;
 namespace Heus.Core.DependencyInjection.Autofac;
 public class AutofacServiceProviderFactoryFacade : IServiceProviderFactory<ContainerBuilder>
 {
-    private static void ConfigurationContainerBuilder(ContainerBuilder builder)
+    private readonly Action<ContainerBuilder>? _configurationAction;
+    private readonly AutofacServiceProviderFactory _factory;
+    public AutofacServiceProviderFactoryFacade(Action<ContainerBuilder>? configurationAction=null) {
+        _configurationAction= configurationAction;
+        _factory = new AutofacServiceProviderFactory(ConfigurationContainerBuilder);
+    }
+    private  void ConfigurationContainerBuilder(ContainerBuilder builder)
     {
+        _configurationAction?.Invoke(builder);
         builder.ComponentRegistryBuilder.Registered += (_, args) =>
         {
             // The PipelineBuilding event fires just before the pipeline is built, and
@@ -17,7 +24,7 @@ public class AutofacServiceProviderFactoryFacade : IServiceProviderFactory<Conta
             };
         };
     }
-    private readonly AutofacServiceProviderFactory _factory = new AutofacServiceProviderFactory(ConfigurationContainerBuilder);
+    
     public ContainerBuilder CreateBuilder(IServiceCollection services)
     {
         var builder = _factory.CreateBuilder(services);

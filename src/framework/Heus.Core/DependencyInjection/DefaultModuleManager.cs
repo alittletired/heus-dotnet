@@ -62,11 +62,7 @@ public class DefaultModuleManager : IModuleManager
 
     public void AddAutofac(IHostBuilder host)
     {
-        host.UseServiceProviderFactory(new AutofacServiceProviderFactory(containerBuilder =>
-        {
-            //containerBuilder.RegisterServiceMiddlewareSource(new ServiceInjectMethodMiddlewareSource());
-        }));
-
+        host.UseServiceProviderFactory(new AutofacServiceProviderFactoryFacade());
     }
 
     public async Task InitializeModulesAsync(IServiceProvider serviceProvider)

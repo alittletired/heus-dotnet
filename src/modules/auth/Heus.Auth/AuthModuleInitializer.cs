@@ -15,7 +15,7 @@ public class AuthModuleInitializer : ModuleInitializerBase
 
     }
 
-    public override async Task InitializeAsync(IServiceProvider serviceProvider)
+    public async override Task InitializeAsync(IServiceProvider serviceProvider)
     {
       //  await serviceProvider.PerformUowTask(async scope =>
       //  {

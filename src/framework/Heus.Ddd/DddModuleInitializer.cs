@@ -71,11 +71,13 @@ public class DddModuleInitializer : ModuleInitializerBase
         {
             var repoType = type.GetTypeInfo().GetInterfaces().FirstOrDefault(s =>
                 s.IsGenericType && s.GetGenericTypeDefinition() == typeof(IRepository<>));
-            if (repoType != null)
+            if (repoType == null)
             {
-                var entityType = repoType.GenericTypeArguments[0];
-                customRepositories.Add(entityType, type);
+                return;
             }
+
+            var entityType = repoType.GenericTypeArguments[0];
+            customRepositories.Add(entityType, type);
         };
         services.Configure<DddOptions>(options =>
         {

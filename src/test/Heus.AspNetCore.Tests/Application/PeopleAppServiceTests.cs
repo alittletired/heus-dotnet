@@ -36,12 +36,9 @@ public class PeopleAppServiceTests: WebIntegratedTestBase<AspNetWebApplicationFa
         search.AddEqualFilter(s => s.Name, "test1");
         var result2 = await _peopleAppService.SearchAsync(search);
         result2.Total.ShouldBe(1);
-         search.AddEqualFilter(s => s.Name, "test1_notexist");
+         search.AddEqualFilter(s => s.Phone, "notexist");
         var result3 = await _peopleAppService.SearchAsync(search);
-        result2.Total.ShouldBe(0);
+        result3.Total.ShouldBe(0);
     }
-
-
-
 
 }

@@ -1,4 +1,4 @@
-using Heus.Enroll.Web;
+using Heus.AspNetCore.TestApp;
 
 await WebApplication.CreateBuilder(args)
     .RunWithModuleAsync<TestAppModuleInitializer>();
