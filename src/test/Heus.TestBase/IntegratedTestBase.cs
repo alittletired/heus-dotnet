@@ -26,6 +26,8 @@ public abstract class IntegratedTestBase: IAsyncLifetime, IDisposable
     protected IntegratedTestBase(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
+       var moduleManager= serviceProvider.GetRequiredService<IModuleManager>();
+        moduleManager.InitializeModulesAsync(serviceProvider).ConfigureAwait(false).GetAwaiter().GetResult();
         // xunit框架每个方法都会从新实例化对象，工作单元作用域在IAsyncLifetime开启并不生效，故只能放在此处
         if (AutoCreateUow)
         {
@@ -86,11 +88,12 @@ public abstract class IntegratedTestBase<TStartupModule> :
          moduleManager.ConfigureServices(services, config);
         var containerBuilder = serviceFactory.CreateBuilder(services);
         var serviceProvider = serviceFactory.CreateServiceProvider(containerBuilder);
+        
         return serviceProvider;
     }
     protected IntegratedTestBase():base(CreateServiceProvider())
     {
-     
+        
     }
    
 

@@ -5,6 +5,7 @@ using Heus.AspNetCore.Conventions;
 using Heus.AspNetCore.OpenApi;
 using Heus.AspNetCore.Validation;
 using Heus.Core.DependencyInjection;
+using Heus.Core.Extensions;
 using Heus.Core.Security;
 using Heus.Core.Utils;
 using Heus.Ddd;
@@ -38,7 +39,6 @@ public class AspNetModuleInitializer : ModuleInitializerBase
                 options.Filters.AddService(typeof(ValidationActionFilter));
                 options.Filters.AddService(typeof(UowActionFilter));
 
-
             }).ConfigureApplicationPartManager(partManager =>
             {
                 var moduleContainer = services.GetSingleton<IModuleManager>()!;
@@ -49,9 +49,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
                     {
                         partManager.ApplicationParts.Add(new AssemblyPart(moduleAssembly));
                     }
-
                 }
-
             })
             .AddControllersAsServices()
             .AddJsonOptions(options => { options.JsonSerializerOptions.ApplyDefaultSettings(); });
@@ -84,8 +82,8 @@ public class AspNetModuleInitializer : ModuleInitializerBase
         partManager.FeatureProviders.Add(new ServiceControllerFeatureProvider());
    
         var app= serviceProvider.GetApplicationBuilder();
-        IWebHostEnvironment env =serviceProvider.GetRequiredService<IWebHostEnvironment>();
-        if (env.IsDevelopment())
+        var env =serviceProvider.GetRequiredService<IWebHostEnvironment>();
+        if (env.IsDevelopment() || env.IsTesting())
         {
             app.UseDeveloperExceptionPage();
             app.UseOpenApi();

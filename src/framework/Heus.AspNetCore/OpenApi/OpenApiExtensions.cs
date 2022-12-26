@@ -1,11 +1,8 @@
 
 using System.Reflection;
 using Heus.Core.Utils;
-using Heus.Ddd.Dtos;
-using Heus.Ddd.Entities;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -29,14 +26,7 @@ public static class OpenApiExtensions
           
             foreach (var filePath in Directory.GetFiles(AppContext.BaseDirectory, "*.xml"))
             {
-                try
-                {
-                    c.IncludeXmlComments(filePath);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+                c.IncludeXmlComments(filePath);
             }
             c.OperationFilter<ResponseContentTypeOperationFilter>();
             c.OperationFilter<FromQueryModelFilter>();
