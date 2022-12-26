@@ -21,7 +21,7 @@ internal class UowDbConnectionInterceptor : DbConnectionInterceptor
         _unitOfWorkManager = unitOfWorkManager;
     }
 
-    public override async Task ConnectionOpenedAsync(DbConnection connection
+    public async override Task ConnectionOpenedAsync(DbConnection connection
         , ConnectionEndEventData eventData
         , CancellationToken cancellationToken = default)
     {

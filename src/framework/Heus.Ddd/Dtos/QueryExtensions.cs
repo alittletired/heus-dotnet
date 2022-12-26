@@ -13,24 +13,21 @@ public static class QueryExtensions
         return visitor.Translate(null);
     }
 
-    public static async Task<PageList<TDto>> ToPageListAsync<TDto>(this IQueryable queryable, IPageRequest<TDto> queryDto)
+    public async static Task<PageList<TDto>> ToPageListAsync<TDto>(this IQueryable queryable,
+        IPageRequest<TDto> queryDto)
     {
-       
+
         QueryExpressionVisitor<TDto> visitor = new(queryable);
-       var query= visitor.Translate(queryDto);
-        
-        var pageList = new PageList<TDto>();
-        var count = await query.CountAsync();
-        if (count <= 0)
+        var query = visitor.Translate(queryDto);
+        var total = await query.CountAsync();
+        var items = new List<TDto>();
+        if (total > 0)
         {
-            return pageList;
+            items = await query.Take(queryDto.PageSize)
+                .Skip(queryDto.PageSize * (queryDto.PageIndex - 1)).ToListAsync();
         }
-        pageList.Total = count;
-        pageList.Items = await query.Take(queryDto.PageSize)
-            .Skip(queryDto.PageSize * (queryDto.PageIndex - 1)).ToListAsync();
 
-        return pageList;
-
+        return new PageList<TDto>() { Total = total, Items = items };
     }
 
     // public static async Task<IEnumerable<T>> ToDtoList<T>(this IQueryable queryable)
@@ -38,13 +35,13 @@ public static class QueryExtensions
     //     var query = TranslateQuery(queryable, queryDto);
     // }
 
-    public static async Task<T?> FirstOrDefaultAsync<T>(IQueryable queryable, IPageRequest<T> queryDto) 
+    public async static Task<T?> FirstOrDefaultAsync<T>(IQueryable queryable, IPageRequest<T> queryDto) 
     {
         var query = TranslateQuery(queryable, queryDto);
         return await query.FirstOrDefaultAsync();
     }
 
-    public static async Task<T> First<T>(IQueryable queryable, IPageRequest<T> queryDto) 
+    public async static Task<T> First<T>(IQueryable queryable, IPageRequest<T> queryDto) 
     {
         var query = TranslateQuery(queryable, queryDto);
         var data= await query.FirstOrDefaultAsync();

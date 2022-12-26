@@ -22,7 +22,7 @@ public static class WebApplicationExtensions
         return builder.AddModule(typeof(TModule));
     }
 
-    public static async Task<WebApplication> UseModule(this WebApplication app)
+    public async static Task<WebApplication> UseModule(this WebApplication app)
     {
         app.Services.GetRequiredService<IApplicationBuilderAccessor>().ApplicationBuilder = app;
         var moduleManager = app.Services.GetRequiredService<IModuleManager>();
@@ -30,7 +30,7 @@ public static class WebApplicationExtensions
         return app;
     }
 
-    public static async Task RunWithModuleAsync<TModule>(this WebApplicationBuilder builder)
+    public async static  Task RunWithModuleAsync<TModule>(this WebApplicationBuilder builder)
     {
         var app = builder.AddModule<TModule>().Build();
         await app.UseModule();
