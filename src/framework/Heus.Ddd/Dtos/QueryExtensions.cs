@@ -30,18 +30,13 @@ public static class QueryExtensions
         return new PageList<TDto>() { Total = total, Items = items };
     }
 
-    // public static async Task<IEnumerable<T>> ToDtoList<T>(this IQueryable queryable)
-    // {
-    //     var query = TranslateQuery(queryable, queryDto);
-    // }
-
     public async static Task<T?> FirstOrDefaultAsync<T>(IQueryable queryable, IPageRequest<T> queryDto) 
     {
         var query = TranslateQuery(queryable, queryDto);
         return await query.FirstOrDefaultAsync();
     }
 
-    public async static Task<T> First<T>(IQueryable queryable, IPageRequest<T> queryDto) 
+    public async static Task<T> FirstAsync<T>(IQueryable queryable, IPageRequest<T> queryDto) 
     {
         var query = TranslateQuery(queryable, queryDto);
         var data= await query.FirstOrDefaultAsync();

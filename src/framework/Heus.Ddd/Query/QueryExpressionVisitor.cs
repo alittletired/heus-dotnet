@@ -166,9 +166,6 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
                 }
 
                 break;
-        
-         
-
         }
         if (filterExpr == null)
         {
