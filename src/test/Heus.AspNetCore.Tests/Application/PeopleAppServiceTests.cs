@@ -9,10 +9,10 @@ namespace Heus.AspNetCore.Tests.Application;
 
 public class PeopleAppServiceTests: WebIntegratedTestBase<AspNetWebApplicationFactory>
 {
-    private IUserAppService _userAppService;
+    private readonly IUserAdminAppService _userAppService;
     public PeopleAppServiceTests(AspNetWebApplicationFactory factory) : base(factory)
     {
-        _userAppService = CreateServiceProxy<IUserAppService>();
+        _userAppService = CreateServiceProxy<IUserAdminAppService>();
     }
   
     //private readonly IPeopleAppService _userAppService;

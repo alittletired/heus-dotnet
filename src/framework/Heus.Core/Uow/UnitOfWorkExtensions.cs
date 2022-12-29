@@ -14,7 +14,7 @@ public static class UnitOfWorkExtensions
         await uow.CompleteAsync();
 
     }
-    public async static Task PerformUowTask(this IServiceProvider serviceProvider, Func< Task> task)
+    public async static Task PerformUowTask(this IServiceProvider serviceProvider, Func<Task> task)
     {
 
         var manager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();

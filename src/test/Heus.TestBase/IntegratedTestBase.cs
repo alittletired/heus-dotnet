@@ -77,7 +77,7 @@ public abstract class IntegratedTestBase: IAsyncLifetime, IDisposable
     }
 }
 public abstract class IntegratedTestBase<TStartupModule> : 
-    IntegratedTestBase, IAsyncLifetime, IDisposable where TStartupModule : IModuleInitializer
+    IntegratedTestBase where TStartupModule : IModuleInitializer
 {
 
     private static  IServiceProvider CreateServiceProvider() {
@@ -97,23 +97,7 @@ public abstract class IntegratedTestBase<TStartupModule> :
     }
    
 
-
-
-    protected Task<TResult> WithUnitOfWorkAsync<TResult>(Func<Task<TResult>> func)
-    {
-        return WithUnitOfWorkAsync(new UnitOfWorkOptions(), func);
-    }
-
-    protected async Task<TResult> WithUnitOfWorkAsync<TResult>(UnitOfWorkOptions options, Func<Task<TResult>> func)
-    {
-        using (var uow = UnitOfWorkManager.Begin(ServiceProvider, options, true))
-        {
-            var result = await func();
-            await uow.CompleteAsync();
-            return result;
-        }
-
-    }
+  
 
  
 }

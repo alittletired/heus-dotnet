@@ -37,7 +37,7 @@ public class UserAppServiceTests : IntegratedTestBase<AuthTestModule>
     public async Task Create_Test()
     {
         var dto = _noExistsDto;
-        await WithUnitOfWorkAsync(() => _userService.CreateAsync(dto));
+        await ServiceProvider.PerformUowTask(() => _userService.CreateAsync(dto));
         var user = await _userRepository.Query.FirstAsync(s => s.Name == dto.Name);
         user.NickName.ShouldBe(dto.NickName);
         user.Phone.ShouldBe(dto.Phone);
