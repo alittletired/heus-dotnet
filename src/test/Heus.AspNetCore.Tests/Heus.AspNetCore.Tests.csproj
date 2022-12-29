@@ -4,6 +4,7 @@
 	  <ProjectReference Include="..\..\framework\Heus.AspNetCore\Heus.AspNetCore.csproj" />
 	  <ProjectReference Include="..\Heus.AspNetCore.TestApp\Heus.AspNetCore.TestApp.csproj" />
 	  <ProjectReference Include="..\Heus.AspNetCore.TestBase\Heus.AspNetCore.TestBase.csproj" />
+	  <ProjectReference Include="..\Heus.Ddd.TestModule\Heus.Ddd.TestModule.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using Heus.Core.DependencyInjection;
 using Heus.Data;
 using Heus.Data.Internal;
+using Heus.Data.Sqlite;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,8 +24,10 @@ internal class MemorySqlliteDbConnectionManager : IDbConnectionManager
         _shareConnection.Dispose();
     }
 
-    public (DbConnection, DbProvider) GetDbConnection<TContext>() where TContext : DbContext
+    public DbConnectionWrapper GetDbConnection<TContext>() where TContext : DbContext
     {
-        return (_shareConnection, DbProvider.Sqlite);
+        return new DbConnectionWrapper() {
+            DbConnection = _shareConnection, DbConnectionProvider = new SqliteDbConnectionProvider()
+        };
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Data.Sqlite;
 
-internal class SqliteDbConnectionProvider : IDbConnectionProvider, ISingletonDependency
+public class SqliteDbConnectionProvider : IDbConnectionProvider, ISingletonDependency
 {
    
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)

@@ -8,7 +8,7 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
     private readonly FilterMapping _filterMapping;
     private readonly IQueryable _queryable;
     // ReSharper disable once StaticMemberInGenericType
-    private static readonly MethodInfo WhereMethod = typeof(Queryable).GetRuntimeMethods()
+    private readonly static MethodInfo WhereMethod = typeof(Queryable).GetRuntimeMethods()
         .First(s => s.Name == nameof(Queryable.Where) && s.GetParameters().Length == 2);
 
     private IPageRequest<T>? _pageRequest;
@@ -116,7 +116,7 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
     {
         Expression filterExpr=null! ;
         var propertyInfo =(PropertyInfo)memberExpr.Member ;
-        var value = filter.Value.ToString()!;
+        var value = filter.Value;
         Expression constExpr;
         switch (filter.Op)
         {

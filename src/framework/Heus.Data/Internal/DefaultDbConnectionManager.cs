@@ -10,7 +10,7 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
     private readonly DataOptions _options;
     private readonly ILogger<DefaultDbConnectionManager> _logger;
 
-    private readonly Dictionary<string, DbConnection> _connections = new();
+    private readonly Dictionary<string, DbConnectionWrapper> _connections = new();
     public DefaultDbConnectionManager(IConnectionInfoResolver connectionInfoResolver
         , IOptions<DataOptions> options,
      ILogger<DefaultDbConnectionManager> logger)
@@ -30,12 +30,12 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
             //    _logger.LogInformation($"close connections,{c.ConnectionString}");
 
             //}
-            c.Dispose();
+            c.DbConnection.Dispose();
         });
         _connections.Clear();
     }
 
-    public (DbConnection, DbProvider) GetDbConnection<TDbContext>() where TDbContext : DbContext
+    public DbConnectionWrapper GetDbConnection<TDbContext>() where TDbContext : DbContext
     {
         var connectionInfo = _connectionInfoResolver.Resolve(null);
         var connectionString = connectionInfo.ConnectionString;
@@ -47,8 +47,10 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
                 connectionString, typeof(TDbContext).Name, connectionInfo.DbProvider);
             var connect = dbContextOptionsProvider.CreateConnection(cs);
             connect.Open();
-            return connect;
+            return new DbConnectionWrapper{
+                DbConnection = connect, DbConnectionProvider = dbContextOptionsProvider
+            };
         });
-        return (dbConnection, connectionInfo.DbProvider);
+        return dbConnection;
     }
 }
