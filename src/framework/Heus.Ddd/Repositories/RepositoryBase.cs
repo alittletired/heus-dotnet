@@ -37,11 +37,12 @@ public abstract class RepositoryBase<TEntity> :
         get
         {
             var query = DbContext.Set<TEntity>().AsQueryable();
-            if (UnitOfWorkManager.Current?.Options.IsTransactional == true)
-            {
-                return query;
-            }
-            return  query.AsNoTracking();
+            return query;
+            //if (UnitOfWorkManager.Current?.Options.IsTransactional == true)
+            //{
+            //    return query;
+            //}
+            //return  query.AsNoTracking();
         }
     }
 

@@ -19,7 +19,7 @@ static internal class QueryFilterHelper
         return DynamicMappingCache.GetOrAdd(key, _ =>
         {
             var mapping = new FilterMapping(dtoType, parameters);
-            var dtoProps = dtoType.GetTypeInfo().DeclaredProperties.Where(p => p.CanWrite);
+            var dtoProps = dtoType.GetRuntimeProperties().Where(p => p.CanWrite);
             foreach (var dtoProp in dtoProps)
             {
                 for (var i = 0; i < parameters.Length; i++)

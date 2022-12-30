@@ -31,6 +31,7 @@ public class User : AuditEntity, ISoftDelete
     public string Name { get; set; } = null!;
     public string Phone { get; set; } = null!;
     public UserType UserType { get; set; }
+    public int Sort { get; set; }
     public UserLevel UserLevel { get; set; } = UserLevel.Level1;
 
 }

@@ -1,8 +1,10 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 using Heus.Ddd.Dtos;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+
 namespace Heus.Ddd.Query;
-internal class QueryExpressionVisitor<T> : ExpressionVisitor
+internal class QueryExpressionVisitor<TDto> : ExpressionVisitor
 {
 
     private readonly FilterMapping _filterMapping;
@@ -11,14 +13,15 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
     private readonly static MethodInfo WhereMethod = typeof(Queryable).GetRuntimeMethods()
         .First(s => s.Name == nameof(Queryable.Where) && s.GetParameters().Length == 2);
 
-    private IPageRequest<T>? _pageRequest;
+    private IPageRequest<TDto>? _pageRequest;
     private Expression? _selectExpression;
     public QueryExpressionVisitor(IQueryable queryable)
     {
-        _queryable= queryable;
+        
+         _queryable = queryable;
         var elementType = _queryable.ElementType;
     
-        _filterMapping = QueryFilterHelper.GetDynamicMappings(typeof(T), elementType);
+        _filterMapping = QueryFilterHelper.GetDynamicMappings(typeof(TDto), elementType);
     }
 
     protected override Expression VisitMethodCall(MethodCallExpression methodCall)
@@ -30,7 +33,7 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
             paras[^1] = TranslateSelect((UnaryExpression)paras[^1]);
             paras = paras.Select(Visit).ToArray()!;
             var genericTypes = methodCall.Method.GetGenericArguments().ToArray();
-            genericTypes[^1] = typeof(T);
+            genericTypes[^1] = typeof(TDto);
             var selectMany = methodCall.Method.GetGenericMethodDefinition().MakeGenericMethod(genericTypes);
             _selectExpression = Expression.Call(obj, selectMany, paras);
             return _selectExpression;
@@ -39,17 +42,18 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
         return base.VisitMethodCall(methodCall);
     }
 
-    public IQueryable<T> Translate(IPageRequest<T>? pageRequest)
+    public IQueryable<TDto> Translate(IPageRequest<TDto>? pageRequest)
     {
         _pageRequest = pageRequest;
         _selectExpression = null;
         //如果类型相同，并且没有过滤条件，则直接返回
-        if (_pageRequest==null && typeof(T) == _queryable.ElementType)
-            return (IQueryable<T>)_queryable;
+        if (_pageRequest==null && typeof(TDto) == _queryable.ElementType)
+            return (IQueryable<TDto>)_queryable;
         var expr = Visit(_queryable.Expression);
-        return _queryable.Provider.CreateQuery<T>(expr);
+        return _queryable.Provider.CreateQuery<TDto>(expr);
 
     }
+
 
     protected override Expression VisitExtension(Expression node)
     {
@@ -67,6 +71,32 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
         }
 
         return base.VisitExtension(node);
+    }
+
+    protected override Expression VisitParameter(ParameterExpression node)
+    {
+        //if (node is UnaryExpression unary && unary is LambdaExpression lambda)
+        //{
+        //    var newLambda = Visit(lambda);
+        //    return Expression.Quote(newLambda);
+        //}
+
+        return base.VisitParameter(node);
+    }
+
+    protected override Expression VisitLambda<T1>(Expression<T1> node)
+    {
+        if (_queryable.ElementType == node.ReturnType && node.ReturnType != typeof(TDto))
+        {
+            var lambda = (LambdaExpression)node;
+            var parameters = lambda.Parameters.Select(p => (ParameterExpression)Visit(p)).ToList();
+            var express = GetSelectExpression(_filterMapping, parameters);
+            var newLambda = Expression.Lambda(express, parameters);
+            return newLambda;
+        }
+
+        return base.VisitLambda(node);
+
     }
 
     private Expression TranslateSelect(UnaryExpression expression)
@@ -185,7 +215,7 @@ internal class QueryExpressionVisitor<T> : ExpressionVisitor
 
     private Expression? GetFilterExpression(Type entityType)
     {
-        var dynamicQuery = _pageRequest as DynamicSearch<T>;
+        var dynamicQuery = _pageRequest as DynamicSearch<TDto>;
         if (dynamicQuery == null)
             return null;
       
