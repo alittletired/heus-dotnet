@@ -6,19 +6,20 @@ namespace Heus.Ddd.Dtos;
 
 public static class QueryExtensions
 {
-    public static IQueryable<TDto> CastQueryable<TDto>(this IQueryable queryable)
+    public static IQueryable< TDto> CastQueryable<TSource,TDto>(this IQueryable<TSource> queryable)
     {
-       
-        QueryExpressionVisitor<TDto> visitor = new(queryable);
-        return visitor.Translate(null);
+        if (typeof(TSource) == typeof(TDto))
+            return (IQueryable<TDto>)queryable;
+        var visitor = new QueryExpressionVisitor<TSource, TDto>(queryable,null);
+        return visitor.Translate();
     }
 
-    public async static Task<PageList<TDto>> ToPageListAsync<TDto>(this IQueryable queryable,
+    public async static Task<PageList<TDto>> ToPageListAsync<TSource,TDto>(this IQueryable<TSource> queryable,
         IPageRequest<TDto> queryDto)
     {
 
-        QueryExpressionVisitor<TDto> visitor = new(queryable);
-        var query = visitor.Translate(queryDto);
+        QueryExpressionVisitor<TSource,TDto> visitor = new(queryable, queryDto);
+        var query = visitor.Translate();
         var total = await query.CountAsync();
         var items = new List<TDto>();
         if (total > 0)
@@ -30,28 +31,28 @@ public static class QueryExtensions
         return new PageList<TDto>() { Total = total, Items = items };
     }
 
-    public async static Task<T?> FirstOrDefaultAsync<T>(IQueryable queryable, IPageRequest<T> queryDto) 
+    public async static Task<TDto?> FirstOrDefaultAsync<TSource, TDto>(IQueryable<TSource> queryable, IPageRequest<TDto> queryDto) 
     {
         var query = TranslateQuery(queryable, queryDto);
         return await query.FirstOrDefaultAsync();
     }
 
-    public async static Task<T> FirstAsync<T>(IQueryable queryable, IPageRequest<T> queryDto) 
+    public async static Task<TDto> FirstAsync<TSource, TDto>(IQueryable<TSource> queryable, IPageRequest<TDto> queryDto) 
     {
         var query = TranslateQuery(queryable, queryDto);
         var data= await query.FirstOrDefaultAsync();
         if (data == null)
         {
-            throw new EntityNotFoundException(typeof(T));
+            throw new EntityNotFoundException(typeof(TDto));
         }
 
         return data;
     }
 
-    private static  IQueryable<T> TranslateQuery<T>(this IQueryable queryable, IPageRequest<T> queryDto) 
+    private static  IQueryable<TDto> TranslateQuery<TSource,TDto>(this IQueryable<TSource> queryable, IPageRequest<TDto> queryDto) 
     {
-        var visitor = new QueryExpressionVisitor<T>(queryable);
-        return visitor.Translate(queryDto);
+        var visitor = new QueryExpressionVisitor<TSource, TDto>(queryable, queryDto);
+        return visitor.Translate();
     }
 
 }

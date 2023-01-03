@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Linq.Expressions;
 using Heus.Ddd.Application.Services;
 using Heus.Ddd.Domain;
@@ -56,7 +57,7 @@ public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdate
             query = query.Where(filter);
         }
 
-        return query.CastQueryable<TDto>();
+        return query.CastQueryable<TEntity,TDto>();
     }
 
     public virtual async Task<TDto> GetAsync(long id)

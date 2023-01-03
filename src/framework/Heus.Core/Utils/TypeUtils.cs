@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Heus.Core.Utils
 {
@@ -41,7 +42,14 @@ namespace Heus.Core.Utils
             var nullabilityInfo = NullabilityContext.Create(property);
             return nullabilityInfo.WriteState is NullabilityState.Nullable;
         }
-    
+
+        public static bool IsAnonymousType(this Type type)
+        {
+            var hasCompilerGeneratedAttribute =
+                type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any();
+            return hasCompilerGeneratedAttribute && type.FullName?.Contains("AnonymousType") == true;
+        }
+
         public static bool IsNullable(Type type)
         {
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);

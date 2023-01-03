@@ -24,12 +24,41 @@ public class QueryExpressionVisitorComplexTest: DddIntegratedTest
         _userAddressRepository = GetRequiredService<IRepository<UserAddress>>();
     }
     [Fact]
-    public async Task InnerJoinQueryTest()
+    public async Task ManyToManyJoinTest()
     {
         var query = from u in _userRepository.Query
                     join ua in _userAddressRepository.Query on u.Id equals ua.UserId
                     join a in _addressRepository.Query on ua.AddressId equals a.Id
                     select new { u, a };
+        var search = new DynamicSearch<UserAddressDto>();
+        search.AddEqualFilter(s => s.AddressCity, "武汉");
+
+        var list = await query.ToPageListAsync(search);
+        list.Total.ShouldBeGreaterThan(0);
+
+    }
+    [Fact]
+    public async Task OneToManyJoinTest()
+    {
+        var query = from u in _userRepository.Query
+            join ua in _userAddressRepository.Query on u.Id equals ua.UserId
+         
+            select new { u, ua };
+        var search = new DynamicSearch<UserAddressDto>();
+        search.AddEqualFilter(s => s.AddressCity, "武汉");
+
+        var list = await query.ToPageListAsync(search);
+        list.Total.ShouldBeGreaterThan(0);
+
+    }
+    [Fact]
+    public async Task OneToManyLeftJoinTest()
+    {
+        var query = from u in _userRepository.Query
+            join ua in _userAddressRepository.Query on u.Id equals ua.UserId
+            join a in _addressRepository.Query on ua.AddressId equals a.Id into  grouping
+            from ua1 in grouping.DefaultIfEmpty()
+            select new { u, ua1 };
         var search = new DynamicSearch<UserAddressDto>();
         search.AddEqualFilter(s => s.AddressCity, "武汉");
 

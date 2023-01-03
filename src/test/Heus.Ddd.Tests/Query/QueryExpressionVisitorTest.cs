@@ -1,7 +1,9 @@
-﻿using Heus.Ddd.Dtos;
+﻿using System.Xml.Linq;
+using Heus.Ddd.Dtos;
 using Heus.Ddd.Repositories;
 using Heus.Ddd.TestModule.Domain;
 using Microsoft.AspNetCore.SignalR.Protocol;
+using Microsoft.Extensions.Logging;
 
 namespace Heus.Ddd.Tests.Query;
 
@@ -21,7 +23,18 @@ public class QueryExpressionVisitorTest : DddIntegratedTest
         var search = new DynamicSearch<User>();
         search.AddEqualFilter(s => s.Name, name);
         var result = await _userRepository.Query.ToPageListAsync(search);
-        (result.Total>0).ShouldBe(hasResult);
+        if (hasResult)
+        {
+            result.Total .ShouldBeGreaterThan(0);
+            result.Items.ForEach(i => i.Name.ShouldBe(name));
+            result.Items.Count().ShouldBeGreaterThan(0);
+        }
+        else
+        {
+            result.Total.ShouldBe(0);
+            result.Items.Count().ShouldBe(0);
+        }
+       
     }
 
     [Theory]
@@ -32,7 +45,17 @@ public class QueryExpressionVisitorTest : DddIntegratedTest
         var search = new DynamicSearch<User>();
         search.AddGreaterThanFilter(s => s.Sort, sort);
         var result = await _userRepository.Query.ToPageListAsync(search);
-        (result.Total > 0).ShouldBe(hasResult);
+        if (hasResult)
+        {
+            result.Total.ShouldBeGreaterThan(0);
+            result.Items.ForEach(i => i.Sort.ShouldBeGreaterThan(sort));
+            result.Items.Count().ShouldBeGreaterThan(0);
+        }
+        else
+        {
+            result.Total.ShouldBe(0);
+            result.Items.Count().ShouldBe(0);
+        }
     }
     [Theory]
     [InlineData(1, true)]
@@ -43,7 +66,17 @@ public class QueryExpressionVisitorTest : DddIntegratedTest
         var search = new DynamicSearch<User>();
         search.AddGreaterOrEqualFilter(s => s.Sort, sort);
         var result = await _userRepository.Query.ToPageListAsync(search);
-        (result.Total > 0).ShouldBe(hasResult);
+        if (hasResult)
+        {
+            result.Total.ShouldBeGreaterThan(0);
+            result.Items.ForEach(i => i.Sort.ShouldBeGreaterThanOrEqualTo(sort));
+            result.Items.Count().ShouldBeGreaterThan(0);
+        }
+        else
+        {
+            result.Total.ShouldBe(0);
+            result.Items.Count().ShouldBe(0);
+        }
     }
 
     [Theory]
@@ -54,7 +87,17 @@ public class QueryExpressionVisitorTest : DddIntegratedTest
         var search = new DynamicSearch<User>();
         search.AddLessThanFilter(s => s.Sort, sort);
         var result = await _userRepository.Query.ToPageListAsync(search);
-        (result.Total > 0).ShouldBe(hasResult);
+        if (hasResult)
+        {
+            result.Total.ShouldBeGreaterThan(0);
+            result.Items.ForEach(i => i.Sort.ShouldBeLessThan(sort));
+            result.Items.Count().ShouldBeGreaterThan(0);
+        }
+        else
+        {
+            result.Total.ShouldBe(0);
+            result.Items.Count().ShouldBe(0);
+        }
     }
 
     [Theory]
@@ -65,7 +108,18 @@ public class QueryExpressionVisitorTest : DddIntegratedTest
         var search = new DynamicSearch<User>();
         search.AddLessOrEqualFilter(s => s.Sort, sort);
         var result = await _userRepository.Query.ToPageListAsync(search);
-        (result.Total > 0).ShouldBe(hasResult);
+        if (hasResult)
+        {
+            result.Total.ShouldBeGreaterThan(0);
+            result.Items.ForEach(i => i.Sort.ShouldBeLessThanOrEqualTo(sort));
+            result.Items.Count().ShouldBeGreaterThan(0);
+        }
+        else
+        {
+            result.Total.ShouldBe(0);
+            result.Items.Count().ShouldBe(0);
+        }
+       
     }
 
     [Theory]
@@ -76,7 +130,17 @@ public class QueryExpressionVisitorTest : DddIntegratedTest
         var search = new DynamicSearch<User>();
         search.AddHeadLikeFilter(s => s.Name, name);
         var result = await _userRepository.Query.ToPageListAsync(search);
-        (result.Total > 0).ShouldBe(hasResult);
+        if (hasResult)
+        {
+            result.Total.ShouldBeGreaterThan(0);
+            result.Items.ForEach(i => i.Name.StartsWith(name).ShouldBeTrue());
+            result.Items.Count().ShouldBeGreaterThan(0);
+        }
+        else
+        {
+            result.Total.ShouldBe(0);
+            result.Items.Count().ShouldBe(0);
+        }
     }
     [Theory]
     [InlineData("test1", true)]
@@ -86,7 +150,17 @@ public class QueryExpressionVisitorTest : DddIntegratedTest
         var search = new DynamicSearch<User>();
         search.AddTailLikeFilter(s => s.Name, name);
         var result = await _userRepository.Query.ToPageListAsync(search);
-        (result.Total > 0).ShouldBe(hasResult);
+        if (hasResult)
+        {
+            result.Total.ShouldBeGreaterThan(0);
+            result.Items.ForEach(i => i.Name.EndsWith(name).ShouldBeTrue());
+            result.Items.Count().ShouldBeGreaterThan(0);
+        }
+        else
+        {
+            result.Total.ShouldBe(0);
+            result.Items.Count().ShouldBe(0);
+        }
     }
     [Theory]
     [InlineData("test1", true)]
@@ -97,7 +171,17 @@ public class QueryExpressionVisitorTest : DddIntegratedTest
         var search = new DynamicSearch<User>();
         search.AddLikeFilter(s => s.Name, name);
         var result = await _userRepository.Query.ToPageListAsync(search);
-        (result.Total > 0).ShouldBe(hasResult);
+        if (hasResult)
+        {
+            result.Total.ShouldBeGreaterThan(0);
+            result.Items.ForEach(i => i.Name.Contains(name).ShouldBeTrue());
+            result.Items.Count().ShouldBeGreaterThan(0);
+        }
+        else
+        {
+            result.Total.ShouldBe(0);
+            result.Items.Count().ShouldBe(0);
+        }
     }
 
 
