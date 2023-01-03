@@ -23,34 +23,71 @@ public class QueryExpressionVisitorComplexTest: DddIntegratedTest
         _addressRepository = GetRequiredService<IRepository<Address>>();
         _userAddressRepository = GetRequiredService<IRepository<UserAddress>>();
     }
-    [Fact]
-    public async Task ManyToManyJoinTest()
+    [Theory]
+    [InlineData("武汉", true)]
+    [InlineData("异常", false)]
+  
+    public async Task ManyToManyJoinTest(string addressCity, bool hasResult)
     {
         var query = from u in _userRepository.Query
                     join ua in _userAddressRepository.Query on u.Id equals ua.UserId
                     join a in _addressRepository.Query on ua.AddressId equals a.Id
                     select new { u, a };
         var search = new DynamicSearch<UserAddressDto>();
-        search.AddEqualFilter(s => s.AddressCity, "武汉");
+        search.AddEqualFilter(s => s.AddressCity, addressCity);
 
-        var list = await query.ToPageListAsync(search);
-        list.Total.ShouldBeGreaterThan(0);
-
+        var result = await query.ToPageListAsync(search);
+       
+        if (hasResult)
+        {
+            result.Total.ShouldBeGreaterThan(0);
+            result.Items.ForEach(i => i.AddressCity.ShouldBe(addressCity));
+            result.Items.Count().ShouldBeGreaterThan(0);
+        }
+        else
+        {
+            result.Total.ShouldBe(0);
+            result.Items.Count().ShouldBe(0);
+        }
     }
     [Fact]
-    public async Task OneToManyJoinTest()
+    public async Task Invalid_Type_Mapping_Should_Throw_Exception()
     {
         var query = from u in _userRepository.Query
-            join ua in _userAddressRepository.Query on u.Id equals ua.UserId
-         
-            select new { u, ua };
+                    join ua in _userAddressRepository.Query on u.Id equals ua.UserId
+                    select new { u, ua };
         var search = new DynamicSearch<UserAddressDto>();
         search.AddEqualFilter(s => s.AddressCity, "武汉");
+      await  Assert.ThrowsAsync<InvalidOperationException>(async () =>await query.ToPageListAsync(search));
+    }
 
-        var list = await query.ToPageListAsync(search);
-        list.Total.ShouldBeGreaterThan(0);
+    [Theory]
+    [InlineData("武汉", true)]
+    //[InlineData("异常", false)]
+    public async Task LeftJoinUsingWhereTest(string addressCity, bool hasResult)
+    {
+        var query = from u in _userRepository.Query
+                    join ua in _userAddressRepository.Query on u.Id equals ua.UserId
+                    from a in _addressRepository.Query.Where(a=> a.Id== ua.AddressId).DefaultIfEmpty()
+                    where a.City== addressCity
+                    select new { u, a };
+        var search = new DynamicSearch<UserAddressDto>();
+        //search.AddEqualFilter(s => s.AddressCity, addressCity);
+        var result = await query.ToPageListAsync(search);
+        if (hasResult)
+        {
+            result.Total.ShouldBeGreaterThan(0);
+            result.Items.ForEach(i => i.AddressCity.ShouldBe(addressCity));
+            result.Items.Count().ShouldBeGreaterThan(0);
+        }
+        else
+        {
+            result.Total.ShouldBe(0);
+            result.Items.Count().ShouldBe(0);
+        }
 
     }
+
     [Fact]
     public async Task OneToManyLeftJoinTest()
     {

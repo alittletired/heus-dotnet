@@ -47,11 +47,39 @@ internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
     }
     protected override Expression VisitMethodCall(MethodCallExpression methodCall)
     {
+        if (methodCall.Method.Name == nameof(Queryable.Where))
+        {
 
+            var argument = methodCall.Arguments[0];
+            var entityType = argument.Type.GetGenericArguments()[0];
+
+            var filterExpr = GetFilterExpression(entityType);
+            if (filterExpr == null)
+            {
+                return base.VisitMethodCall(methodCall);
+            }
+            var where = WhereMethod.MakeGenericMethod(entityType);
+
+            return Expression.Call(null, where, methodCall, filterExpr);
+        }
+        if (methodCall.Method.Name == nameof(Queryable.SelectMany) )
+        {
+          
+            var argument= methodCall.Arguments[0];
+            var entityType= argument.Type.GetGenericArguments()[0];
+       
+            var filterExpr = GetFilterExpression(entityType);
+            if (filterExpr == null)
+            {
+                return base.VisitMethodCall(methodCall);
+            }
+            var where = WhereMethod.MakeGenericMethod(entityType);
+        
+            return Expression.Call(null, where, methodCall, filterExpr);
+        }
         if (methodCall.Arguments.Count == 0 || !methodCall.Method.IsGenericMethod)
         {
             return base.VisitMethodCall(methodCall);
-
         }
         var selectIndex = FindSelectIndex(methodCall.Arguments);
         if (selectIndex == -1)
@@ -116,7 +144,7 @@ internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
         return newLambda;
 
     }
-
+  
     private static Expression GetSelectExpression(FilterMapping mapping, IEnumerable<ParameterExpression> parameters)
     {
         var memberBindings = new List<MemberBinding>();

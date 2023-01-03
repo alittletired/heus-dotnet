@@ -1,5 +1,7 @@
 using System.Collections.Concurrent;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Heus.Ddd.Query;
 
@@ -19,9 +21,10 @@ static internal class QueryFilterHelper
         return DynamicMappingCache.GetOrAdd(key, _ =>
         {
             var mapping = new FilterMapping(dtoType, parameters);
-            var dtoProps = dtoType.GetRuntimeProperties().Where(p => p.CanWrite);
+            var dtoProps = dtoType.GetRuntimeProperties().Where(p => p.CanWrite || p.GetCustomAttribute<NotMappedAttribute>() == null);
             foreach (var dtoProp in dtoProps)
             {
+                FilterMapping.MappingItem? mappingItem = null;
                 for (var i = 0; i < parameters.Length; i++)
                 {
                     var entityType = parameters[i];
@@ -33,16 +36,18 @@ static internal class QueryFilterHelper
                         continue;
                     }
 
-                    mapping.Mappings.Add(dtoProp.Name,
-                        new FilterMapping.MappingItem(dtoProp, mappingProp, entityType, i));
+                    mappingItem = new FilterMapping.MappingItem(dtoProp, mappingProp, entityType);
                     break;
                 }
-
+                if (mappingItem == null)
+                {
+                    throw new InvalidOperationException($"无法定位属性映射关系type:{dtoType.Name},property:{dtoProp.Name}，如果明确不需要映射,添加NotMappedAttribute特性或者属性不可写");
+                }
+                mapping.Mappings.Add(dtoProp.Name, mappingItem);
             }
 
             return mapping;
         });
     }
-
 
 }

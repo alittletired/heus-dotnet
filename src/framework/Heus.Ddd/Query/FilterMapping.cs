@@ -1,22 +1,23 @@
 ﻿using System.Reflection;
 namespace Heus.Ddd.Query;
+internal class MappingItem
+{
+    public MappingItem(PropertyInfo dtoProperty, PropertyInfo entityProperty, Type entityType)
+    {
+        DtoProperty = dtoProperty;
+        EntityProperty = entityProperty;
+
+        EntityType = entityType;
+    }
+
+    public PropertyInfo DtoProperty { get; }
+    public PropertyInfo EntityProperty { get; }
+
+    public Type EntityType { get; }
+}
 internal class FilterMapping
 {
-    internal class MappingItem
-    {
-        public MappingItem(PropertyInfo dtoProperty, PropertyInfo entityProperty, Type entityType, int paramIndex)
-        {
-            DtoProperty = dtoProperty;
-            EntityProperty = entityProperty;
-            ParamIndex = paramIndex;
-            EntityType = entityType;
-        }
-
-        public PropertyInfo DtoProperty { get; }
-        public PropertyInfo EntityProperty { get; }
-        public int ParamIndex { get; }
-        public Type EntityType { get; }
-    }
+   
     public FilterMapping(Type dtoType, params Type[] entityTypes)
     {
         DtoType = dtoType;

@@ -43,11 +43,12 @@ namespace Heus.Core.Utils
             return nullabilityInfo.WriteState is NullabilityState.Nullable;
         }
 
-        public static bool IsAnonymousType(this Type type)
+        public static bool IsAnonymousType(Type type)
         {
-            var hasCompilerGeneratedAttribute =
-                type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any();
-            return hasCompilerGeneratedAttribute && type.FullName?.Contains("AnonymousType") == true;
+            return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
+          && type.IsGenericType && type.Name.Contains("AnonymousType")
+          && (type.Name.StartsWith("<>") || type.Name.StartsWith("VB$"))
+          && type.Attributes.HasFlag(TypeAttributes.NotPublic);
         }
 
         public static bool IsNullable(Type type)
