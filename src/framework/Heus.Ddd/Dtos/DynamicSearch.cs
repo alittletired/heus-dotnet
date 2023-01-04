@@ -1,6 +1,7 @@
 
 using System.Linq.Expressions;
 using System.Text.Json;
+using System.Xml.Linq;
 using Heus.Core.Utils;
 using Heus.Ddd.Query;
 
@@ -69,7 +70,12 @@ public class DynamicSearch<T> : IPageRequest<T>
     public DynamicSearch<T> AddFilter<TResult>(Expression<Func<T, TResult>> selector, string operatorTypes, TResult value, string? filed = null) where TResult : notnull
     {
         var property = ExpressionUtils.GetPropertyInfo(selector);
-        Filters[property.Name] = new DynamicSearchFilter(operatorTypes, value, filed); ;
+        return AddFilter(property.Name, operatorTypes, value, filed);
+     
+    }
+    public DynamicSearch<T> AddFilter<TResult>(string propertyName, string operatorTypes, TResult value, string? filed = null) where TResult : notnull
+    {
+        Filters[propertyName] = new DynamicSearchFilter(operatorTypes, value, filed); ;
         return this;
     }
     public Dictionary<string, DynamicSearchFilter> Filters { get; set; } = new();

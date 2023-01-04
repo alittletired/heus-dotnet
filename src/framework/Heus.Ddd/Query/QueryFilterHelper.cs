@@ -21,10 +21,10 @@ static internal class QueryFilterHelper
         return DynamicMappingCache.GetOrAdd(key, _ =>
         {
             var mapping = new FilterMapping(dtoType, parameters);
-            var dtoProps = dtoType.GetRuntimeProperties().Where(p => p.CanWrite || p.GetCustomAttribute<NotMappedAttribute>() == null);
+            var dtoProps = dtoType.GetRuntimeProperties().Where(p => p.CanWrite || p.GetCustomAttribute<NotMappedAttribute>() == null).Reverse();
             foreach (var dtoProp in dtoProps)
             {
-                FilterMapping.MappingItem? mappingItem = null;
+                MappingItem? mappingItem = null;
                 for (var i = 0; i < parameters.Length; i++)
                 {
                     var entityType = parameters[i];
@@ -36,7 +36,7 @@ static internal class QueryFilterHelper
                         continue;
                     }
 
-                    mappingItem = new FilterMapping.MappingItem(dtoProp, mappingProp, entityType);
+                    mappingItem = new MappingItem(dtoProp, mappingProp, entityType);
                     break;
                 }
                 if (mappingItem == null)

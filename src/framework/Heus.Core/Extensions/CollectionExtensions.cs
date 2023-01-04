@@ -45,5 +45,17 @@ public static class CollectionExtensions
             action(item);
         }
     }
+    public async static Task ForEachAsync<T, TResult>(this IEnumerable<T>? source, Func<T, Task<TResult>> action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+        if (source == null)
+        {
+            return;
+        }
+        foreach (var item in source)
+        {
+            await action(item);
+        }
+    }
 }
 
