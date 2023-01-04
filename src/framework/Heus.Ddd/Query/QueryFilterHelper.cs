@@ -7,8 +7,11 @@ namespace Heus.Ddd.Query;
 
 static internal class QueryFilterHelper
 {
-    private readonly static ConcurrentDictionary<string, FilterMapping> DynamicMappingCache = new();
-
+    private static readonly ConcurrentDictionary<string, FilterMapping> DynamicMappingCache = new();
+    public static readonly MethodInfo WhereMethodInfo = typeof(Queryable).GetRuntimeMethods()
+        .First(s => s.Name == nameof(Queryable.Where) && s.GetParameters().Length == 2);
+    public static readonly MethodInfo SelectMethodInfo = typeof(Queryable).GetRuntimeMethods()
+        .First(s => s.Name == nameof(Queryable.Select) && s.GetParameters().Length == 2);
     public static FilterMapping GetDynamicMappings(Type dtoType, Type elementType)
     {
         var parameters = new[] { elementType };
@@ -41,7 +44,7 @@ static internal class QueryFilterHelper
                 }
                 if (mappingItem == null)
                 {
-                    throw new InvalidOperationException($"ÎÞ·¨¶¨Î»ÊôÐÔÓ³Éä¹ØÏµtype:{dtoType.Name},property:{dtoProp.Name}£¬Èç¹ûÃ÷È·²»ÐèÒªÓ³Éä,Ìí¼ÓNotMappedAttributeÌØÐÔ»òÕßÊôÐÔ²»¿ÉÐ´");
+                    throw new InvalidOperationException($"ï¿½Þ·ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ó³ï¿½ï¿½ï¿½Ïµtype:{dtoType.Name},property:{dtoProp.Name}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½ÒªÓ³ï¿½ï¿½,ï¿½ï¿½ï¿½NotMappedAttributeï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½Ð´");
                 }
                 mapping.Mappings.Add(dtoProp.Name, mappingItem);
             }

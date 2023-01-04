@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -9,7 +7,7 @@ namespace Heus.Core.Utils
 {
     public static class TypeUtils
     {
-        private readonly static Dictionary<Type, string> _simplifiedNames = new() { 
+        private static readonly Dictionary<Type, string> SimplifiedNames = new() { 
             {typeof(string), "string" },
             {typeof(int),"number"},
             {typeof(long),"number"},
@@ -36,7 +34,7 @@ namespace Heus.Core.Utils
             return type.GetMethods().Any(m => m.Name == "<Clone>$");
         }
    
-        private readonly static NullabilityInfoContext NullabilityContext = new ();
+        private static readonly NullabilityInfoContext NullabilityContext = new ();
         public static bool IsNullable(PropertyInfo property)
         {
             var nullabilityInfo = NullabilityContext.Create(property);
@@ -102,7 +100,7 @@ namespace Heus.Core.Utils
                 var genericType = type.GetGenericTypeDefinition();
                 return $"{genericType.Name.Substring(0,genericType.Name.IndexOf('`'))}<{type.GenericTypeArguments.Select(GetSimplifiedName).JoinAsString(",")}>";
             }
-            if (_simplifiedNames.TryGetValue(type, out var simplifiedName))
+            if (SimplifiedNames.TryGetValue(type, out var simplifiedName))
             {
                 return simplifiedName;
             }
@@ -133,7 +131,7 @@ namespace Heus.Core.Utils
         public static object? ConvertFrom(Type targetType, object value)
         {
             return TypeDescriptor
-                .GetConverter(targetType)?
+                .GetConverter(targetType)
                 .ConvertFrom(value);
         }
         

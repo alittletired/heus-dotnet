@@ -1,19 +1,13 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
-using System.Xml.Linq;
 using Heus.Core.Utils;
 using Heus.Ddd.Dtos;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Heus.Ddd.Query;
 internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
 {
 // ReSharper disable once StaticMemberInGenericType
-    private readonly static MethodInfo WhereMethod = typeof(Queryable).GetRuntimeMethods()
-        .First(s => s.Name == nameof(Queryable.Where) && s.GetParameters().Length == 2);
-    private readonly static MethodInfo SelectMethod = typeof(Queryable).GetRuntimeMethods()
-        .First(s => s.Name == nameof(Queryable.Select) && s.GetParameters().Length == 2);
+  
 
     private readonly FilterMapping _filterMapping;
     private readonly IQueryable<TSource> _queryable;
@@ -25,20 +19,6 @@ internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
         _pageRequest = pageRequest;
         var elementType = _queryable.ElementType;
         _filterMapping = QueryFilterHelper.GetDynamicMappings(typeof(TDto), elementType);
-    }
-    private int FindSelectIndex(IEnumerable<Expression> paras)
-    {
-        int i = -1;
-        foreach (var para in paras)
-        {
-            i++;
-            if (para.NodeType == ExpressionType.Quote && para is UnaryExpression unary
-            && unary.Operand is LambdaExpression lambda && lambda.ReturnType == typeof(TSource))
-            {
-                return i;
-            }
-        }
-        return -1;
     }
    
 
@@ -60,7 +40,8 @@ internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
         {
             return expression;
         }
-        var selectMethods = SelectMethod.MakeGenericMethod(returnType, typeof(TDto));
+        var selectMethods =QueryFilterHelper.SelectMethodInfo
+            .MakeGenericMethod(returnType, typeof(TDto));
         var paramExpr = Expression.Parameter(returnType, "p");
         var selectExpr = GetSelectLambda(_filterMapping, paramExpr);
         return  Expression.Call(null, selectMethods, expression, selectExpr);
@@ -73,7 +54,7 @@ internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
         {
             return expression;
         }
-        var whereMethod = WhereMethod.MakeGenericMethod(type);
+        var whereMethod =QueryFilterHelper.WhereMethodInfo.MakeGenericMethod(type);
         return Expression.Call(null, whereMethod, expression, filterExpr);
     }
 
@@ -137,8 +118,8 @@ internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
                 memberBindings.Add(Expression.Bind(dtoProp, memberExpr));
             }
         }
-        var memverInitExpr = Expression.MemberInit(Expression.New(mapping.DtoType), memberBindings);
-        return Expression.Lambda(memverInitExpr, parameters);
+        var memberInitExpr = Expression.MemberInit(Expression.New(mapping.DtoType), memberBindings);
+        return Expression.Lambda(memberInitExpr, parameters);
     }
 
     private Expression GetFilterItemExpression(MemberExpression memberExpr
@@ -223,7 +204,6 @@ internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
         var filters = new List<Expression>();
         foreach (var (propName, filter) in dynamicQuery.Filters)
         {
-
             if (!_filterMapping.Mappings.TryGetValue(propName, out var mappingItem))
             {
                 continue;
