@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Data.Sqlite;
 
-public class SqliteDbConnectionProvider : IDbConnectionProvider, ISingletonDependency
+public class SqliteDbConnectionProvider : IDbConnectionProvider
 {
    
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
@@ -18,7 +18,7 @@ public class SqliteDbConnectionProvider : IDbConnectionProvider, ISingletonDepen
 
     public DbProviderFactory DbProviderFactory => SqliteFactory.Instance;
 
-    public DbConnection CreateConnection(string connectionString)
+    public virtual DbConnection CreateConnection(string connectionString)
     {
         return new SqliteConnection(connectionString);
     }

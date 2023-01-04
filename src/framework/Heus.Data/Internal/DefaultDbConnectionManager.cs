@@ -1,19 +1,21 @@
-﻿using System.Data.Common;
+﻿using System.Data;
+using System.Data.Common;
 using Heus.Core.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Heus.Data.Internal;
+
 internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDependency
 {
     private readonly IConnectionInfoResolver _connectionInfoResolver;
     private readonly DataOptions _options;
     private readonly ILogger<DefaultDbConnectionManager> _logger;
-
     private readonly Dictionary<string, DbConnectionWrapper> _connections = new();
+    private readonly List<DbConnection> _shouldDisposeConnections = new();
     public DefaultDbConnectionManager(IConnectionInfoResolver connectionInfoResolver
         , IOptions<DataOptions> options,
-     ILogger<DefaultDbConnectionManager> logger)
+        ILogger<DefaultDbConnectionManager> logger)
     {
         _connectionInfoResolver = connectionInfoResolver;
         _options = options.Value;
@@ -22,16 +24,11 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
 
     public void Dispose()
     {
-
-        _connections.Values.ForEach(c =>
+        _shouldDisposeConnections.ForEach(c =>
         {
-            //if (c.State != ConnectionState.Closed)
-            //{
-            //    _logger.LogInformation($"close connections,{c.ConnectionString}");
-
-            //}
-            c.DbConnection.Dispose();
+            c.Dispose();
         });
+        _shouldDisposeConnections.Clear();
         _connections.Clear();
     }
 
@@ -42,12 +39,19 @@ internal class DefaultDbConnectionManager : IDbConnectionManager, IScopedDepende
 
         var dbConnection = _connections.GetOrAdd(connectionString, (cs) =>
         {
-            var dbContextOptionsProvider = _options.DbConnectionProviders.First(p => p.DbProvider == connectionInfo.DbProvider);
-            _logger.LogDebug(" connectionString:{ConnectionString},DbContext:{DbContext},DbProvider:{DbProvider}", 
+            var dbContextOptionsProvider =
+                _options.DbConnectionProviders.First(p => p.DbProvider == connectionInfo.DbProvider);
+            _logger.LogDebug(" connectionString:{ConnectionString},DbContext:{DbContext},DbProvider:{DbProvider}",
                 connectionString, typeof(TDbContext).Name, connectionInfo.DbProvider);
             var connect = dbContextOptionsProvider.CreateConnection(cs);
-            connect.Open();
-            return new DbConnectionWrapper{
+            if (connect.State != ConnectionState.Open)
+            {
+                connect.Open();  
+                _shouldDisposeConnections.Add(connect);
+            }
+           
+            return new DbConnectionWrapper
+            {
                 DbConnection = connect, DbConnectionProvider = dbContextOptionsProvider
             };
         });
