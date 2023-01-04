@@ -16,6 +16,7 @@ internal class MemorySqlliteDbConnectionManager : IDbConnectionManager
     private readonly DbConnection _shareConnection;
     public MemorySqlliteDbConnectionManager()
     {
+        // _shareConnection = new SqliteConnection($"DataSource=test{DateTime.Now.Ticks};mode=memory;cache=shared");
         _shareConnection = new SqliteConnection("Filename=:memory:");
         _shareConnection.Open();
     }

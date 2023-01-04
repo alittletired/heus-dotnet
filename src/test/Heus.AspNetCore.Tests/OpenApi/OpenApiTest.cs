@@ -2,9 +2,9 @@
 
 namespace Heus.AspNetCore.Tests.OpenApi;
 
-public class OpenApiTest: WebIntegratedTestBase<AspNetWebApplicationFactory>
+public class OpenApiTest: AspNetIntegratedTest
 {
-    public OpenApiTest(AspNetWebApplicationFactory factory) : base(factory)
+    public OpenApiTest(WebApplicationFactory<AspNetCoreTestModule, Program> factory) : base(factory)
     {
     }
 
@@ -22,4 +22,6 @@ public class OpenApiTest: WebIntegratedTestBase<AspNetWebApplicationFactory>
         // var json1 = await _factory.HttpClient.GetStringAsync("/swagger/index.html?urls.primaryName=admin");
         json1.ShouldNotBeEmpty();
     }
+
+   
 }

@@ -7,9 +7,23 @@ using Heus.Ddd.Query;
 
 namespace Heus.Ddd.Dtos;
 
-public record DynamicSearchFilter(string Op, object Value, string? Field)
+public class  DynamicSearchFilter
 {
-  
+    public DynamicSearchFilter(string op, object value, string? field)
+    {
+        Op = op;
+        Value = value;
+        if (value is JsonElement jsonElement)
+        {
+            Value = jsonElement.ToString();
+        }
+      
+        Field = field;
+    }
+
+    public string Op { get; }
+   public object Value { get; }
+   public string? Field { get; }
   
 }
 public class DynamicSearch<T> : IPageRequest<T>

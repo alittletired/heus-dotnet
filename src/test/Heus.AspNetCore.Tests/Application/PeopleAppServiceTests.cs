@@ -2,40 +2,47 @@
 using Heus.AspNetCore.TestBase;
 
 using Heus.Ddd.Dtos;
+using Heus.Ddd.Query;
+using Heus.Ddd.TestModule;
 using Heus.Ddd.TestModule.Application;
 using Heus.Ddd.TestModule.Domain;
 
 namespace Heus.AspNetCore.Tests.Application;
 
-public class PeopleAppServiceTests: WebIntegratedTestBase<AspNetWebApplicationFactory>
+public class PeopleAppServiceTests:AspNetIntegratedTest
 {
     private readonly IUserAdminAppService _userAppService;
-    public PeopleAppServiceTests(AspNetWebApplicationFactory factory) : base(factory)
+    public PeopleAppServiceTests(WebApplicationFactory<AspNetCoreTestModule, Program> factory) : base(factory)
     {
         _userAppService = CreateServiceProxy<IUserAdminAppService>();
     }
-  
-    //private readonly IPeopleAppService _userAppService;
-    //private readonly IRepository<User> _repository;
-    //public PeopleAppServiceTests(AspNetWebApplicationFactory factory)
-    //{
-    //    _factory = factory;
-    //    _repository = repository;
-    //    _userAppService = _factory.GetServiceProxy<IPeopleAppService>();
-    //}
-
-    [Fact]
-    public async Task Search_Test()
+   
+   
+    [Theory]
+    [InlineData(nameof(User.Name),"",false)]
+    [InlineData(nameof(User.Name),MockData.UserName1,true)]
+    [InlineData(nameof(User.Phone),"notexist",false)]
+    public async Task Search_Test(string propName,string value,bool hasResult)
     {
         var search = new DynamicSearch<User>();
+        if (string.IsNullOrEmpty(value))
+        {
+            search.AddFilter(propName, OperatorTypes.Equal, value);     
+        }
+       
         var result = await _userAppService.SearchAsync(search);
-        result.Total.ShouldBeGreaterThan(0);
-        search.AddEqualFilter(s => s.Name, "test1");
-        var result2 = await _userAppService.SearchAsync(search);
-        result2.Total.ShouldBe(1);
-         search.AddEqualFilter(s => s.Phone, "notexist");
-        var result3 = await _userAppService.SearchAsync(search);
-        result3.Total.ShouldBe(0);
+        if (hasResult)
+        {
+            result.Total.ShouldBeGreaterThan(0);     
+        }
+        else
+        {
+            result.Total.ShouldBe(0);   
+        }
+       
+    
+       
     }
 
+   
 }

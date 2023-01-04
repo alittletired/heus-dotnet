@@ -19,13 +19,13 @@ internal class RemoteServiceProxy : DispatchProxy
         var request = HttpApiHelper.CreateHttpRequest(ProxyType,targetMethod, args);
         await ProxyFactory.PopulateRequestHeaders(request);
         var response = await HttpClient.SendAsync(request);
-
+        var content = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
         {
-            throw new BusinessException($"请求失败! request:{request},response:{response}");
+            throw new BusinessException($"请求失败! request:{request},response:{response},content:{content}");
         }
 
-        var content = await response.Content.ReadAsStringAsync();
+       
         var data = JsonUtils.Deserialize<ApiResult<T>>(content);
         if (data == null)
         {

@@ -5,10 +5,12 @@ using Heus.TestBase;
 
 namespace Heus.AspNetCore.TestBase;
 
-public abstract class WebIntegratedTestBase<T> : IntegratedTestBase, IClassFixture<T> where T : class, IWebApplicationFactory
+public abstract class WebIntegratedTestBase<TTestModule,TStartup> : IntegratedTestBase
+    ,IClassFixture<WebApplicationFactory<TTestModule,TStartup>> where TStartup : class
+
 {
-    protected readonly T _factory;
-    public WebIntegratedTestBase(T factory) : base(factory.Services)
+    protected readonly WebApplicationFactory<TTestModule,TStartup> _factory;
+    public WebIntegratedTestBase(WebApplicationFactory<TTestModule,TStartup> factory) : base(factory.Services)
     {
         _factory = factory;
     }

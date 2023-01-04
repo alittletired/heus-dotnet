@@ -8,7 +8,7 @@ namespace Heus.Ddd.TestModule;
 [DependsOn(typeof(DddModuleInitializer))]
 public class DddTestModuleInitializer: ModuleInitializerBase
 {
-    public async override Task InitializeAsync(IServiceProvider serviceProvider)
+    public override async Task InitializeAsync(IServiceProvider serviceProvider)
     {
         await serviceProvider.PerformUowTask(async sp =>
         {
@@ -20,16 +20,9 @@ public class DddTestModuleInitializer: ModuleInitializerBase
       {
           var userAppService = sp.GetRequiredService<IUserAdminAppService>();
           await MockData.Users.ForEachAsync(userAppService.CreateAsync);
-          //await userAppService.CreateAsync(MockData.User1);
-          //await userAppService.CreateAsync(MockData.User2);
-          //await userAppService.CreateAsync(MockData.User3);
-          //await userAppService.CreateAsync(MockData.User4);
-  
-
           var userAddressRepo = sp.GetRequiredService<IRepository<UserAddress>>();
           var addressRepo = sp.GetRequiredService<IRepository<Address>>();
           await MockData.Addresses.ForEachAsync(addressRepo.InsertAsync);
-
           await MockData.UserAddresses.ForEachAsync(userAddressRepo.InsertAsync);
          
       });

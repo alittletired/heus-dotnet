@@ -1,16 +1,12 @@
 ﻿
-using System.Net;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Extensions;
 using Heus.Core.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 namespace Heus.AspNetCore.TestBase;
 
-public interface IWebApplicationFactory {
-    IServiceProvider Services { get; }
-    
-}
-public  class WebApplicationFactory<TStartup,TTestModule> : WebApplicationFactory<TStartup>, IWebApplicationFactory where TStartup : class
+public  class WebApplicationFactory<TTestModule,TStartup> 
+    : WebApplicationFactory<TStartup> where TStartup : class
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
