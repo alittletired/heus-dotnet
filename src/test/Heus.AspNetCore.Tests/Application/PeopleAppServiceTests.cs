@@ -19,13 +19,13 @@ public class PeopleAppServiceTests:AspNetIntegratedTest
    
    
     [Theory]
-    [InlineData(nameof(User.Name),"",false)]
+    [InlineData(nameof(User.Name),"",true)]
     [InlineData(nameof(User.Name),MockData.UserName1,true)]
     [InlineData(nameof(User.Phone),"notexist",false)]
     public async Task Search_Test(string propName,string value,bool hasResult)
     {
         var search = new DynamicSearch<User>();
-        if (string.IsNullOrEmpty(value))
+        if (!string.IsNullOrEmpty(value))
         {
             search.AddFilter(propName, OperatorTypes.Equal, value);     
         }
