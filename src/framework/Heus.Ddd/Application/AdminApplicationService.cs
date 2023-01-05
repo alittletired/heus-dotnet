@@ -93,28 +93,16 @@ public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdate
 
     }
 
-    protected virtual async Task<TDto> MapToDto(TEntity entity)
+    private Task<TDto> MapToDto(TEntity entity)
     {
         if (entity is TDto dto)
         {
-            return dto;
+            return Task.FromResult(dto) ;
         }
-        //todo: 需要解析query，减少数据库查询
-        
-        var query = GetQuery(s => s.Id == entity.Id);
-        if (IsOnlyOneEntity(query))
-        {
-            return Mapper.Map<TDto>(entity);      
-        }
-        return await query.FirstAsync();
        
-    }
-
-    private bool IsOnlyOneEntity(IQueryable queryable)
-    {
-        // var methodCall = (MethodCallExpression)queryable.Expression;
-        // .Expression
-        return true;
+        dto= Mapper.Map<TDto>(entity);      
+        return Task.FromResult(dto) ;
+       
     }
 
     public virtual async Task<TDto> CreateAsync(TCreateDto createDto)

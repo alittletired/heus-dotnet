@@ -1,21 +1,20 @@
 using Heus.Ddd.Query;
 namespace Heus.Ddd.Dtos;
+
 public static class QueryExtensions
 {
-    public static IQueryable< TDto> CastQueryable<TSource,TDto>(this IQueryable<TSource> queryable)
+    public static IQueryable<TDto> CastQueryable<TSource, TDto>(this IQueryable<TSource> queryable)
     {
         if (typeof(TSource) == typeof(TDto))
             return (IQueryable<TDto>)queryable;
-        var visitor = new QueryExpressionVisitor<TSource, TDto>(queryable,null);
+        var visitor = new QueryExpressionVisitor<TSource, TDto>(queryable, null);
         return visitor.Translate();
     }
 
-    public async static Task<PageList<TDto>> ToPageListAsync<TSource,TDto>(this IQueryable<TSource> queryable,
+    public static async Task<PageList<TDto>> ToPageListAsync<TSource, TDto>(this IQueryable<TSource> queryable,
         IPageRequest<TDto> queryDto)
     {
-
-        QueryExpressionVisitor<TSource,TDto> visitor = new(queryable, queryDto);
-        var query = visitor.Translate();
+        var query = TranslateQuery(queryable, queryDto);
         var total = await query.CountAsync();
         var items = new List<TDto>();
         if (total > 0)
@@ -27,15 +26,15 @@ public static class QueryExtensions
         return new PageList<TDto>() { Total = total, Items = items };
     }
 
-    public async static Task<TDto?> FirstOrDefaultAsync<TSource, TDto>(IQueryable<TSource> queryable, IPageRequest<TDto> queryDto) 
+    public static async Task<TDto?> FirstOrDefaultAsync<TSource, TDto>(IQueryable<TSource> queryable,
+        IPageRequest<TDto> queryDto)
     {
         var query = TranslateQuery(queryable, queryDto);
         return await query.FirstOrDefaultAsync();
     }
 
-  
-
-    private static  IQueryable<TDto> TranslateQuery<TSource,TDto>(this IQueryable<TSource> queryable, IPageRequest<TDto> queryDto) 
+    private static IQueryable<TDto> TranslateQuery<TSource, TDto>(this IQueryable<TSource> queryable,
+        IPageRequest<TDto> queryDto)
     {
         var visitor = new QueryExpressionVisitor<TSource, TDto>(queryable, queryDto);
         return visitor.Translate();
