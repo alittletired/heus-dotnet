@@ -25,7 +25,6 @@ public class RepositoryTests : DddIntegratedTest
         };
         await ServiceProvider.PerformUowTask(async () =>
         {
-          
             await _userRepository.InsertManyAsync(users);
         });
         var count1 = await _userRepository.Query.CountAsync();
@@ -35,17 +34,19 @@ public class RepositoryTests : DddIntegratedTest
     [Fact]
     public async Task UpdateManyAsync_Test()
     {
-        var users = await _userRepository.Query.ToListAsync();
+        var users = await _userRepository.Query.AsNoTracking().ToListAsync();
        
         await ServiceProvider.PerformUowTask(async () =>
         {
-            await _userRepository.UpdateManyAsync(users);
+            var users1 = await _userRepository.Query.AsNoTracking().ToListAsync();
+            await Task.Delay(TimeSpan.FromMilliseconds(10));
+            await _userRepository.UpdateManyAsync(users1);
         });
-        var users1 = await _userRepository.Query.ToListAsync();
+        var users1 = await _userRepository.Query.AsNoTracking().ToListAsync();
         foreach (var user in users)
         {
             var user1 = users1.First(s => s.Id == user.Id);
-            user1.UpdateDate.ShouldBeGreaterThan(user.UpdateDate);
+            user1.UpdateDate.Ticks.ShouldBeGreaterThan(user.UpdateDate.Ticks);
         }
 
     }
