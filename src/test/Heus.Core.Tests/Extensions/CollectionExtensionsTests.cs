@@ -29,4 +29,13 @@ public class CollectionExtensionsTests
         list.Sum().ShouldBe(sum);
         _nullList.ForEach(I => { });
     }
+    [Fact]
+    public async Task ForEachAsync_Test()
+    {
+        var list = TestList;
+        var sum = 0;
+        await list.ForEachAsync( i => Task.FromResult(sum += i));
+        list.Sum().ShouldBe(sum);
+        await _nullList.ForEachAsync(i => Task.FromResult(sum += i));
+    }
 }

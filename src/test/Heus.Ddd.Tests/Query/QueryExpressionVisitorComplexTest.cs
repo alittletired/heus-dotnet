@@ -72,35 +72,56 @@ public class QueryExpressionVisitorComplexTest : DddIntegratedTest
             result.Items.Count().ShouldBe(0);
         }
     }
+
     [Theory]
     [InlineData(nameof(UserAddressDto.Name), OperatorTypes.Equal, MockData.UserName1, true)]
-    [InlineData(nameof(UserAddressDto.Name), OperatorTypes.Equal, MockData.UserName1+"test12222", false)]
+    [InlineData(nameof(UserAddressDto.Name), OperatorTypes.Equal, MockData.UserName1 + "test12222", false)]
     [InlineData(nameof(UserAddressDto.AddressCity), OperatorTypes.Equal, MockData.AddressCity1, true)]
-    [InlineData(nameof(UserAddressDto.AddressCity), OperatorTypes.Equal, MockData.AddressCity1+"异常", false)]
+    [InlineData(nameof(UserAddressDto.AddressCity), OperatorTypes.Equal, MockData.AddressCity1 + "异常", false)]
     public async Task LeftJoinUsingWhereTest(string propName, string operatorType, string value, bool hasResult)
     {
         var query = from u in _userRepository.Query
-                    join ua in _userAddressRepository.Query on u.Id equals ua.UserId
-                    from a in _addressRepository.Query.Where(a => a.Id == ua.AddressId).DefaultIfEmpty()
-                    select new { u, a };
-        var search = new DynamicSearch<UserAddressDto>();
+            join ua in _userAddressRepository.Query on u.Id equals ua.UserId
+            from a in _addressRepository.Query.Where(a => a.Id == ua.AddressId).DefaultIfEmpty()
+            select new { u, a };
 
-        search.AddFilter(propName, operatorType, value);
-        var result = await query.ToPageListAsync(search);
-        CheckResult(result, hasResult, propName, value);
+        await LeftJoinCheck(query, propName, operatorType, value, hasResult);
 
 
-        // query = from u in _userRepository.Query
-        //            join ua in _userAddressRepository.Query on u.Id equals ua.UserId
-        //            from a in _addressRepository.Query.Where(a => a.Id == ua.AddressId).DefaultIfEmpty()
-        //         where a.City != ""
-        //         select new { u, a };
-      
-        //var result1 = await query.ToPageListAsync(search);
-        //CheckResult(result1, hasResult, propName, value);
+        query = from u in _userRepository.Query
+            join ua in _userAddressRepository.Query on u.Id equals ua.UserId
+            from a in _addressRepository.Query.Where(a => a.Id == ua.AddressId).DefaultIfEmpty()
+            where a.City != ""
+            select new { u, a };
+
+        await LeftJoinCheck(query, propName, operatorType, value, hasResult);
+
+        var query1 = from u in _userRepository.Query
+            join ua in _userAddressRepository.Query on u.Id equals ua.UserId
+            join a in _addressRepository.Query on ua.AddressId equals a.Id into gj
+            from a1 in gj.DefaultIfEmpty()
+            where a1.City != ""
+            select new { u, a1 };
+
+        await LeftJoinCheck(query1, propName, operatorType, value, hasResult);
+        var query2 = from u in _userRepository.Query
+            join ua in _userAddressRepository.Query on u.Id equals ua.UserId
+            join a in _addressRepository.Query on ua.AddressId equals a.Id into gj
+            from a1 in gj.DefaultIfEmpty()
+            select new { u, a1 };
+
+        await LeftJoinCheck(query2, propName, operatorType, value, hasResult);
 
     }
 
+    private async Task LeftJoinCheck<TSource>(IQueryable<TSource> query,
+        string propName, string operatorType, string value, bool hasResult)
+    {
+        var search = new DynamicSearch<UserAddressDto>();
+        search.AddFilter(propName, operatorType, value);
+        var result = await query.ToPageListAsync(search);
+        CheckResult(result, hasResult, propName, value);
+    }
     
 
 }

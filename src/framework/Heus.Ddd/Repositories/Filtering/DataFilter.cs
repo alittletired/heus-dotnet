@@ -1,13 +1,14 @@
 ﻿using Heus.Core.DependencyInjection;
 using System.Collections.Concurrent;
 using Heus.Core.Common;
+using Heus.Core.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Repositories.Filtering;
 
     internal class DataFilter : IDataFilter, ISingletonDependency
     {
-        private readonly ConcurrentDictionary<Type, object> _filters = new ConcurrentDictionary<Type, object>();
+        private readonly ConcurrentDictionary<Type, object> _filters = new ();
 
         private readonly IServiceProvider _serviceProvider;
 
@@ -38,16 +39,21 @@ namespace Heus.Ddd.Repositories.Filtering;
         private IDataFilter<TFilter> GetFilter<TFilter>()
             where TFilter : class
         {
-            return (IDataFilter<TFilter>)_filters.GetOrAdd(
-                typeof(TFilter), () => _serviceProvider.GetRequiredService<IDataFilter<TFilter>>()
-            ) ;
+         var filter=  _filters.GetOrAdd(
+                typeof(TFilter), _ =>
+                {
+                    var filter=  _serviceProvider.GetRequiredService<IDataFilter<TFilter>>();
+                    return filter;
+                
+                }) ;
+         return (IDataFilter<TFilter>)filter;
         }
     }
 
 internal class DataFilter<TFilter> : IDataFilter<TFilter>
     where TFilter : class
 {
-    private readonly AsyncLocal<DataFilterState> _filter = new AsyncLocal<DataFilterState>();
+    private readonly AsyncLocal<DataFilterState?> _filter = new ();
     public bool IsEnabled => Current.IsEnabled;
 
     protected DataFilterState Current
@@ -70,10 +76,7 @@ internal class DataFilter<TFilter> : IDataFilter<TFilter>
         {
             return NullDisposable.Instance;
         }
-
-        Current.IsEnabled = true;
-
-        return DisposeAction.Create(() => Disable());
+        return AsyncLocalUtils.BeginScope(_filter, new DataFilterState( true) );
     }
 
     public IDisposable Disable()
@@ -83,9 +86,7 @@ internal class DataFilter<TFilter> : IDataFilter<TFilter>
             return NullDisposable.Instance;
         }
 
-        Current.IsEnabled = false;
-
-        return DisposeAction.Create(() => Enable());
+        return AsyncLocalUtils.BeginScope(_filter, new DataFilterState(false));
     }
 
 

@@ -4,6 +4,7 @@ using Heus.Core.DependencyInjection;
 using Heus.Data;
 using Heus.Data.Utils;
 using Heus.Ddd.Repositories;
+using Heus.Ddd.Repositories.Filtering;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -23,7 +24,7 @@ public class DddModuleInitializer : ModuleInitializerBase
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-
+        context.Services.AddSingleton(typeof(IDataFilter<>), typeof(DataFilter<>));
     }
 
     public override void PostConfigureServices(ServiceConfigurationContext context)

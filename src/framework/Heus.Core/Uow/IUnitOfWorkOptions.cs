@@ -3,11 +3,11 @@ namespace Heus.Core.Uow;
 
 public interface IUnitOfWorkOptions
 {
-    public IsolationLevel? IsolationLevel { get; set; }
-    public bool IsTransactional { get; set; }
+    public IsolationLevel? IsolationLevel { get;  }
+    public bool IsTransactional { get;  }
 
     /// <summary>
     /// Milliseconds
     /// </summary>
-    public int? Timeout { get; set; }
+    public int? Timeout { get;  }
 }

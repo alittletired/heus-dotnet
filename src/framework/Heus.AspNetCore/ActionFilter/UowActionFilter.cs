@@ -7,10 +7,12 @@ namespace Heus.AspNetCore.ActionFilter;
 internal class UowActionFilter : IAsyncActionFilter, IScopedDependency
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
+
     public UowActionFilter(IUnitOfWorkManager unitOfWorkManager)
     {
         _unitOfWorkManager = unitOfWorkManager;
     }
+
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         if (!context.ActionDescriptor.IsControllerAction())
@@ -18,6 +20,7 @@ internal class UowActionFilter : IAsyncActionFilter, IScopedDependency
             await next();
             return;
         }
+
         var methodInfo = context.ActionDescriptor.GetMethodInfo();
         var unitOfWorkAttr = UnitOfWorkHelper.GetUnitOfWorkAttributeOrNull(methodInfo);
         if (unitOfWorkAttr?.IsDisabled == true)
@@ -38,12 +41,12 @@ internal class UowActionFilter : IAsyncActionFilter, IScopedDependency
             await uow.RollbackAsync(context.HttpContext.RequestAborted);
         }
     }
+
     private UnitOfWorkOptions CreateOptions(ActionExecutingContext context, UnitOfWorkAttribute? unitOfWorkAttribute)
     {
-        var options = new UnitOfWorkOptions();
-        unitOfWorkAttribute?.SetOptions(options);
+        var options = new UnitOfWorkOptions(unitOfWorkAttribute);
         //context.HttpContext.RequestServices
-        if (unitOfWorkAttribute?.IsTransactional == null)
+        if (unitOfWorkAttribute?.IsTransactional.HasValue == false)
         {
             options.IsTransactional = !string.Equals(context.HttpContext.Request.Method
                 , HttpMethod.Get.Method, StringComparison.OrdinalIgnoreCase);
@@ -51,6 +54,7 @@ internal class UowActionFilter : IAsyncActionFilter, IScopedDependency
 
         return options;
     }
+
     private static bool Succeed(ActionExecutedContext result)
     {
         return result.Exception == null || result.ExceptionHandled;

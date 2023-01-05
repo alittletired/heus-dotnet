@@ -25,21 +25,5 @@ public class UnitOfWorkAttribute:Attribute
     /// Default: false.
     /// </summary>
     public bool IsDisabled { get; set; }
-    public virtual void SetOptions(UnitOfWorkOptions options)
-    {
-        if (IsTransactional.HasValue)
-        {
-            options.IsTransactional = IsTransactional.Value;
-        }
-
-        if (Timeout.HasValue)
-        {
-            options.Timeout = Timeout;
-        }
-
-        if (IsolationLevel.HasValue)
-        {
-            options.IsolationLevel = IsolationLevel;
-        }
-    }
+   
 }

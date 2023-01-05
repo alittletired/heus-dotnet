@@ -35,7 +35,6 @@ public static class CollectionExtensions
 
     public static void ForEach<T>(this IEnumerable<T>? source, Action<T> action)
     {
-        ArgumentNullException.ThrowIfNull(action);
         if (source == null)
         {
             return;
@@ -47,7 +46,6 @@ public static class CollectionExtensions
     }
     public async static Task ForEachAsync<T, TResult>(this IEnumerable<T>? source, Func<T, Task<TResult>> action)
     {
-        ArgumentNullException.ThrowIfNull(action);
         if (source == null)
         {
             return;

@@ -55,11 +55,19 @@ public class JsonUtilsTests
     }
     
     [Fact]
-    public void Deserialize_Long_Convert()
+    public void Deserialize_Long_To_Long_Convert()
     {
       
         var obj= JsonUtils.Deserialize<TestJson>(_json1);
         obj.ShouldNotBeNull();
         obj.Id.ShouldBe(123);
+        
+    }
+    [Fact]
+    public void Deserialize_Long_To_String_Convert()
+    {
+        var obj2= JsonUtils.Deserialize<TestJson>(_json2);
+        obj2.ShouldNotBeNull();
+        obj2.Id.ShouldBe(123);
     }
 }

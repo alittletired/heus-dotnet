@@ -37,7 +37,7 @@ public abstract class RepositoryBase<TEntity> :
         get
         {
             var query = DbContext.Set<TEntity>().AsQueryable();
-            return query;
+            return ApplyDataFilter(query);
             //if (UnitOfWorkManager.Current?.Options.IsTransactional == true)
             //{
             //    return query;
@@ -46,6 +46,17 @@ public abstract class RepositoryBase<TEntity> :
         }
     }
 
+    private IQueryable<TEntity> ApplyDataFilter(IQueryable<TEntity> queryable)
+    {
+        if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
+        {
+            return queryable.WhereIf(DataFilter.IsEnabled<ISoftDelete>(), e => !EF.Property<bool>(e,nameof(ISoftDelete.IsDeleted)));
+
+        }
+
+        return queryable;
+
+    }
    
     public async Task<TEntity> InsertAsync(TEntity entity)
     {
@@ -129,26 +140,5 @@ public abstract class RepositoryBase<TEntity> :
     {
         return await Query.FirstOrDefaultAsync(predicate);
     }
-
-
-
-    protected TQueryable ApplyDataFilters<TQueryable>(TQueryable query)
-        where TQueryable : IQueryable<TEntity>
-    {
-        return ApplyDataFilters<TQueryable, TEntity>(query);
-    }
-
-    protected virtual TQueryable ApplyDataFilters<TQueryable, TOtherEntity>(TQueryable query)
-        where TQueryable : IQueryable<TOtherEntity>
-    {
-        if (typeof(ISoftDelete).IsAssignableFrom(typeof(TOtherEntity)))
-        {
-            query = (TQueryable)query.WhereIf(DataFilter.IsEnabled<ISoftDelete>(),
-                e => ((ISoftDelete)e!).IsDeleted == false);
-        }
-
-        return query;
-    }
-
 
 }
