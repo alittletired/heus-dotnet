@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Linq.Expressions;
 using Heus.Ddd.Application.Services;
 using Heus.Ddd.Domain;
@@ -63,10 +62,8 @@ public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdate
     public virtual async Task<TDto> GetAsync(long id)
     {
         var dto = await GetQuery(s => s.Id == id).FirstOrDefaultAsync();
-        if (dto == null)
-        {
-            throw new EntityNotFoundException(typeof(TEntity), id);
-        }
+        EntityNotFoundException.ThrowIfNull(dto,nameof(IEntity.Id),id);
+       
         return dto;
     }
 

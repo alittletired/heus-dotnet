@@ -1,9 +1,5 @@
-using Heus.Ddd.Domain;
 using Heus.Ddd.Query;
-
-
 namespace Heus.Ddd.Dtos;
-
 public static class QueryExtensions
 {
     public static IQueryable< TDto> CastQueryable<TSource,TDto>(this IQueryable<TSource> queryable)
@@ -37,17 +33,7 @@ public static class QueryExtensions
         return await query.FirstOrDefaultAsync();
     }
 
-    public async static Task<TDto> FirstAsync<TSource, TDto>(IQueryable<TSource> queryable, IPageRequest<TDto> queryDto) 
-    {
-        var query = TranslateQuery(queryable, queryDto);
-        var data= await query.FirstOrDefaultAsync();
-        if (data == null)
-        {
-            throw new EntityNotFoundException(typeof(TDto));
-        }
-
-        return data;
-    }
+  
 
     private static  IQueryable<TDto> TranslateQuery<TSource,TDto>(this IQueryable<TSource> queryable, IPageRequest<TDto> queryDto) 
     {

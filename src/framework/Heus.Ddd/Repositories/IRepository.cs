@@ -20,11 +20,7 @@ public interface IRepository<TEntity> where TEntity : class, IEntity
     async Task<TEntity> GetByIdAsync(long id)
     {
         var entity = await FindOneAsync(s=>s.Id==id);
-        if (entity == null)
-        {
-            throw new EntityNotFoundException(typeof(TEntity), id);
-        }
-
+        EntityNotFoundException.ThrowIfNull(entity,nameof(IEntity.Id),id);
         return entity;
     }
    

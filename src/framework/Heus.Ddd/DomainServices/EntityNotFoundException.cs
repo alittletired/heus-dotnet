@@ -1,40 +1,38 @@
-using System.Runtime.Serialization;
-using Heus.Core;
-using Heus.Ddd.Entities;
+
+
+using System.Diagnostics.CodeAnalysis;
 
 namespace Heus.Ddd.Domain;
 public class EntityNotFoundException:BusinessException
 {
-    public static EntityNotFoundException Create<TEntity>(TEntity? entity, string findBy, string value)
+    public static void ThrowIfNull<T>([NotNull] T? argument, string property, object value)
     {
-        return new EntityNotFoundException(typeof(TEntity), findBy, value);
-    }
+        if (argument != null)
+            return;
+        Throw(typeof(T), property, value);
+    } 
+    [DoesNotReturn]
+    private static void Throw(Type entityType, string property,object? value) => 
+        throw new EntityNotFoundException(entityType,property,value);
+   
     /// <summary>
     /// Type of the entity.
     /// </summary>
-    public Type EntityType { get; set; }
+    public Type EntityType { get; }
     
-    public string FindBy { get; set; }
-    public object? Value { get; set; }
-    public EntityNotFoundException(Type entityType)
-        : this(entityType, "id", null)
-    {
-
-    }
+    public string Property { get;  }
+    public object? Value { get;  }
+    
   
     /// <summary>
     /// Creates a new <see cref="EntityNotFoundException"/> object.
     /// </summary>
-    public EntityNotFoundException(Type entityType, long id)
-        : this(entityType,"id", id)
-    {
-
-    }
-    public EntityNotFoundException(Type entityType, string findBy,object? value)
-      :base($"entity not found,type:{entityType},{findBy}:{value}")
+    
+    public EntityNotFoundException(Type entityType, string property,object? value)
+      :base($"entity not found,type:{entityType},{property}:{value}")
     {
         EntityType = entityType;
-        FindBy = findBy;
+        Property = property;
         Value = value;
     }
    

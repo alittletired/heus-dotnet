@@ -1,4 +1,6 @@
-﻿using Heus.Ddd.Repositories;
+﻿using Heus.Ddd.Domain;
+using Heus.Ddd.Repositories;
+using Heus.Ddd.TestModule;
 using Heus.Ddd.TestModule.Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +17,7 @@ public class RepositoryTests : DddIntegratedTest
     }
 
     [Fact]
-    public async Task InsertManyAsync_Test()
+    public async Task Insert_Delete_ManyAsync_Test()
     {
         var count = await _userRepository.Query.CountAsync();
         var users = new List<User>() {
@@ -29,7 +31,13 @@ public class RepositoryTests : DddIntegratedTest
         });
         var count1 = await _userRepository.Query.CountAsync();
        ( count1- count).ShouldBe(users.Count);
-
+       await ServiceProvider.PerformUowTask(async () =>
+       {
+           await _userRepository.DeleteManyAsync(users);
+       });
+       var count2 = await _userRepository.Query.CountAsync();
+       count2.ShouldBe(count);
+       
     }
     [Fact]
     public async Task UpdateManyAsync_Test()
@@ -49,5 +57,22 @@ public class RepositoryTests : DddIntegratedTest
             user1.UpdateDate.Ticks.ShouldBeGreaterThan(user.UpdateDate.Ticks);
         }
 
+    }
+
+    [Fact]
+    public async Task GetById_ThrowError_When_NotExists()
+    {
+     var ex=  await Assert.ThrowsAsync<EntityNotFoundException>(
+         async () =>await _userRepository.GetByIdAsync(-1));
+     ex.Value.ShouldBe(-1);
+     ex.EntityType.ShouldBe(typeof(User));
+     ex.Property.ShouldBe(nameof(User.Id));
+    }
+    [Fact]
+    public async Task Delete()
+    {
+        await _userRepository.DeleteByIdAsync(-1);
+       
+        await _userRepository.DeleteByIdAsync(MockData.Users[^1].Id);
     }
 }

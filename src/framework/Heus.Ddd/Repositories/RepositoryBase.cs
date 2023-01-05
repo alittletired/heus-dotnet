@@ -15,21 +15,14 @@ public abstract class RepositoryBase<TEntity> :
     IRepository<TEntity>, IScopedDependency where TEntity : class, IEntity
 {
     protected  IServiceProvider ServiceProvider { get; }
-    protected IUnitOfWorkManager UnitOfWorkManager { get; }
+   
     protected IDataFilter DataFilter => ServiceProvider.GetRequiredService<IDataFilter>();
     protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
-    protected  DbContext DbContext
-    {
-        get
-        {
-            return ServiceProvider.GetRequiredService<IDbContextProvider>().CreateDbContext<TEntity>();
-        }
-    }
+    protected  DbContext DbContext => ServiceProvider.GetRequiredService<IDbContextProvider>().CreateDbContext<TEntity>();
 
     public RepositoryBase(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
-        UnitOfWorkManager = ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
     }
 
     public IQueryable<TEntity> Query
