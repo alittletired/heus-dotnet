@@ -8,11 +8,9 @@ public class ApiResultTests
     public void Test_Error()
     {
 
-        var result = ApiResult.Error(new Exception("error"));
+        var result = ApiResult.FromException(new Exception("error"));
         result.Code.ShouldBe(500);
         result.Message.ShouldNotBeNull();
-
-
     }
     [Fact]
     public void Test_Ok()

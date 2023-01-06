@@ -1,10 +1,11 @@
 using Heus.Core.Common;
+using Heus.Core.DependencyInjection;
 using Heus.Core.Utils;
 using Microsoft.Net.Http.Headers;
 
 namespace Heus.AspNetCore.ExceptionHandling;
 
-public class ExceptionHandlingMiddleware:IMiddleware
+public class ExceptionHandlingMiddleware:IMiddleware,IScopedDependency
 {
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
@@ -40,7 +41,8 @@ public class ExceptionHandlingMiddleware:IMiddleware
             httpContext.Response.StatusCode = 200;
             httpContext.Response.OnStarting(ClearCacheHeaders, httpContext.Response);
             httpContext.Response.Headers.Add("Content-Type", "application/json");
-            await httpContext.Response.WriteAsync(JsonUtils.Serialize(ApiResult.Error(exception)));
+            var error = JsonUtils.Serialize(ApiResult.FromException(exception));
+            await httpContext.Response.WriteAsync(error);
         
     }
       private Task ClearCacheHeaders(object state)

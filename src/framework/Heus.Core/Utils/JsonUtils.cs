@@ -12,7 +12,7 @@ public static class JsonUtils
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        NumberHandling = JsonNumberHandling.WriteAsString
+        // NumberHandling = JsonNumberHandling.WriteAsString
     };
 
     static JsonUtils()

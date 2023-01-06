@@ -10,11 +10,16 @@ public  class ApiResult
         Code = code;
         Message = message;
     }
-    public static ApiResult Error(Exception ex)
+    public static ApiResult FromException(Exception ex)
     {
-        return new ApiResult (500,ex.Message) ;
+        var code = 500;
+        if (ex is BusinessException businessException)
+        {
+            code = businessException.Code;
+        }
+        return new ApiResult (code,ex.Message) ;
     }
-    public static ApiResult<T> Ok<T>(T? data)
+    public static ApiResult<T> Ok<T>(T data)
     {
         return new ApiResult<T>( data);
     }
@@ -22,10 +27,10 @@ public  class ApiResult
 
 public class ApiResult<T> : ApiResult
 {
-    public ApiResult(T? data) : base(0, null)
+    public ApiResult(T data,int code=0, string? message=null) : base(code, message)
     {
         Data = data;
     }
-    public T? Data { get;  }
-   
+    public T? Data { get; }
+
 }

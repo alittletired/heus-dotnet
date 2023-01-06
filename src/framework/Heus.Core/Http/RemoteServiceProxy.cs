@@ -34,7 +34,7 @@ internal class RemoteServiceProxy : DispatchProxy
 
         if (data.Code != 0)
         {
-            throw new BusinessException(data.Message!);
+            throw new BusinessException(data.Message!,data.Code);
         }
 
         return data.Data;

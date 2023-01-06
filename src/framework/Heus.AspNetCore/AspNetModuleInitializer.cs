@@ -2,6 +2,7 @@ using System.Text;
 using Heus.AspNetCore.ActionFilter;
 using Heus.AspNetCore.Authorization;
 using Heus.AspNetCore.Conventions;
+using Heus.AspNetCore.ExceptionHandling;
 using Heus.AspNetCore.OpenApi;
 using Heus.AspNetCore.Validation;
 using Heus.Core.DependencyInjection;
@@ -93,6 +94,7 @@ public class AspNetModuleInitializer : ModuleInitializerBase
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors("AnyOrigin");
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
         // if (context.Environment.IsDevelopment())
         // {
         //     app.UseMiddleware<DevAuthenticationMiddleware>();

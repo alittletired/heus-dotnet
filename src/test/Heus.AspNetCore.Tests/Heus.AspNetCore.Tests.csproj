@@ -6,5 +6,8 @@
 	  <ProjectReference Include="..\Heus.AspNetCore.TestBase\Heus.AspNetCore.TestBase.csproj" />
 	  <ProjectReference Include="..\Heus.Ddd.TestModule\Heus.Ddd.TestModule.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="ExceptionHandling" />
+	</ItemGroup>
 
 </Project>

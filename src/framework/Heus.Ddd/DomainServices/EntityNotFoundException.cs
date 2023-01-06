@@ -29,8 +29,9 @@ public class EntityNotFoundException:BusinessException
     /// </summary>
     
     public EntityNotFoundException(Type entityType, string property,object? value)
-      :base($"entity not found,type:{entityType},{property}:{value}")
+      :base($"entity not found,type:{entityType},{property}:{value}",404)
     {
+      
         EntityType = entityType;
         Property = property;
         Value = value;

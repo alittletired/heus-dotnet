@@ -1,6 +1,7 @@
 ﻿
 using Heus.AspNetCore.TestBase;
-
+using Heus.Core;
+using Heus.Ddd.Domain;
 using Heus.Ddd.Dtos;
 using Heus.Ddd.Query;
 using Heus.Ddd.TestModule;
@@ -16,8 +17,16 @@ public class PeopleAppServiceTests:AspNetIntegratedTest
     {
         _userAppService = CreateServiceProxy<IUserAdminAppService>();
     }
-   
-   
+
+    [Fact]
+    public async Task Get_ThrowError()
+    {
+     var ex=   await Assert.ThrowsAsync<BusinessException>(() => _userAppService.GetAsync(-1));
+     ex.Code.ShouldBe(404);
+     
+
+    }
+
     [Theory]
     [InlineData(nameof(User.Name),"",true)]
     [InlineData(nameof(User.Name),MockData.UserName1,true)]
