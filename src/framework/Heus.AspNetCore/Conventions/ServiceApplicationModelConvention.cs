@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace Heus.AspNetCore.Conventions;
 
-internal class ServiceApplicationModelConvention:IApplicationModelConvention
+internal class ServiceApplicationModelConvention : IApplicationModelConvention
 {
     public void Apply(ApplicationModel application)
     {
@@ -20,18 +20,19 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
             }
         }
     }
-    protected  void ConfigureApplicationService(ControllerModel controller )
+
+    private void ConfigureApplicationService(ControllerModel controller)
     {
-      
+
         ConfigureSelector(controller);
         ConfigureParameters(controller);
     }
-  
+
     private void ConfigureParameters(ControllerModel controller)
     {
         foreach (var action in controller.Actions)
         {
-            
+
             foreach (var parameter in action.Parameters)
             {
                 if (parameter.BindingInfo != null)
@@ -39,7 +40,7 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
                     continue;
                 }
 
-                if ((parameter.ParameterType.IsClass|| parameter.ParameterType.IsAssignableTo(typeof(IEnumerable)) )&&
+                if ((parameter.ParameterType.IsClass || parameter.ParameterType.IsAssignableTo(typeof(IEnumerable))) &&
                     parameter.ParameterType != typeof(string) &&
                     parameter.ParameterType != typeof(IFormFile))
                 {
@@ -58,6 +59,7 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
             }
         }
     }
+
     private void ConfigureSelector(ControllerModel controller)
     {
         RemoveEmptySelectors(controller.Selectors);
@@ -85,6 +87,7 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
             ConfigureSelector(action);
         }
     }
+
     private void ConfigureSelector(ActionModel action)
     {
         RemoveEmptySelectors(action.Selectors);
@@ -98,35 +101,39 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
             NormalizeSelectorRoutes(action);
         }
     }
+
     private void AddApplicationServiceSelector(ActionModel action)
     {
         var httpMethod = HttpMethodHelper.GetHttpMethod(action.ActionMethod);
         var routeTemplate = HttpApiHelper.CalculateRouteTemplate(action.Controller.ControllerType, action.ActionMethod);
         var routeAttr = new RouteAttribute(routeTemplate);
-        var selector =  new SelectorModel
-        {
+        var selector = new SelectorModel {
             AttributeRouteModel = new AttributeRouteModel(routeAttr),
             ActionConstraints = { new HttpMethodActionConstraint(new[] { httpMethod.ToString() }) }
         };
 
         action.Selectors.Add(selector);
     }
-   
-    
+
+
     private void NormalizeSelectorRoutes(ActionModel action)
     {
         foreach (var selector in action.Selectors)
         {
-            var routeTemplate = HttpApiHelper.CalculateRouteTemplate(action.Controller.ControllerType,action.ActionMethod);
-            selector.AttributeRouteModel ??= new AttributeRouteModel(new RouteAttribute( routeTemplate));
+            var routeTemplate =
+                HttpApiHelper.CalculateRouteTemplate(action.Controller.ControllerType, action.ActionMethod);
+            selector.AttributeRouteModel ??= new AttributeRouteModel(new RouteAttribute(routeTemplate));
 
             if (selector.ActionConstraints.OfType<HttpMethodActionConstraint>()
                     .FirstOrDefault()?.HttpMethods.FirstOrDefault() == null)
             {
-                selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { HttpMethodHelper.GetHttpMethod(action.ActionMethod).ToString() }));
+                selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] {
+                    HttpMethodHelper.GetHttpMethod(action.ActionMethod).ToString()
+                }));
             }
         }
     }
+
     private void RemoveEmptySelectors(IList<SelectorModel> selectors)
     {
         for (var i = selectors.Count - 1; i >= 0; i--)
@@ -140,5 +147,5 @@ internal class ServiceApplicationModelConvention:IApplicationModelConvention
             }
         }
     }
-  
+
 }

@@ -13,7 +13,7 @@ public class DataOptions
 
     public DataOptions()
     {
-        ModelConfigurations = new() { DefaultModelConfiguration };
+       
         ConfigureDbContextOptions = new() {
             (builder) =>
             {
@@ -39,28 +39,9 @@ public class DataOptions
         };
     }
 
-    internal static readonly Action<ModelConfigurationBuilder> DefaultModelConfiguration = (options) =>
-    {
-        var modelBuilder = options.CreateModelBuilder(null);
-        var propertyTypes = modelBuilder.Model.GetEntityTypes()
-            .SelectMany(e => e.ClrType.GetProperties())
-            .Where(p => p.PropertyType.IsGenericType 
-                        && p.PropertyType.GetGenericTypeDefinition() == typeof(EnumClass<>))
-            .Select(p => p.PropertyType)
-            .Distinct();
+  
 
-        foreach (var propertyType in propertyTypes)
-        {
-            var converterType = typeof(EnumClassValueConverter<>).MakeGenericType(propertyType);
-            options.Properties(propertyType)
-                .HaveConversion(converterType);
-        }
-        //options.Properties<long>()
-        // .HaveConversion<longConverter>().HaveMaxLength(24).AreUnicode(false);
-    };
-
-
-    public List<Action<ModelConfigurationBuilder>> ModelConfigurations { get; } 
+ 
    
 
 }

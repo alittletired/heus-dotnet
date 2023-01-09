@@ -5,7 +5,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace Heus.AspNetCore.ExceptionHandling;
 
-public class ExceptionHandlingMiddleware:IMiddleware,IScopedDependency
+public class ExceptionHandlingMiddleware : IMiddleware, IScopedDependency
 {
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
@@ -22,38 +22,32 @@ public class ExceptionHandlingMiddleware:IMiddleware,IScopedDependency
         }
         catch (Exception ex)
         {
-            // We can't do anything if the response has already started, just abort.
-            if (context.Response.HasStarted)
-            {
-                _logger.LogWarning("An exception occurred, but response has already started!");
-                throw;
-            }
-
             await HandleAndWrapException(context, ex);
         }
     }
 
     private async Task HandleAndWrapException(HttpContext httpContext, Exception exception)
     {
-        _logger.LogError(exception,exception.Message);
+        _logger.LogError(exception, exception.Message);
 
-            httpContext.Response.Clear();
-            httpContext.Response.StatusCode = 200;
-            httpContext.Response.OnStarting(ClearCacheHeaders, httpContext.Response);
-            httpContext.Response.Headers.Add("Content-Type", "application/json");
-            var error = JsonUtils.Serialize(ApiResult.FromException(exception));
-            await httpContext.Response.WriteAsync(error);
-        
+        httpContext.Response.Clear();
+        httpContext.Response.StatusCode = 200;
+        httpContext.Response.OnStarting(ClearCacheHeaders, httpContext.Response);
+        httpContext.Response.Headers.Add("Content-Type", "application/json");
+        var error = JsonUtils.Serialize(ApiResult.FromException(exception));
+        await httpContext.Response.WriteAsync(error);
+
     }
-      private Task ClearCacheHeaders(object state)
-      {
-          var response = (HttpResponse)state;
 
-          response.Headers[HeaderNames.CacheControl] = "no-cache";
-          response.Headers[HeaderNames.Pragma] = "no-cache";
-          response.Headers[HeaderNames.Expires] = "-1";
-          response.Headers.Remove(HeaderNames.ETag);
+    private Task ClearCacheHeaders(object state)
+    {
+        var response = (HttpResponse)state;
 
-          return Task.CompletedTask;
-      }
+        response.Headers[HeaderNames.CacheControl] = "no-cache";
+        response.Headers[HeaderNames.Pragma] = "no-cache";
+        response.Headers[HeaderNames.Expires] = "-1";
+        response.Headers.Remove(HeaderNames.ETag);
+
+        return Task.CompletedTask;
+    }
 }
