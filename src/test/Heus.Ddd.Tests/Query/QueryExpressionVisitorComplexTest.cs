@@ -92,6 +92,7 @@ public class QueryExpressionVisitorComplexTest : DddIntegratedTest
             join ua in _userAddressRepository.Query on u.Id equals ua.UserId
             from a in _addressRepository.Query.Where(a => a.Id == ua.AddressId).DefaultIfEmpty()
             where a.City != ""
+            orderby u.Id descending 
             select new { u, a };
 
         await LeftJoinCheck(query, propName, operatorType, value, hasResult);

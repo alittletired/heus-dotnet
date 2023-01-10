@@ -7,11 +7,11 @@ public static class QueryExtensions
     {
         if (typeof(TSource) == typeof(TDto))
             return (IQueryable<TDto>)queryable;
-        var visitor = new QueryExpressionVisitor<TSource, TDto>(queryable, null);
+        var visitor = new QueryExpressionVisitor<TSource, TDto>(queryable, new DynamicSearch<TDto>());
         return visitor.Translate();
     }
 
-    public static async Task<PageList<TDto>> ToPageListAsync<TSource, TDto>(this IQueryable<TSource> queryable,
+    public async static Task<PageList<TDto>> ToPageListAsync<TSource, TDto>(this IQueryable<TSource> queryable,
         IPageRequest<TDto> queryDto)
     {
         var query = TranslateQuery(queryable, queryDto);
@@ -26,7 +26,7 @@ public static class QueryExtensions
         return new PageList<TDto>() { Total = total, Items = items };
     }
 
-    public static async Task<TDto?> FirstOrDefaultAsync<TSource, TDto>(IQueryable<TSource> queryable,
+    public async static Task<TDto?> FirstOrDefaultAsync<TSource, TDto>(IQueryable<TSource> queryable,
         IPageRequest<TDto> queryDto)
     {
         var query = TranslateQuery(queryable, queryDto);

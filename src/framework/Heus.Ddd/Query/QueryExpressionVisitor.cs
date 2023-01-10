@@ -4,15 +4,15 @@ using Heus.Core.Utils;
 using Heus.Ddd.Dtos;
 
 namespace Heus.Ddd.Query;
-internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
+internal class QueryExpressionVisitor<TSource, TDto> 
 {
 // ReSharper disable once StaticMemberInGenericType
   
 
     private readonly FilterMapping _filterMapping;
     private readonly IQueryable<TSource> _queryable;
-    private readonly IPageRequest<TDto>? _pageRequest;
-    public QueryExpressionVisitor(IQueryable<TSource> queryable, IPageRequest<TDto>? pageRequest)
+    private readonly IPageRequest<TDto> _pageRequest;
+    public QueryExpressionVisitor(IQueryable<TSource> queryable, IPageRequest<TDto> pageRequest)
     {
 
         _queryable = queryable;
@@ -20,15 +20,11 @@ internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
         var elementType = _queryable.ElementType;
         _filterMapping = QueryFilterHelper.GetDynamicMappings(typeof(TDto), elementType);
     }
-   
-
     public IQueryable<TDto> Translate()
     {
         //如果类型相同，并且没有过滤条件，则直接返回
-        if (_pageRequest == null && typeof(TDto) == _queryable.ElementType)
-            return (IQueryable<TDto>)_queryable;
-        var expr =Visit(_queryable.Expression);
-        expr = ApplyFilter(expr);
+        var expr = ApplyFilter(_queryable.Expression);
+        expr = ApplyOrderBy(expr);
         expr = ApplySelect(expr);
         return _queryable.Provider.CreateQuery<TDto>(expr);
 
@@ -58,6 +54,10 @@ internal class QueryExpressionVisitor<TSource, TDto> : ExpressionVisitor
         return Expression.Call(null, whereMethod, expression, filterExpr);
     }
 
+    private Expression ApplyOrderBy(Expression expression)
+    {
+        return expression;
+    }
 
     private static MemberExpression GetMemberExpression( MappingItem mappingItem, params ParameterExpression[] parameters)
     {
