@@ -1,5 +1,7 @@
-﻿using System.Xml.Linq;
+﻿using System.Linq.Expressions;
+using System.Xml.Linq;
 using Heus.Ddd.Dtos;
+using Heus.Ddd.Query;
 using Heus.Ddd.Repositories;
 using Heus.Ddd.TestModule.Domain;
 using Microsoft.AspNetCore.SignalR.Protocol;
@@ -211,5 +213,35 @@ public class QueryExpressionVisitorTest : DddIntegratedTest
         var result = await _userRepository.Query.ToPageListAsync(search);
        var users= allUsers.Where(s => !sorts.Contains(s.Sort));
         result.Total.ShouldBe(users.Count());
+    }
+    [Theory]
+    [InlineData(null,nameof(Queryable.OrderByDescending),nameof(User.Id))]
+    [InlineData("name", nameof(Queryable.OrderByDescending), nameof(User.Name))]
+    [InlineData("name asc", nameof(Queryable.OrderBy), nameof(User.Name))]
+    [InlineData("name desc", nameof(Queryable.OrderByDescending), nameof(User.Name))]
+    public  void ApplyOrderBy(string orderBy,string methodName,string propertyName)
+    {
+        var search = new DynamicSearch<User>();
+        search.OrderBy = orderBy;
+        var visitor = new QueryExpressionVisitor<User, User>(_userRepository.Query, search);
+        var query= visitor.Translate();
+        var expr = (MethodCallExpression)query.Expression;
+        expr.Method.Name.ShouldBe(methodName);
+        expr.Arguments[1].ShouldNotBeNull();
+        var unary = (UnaryExpression)expr.Arguments[1];
+        var lambda = (LambdaExpression)unary.Operand;
+        var property = (MemberExpression)lambda.Body;
+        property.Member.Name.ShouldBe(propertyName);
+    }
+    [Theory]
+    [InlineData("name,phone desc")]
+    public void ApplyMutilOrderBy(string orderBy)
+    {
+        var search = new DynamicSearch<User>();
+        search.OrderBy = orderBy;
+        var visitor = new QueryExpressionVisitor<User, User>(_userRepository.Query, search);
+        visitor.Translate();
+        
+
     }
 }

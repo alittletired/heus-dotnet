@@ -7,11 +7,22 @@ namespace Heus.Ddd.Query;
 
 static internal class QueryFilterHelper
 {
-    private static readonly ConcurrentDictionary<string, FilterMapping> DynamicMappingCache = new();
-    public static readonly MethodInfo WhereMethodInfo = typeof(Queryable).GetRuntimeMethods()
+    private readonly static ConcurrentDictionary<string, FilterMapping> DynamicMappingCache = new();
+    public readonly static MethodInfo WhereMethodInfo = typeof(Queryable).GetRuntimeMethods()
         .First(s => s.Name == nameof(Queryable.Where) && s.GetParameters().Length == 2);
-    public static readonly MethodInfo SelectMethodInfo = typeof(Queryable).GetRuntimeMethods()
+    public readonly static MethodInfo SelectMethodInfo = typeof(Queryable).GetRuntimeMethods()
         .First(s => s.Name == nameof(Queryable.Select) && s.GetParameters().Length == 2);
+    public readonly static MethodInfo OrderByDescendingMethodInfo = typeof(Queryable).GetRuntimeMethods()
+        .First(s => s.Name == nameof(Queryable.OrderByDescending) && s.GetParameters().Length == 2);
+    public readonly static MethodInfo OrderByMethodInfo = typeof(Queryable).GetRuntimeMethods()
+        .First(s => s.Name == nameof(Queryable.OrderBy) && s.GetParameters().Length == 2);
+
+    public static List<string> OrderByMethodNames { get; } = new() {
+        nameof(Queryable.Order),
+        nameof(Queryable.OrderBy),
+        nameof(Queryable.OrderDescending),
+        nameof(Queryable.OrderByDescending)
+    };
     public static FilterMapping GetDynamicMappings(Type dtoType, Type elementType)
     {
         var parameters = new[] { elementType };

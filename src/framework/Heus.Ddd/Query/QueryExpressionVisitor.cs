@@ -4,14 +4,12 @@ using Heus.Core.Utils;
 using Heus.Ddd.Dtos;
 
 namespace Heus.Ddd.Query;
-internal class QueryExpressionVisitor<TSource, TDto> 
+public class QueryExpressionVisitor<TSource, TDto> :ExpressionVisitor
 {
-// ReSharper disable once StaticMemberInGenericType
-  
-
     private readonly FilterMapping _filterMapping;
     private readonly IQueryable<TSource> _queryable;
     private readonly IPageRequest<TDto> _pageRequest;
+    private bool _hasOrderClause;
     public QueryExpressionVisitor(IQueryable<TSource> queryable, IPageRequest<TDto> pageRequest)
     {
 
@@ -20,10 +18,22 @@ internal class QueryExpressionVisitor<TSource, TDto>
         var elementType = _queryable.ElementType;
         _filterMapping = QueryFilterHelper.GetDynamicMappings(typeof(TDto), elementType);
     }
+
+    protected override Expression VisitMethodCall(MethodCallExpression node)
+    {
+        var methodName = node.Method.Name;
+        if (QueryFilterHelper.OrderByMethodNames.Contains(methodName))
+        {
+            _hasOrderClause = true;
+        }
+        return base.VisitMethodCall(node);
+    }
+
     public IQueryable<TDto> Translate()
     {
+        var expr = this.Visit(_queryable.Expression);
         //如果类型相同，并且没有过滤条件，则直接返回
-        var expr = ApplyFilter(_queryable.Expression);
+        expr = ApplyFilter(expr);
         expr = ApplyOrderBy(expr);
         expr = ApplySelect(expr);
         return _queryable.Provider.CreateQuery<TDto>(expr);
@@ -54,8 +64,37 @@ internal class QueryExpressionVisitor<TSource, TDto>
         return Expression.Call(null, whereMethod, expression, filterExpr);
     }
 
+    private Expression ApplyOrderBy(Expression expression,string propertyName,bool asc=false)
+    {
+        var type = expression.Type.GetGenericArguments()[0];
+       
+        var paramExpr = Expression.Parameter(type, "p");
+        var mappingItem = _filterMapping.Mappings[propertyName];
+        var idMemberExpr = GetMemberExpression(mappingItem, paramExpr);
+        var orderByIdLambda= Expression.Lambda(idMemberExpr, paramExpr);
+        var orderByMethods = asc ? QueryFilterHelper.OrderByMethodInfo : QueryFilterHelper.OrderByDescendingMethodInfo;
+        var orderBy=orderByMethods.MakeGenericMethod(type,orderByIdLambda.ReturnType);
+        return Expression.Call(null, orderBy, expression, orderByIdLambda);
+
+    }
     private Expression ApplyOrderBy(Expression expression)
     {
+       
+        if (_pageRequest is DynamicSearch<TDto> search && search.OrderBy!=null)
+        {
+            var orderByParts = search.OrderBy.Trim().Split(',');
+            foreach (var singleOrder     in orderByParts)
+            {
+                var pairs = singleOrder.Trim().Split(' ');
+                var asc = pairs.Length > 1 && string.Equals(pairs[1], "asc", StringComparison.OrdinalIgnoreCase);
+                expression = ApplyOrderBy(expression, pairs[0], asc);
+            }
+
+        }
+        else if (!_hasOrderClause)
+        {
+            expression = ApplyOrderBy(expression,"Id");
+        }
         return expression;
     }
 
