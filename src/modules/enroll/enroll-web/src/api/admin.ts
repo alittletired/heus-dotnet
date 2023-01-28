@@ -29,9 +29,9 @@ export interface Resource {
   /** 更新人 */
   updateBy?: long
   /** 创建时间 */
-  createdDate?: string
+  createdDate: string
   /** 更新时间 */
-  updateDate?: string
+  updateDate: string
   appCode?: string
   name: string
   path: string
@@ -82,9 +82,9 @@ export interface Role {
   /** 更新人 */
   updateBy?: long
   /** 创建时间 */
-  createdDate?: string
+  createdDate: string
   /** 更新时间 */
-  updateDate?: string
+  updateDate: string
   /** 内置角色，不允许删除 */
   isBuildIn: boolean
   isDeleted: boolean
@@ -103,9 +103,9 @@ export interface RoleActionRight {
   /** 更新人 */
   updateBy?: long
   /** 创建时间 */
-  createdDate?: string
+  createdDate: string
   /** 更新时间 */
-  updateDate?: string
+  updateDate: string
   resourceId: long
   roleId: long
   flag: number
@@ -120,9 +120,9 @@ export interface User {
   /** 更新人 */
   updateBy?: long
   /** 创建时间 */
-  createdDate?: string
+  createdDate: string
   /** 更新时间 */
-  updateDate?: string
+  updateDate: string
   /** 用户账号 */
   name: string
   /** 用户手机 */
