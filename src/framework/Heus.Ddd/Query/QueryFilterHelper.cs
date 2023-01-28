@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Heus.Ddd.Query;
 

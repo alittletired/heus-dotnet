@@ -1,8 +1,7 @@
 ﻿using Heus.Core.DependencyInjection;
 using Heus.Core.Http;
-using Heus.Core.Security;
 
-namespace Heus.AspNetCore;
+namespace Heus.AspNetCore.Http;
 
 public class HttpRemoteServiceProxyContributor : IRemoteServiceProxyContributor,ISingletonDependency
 {
@@ -12,8 +11,6 @@ public class HttpRemoteServiceProxyContributor : IRemoteServiceProxyContributor,
     public HttpRemoteServiceProxyContributor(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
-
-
     }
 
     public Task PopulateRequestHeaders(HttpRequestMessage request)
