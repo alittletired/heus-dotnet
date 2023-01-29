@@ -22,7 +22,7 @@ internal class UserAdminAppService : AdminApplicationService<User, User, UserCre
     //    await _userRepository.UpdateAsync(user);
     //    return true;
     //}
-    public override async Task<User> CreateAsync(UserCreateDto createDto)
+    public async override Task<User> CreateAsync(UserCreateDto createDto)
     {
         var entity = Mapper.Map<User>(createDto);
         entity.SetPassword(createDto.PlaintextPassword);

@@ -56,7 +56,7 @@ public static class HttpApiHelper
             controllerName = controllerName[..^"AppService".Length];
         }
 
-        controllerName = HumanizerUtils.Kebaberize(controllerName);
+        controllerName = HumanizerUtils.Kebaberize(HumanizerUtils.Pluralize( controllerName));
         routeTemplate.Append($"/{controllerName}");
 
         // id 部分

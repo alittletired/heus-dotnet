@@ -176,95 +176,95 @@ export interface UserUpdateDto {
 }
 
 const adminApi = {
-  account: {
+  accounts: {
     login(data: LoginInput): Promise<LoginResult> {
-      const path = `/admin/account/login`
+      const path = `/admin/accounts/login`
       return http.post(path, data)
     },
     sendVerifyCode(phone: string): Promise<boolean> {
-      const path = `/admin/account/sendVerifyCode`
+      const path = `/admin/accounts/sendVerifyCode`
       return http.post(path, { params: { phone } })
     },
   },
-  resource: {
+  resources: {
     syncResources(data: ResourceDto[]): Promise<boolean> {
-      const path = `/admin/resource/syncResources`
+      const path = `/admin/resources/syncResources`
       return http.post(path, data)
     },
     getUserActionRights(userId: long): Promise<UserActionRight[]> {
-      const path = `/admin/resource/getUserActionRights`
+      const path = `/admin/resources/getUserActionRights`
       return http.get(path, { params: { userId } })
     },
     delete(id: long): Promise<long> {
-      const path = `/admin/resource/delete`
+      const path = `/admin/resources/delete`
       return http.delete(path, { params: { id } })
     },
     get(id: long): Promise<Resource> {
-      const path = `/admin/resource/get`
+      const path = `/admin/resources/get`
       return http.get(path, { params: { id } })
     },
     search(data: DynamicSearch<Resource>): Promise<PageList<Resource>> {
-      const path = `/admin/resource/search`
+      const path = `/admin/resources/search`
       return http.post(path, data)
     },
     update(data: Resource): Promise<Resource> {
-      const path = `/admin/resource/update`
+      const path = `/admin/resources/update`
       return http.put(path, data)
     },
     create(data: Resource): Promise<Resource> {
-      const path = `/admin/resource/create`
+      const path = `/admin/resources/create`
       return http.post(path, data)
     },
   },
-  role: {
+  roles: {
     getActionIds(id: long): Promise<RoleActionRight[]> {
-      const path = `/admin/role/getActionIds`
+      const path = `/admin/roles/getActionIds`
       return http.get(path, { params: { id } })
     },
     authorizeAction(id: long, data: long[]): Promise<boolean> {
-      const path = `/admin/role/authorizeAction`
+      const path = `/admin/roles/authorizeAction`
       return http.post(path, data, { params: { id } })
     },
     delete(id: long): Promise<long> {
-      const path = `/admin/role/delete`
+      const path = `/admin/roles/delete`
       return http.delete(path, { params: { id } })
     },
     get(id: long): Promise<Role> {
-      const path = `/admin/role/get`
+      const path = `/admin/roles/get`
       return http.get(path, { params: { id } })
     },
     search(data: DynamicSearch<Role>): Promise<PageList<Role>> {
-      const path = `/admin/role/search`
+      const path = `/admin/roles/search`
       return http.post(path, data)
     },
     update(data: Role): Promise<Role> {
-      const path = `/admin/role/update`
+      const path = `/admin/roles/update`
       return http.put(path, data)
     },
     create(data: Role): Promise<Role> {
-      const path = `/admin/role/create`
+      const path = `/admin/roles/create`
       return http.post(path, data)
     },
   },
-  user: {
+  users: {
     create(data: UserCreateDto): Promise<User> {
-      const path = `/admin/user/create`
+      const path = `/admin/users/create`
       return http.post(path, data)
     },
     delete(id: long): Promise<long> {
-      const path = `/admin/user/delete`
+      const path = `/admin/users/delete`
       return http.delete(path, { params: { id } })
     },
     get(id: long): Promise<User> {
-      const path = `/admin/user/get`
+      const path = `/admin/users/get`
       return http.get(path, { params: { id } })
     },
     search(data: DynamicSearch<User>): Promise<PageList<User>> {
-      const path = `/admin/user/search`
+      const path = `/admin/users/search`
       return http.post(path, data)
     },
     update(data: UserUpdateDto): Promise<User> {
-      const path = `/admin/user/update`
+      const path = `/admin/users/update`
       return http.put(path, data)
     },
   },
