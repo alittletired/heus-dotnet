@@ -25,30 +25,22 @@ public class HttpRemoteServiceProxyTestController : Controller
     [Route("GetUserAddress")]
     public async Task<PageList<Address>> GetUserAddress(long userId)
     {
-        return await _addressAppService.SearchAsync(new DynamicSearch<Address>());
+        var data= await _addressAppService.SearchAsync(new DynamicSearch<Address>());
+        return data;
     }
 }
 public class HttpRemoteServiceProxyTests:AspNetIntegratedTest
 {
-    private readonly ITokenProvider _tokenProvider;
     public HttpRemoteServiceProxyTests(WebApplicationFactory<AspNetCoreTestModule, Program> factory) : base(factory)
     {
-        _tokenProvider = GetRequiredService<ITokenProvider>();
+        
     }
 
     [Fact]
     public async Task HttpRemoteServiceProxyContributor_Test()
     {
-        // var token = _tokenProvider.CreateToken(_currentUser.Principal!);
-        // request.Headers.Add("Authorization", "Bearer " + token);
-        var request = new HttpRequestMessage();
-        request.RequestUri = new Uri( _factory.HttpClient.BaseAddress!, "/api/RemoteServiceProxyTest/GetUserAddress");
-        var principal = _tokenProvider.CreatePrincipal(GetCurrentUser());
-        var token = _tokenProvider.CreateToken(principal);
-        request.Headers.Add("Authorization", "Bearer " + token);
-      
-        var res=await _factory.HttpClient.SendAsync(request);
-      
+        var data = await HttpGetAsync<PageList<Address>>("/api/RemoteServiceProxyTest/GetUserAddress");
+        data.Items.ShouldNotBeEmpty();
       
     }
 
