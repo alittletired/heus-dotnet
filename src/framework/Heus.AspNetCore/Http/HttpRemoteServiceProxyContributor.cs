@@ -16,12 +16,14 @@ public class HttpRemoteServiceProxyContributor : IRemoteServiceProxyContributor,
     public Task PopulateRequestHeaders(HttpRequestMessage request)
     {
         var httContext = _httpContextAccessor.HttpContext;
-        if (httContext != null)
+        if (httContext == null)
         {
-            foreach (var header in httContext.Request.Headers)
-            {
-                request.Headers.TryAddWithoutValidation(header.Key, (string?)header.Value);
-            }
+            return Task.CompletedTask;
+        }
+
+        foreach (var header in httContext.Request.Headers)
+        {
+            request.Headers.TryAddWithoutValidation(header.Key, (string?)header.Value);
         }
 
         return Task.CompletedTask;

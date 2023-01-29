@@ -1,5 +1,6 @@
 ﻿using Heus.AspNetCore.TestBase;
 using Heus.Core.Http;
+using Heus.Core.Security;
 using Heus.Ddd.Application;
 using Heus.Ddd.Dtos;
 using Heus.Ddd.TestModule.Application;
@@ -20,6 +21,8 @@ public class HttpRemoteServiceProxyTestController : Controller
     {
         _addressAppService = serviceProvider.GetRequiredService<RemoteServiceProxyFactory>().CreateProxy<IAddressAppService>();
     }
+    [HttpGet]
+    [Route("GetUserAddress")]
     public async Task<PageList<Address>> GetUserAddress(long userId)
     {
         return await _addressAppService.SearchAsync(new DynamicSearch<Address>());
@@ -27,8 +30,10 @@ public class HttpRemoteServiceProxyTestController : Controller
 }
 public class HttpRemoteServiceProxyTests:AspNetIntegratedTest
 {
+    private readonly ITokenProvider _tokenProvider;
     public HttpRemoteServiceProxyTests(WebApplicationFactory<AspNetCoreTestModule, Program> factory) : base(factory)
     {
+        _tokenProvider = GetRequiredService<ITokenProvider>();
     }
 
     [Fact]
@@ -36,7 +41,13 @@ public class HttpRemoteServiceProxyTests:AspNetIntegratedTest
     {
         // var token = _tokenProvider.CreateToken(_currentUser.Principal!);
         // request.Headers.Add("Authorization", "Bearer " + token);
-        var res=await _factory.HttpClient.GetAsync("/api/RemoteServiceProxyTest/GetUserAddress");
+        var request = new HttpRequestMessage();
+        request.RequestUri = new Uri( _factory.HttpClient.BaseAddress!, "/api/RemoteServiceProxyTest/GetUserAddress");
+        var principal = _tokenProvider.CreatePrincipal(GetCurrentUser());
+        var token = _tokenProvider.CreateToken(principal);
+        request.Headers.Add("Authorization", "Bearer " + token);
+      
+        var res=await _factory.HttpClient.SendAsync(request);
       
       
     }

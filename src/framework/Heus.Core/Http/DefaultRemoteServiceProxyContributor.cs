@@ -16,11 +16,13 @@ internal class DefaultRemoteServiceProxyContributor : IRemoteServiceProxyContrib
 
     public Task PopulateRequestHeaders(HttpRequestMessage request)
     {
-        if (!request.Headers.Contains("Authorization") && _currentUser.IsAuthenticated)
+        if (request.Headers.Contains("Authorization") || !_currentUser.IsAuthenticated)
         {
-            var token = _tokenProvider.CreateToken(_currentUser.Principal!);
-            request.Headers.Add("Authorization", "Bearer " + token);
+            return Task.CompletedTask;
         }
+
+        var token = _tokenProvider.CreateToken(_currentUser.Principal!);
+        request.Headers.Add("Authorization", "Bearer " + token);
 
         return Task.CompletedTask;
     }
