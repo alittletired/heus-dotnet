@@ -4,9 +4,9 @@ using Heus.Ddd.TestModule;
 using Heus.TestBase;
 
 namespace Heus.AspNetCore.Tests;
-[DependsOn(typeof(AspNetCoreTestBaseModule))]
-[DependsOn(typeof(AspNetModuleInitializer))]
-[DependsOn(typeof(DddTestModuleInitializer))]
+[ModuleDependsOn<AspNetCoreTestBaseModule>]
+[ModuleDependsOn<AspNetModuleInitializer>]
+[ModuleDependsOn<DddTestModuleInitializer>]
 
 public class AspNetCoreTestModule  : ModuleInitializerBase
 {

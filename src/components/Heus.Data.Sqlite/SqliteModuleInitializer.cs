@@ -3,7 +3,7 @@ using Heus.Data;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Data.Sqlite;
-[DependsOn(typeof(DataModuleInitializer))]
+[ModuleDependsOn<DataModuleInitializer>]
 public class SqliteModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)

@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Data.Mysql;
 
-[DependsOn(typeof(DataModuleInitializer))]
+[ModuleDependsOn<DataModuleInitializer>]
 public class MysqlModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)

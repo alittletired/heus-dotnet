@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.AspNetCore;
 
-[DependsOn(typeof(DddModuleInitializer))]
+[ModuleDependsOn<DddModuleInitializer>]
 public class AspNetModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)

@@ -1,6 +1,6 @@
 using Heus.Core.DependencyInjection;
 
-namespace Heus.Ddd.DomainServices;
+namespace Heus.Ddd.Domain;
 
 public interface IDomainService : IScopedDependency
 {

@@ -5,10 +5,10 @@ using Heus.Ddd.TestModule.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Heus.Ddd.TestModule.Domain;
 namespace Heus.Ddd.TestModule;
-[DependsOn(typeof(DddModuleInitializer))]
+[ModuleDependsOn<DddModuleInitializer>]
 public class DddTestModuleInitializer: ModuleInitializerBase
 {
-    public override async Task InitializeAsync(IServiceProvider serviceProvider)
+    public async override Task InitializeAsync(IServiceProvider serviceProvider)
     {
         await serviceProvider.PerformUowTask(async sp =>
         {

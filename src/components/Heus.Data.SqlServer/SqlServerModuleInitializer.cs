@@ -3,7 +3,7 @@ using Heus.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 namespace Heus.Data.SqlServer;
 
-[DependsOn(typeof(DataModuleInitializer))]
+[ModuleDependsOn<DataModuleInitializer>]
 public class SqlServerModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)

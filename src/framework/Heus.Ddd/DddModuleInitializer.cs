@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace Heus.Ddd;
 
-[DependsOn(typeof(DataModuleInitializer))]
+[ModuleDependsOn<DataModuleInitializer>]
 public class DddModuleInitializer : ModuleInitializerBase
 {
 

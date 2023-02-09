@@ -5,11 +5,10 @@ using Heus.Data;
 using Heus.Data.Postgres;
 using Heus.Data.SqlServer;
 namespace Heus.Enroll.Web;
-[DependsOn(typeof(AspNetModuleInitializer)
-    , typeof(EnrollModuleInitializer)
-    , typeof(SqlServerModuleInitializer)
-    , typeof(PostgresSqlModuleInitializer)
-    )]
+[ModuleDependsOn<AspNetModuleInitializer>]
+[ModuleDependsOn<EnrollModuleInitializer>]
+[ModuleDependsOn<SqlServerModuleInitializer>]
+[ModuleDependsOn<PostgresSqlModuleInitializer>]
 public class WebModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)

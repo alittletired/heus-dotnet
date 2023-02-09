@@ -14,7 +14,7 @@ public class ActionDescriptionAttribute
     /// <summary>
     /// 功能点编号。
     /// </summary>
-    public string ActionCode { get; private set; }
+    public string ActionCode { get;  }
 
     public ActionDescriptionAttribute(string actionName, string actionCode)
     {
@@ -25,5 +25,5 @@ public class ActionDescriptionAttribute
     /// <summary>
     /// 功能点名称。
     /// </summary>
-    public string ActionName { get; private set; }
+    public string ActionName { get;  }
 }

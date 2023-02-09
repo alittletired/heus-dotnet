@@ -4,7 +4,7 @@ using Heus.Core.Security;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 namespace Heus.Auth;
-[DependsOn(typeof(DddModuleInitializer))]
+[ModuleDependsOn<DddModuleInitializer>]
 public class AuthModuleInitializer : ModuleInitializerBase
 {
     public override string? Name => "Auth";

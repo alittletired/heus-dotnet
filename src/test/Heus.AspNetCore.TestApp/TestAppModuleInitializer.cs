@@ -2,8 +2,7 @@ using Heus.Core.DependencyInjection;
 
 namespace Heus.AspNetCore.TestApp;
 
-[DependsOn(typeof(AspNetModuleInitializer)
-)]
+[ModuleDependsOn<AspNetModuleInitializer>]
 public class TestAppModuleInitializer : ModuleInitializerBase
 {
    

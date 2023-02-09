@@ -4,7 +4,7 @@ using Heus.Core.DependencyInjection;
 using Heus.Data.Internal;
 using Microsoft.Extensions.DependencyInjection;
 namespace Heus.Data;
-[DependsOn(typeof(CoreModuleInitializer))]
+[ModuleDependsOn<CoreModuleInitializer>]
 public class DataModuleInitializer : ModuleInitializerBase
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)

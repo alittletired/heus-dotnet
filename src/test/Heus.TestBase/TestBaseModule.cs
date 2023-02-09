@@ -5,7 +5,7 @@ using Heus.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.TestBase;
-[DependsOn(typeof(SqliteModuleInitializer))]
+[ModuleDependsOn<SqliteModuleInitializer>]
 public class TestBaseModule: ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)

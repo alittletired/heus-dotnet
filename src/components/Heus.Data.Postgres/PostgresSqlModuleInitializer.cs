@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace Heus.Data.Postgres;
 
-[DependsOn(typeof(DataModuleInitializer))]
+[ModuleDependsOn<DataModuleInitializer>]
 public class PostgresSqlModuleInitializer : ModuleInitializerBase
 {
     public override void ConfigureServices(ServiceConfigurationContext context)

@@ -1,9 +1,8 @@
 using Heus.Core.DependencyInjection;
 using Heus.TestBase;
 namespace Heus.Auth.IntegratedTests;
-[DependsOn(typeof(AuthModuleInitializer)
-      , typeof(TestBaseModule)
-    )]
+[ModuleDependsOn<AuthModuleInitializer>]
+[ModuleDependsOn<TestBaseModule>]
 public class AuthTestModule : ModuleInitializerBase
 {
 

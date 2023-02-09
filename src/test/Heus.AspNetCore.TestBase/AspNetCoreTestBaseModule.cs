@@ -2,8 +2,8 @@
 using Heus.TestBase;
 
 namespace Heus.AspNetCore.TestBase;
-[DependsOn(typeof(TestBaseModule))]
-[DependsOn(typeof(AspNetModuleInitializer))]
+[ModuleDependsOn<TestBaseModule>]
+[ModuleDependsOn<AspNetModuleInitializer>]
 public class AspNetCoreTestBaseModule: ModuleInitializerBase
 {
 }

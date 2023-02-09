@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
-using Heus.Core.DependencyInjection;
 
 namespace Heus.Core.DependencyInjection.Internal
 {
-    internal static class ServiceModuleHelper
+    static internal class ServiceModuleHelper
     {
         public static List<Type> FindAllModuleTypes(Type startupModuleType)
         {
@@ -14,25 +13,25 @@ namespace Heus.Core.DependencyInjection.Internal
 
         public static List<Type> FindDependedModuleTypes(Type moduleType)
         {
-            CheckSeriveModuleType(moduleType);
+            CheckServiceModuleType(moduleType);
 
             var dependencies = new List<Type>();
 
             var dependsOnAttributes = moduleType
-                .GetCustomAttributes()
-                .OfType<DependsOnAttribute>();
+                .GetCustomAttributes(typeof(ModuleDependsOnAttribute<>));
+
 
             foreach (var dependsOn in dependsOnAttributes)
             {
-                foreach (var dependedModuleType in dependsOn.DependedTypes)
-                {
-                    dependencies.TryAdd(dependedModuleType);
-                }
+                var dependedModuleType = dependsOn.GetType().GetGenericArguments().First();
+                dependencies.TryAdd(dependedModuleType);
+
             }
 
             return dependencies;
         }
-        internal static void CheckSeriveModuleType(Type moduleType)
+
+        private static void CheckServiceModuleType(Type moduleType)
         {
             if (!IsModuleInitializer(moduleType))
             {
@@ -50,7 +49,7 @@ namespace Heus.Core.DependencyInjection.Internal
         //         }
         //     }
 
-        public static bool IsModuleInitializer(Type type)
+        private static bool IsModuleInitializer(Type type)
         {
             var typeInfo = type.GetTypeInfo();
 
@@ -66,7 +65,7 @@ namespace Heus.Core.DependencyInjection.Internal
 
             int depth = 0)
         {
-            CheckSeriveModuleType(moduleType);
+            CheckServiceModuleType(moduleType);
 
             if (moduleTypes.Contains(moduleType))
             {

@@ -8,13 +8,18 @@ public class EntityNotFoundException:BusinessException
     public static void ThrowIfNull<T>([NotNull] T? argument, string property, object value)
     {
         if (argument != null)
+        {
             return;
+        }
+
         Throw(typeof(T), property, value);
     } 
     [DoesNotReturn]
-    private static void Throw(Type entityType, string property,object? value) => 
-        throw new EntityNotFoundException(entityType,property,value);
-   
+    private static void Throw(Type entityType, string property,object? value)
+    {
+        throw new EntityNotFoundException(entityType, property, value);
+    }
+
     /// <summary>
     /// Type of the entity.
     /// </summary>
