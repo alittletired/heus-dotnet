@@ -27,7 +27,7 @@ public class DataModuleInitializer : ModuleInitializerBase
     }
     private static void OnDbContextScan(ServiceConfigurationContext context)
     {
-        context.ServiceRegistrar.TypeScaning += (obj, type) =>
+        context.ServiceRegistrar.TypeScaning += (_, type) =>
         {
             if (!typeof(DbContext).IsAssignableFrom(type))
             {

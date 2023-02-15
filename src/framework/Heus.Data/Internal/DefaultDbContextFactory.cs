@@ -12,11 +12,11 @@ public class DefaultDbContextFactory<TContext> :IDbContextFactory<TContext> wher
     private readonly IDbContextOptionsFactory<TContext> _optionsFactory;
     private static Func<DbContextOptions<TContext>, TContext> CreateActivator()
     {
-        ConstructorInfo[] array = typeof(TContext).GetTypeInfo()
-            .DeclaredConstructors.Where(c => !c.IsStatic && c.IsPublic && c.GetParameters().Length != 0).ToArray();
+        var constructor = typeof(TContext).GetTypeInfo()
+            .DeclaredConstructors.Single(c => c.IsPublic && c.GetParameters().Length != 0);
         var optionsParameter = Expression.Parameter(typeof(DbContextOptions<TContext>), "options");
         return Expression.Lambda<Func< DbContextOptions<TContext>, TContext>>(
-            Expression.New(array[0], optionsParameter), optionsParameter).Compile();
+            Expression.New(constructor, optionsParameter), optionsParameter).Compile();
 
     }
 

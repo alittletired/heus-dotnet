@@ -49,9 +49,16 @@ internal class UnitOfWork : IUnitOfWork
         }
 
         if (dbContext.Database.CurrentTransaction != null)
+        {
             return;
+        }
+
         var connStr = dbContext.Database.GetConnectionString();
-        if (connStr == null) return;
+        if (connStr == null)
+        {
+            return;
+        }
+
         if (!_dbTransactions.TryGetValue(connStr, out var dbTransaction))
         {
             dbTransaction = dbContext.Database.GetDbConnection()
