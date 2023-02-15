@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
 using Heus.Ddd.Domain;
 using Heus.Ddd.Entities;
+using Microsoft.EntityFrameworkCore.Query;
+
 namespace Heus.Ddd.Repositories;
 
 public interface IRepository<TEntity> where TEntity : class, IEntity
@@ -17,6 +19,10 @@ public interface IRepository<TEntity> where TEntity : class, IEntity
 
     Task DeleteManyAsync(IEnumerable<TEntity> entities);
     Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<int> ExecuteDeleteAsync(Expression<Func<TEntity, bool>> predicate);
+
+    Task<int> ExecuteUpdateAsync(Expression<Func<TEntity, bool>> predicate,
+        Expression<Func<SetPropertyCalls<TEntity>, SetPropertyCalls<TEntity>>> setPropertyCalls);
     async Task<TEntity> GetByIdAsync(long id)
     {
         var entity = await FindOneAsync(s=>s.Id==id);

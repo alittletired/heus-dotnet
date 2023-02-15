@@ -6,7 +6,7 @@ using Heus.Data;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Internal;
 using Heus.Ddd.Repositories.Filtering;
-
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd.Repositories;
@@ -14,21 +14,21 @@ namespace Heus.Ddd.Repositories;
 public abstract class RepositoryBase<TEntity> :
     IRepository<TEntity>, IScopedDependency where TEntity : class, IEntity
 {
-    protected  IServiceProvider ServiceProvider { get; }
-   
+    protected IServiceProvider ServiceProvider { get; }
+
     protected IDataFilter DataFilter => ServiceProvider.GetRequiredService<IDataFilter>();
     protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
-    protected  DbContext DbContext => ServiceProvider.GetRequiredService<IDbContextProvider>().CreateDbContext<TEntity>();
+
+    protected DbContext DbContext =>
+        ServiceProvider.GetRequiredService<IDbContextProvider>().CreateDbContext<TEntity>();
 
     public RepositoryBase(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
     }
 
-    public IQueryable<TEntity> Query
-    {
-        get
-        {
+    public IQueryable<TEntity> Query {
+        get {
             var query = DbContext.Set<TEntity>().AsQueryable();
             return ApplyDataFilter(query);
             //if (UnitOfWorkManager.Current?.Options.IsTransactional == true)
@@ -43,14 +43,15 @@ public abstract class RepositoryBase<TEntity> :
     {
         if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
         {
-            return queryable.WhereIf(DataFilter.IsEnabled<ISoftDelete>(), e => !EF.Property<bool>(e,nameof(ISoftDelete.IsDeleted)));
+            return queryable.WhereIf(DataFilter.IsEnabled<ISoftDelete>(),
+                e => !EF.Property<bool>(e, nameof(ISoftDelete.IsDeleted)));
 
         }
 
         return queryable;
 
     }
-   
+
     public async Task<TEntity> InsertAsync(TEntity entity)
     {
         BeforeInsert(entity);
@@ -68,6 +69,7 @@ public abstract class RepositoryBase<TEntity> :
             BeforeUpdate(entity);
         }
     }
+
     protected virtual void TrySetId(TEntity entity)
     {
         if (entity.Id != default)
@@ -77,6 +79,7 @@ public abstract class RepositoryBase<TEntity> :
 
         entity.Id = SnowflakeId.Default.NextId();
     }
+
     private void BeforeUpdate(TEntity entity)
     {
         if (entity is AuditEntity auditEntity)
@@ -92,6 +95,7 @@ public abstract class RepositoryBase<TEntity> :
         {
             BeforeInsert(entity);
         }
+
         await DbContext.AddRangeAsync(entities);
     }
 
@@ -134,4 +138,16 @@ public abstract class RepositoryBase<TEntity> :
         return await Query.FirstOrDefaultAsync(predicate);
     }
 
+    public async Task<int> ExecuteDeleteAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return await DbContext.Set<TEntity>().Where(predicate).ExecuteDeleteAsync();
+
+    }
+
+    public async Task<int> ExecuteUpdateAsync(Expression<Func<TEntity, bool>> predicate,
+        Expression<Func<SetPropertyCalls<TEntity>, SetPropertyCalls<TEntity>>> setPropertyCalls)
+    {
+        return await DbContext.Set<TEntity>().Where(predicate).ExecuteUpdateAsync(setPropertyCalls);
+
+    }
 }
