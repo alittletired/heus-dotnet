@@ -1,4 +1,6 @@
 using System.Data.Common;
+using System.Reflection;
+using Heus.Ddd.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -12,16 +14,16 @@ internal class UnitOfWork : IUnitOfWork
     private bool _isRollback;
     
     public event EventHandler<UnitOfWorkFailedEventArgs>? Failed;
-    protected List<Func<Task>> CompletedHandlers { get; } = new();
+    private readonly List<Func<Task>> _completedHandlers  = new();
     public event EventHandler<UnitOfWorkEventArgs>? Disposed;
     public IServiceProvider ServiceProvider { get; }
     public UnitOfWorkOptions Options { get; }
-    public Dictionary<string, DbContext> DbContexts { get; } = new();
+    private readonly Dictionary<Type, DbContext> _dbContexts  = new();
     private readonly ILogger<UnitOfWork> _logger;
     private readonly Dictionary<string, DbTransaction> _dbTransactions = new();
     public  void OnCompleted(Func<Task> handler)
     {
-        CompletedHandlers.Add(handler);
+        _completedHandlers.Add(handler);
     }
 
     public UnitOfWork(IServiceProvider serviceProvider, UnitOfWorkOptions options)
@@ -30,16 +32,37 @@ internal class UnitOfWork : IUnitOfWork
         ServiceProvider = serviceProvider;
         _logger = ServiceProvider.GetRequiredService<ILogger<UnitOfWork>>();
     }
-
-    public DbContext AddDbContext(string key, Func<string, DbContext> func)
+    private static DbContext CreateDbContextInternal<TContext>(IServiceProvider serviceProvider)
+        where TContext : DbContext
     {
-        return DbContexts.GetOrAdd(key, (t) =>
-        {
-            var context = func(t);
-            EnsureTransaction(context);
-            return context;
-        });
+        var contextFactory = serviceProvider.GetRequiredService<IDbContextFactory<TContext>>();
+        return contextFactory.CreateDbContext();
     }
+
+    private readonly static MethodInfo GenericCreateDbContext = typeof(UnitOfWork)
+        .GetTypeInfo().DeclaredMethods
+        .First(m => m.Name == nameof(CreateDbContextInternal));
+    
+    public DbContext GetDbContext(Type entityType)
+    {
+      var contextResolver=  ServiceProvider.GetRequiredService<IDbContextResolver>();
+      var dbContextType = contextResolver.Resolve(entityType);
+     return _dbContexts.GetOrAdd(dbContextType, (contextType) =>
+      {
+          var activator = GenericCreateDbContext.MakeGenericMethod(contextType);
+          var dbContext = activator.Invoke(null, new object[] { ServiceProvider });
+          ArgumentNullException.ThrowIfNull(dbContext); 
+          return (DbContext)dbContext;
+      });
+   
+
+    }
+    public  TDbContext GetDbContext<TDbContext>() where  TDbContext:DbContext
+    {
+        var factory = ServiceProvider.GetRequiredService<IDbContextFactory<TDbContext>>();
+        return factory.CreateDbContext();
+    }
+  
 
     private void EnsureTransaction(DbContext dbContext)
     {
@@ -79,7 +102,7 @@ internal class UnitOfWork : IUnitOfWork
         try
         {
           
-            foreach (var dbContext in DbContexts)
+            foreach (var dbContext in _dbContexts)
             {
                 await dbContext.Value.SaveChangesAsync(cancellationToken);
             }
@@ -87,7 +110,7 @@ internal class UnitOfWork : IUnitOfWork
             {
                 await tran.Value.CommitAsync(cancellationToken);
             }
-            foreach (var handler in CompletedHandlers)
+            foreach (var handler in _completedHandlers)
             {
                 await handler.Invoke();
             }
@@ -152,12 +175,12 @@ internal class UnitOfWork : IUnitOfWork
 
         _isDisposed = true;
         DisposeTransactions();
-        DbContexts.Values.ForEach(c => c.Dispose());
+        _dbContexts.ForEach(c => c.Value.Dispose());
         if (!_isCompleted || _exception != null)
         {
             Failed?.Invoke(this,new UnitOfWorkFailedEventArgs(this,_exception,_isRollback));
         }
-
+        _dbContexts.Clear();
         Disposed?.Invoke(this, new UnitOfWorkEventArgs(this));
     }
 }

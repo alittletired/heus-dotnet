@@ -33,5 +33,5 @@ public class User : AuditEntity, ISoftDelete
     public UserType UserType { get; set; }
     public int Sort { get; set; }
     public UserLevel UserLevel { get; set; } = UserLevel.Level1;
-
+    public DateTimeOffset? DeletedAt { get; set; }
 }

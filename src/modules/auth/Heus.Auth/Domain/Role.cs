@@ -21,5 +21,5 @@ public class Role : AuditEntity,ISoftDelete
     /// 角色说明
     /// </summary>
     public  string? Remarks { get; set; }
-    
+    public DateTimeOffset? DeletedAt { get; set; }
 }

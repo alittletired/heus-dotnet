@@ -54,7 +54,7 @@ public class RepositoryTests : DddIntegratedTest
         foreach (var user in users)
         {
             var user1 = users1.First(s => s.Id == user.Id);
-            user1.UpdateDate.Ticks.ShouldBeGreaterThan(user.UpdateDate.Ticks);
+            user1.UpdatedAt.Ticks.ShouldBeGreaterThan(user.UpdatedAt.Ticks);
         }
 
     }

@@ -13,4 +13,5 @@ public class ActionRight : AuditEntity, ISoftDelete
     public string Title { get; set; } = null!;
     public string? Url { get; set; } = null!;
     public bool IsDeleted { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
 }

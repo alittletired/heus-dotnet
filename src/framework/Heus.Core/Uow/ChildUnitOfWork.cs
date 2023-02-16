@@ -9,10 +9,12 @@ internal class ChildUnitOfWork : IUnitOfWork
     private readonly IUnitOfWork _parent;
     public event EventHandler<UnitOfWorkFailedEventArgs>? Failed;
     public UnitOfWorkOptions Options => _parent.Options;
-    public DbContext AddDbContext(string key, Func<string,DbContext> func) { 
-        return _parent.AddDbContext(key, func);
-        }
-   
+    public IServiceProvider ServiceProvider => _parent.ServiceProvider;
+
+    public DbContext GetDbContext(Type entityType)
+    {
+        return _parent.GetDbContext(entityType);
+    }
   
     // public Task EnsureTransaction(DbContext dbContext) { 
     //     return _parent.EnsureTransaction(dbContext); 

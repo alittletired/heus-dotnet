@@ -20,7 +20,7 @@ public class Resource : AuditEntity, ITreeEntity,ISoftDelete
    
     public string Code { get; set; } = null!;
     public long? ParentId { get; set; }
-
+    public DateTimeOffset? DeletedAt { get; set; }
 
 
    

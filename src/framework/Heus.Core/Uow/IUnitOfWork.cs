@@ -5,10 +5,10 @@ public interface IUnitOfWork :  IDisposable
 {
   
     UnitOfWorkOptions Options { get; }
-  
+    IServiceProvider ServiceProvider{ get; }
     // Task EnsureTransaction(DbContext dbContext);
     event EventHandler<UnitOfWorkEventArgs>? Disposed;
-    DbContext AddDbContext(string key, Func<string,DbContext> func);
+    DbContext GetDbContext(Type entityType);
     Task CompleteAsync(CancellationToken cancellationToken = default);
     Task RollbackAsync(CancellationToken cancellationToken = default);
     void OnCompleted(Func<Task> handler);

@@ -14,17 +14,23 @@ namespace Heus.Ddd.Repositories;
 public abstract class RepositoryBase<TEntity> :
     IRepository<TEntity>, IScopedDependency where TEntity : class, IEntity
 {
-    protected IServiceProvider ServiceProvider { get; }
+    private readonly IUnitOfWork _unitOfWork;
 
-    protected IDataFilter DataFilter => ServiceProvider.GetRequiredService<IDataFilter>();
-    protected ICurrentUser CurrentUser => ServiceProvider.GetRequiredService<ICurrentUser>();
-
-    protected DbContext DbContext =>
-        ServiceProvider.GetRequiredService<IDbContextProvider>().CreateDbContext<TEntity>();
-
-    public RepositoryBase(IServiceProvider serviceProvider)
+    private T GetRequiredService<T>()where T : notnull
     {
-        ServiceProvider = serviceProvider;
+       return ServiceProvider.GetRequiredService<T>(); 
+    }
+    protected IServiceProvider ServiceProvider => _unitOfWork.ServiceProvider;
+    protected IDataFilter DataFilter => GetRequiredService<IDataFilter>();
+    protected ICurrentUser CurrentUser => GetRequiredService<ICurrentUser>();
+
+    protected DbContext DbContext => _unitOfWork.GetDbContext(typeof(TEntity));
+
+    public RepositoryBase(IUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+      
+     
     }
 
     public IQueryable<TEntity> Query {
@@ -64,7 +70,7 @@ public abstract class RepositoryBase<TEntity> :
         TrySetId(entity);
         if (entity is AuditEntity auditEntity)
         {
-            auditEntity.CreatedDate = DateTimeOffset.Now;
+            auditEntity.CreatedAt = DateTimeOffset.Now;
             auditEntity.CreatedBy = CurrentUser.Id;
             BeforeUpdate(entity);
         }
@@ -84,8 +90,8 @@ public abstract class RepositoryBase<TEntity> :
     {
         if (entity is AuditEntity auditEntity)
         {
-            auditEntity.UpdateBy = CurrentUser.Id;
-            auditEntity.UpdateDate = DateTimeOffset.Now;
+            auditEntity.UpdatedBy = CurrentUser.Id;
+            auditEntity.UpdatedAt = DateTimeOffset.Now;
         }
     }
 
