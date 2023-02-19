@@ -4,7 +4,7 @@ namespace Heus.Auth.Domain.Internal;
 
 internal class UserRepository : RepositoryBase<User>, IUserRepository
 {
-    public UserRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
+    public UserRepository(IUnitOfWorkManager unitOfWork) : base(unitOfWork)
     {
     }
 

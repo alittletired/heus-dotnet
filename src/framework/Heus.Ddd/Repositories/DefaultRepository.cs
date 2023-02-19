@@ -7,7 +7,7 @@ namespace Heus.Ddd.Repositories;
 internal class DefaultRepository<TEntity> : RepositoryBase<TEntity>
     where TEntity : class, IEntity
 {
-    public DefaultRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
+    public DefaultRepository(IUnitOfWorkManager unitOfWorkManager) : base(unitOfWorkManager)
     {
     }
 }

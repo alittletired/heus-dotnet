@@ -14,21 +14,30 @@ namespace Heus.Ddd.Repositories;
 public abstract class RepositoryBase<TEntity> :
     IRepository<TEntity>, IScopedDependency where TEntity : class, IEntity
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
 
+    private IUnitOfWork UnitOfWork {
+        get {
+            var uow = _unitOfWorkManager.Current;
+            ArgumentNullException.ThrowIfNull(uow);
+            return uow;
+
+        }
+    }
     private T GetRequiredService<T>()where T : notnull
     {
        return ServiceProvider.GetRequiredService<T>(); 
     }
-    protected IServiceProvider ServiceProvider => _unitOfWork.ServiceProvider;
+    protected IServiceProvider ServiceProvider => UnitOfWork.ServiceProvider;
     protected IDataFilter DataFilter => GetRequiredService<IDataFilter>();
     protected ICurrentUser CurrentUser => GetRequiredService<ICurrentUser>();
 
-    protected DbContext DbContext => _unitOfWork.GetDbContext(typeof(TEntity));
+    protected DbContext DbContext => UnitOfWork.GetDbContext(typeof(TEntity));
 
-    public RepositoryBase(IUnitOfWork unitOfWork)
+    public RepositoryBase( IUnitOfWorkManager unitOfWorkManager)
     {
-        _unitOfWork = unitOfWork;
+        _unitOfWorkManager = unitOfWorkManager;
+       
       
      
     }
