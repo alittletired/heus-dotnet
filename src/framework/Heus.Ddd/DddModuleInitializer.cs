@@ -1,13 +1,10 @@
 using System.Reflection;
-using Autofac.Core;
 using Heus.Core.DependencyInjection;
 using Heus.Data;
 using Heus.Data.Utils;
 using Heus.Ddd.Repositories;
 using Heus.Ddd.Repositories.Filtering;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Heus.Ddd;
 
@@ -46,7 +43,7 @@ public class DddModuleInitializer : ModuleInitializerBase
     {
         var services = context.Services;
         var entityDbContextMappings = new Dictionary<Type, Type>();
-        context.ServiceRegistrar.TypeScaning += (obj, type) =>
+        context.ServiceRegistrar.TypeScaning += (_, type) =>
         {
             if (!typeof(DbContext).IsAssignableFrom(type))
             {
@@ -68,7 +65,7 @@ public class DddModuleInitializer : ModuleInitializerBase
     {
         var services = context.Services;
         var customRepositories = new Dictionary<Type, Type>();
-        context.ServiceRegistrar.ServiceRegistered += (obj, type) =>
+        context.ServiceRegistrar.ServiceRegistered += (_, type) =>
         {
             var repoType = type.GetTypeInfo().GetInterfaces().FirstOrDefault(s =>
                 s.IsGenericType && s.GetGenericTypeDefinition() == typeof(IRepository<>));
@@ -88,7 +85,7 @@ public class DddModuleInitializer : ModuleInitializerBase
     }
     private static void OnModuleInitialized(ServiceConfigurationContext context)
     {
-        context.ServiceRegistrar.ModuleInitialized += (obj, assembly) => {
+        context.ServiceRegistrar.ModuleInitialized += (_, assembly) => {
             context.Services.AddMediatR(cfg=>cfg.RegisterServicesFromAssembly(assembly) );
             };
     }
