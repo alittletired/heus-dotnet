@@ -8,8 +8,8 @@ public static class UnitOfWorkExtensions
     {
      
         var manager =serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-        //集成测试会开启作用域，导致此处的工作单位为childunitofwork无效，故需创建新的作用域
-        using var uow= manager.Begin(serviceProvider,requiresNew:true);
+        using var scope = serviceProvider.CreateScope();
+        using var uow= manager.Begin(scope.ServiceProvider,requiresNew:true);
         await task(serviceProvider);
         await uow.CompleteAsync();
 
@@ -18,8 +18,9 @@ public static class UnitOfWorkExtensions
     {
 
         var manager = serviceProvider.GetRequiredService<IUnitOfWorkManager>();
-        //集成测试会开启作用域，导致此处的工作单位为childunitofwork无效，故需创建新的作用域
-        using var uow = manager.Begin(serviceProvider, requiresNew: true);
+        using var scope = serviceProvider.CreateScope();
+        
+        using var uow = manager.Begin(scope.ServiceProvider, requiresNew: true);
         await task();
         await uow.CompleteAsync();
 

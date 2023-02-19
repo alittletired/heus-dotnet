@@ -1,6 +1,5 @@
 using System.Data.Common;
 using System.Reflection;
-using Heus.Ddd.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -43,21 +42,27 @@ internal class UnitOfWork : IUnitOfWork
         .GetTypeInfo().DeclaredMethods
         .First(m =>m.IsStatic && m.Name == nameof(CreateDbContext));
     
-    public DbContext GetDbContext(Type entityType)
+    // public DbContext GetDbContext(Type entityType)
+    // {
+    //   var contextResolver=  ServiceProvider.GetRequiredService<IDbContextResolver>();
+    //   var dbContextType = contextResolver.Resolve(entityType);
+    //
+    //
+    //
+    // }
+    public DbContext GetDbContext(Type dbContextType)
     {
-      var contextResolver=  ServiceProvider.GetRequiredService<IDbContextResolver>();
-      var dbContextType = contextResolver.Resolve(entityType);
-     return _dbContexts.GetOrAdd(dbContextType, (contextType) =>
-      {
-          var activator = GenericCreateDbContext.MakeGenericMethod(contextType);
-          var dbContext = activator.Invoke(null, new object[] { ServiceProvider });
-          ArgumentNullException.ThrowIfNull(dbContext); 
-          return (DbContext)dbContext;
-      });
-   
-
+        return _dbContexts.GetOrAdd(dbContextType, (type) =>
+        {
+            
+            var activator = GenericCreateDbContext.MakeGenericMethod(type);
+            var dbContext = activator.Invoke(null, new object[] { ServiceProvider });
+            ArgumentNullException.ThrowIfNull(dbContext); 
+            return (DbContext)dbContext;
+        });
+        
     }
-   
+  
     private void EnsureTransaction(DbContext dbContext)
     {
         if (!Options.IsTransactional)

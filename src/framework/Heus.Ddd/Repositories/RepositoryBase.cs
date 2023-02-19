@@ -3,6 +3,7 @@ using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
 using Heus.Core.Uow;
 using Heus.Data;
+using Heus.Ddd.Application;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Internal;
 using Heus.Ddd.Repositories.Filtering;
@@ -32,7 +33,15 @@ public abstract class RepositoryBase<TEntity> :
     protected IDataFilter DataFilter => GetRequiredService<IDataFilter>();
     protected ICurrentUser CurrentUser => GetRequiredService<ICurrentUser>();
 
-    protected DbContext DbContext => UnitOfWork.GetDbContext(typeof(TEntity));
+    protected DbContext DbContext {
+        get {
+            var contextResolver=  ServiceProvider.GetRequiredService<IDbContextResolver>();
+            var dbContextType = contextResolver.Resolve(typeof(TEntity));
+           return UnitOfWork.GetDbContext(dbContextType);
+        }
+    }
+
+   
 
     public RepositoryBase( IUnitOfWorkManager unitOfWorkManager)
     {

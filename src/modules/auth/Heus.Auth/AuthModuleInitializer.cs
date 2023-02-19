@@ -7,7 +7,7 @@ namespace Heus.Auth;
 [ModuleDependsOn<DddModuleInitializer>]
 public class AuthModuleInitializer : ModuleInitializerBase
 {
-    public override string? Name => "Auth";
+    public override string Name => "Auth";
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {

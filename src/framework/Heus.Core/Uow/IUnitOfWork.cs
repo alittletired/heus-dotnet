@@ -8,7 +8,9 @@ public interface IUnitOfWork :  IDisposable
     IServiceProvider ServiceProvider{ get; }
     // Task EnsureTransaction(DbContext dbContext);
     event EventHandler<UnitOfWorkEventArgs>? Disposed;
-    DbContext GetDbContext(Type entityType);
+
+   
+    DbContext GetDbContext(Type dbContextType);
     Task CompleteAsync(CancellationToken cancellationToken = default);
     Task RollbackAsync(CancellationToken cancellationToken = default);
     void OnCompleted(Func<Task> handler);

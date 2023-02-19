@@ -1,6 +1,7 @@
 using System.Reflection;
 using Heus.Data.Options;
 using Heus.Core.DependencyInjection;
+using Heus.Core.Uow;
 using Heus.Data.Internal;
 using Microsoft.Extensions.DependencyInjection;
 namespace Heus.Data;
@@ -21,10 +22,17 @@ public class DataModuleInitializer : ModuleInitializerBase
 
     private static MethodInfo _registerDbContext = typeof(DataModuleInitializer)
         .GetTypeInfo().DeclaredMethods.First(m => m.Name == nameof(RegisterDbContext));
-    private static void RegisterDbContext<TContext>(IServiceCollection services)where TContext:DbContext
+
+    private static void RegisterDbContext<TContext>(IServiceCollection services) where TContext : DbContext
     {
-        services.AddScoped(sp => sp.GetRequiredService<IDbContextFactory<TContext>>().CreateDbContext());
+        services.AddScoped(sp =>
+        {
+            var uow = sp.GetRequiredService<IUnitOfWorkManager>().Current;
+            ArgumentNullException.ThrowIfNull(uow);
+            return (TContext)uow.GetDbContext(typeof(TContext));
+        });
     }
+
     private static void OnDbContextScan(ServiceConfigurationContext context)
     {
         context.ServiceRegistrar.TypeScaning += (_, type) =>
