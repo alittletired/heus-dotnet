@@ -89,7 +89,7 @@ public class DddModuleInitializer : ModuleInitializerBase
     private static void OnModuleInitialized(ServiceConfigurationContext context)
     {
         context.ServiceRegistrar.ModuleInitialized += (obj, assembly) => {
-            context.Services.AddMediatR(assembly);
+            context.Services.AddMediatR(cfg=>cfg.RegisterServicesFromAssembly(assembly) );
             };
     }
 }
