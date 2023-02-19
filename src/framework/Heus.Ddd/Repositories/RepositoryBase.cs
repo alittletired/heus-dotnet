@@ -76,7 +76,7 @@ public abstract class RepositoryBase<TEntity> :
         }
     }
 
-    protected virtual void TrySetId(TEntity entity)
+    protected  void TrySetId(TEntity entity)
     {
         if (entity.Id != default)
         {

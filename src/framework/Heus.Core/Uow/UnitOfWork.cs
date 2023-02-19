@@ -32,7 +32,7 @@ internal class UnitOfWork : IUnitOfWork
         ServiceProvider = serviceProvider;
         _logger = ServiceProvider.GetRequiredService<ILogger<UnitOfWork>>();
     }
-    private static DbContext CreateDbContextInternal<TContext>(IServiceProvider serviceProvider)
+    private static DbContext CreateDbContext<TContext>(IServiceProvider serviceProvider)
         where TContext : DbContext
     {
         var contextFactory = serviceProvider.GetRequiredService<IDbContextFactory<TContext>>();
@@ -41,7 +41,7 @@ internal class UnitOfWork : IUnitOfWork
 
     private readonly static MethodInfo GenericCreateDbContext = typeof(UnitOfWork)
         .GetTypeInfo().DeclaredMethods
-        .First(m => m.Name == nameof(CreateDbContextInternal));
+        .First(m =>m.IsStatic && m.Name == nameof(CreateDbContext));
     
     public DbContext GetDbContext(Type entityType)
     {
@@ -57,13 +57,7 @@ internal class UnitOfWork : IUnitOfWork
    
 
     }
-    public  TDbContext GetDbContext<TDbContext>() where  TDbContext:DbContext
-    {
-        var factory = ServiceProvider.GetRequiredService<IDbContextFactory<TDbContext>>();
-        return factory.CreateDbContext();
-    }
-  
-
+   
     private void EnsureTransaction(DbContext dbContext)
     {
         if (!Options.IsTransactional)

@@ -14,6 +14,11 @@ internal class TestSqliteDbConnectionProvider : SqliteDbConnectionProvider,IDisp
         // _shareConnection = new SqliteConnection($"DataSource=test{DateTime.Now.Ticks};mode=memory;cache=shared");
         _shareConnection = new SqliteConnection(ShareConnectionString);
         _shareConnection.Open();
+        _shareConnection.Disposed += (o, e) =>
+        {
+            Console.WriteLine("not suppose exec");
+
+        };
     }
 
     public override DbConnection CreateConnection(string connectionString)
