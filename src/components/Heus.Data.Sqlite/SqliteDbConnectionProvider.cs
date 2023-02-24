@@ -1,5 +1,4 @@
 using System.Data.Common;
-using Heus.Core.DependencyInjection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +13,7 @@ public class SqliteDbConnectionProvider : IDbConnectionProvider
         dbContextOptions.UseSqlite(shareConnection);
     }
 
-    public DbProvider DbProvider { get; } = DbProvider.Sqlite;
+    public DbProvider DbProvider  => DbProvider.Sqlite;
 
     public DbProviderFactory DbProviderFactory => SqliteFactory.Instance;
 

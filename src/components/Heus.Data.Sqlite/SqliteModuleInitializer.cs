@@ -1,5 +1,4 @@
 using Heus.Core.DependencyInjection;
-using Heus.Data;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Data.Sqlite;

@@ -8,13 +8,13 @@ namespace Heus.Data.Mysql;
 
 internal class MySqlDbConnectionProvider : IDbConnectionProvider
 {
-    private static readonly ConcurrentDictionary<string, ServerVersion> _serverVersions = new();
+    private readonly static ConcurrentDictionary<string, ServerVersion> ServerVersions = new();
     public DbProviderFactory DbProviderFactory => MySqlConnectorFactory.Instance;
     public void Configure(DbContextOptionsBuilder dbContextOptions, DbConnection shareConnection)
     {
 
-        var serverVersion = _serverVersions.GetOrAdd(shareConnection.ConnectionString,
-            (key) => ServerVersion.AutoDetect(shareConnection as MySqlConnection));
+        var serverVersion = ServerVersions.GetOrAdd(shareConnection.ConnectionString,
+            _ => ServerVersion.AutoDetect(shareConnection as MySqlConnection));
         dbContextOptions.UseMySql(shareConnection, serverVersion,
             mySqlOptions =>
             {

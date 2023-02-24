@@ -1,8 +1,5 @@
 ﻿using Heus.Core.DependencyInjection;
-
-using Heus.Ddd;
 using Microsoft.Extensions.DependencyInjection;
-
 namespace Heus.Data.Mysql;
 
 [ModuleDependsOn<DataModuleInitializer>]

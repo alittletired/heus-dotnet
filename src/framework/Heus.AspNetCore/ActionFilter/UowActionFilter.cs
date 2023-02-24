@@ -45,7 +45,6 @@ internal class UowActionFilter : IAsyncActionFilter, IScopedDependency
     private UnitOfWorkOptions CreateOptions(ActionExecutingContext context, UnitOfWorkAttribute? unitOfWorkAttribute)
     {
         var options = new UnitOfWorkOptions(unitOfWorkAttribute);
-        //context.HttpContext.RequestServices
         if (unitOfWorkAttribute?.IsTransactional.HasValue == false)
         {
             options.IsTransactional = !string.Equals(context.HttpContext.Request.Method
