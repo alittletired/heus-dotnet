@@ -62,7 +62,7 @@ internal class ServiceApplicationModelConvention : IApplicationModelConvention
 
     private void ConfigureSelector(ControllerModel controller)
     {
-        RemoveEmptySelectors(controller.Selectors);
+    
 
         if (controller.Selectors.Any(temp => temp.AttributeRouteModel != null))
         {
@@ -90,30 +90,13 @@ internal class ServiceApplicationModelConvention : IApplicationModelConvention
 
     private void ConfigureSelector(ActionModel action)
     {
-        RemoveEmptySelectors(action.Selectors);
+       
 
-        if (action.Selectors.Count <= 0)
-        {
-            AddApplicationServiceSelector(action);
-        }
-        else
-        {
             NormalizeSelectorRoutes(action);
-        }
+        
     }
 
-    private void AddApplicationServiceSelector(ActionModel action)
-    {
-        var httpMethod = HttpMethodHelper.GetHttpMethod(action.ActionMethod);
-        var routeTemplate = HttpApiHelper.CalculateRouteTemplate(action.Controller.ControllerType, action.ActionMethod);
-        var routeAttr = new RouteAttribute(routeTemplate);
-        var selector = new SelectorModel {
-            AttributeRouteModel = new AttributeRouteModel(routeAttr),
-            ActionConstraints = { new HttpMethodActionConstraint(new[] { httpMethod.ToString() }) }
-        };
-
-        action.Selectors.Add(selector);
-    }
+    
 
 
     private void NormalizeSelectorRoutes(ActionModel action)
@@ -134,18 +117,6 @@ internal class ServiceApplicationModelConvention : IApplicationModelConvention
         }
     }
 
-    private void RemoveEmptySelectors(IList<SelectorModel> selectors)
-    {
-        for (var i = selectors.Count - 1; i >= 0; i--)
-        {
-            var selector = selectors[i];
-            if (selector.AttributeRouteModel == null &&
-                (selector.ActionConstraints.Count <= 0) &&
-                (selector.EndpointMetadata.Count <= 0))
-            {
-                selectors.Remove(selector);
-            }
-        }
-    }
+   
 
 }

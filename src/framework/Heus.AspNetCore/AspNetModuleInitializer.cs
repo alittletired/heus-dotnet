@@ -1,6 +1,5 @@
 using System.Text;
 using Heus.AspNetCore.ActionFilter;
-using Heus.AspNetCore.Authorization;
 using Heus.AspNetCore.Conventions;
 using Heus.AspNetCore.ExceptionHandling;
 using Heus.AspNetCore.OpenApi;
@@ -10,12 +9,10 @@ using Heus.Core.Extensions;
 using Heus.Core.Security;
 using Heus.Core.Utils;
 using Heus.Ddd;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.AspNetCore;
 
