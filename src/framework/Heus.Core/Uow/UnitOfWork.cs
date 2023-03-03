@@ -63,34 +63,7 @@ internal class UnitOfWork : IUnitOfWork
         
     }
   
-    private void EnsureTransaction(DbContext dbContext)
-    {
-        if (!Options.IsTransactional)
-        {
-            return;
-        }
-
-        if (dbContext.Database.CurrentTransaction != null)
-        {
-            return;
-        }
-
-        var connStr = dbContext.Database.GetConnectionString();
-        if (connStr == null)
-        {
-            return;
-        }
-
-        if (!_dbTransactions.TryGetValue(connStr, out var dbTransaction))
-        {
-            dbTransaction = dbContext.Database.GetDbConnection()
-                .BeginTransaction();
-            _dbTransactions.Add(connStr, dbTransaction);
-        }
-
-        dbContext.Database.UseTransactionAsync(dbTransaction);
-
-    }
+   
 
     public async Task CompleteAsync(CancellationToken cancellationToken = default)
     {
@@ -133,15 +106,9 @@ internal class UnitOfWork : IUnitOfWork
         _isRollback = true;
         foreach (var dbTran in _dbTransactions)
         {
-            try
-            {
+            
                 await dbTran.Value.RollbackAsync(cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"{nameof(RollbackAsync)}  Fail :{dbTran.Key}");
-                throw;
-            }
+           
         }
 
     }
@@ -151,15 +118,7 @@ internal class UnitOfWork : IUnitOfWork
         // return DbTransaction == null ? Task.CompletedTask : DbTransaction.ReleaseAsync();
         foreach (var dbTran in _dbTransactions)
         {
-            try
-            {
-                dbTran.Value.Dispose();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"{nameof(DisposeTransactions)}  Fail :{dbTran.Key}");
-
-            }
+            dbTran.Value.Dispose();
         }
 
         _dbTransactions.Clear();

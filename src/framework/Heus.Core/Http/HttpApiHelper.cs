@@ -141,12 +141,7 @@ public static class HttpApiHelper
 
     private static string ConvertToQueryString(KeyValuePair<string, object> pair)
     {
-        var valueType = pair.Value.GetType();
-        if (valueType.IsClass && valueType != typeof(string))
-        {
-
-        }
-
+     
         return $"{pair.Key}={pair.Value}";
     }
 }

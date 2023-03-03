@@ -32,12 +32,6 @@ public class CoreModuleInitializer : ModuleInitializerBase
         context.Services.Configure<JwtOptions>(context.Configuration.GetSection(JwtOptions.ConfigurationSection));
         context.Services.AddHttpClient();
         context.Services.AddCache();
-        context.Services.AddScoped<IUnitOfWork>(sp =>
-        {
-            var uow= sp.GetRequiredService<IUnitOfWorkManager>().Current;
-            ArgumentNullException.ThrowIfNull(uow);
-            return uow;
-        
-        });
+      
     }
 }
