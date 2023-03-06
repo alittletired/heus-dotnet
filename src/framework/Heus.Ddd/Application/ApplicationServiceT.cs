@@ -8,11 +8,11 @@ using Heus.Ddd.Repositories;
 
 namespace Heus.Ddd.Application;
 
-public interface IAdminApplicationService<TEntity>: IAdminApplicationService<TEntity, TEntity,  TEntity, TEntity> 
+public interface IApplicationService<TEntity>: IApplicationService<TEntity, TEntity,  TEntity, TEntity> 
     where TEntity : class, IEntity  { }
-public interface IAdminApplicationService<TEntity, TDto> : IAdminApplicationService<TEntity, TDto, TDto, TDto>
+public interface IApplicationService<TEntity, TDto> : IApplicationService<TEntity, TDto, TDto, TDto>
     where TEntity : class, IEntity { }
-public interface IAdminApplicationService<TEntity, TDto, in TCreateDto, in TUpdateDto> : IAdminApplicationService
+public interface IApplicationService<TEntity, TDto, in TCreateDto, in TUpdateDto> : IApplicationService
     , IGetOneAppService<TDto>
     , ICreateAppService<TCreateDto, TDto>
     , IUpdateAppService<TUpdateDto, TDto>
@@ -22,19 +22,14 @@ public interface IAdminApplicationService<TEntity, TDto, in TCreateDto, in TUpda
 }
 
 
-/// <summary>
-/// 管理后台基类
-/// </summary>
-public abstract class AdminApplicationService: ApplicationService, IAdminApplicationService
-{
-}
-public abstract class AdminApplicationService<TEntity>: AdminApplicationService<TEntity, TEntity, TEntity, TEntity> 
+
+public abstract class ApplicationService<TEntity>: ApplicationService<TEntity, TEntity, TEntity, TEntity> 
     where TEntity : class, IEntity { }
-public abstract class AdminApplicationService<TEntity, TDto> : AdminApplicationService<TEntity, TDto, TDto, TDto> 
+public abstract class ApplicationService<TEntity, TDto> : ApplicationService<TEntity, TDto, TDto, TDto> 
     where TEntity : class, IEntity { }
 
-public abstract class AdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> : ApplicationService,
-    IAdminApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> where TEntity : class, IEntity 
+public abstract class ApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> : ApplicationService,
+    IApplicationService<TEntity, TDto, TCreateDto, TUpdateDto> where TEntity : class, IEntity 
 {
     protected IRepository<TEntity> Repository => GetRequiredService<IRepository<TEntity>>();
 

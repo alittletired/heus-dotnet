@@ -1,13 +1,14 @@
 
 namespace Heus.Auth.Application;
-public interface IRoleAdminAppService:IAdminApplicationService<Role>
+[AdminController()]
+public interface IRoleAppService:IApplicationService<Role>
 {
    
     Task<bool> AuthorizeActionAsync(long id, IEnumerable<long> actionIds);
     Task<IEnumerable<RoleActionRight>> GetActionIdsAsync(long id);
 
 }
-internal class RoleAdminAppService : AdminApplicationService<Role>, IRoleAdminAppService
+internal class RoleAdminAppService : ApplicationService<Role>, IRoleAppService
 {
     private readonly IRepository<RoleActionRight> _roleActionRightRepository;
     private readonly IRepository<ActionRight> _actionRightRepository;
