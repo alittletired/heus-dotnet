@@ -24,7 +24,7 @@ public record UserActionRight(string ResourcePath, int Flag)
 }
 
 
-public interface IResourceAppService : IApplicationService<Resource>
+public interface IResourceAdminAppService : IAdminApplicationService<Resource>
 {
 
     Task<bool> SyncResources(List<ResourceDto> resources);
@@ -32,7 +32,7 @@ public interface IResourceAppService : IApplicationService<Resource>
     Task<IEnumerable<UserActionRight>> GetUserActionRights(long userId);
 }
 
-internal class ResourceAppService : ApplicationService<Resource>, IResourceAppService
+internal class ResourceAdminAppService : AdminApplicationService<Resource>, IResourceAdminAppService
 {
     private readonly IRepository<ActionRight> _actionRightRepository;
     private readonly IRepository<User> _userRepository;
@@ -40,7 +40,7 @@ internal class ResourceAppService : ApplicationService<Resource>, IResourceAppSe
     private readonly IRepository<RoleActionRight> _roleActionRightRepository;
     private readonly IRepository<Resource> _resourceRepository;
     
-    public ResourceAppService(IRepository<ActionRight> actionRightRepository
+    public ResourceAdminAppService(IRepository<ActionRight> actionRightRepository
         , IRepository<User> userRepository
         , IRepository<RoleActionRight> roleActionRightRepository
         , IRepository<Resource> resourceRepository,
