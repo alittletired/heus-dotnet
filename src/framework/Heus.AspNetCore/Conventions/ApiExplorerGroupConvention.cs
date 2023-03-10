@@ -1,4 +1,4 @@
-using Heus.Core.Http;
+using Heus.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace Heus.AspNetCore.Conventions;

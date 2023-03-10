@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Heus.Core.Http;
+namespace Heus.AspNetCore.Http;
 
 public static class HttpMethodHelper
 {

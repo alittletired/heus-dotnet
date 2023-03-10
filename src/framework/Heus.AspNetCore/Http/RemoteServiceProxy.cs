@@ -1,8 +1,9 @@
 using System.Reflection;
+using Heus.Core;
 using Heus.Core.Common;
 using Heus.Core.Utils;
 
-namespace Heus.Core.Http;
+namespace Heus.AspNetCore.Http;
 
 internal class RemoteServiceProxy : DispatchProxy
 {

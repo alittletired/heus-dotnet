@@ -1,6 +1,6 @@
 using Heus.Core.DependencyInjection;
 
-namespace Heus.Core.Http;
+namespace Heus.AspNetCore.Http;
 
 internal class DefaultProxyHttpClientFactory: IProxyHttpClientFactory,ISingletonDependency
 {

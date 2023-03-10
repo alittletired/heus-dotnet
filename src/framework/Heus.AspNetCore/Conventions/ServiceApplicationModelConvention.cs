@@ -1,6 +1,6 @@
 using System.Collections;
+using Heus.AspNetCore.Http;
 using Heus.Core;
-using Heus.Core.Http;
 using Heus.Ddd.Application;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;

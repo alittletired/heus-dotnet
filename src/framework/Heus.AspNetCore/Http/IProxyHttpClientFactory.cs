@@ -1,4 +1,4 @@
-namespace Heus.Core.Http;
+namespace Heus.AspNetCore.Http;
 
 public interface IProxyHttpClientFactory
 {
