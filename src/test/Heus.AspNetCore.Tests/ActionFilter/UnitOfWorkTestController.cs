@@ -1,4 +1,4 @@
-﻿using Heus.Core.Uow;
+﻿using Heus.Ddd.Uow;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

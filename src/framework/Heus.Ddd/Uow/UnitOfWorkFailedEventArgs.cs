@@ -1,4 +1,4 @@
-﻿namespace Heus.Core.Uow;
+﻿namespace Heus.Ddd.Uow;
 
 public class UnitOfWorkFailedEventArgs:UnitOfWorkEventArgs
 {

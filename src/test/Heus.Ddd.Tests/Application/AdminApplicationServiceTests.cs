@@ -2,6 +2,7 @@
 using Heus.Ddd.Repositories;
 using Heus.Ddd.TestModule.Application;
 using Heus.Ddd.TestModule.Domain;
+using Heus.Ddd.Uow;
 
 namespace Heus.Ddd.Tests.Application;
 public class AdminApplicationServiceTests: DddIntegratedTest

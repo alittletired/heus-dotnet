@@ -1,6 +1,5 @@
-
-using Heus.Core.Uow;
 using Heus.Ddd.Entities;
+using Heus.Ddd.Uow;
 
 namespace Heus.Ddd.Repositories;
 

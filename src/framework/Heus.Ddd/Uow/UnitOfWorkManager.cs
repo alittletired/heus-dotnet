@@ -1,6 +1,6 @@
 
 
-namespace Heus.Core.Uow;
+namespace Heus.Ddd.Uow;
 internal class UnitOfWorkManager : IUnitOfWorkManager
 {
     private readonly AsyncLocal<IUnitOfWork?> _currentUow = new();

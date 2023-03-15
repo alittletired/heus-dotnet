@@ -1,9 +1,9 @@
-using System.Reflection;
+
 using Heus.Core.Caching;
 using Heus.Core.DependencyInjection;
 using Heus.Core.ObjectMapping;
 using Heus.Core.Security;
-using Heus.Core.Uow;
+
 
 
 namespace Heus.Core;
@@ -32,12 +32,6 @@ public class CoreModuleInitializer : ModuleInitializerBase
         context.Services.Configure<JwtOptions>(context.Configuration.GetSection(JwtOptions.ConfigurationSection));
         context.Services.AddHttpClient();
         context.Services.AddCache();
-        context.Services.AddScoped<IUnitOfWork>(sp =>
-        {
-            var uow= sp.GetRequiredService<IUnitOfWorkManager>().Current;
-            ArgumentNullException.ThrowIfNull(uow);
-            return uow;
-        
-        });
+     
     }
 }

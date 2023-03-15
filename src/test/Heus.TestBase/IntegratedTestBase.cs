@@ -1,11 +1,8 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Autofac.Core;
+﻿
 using Heus.Core.DependencyInjection;
 using Heus.Core.DependencyInjection.Autofac;
 using Heus.Core.Security;
-using Heus.Core.Uow;
+using Heus.Ddd.Uow;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 namespace Heus.TestBase;

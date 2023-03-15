@@ -2,6 +2,7 @@
 using Heus.Ddd.Repositories;
 using Heus.Ddd.TestModule;
 using Heus.Ddd.TestModule.Domain;
+using Heus.Ddd.Uow;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heus.Ddd.Tests.Repositories;
