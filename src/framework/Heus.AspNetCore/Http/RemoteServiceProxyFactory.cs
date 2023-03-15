@@ -1,8 +1,9 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using Heus.Core.DependencyInjection;
+using Heus.Ddd.Application;
 
-namespace Heus.Core.Http;
+namespace Heus.AspNetCore.Http;
 
 public class RemoteServiceProxyFactory : ISingletonDependency
 {
@@ -31,7 +32,7 @@ public class RemoteServiceProxyFactory : ISingletonDependency
     {
         return _httpClientFactory.CreateClient(remoteServiceName);
     }
-    public T CreateProxy<T>(string? remoteServiceName=null) where T : IRemoteService
+    public T CreateProxy<T>(string? remoteServiceName=null) where T : IApplicationService
     {
         var serviceName=  remoteServiceName ?? typeof(T).Assembly.FullName;
         var key = $"{remoteServiceName}:{typeof(T).FullName}";

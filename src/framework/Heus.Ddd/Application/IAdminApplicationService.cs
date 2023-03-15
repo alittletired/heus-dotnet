@@ -1,5 +1,4 @@
 
-using Heus.Core.Http;
 
 namespace Heus.Ddd.Application;
 

@@ -1,6 +1,7 @@
 ﻿using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
-namespace Heus.Core.Http;
+
+namespace Heus.AspNetCore.Http;
 
 internal class DefaultRemoteServiceProxyContributor : IRemoteServiceProxyContributor, ISingletonDependency
 {

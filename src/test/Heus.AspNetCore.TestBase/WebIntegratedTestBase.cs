@@ -1,9 +1,10 @@
 ﻿
 using Autofac.Core;
+using Heus.AspNetCore.Http;
 using Heus.Core.Common;
-using Heus.Core.Http;
 using Heus.Core.Security;
 using Heus.Core.Utils;
+using Heus.Ddd.Application;
 using Heus.TestBase;
 
 namespace Heus.AspNetCore.TestBase;
@@ -17,7 +18,7 @@ public abstract class WebIntegratedTestBase<TTestModule,TStartup> : IntegratedTe
     {
         _factory = factory;
     }
-    public TService CreateServiceProxy<TService>(string? remoteServiceName=null) where TService : IRemoteService
+    public TService CreateServiceProxy<TService>(string? remoteServiceName=null) where TService : IApplicationService
     {
         return GetRequiredService<RemoteServiceProxyFactory>().CreateProxy<TService>(remoteServiceName);
     }

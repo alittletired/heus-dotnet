@@ -1,11 +1,11 @@
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Heus.Core;
 using Heus.Core.Utils;
 using Heus.Ddd.Application;
-using Microsoft.AspNetCore.Authorization;
 
-namespace Heus.Core.Http;
+namespace Heus.AspNetCore.Http;
 public static class HttpApiHelper
 {
     public static string GetGroupName(Type type)

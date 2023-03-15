@@ -1,5 +1,5 @@
-﻿using Heus.Core.DependencyInjection;
-using Heus.Core.Http;
+﻿using Heus.AspNetCore.Http;
+using Heus.Core.DependencyInjection;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.TestHost;
 
