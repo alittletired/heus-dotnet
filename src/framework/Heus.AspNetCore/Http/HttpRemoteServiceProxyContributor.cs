@@ -1,5 +1,6 @@
 ﻿using Heus.Core.DependencyInjection;
 
+
 namespace Heus.AspNetCore.Http;
 
 public class HttpRemoteServiceProxyContributor : IRemoteServiceProxyContributor,ISingletonDependency
