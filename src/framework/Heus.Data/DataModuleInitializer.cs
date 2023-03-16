@@ -24,12 +24,12 @@ public class DataModuleInitializer : ModuleInitializerBase
 
     private static void RegisterDbContext<TContext>(IServiceCollection services) where TContext : DbContext
     {
-        // services.AddScoped(sp =>
-        // {
-        //     var uow = sp.GetRequiredService<IUnitOfWorkManager>().Current;
-        //     ArgumentNullException.ThrowIfNull(uow);
-        //     return (TContext)uow.GetDbContext(typeof(TContext));
-        // });
+        services.AddScoped(sp =>
+        {
+            var uow = sp.GetRequiredService<IUnitOfWorkManager>().Current;
+            ArgumentNullException.ThrowIfNull(uow);
+            return (TContext)uow.GetDbContext(typeof(TContext));
+        });
     }
 
     private static void OnDbContextScan(ServiceConfigurationContext context)
@@ -45,5 +45,5 @@ public class DataModuleInitializer : ModuleInitializerBase
 
         };
     }
-   
+
 }
