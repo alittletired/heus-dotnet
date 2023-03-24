@@ -4,7 +4,7 @@ using Heus.TestBase;
 
 namespace Heus.Ddd.Tests.Uow;
 
-public class UnitOfWork_Scope_Tests : IntegratedTestBase<CoreModuleInitializer>
+public class UnitOfWork_Scope_Tests : IntegratedTestBase<DddTestModule>
 {
     private readonly IUnitOfWorkManager _unitOfWorkManager;
     protected override bool AutoCreateUow => false;

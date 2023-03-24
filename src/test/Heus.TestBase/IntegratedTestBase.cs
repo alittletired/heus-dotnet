@@ -27,7 +27,7 @@ public abstract class IntegratedTestBase: IAsyncLifetime, IDisposable
         // xunit框架每个方法都会从新实例化对象，工作单元作用域在IAsyncLifetime开启并不生效，故只能放在此处
         if (AutoCreateUow)
         {
-            UnitOfWorkManager.Begin(ServiceProvider);
+            UnitOfWorkManager?.Begin(ServiceProvider);
         }
         if (AutoAuthorize)
         {
@@ -52,6 +52,7 @@ public abstract class IntegratedTestBase: IAsyncLifetime, IDisposable
     }
     public async Task InitializeAsync()
     {
+       
         //超类的初始化逻辑只能在此处调用，原因是，超类的构造函数中赋值的字段还没执行，导致空引用
         await ServiceProvider.PerformUowTask(BeforeTestAsync);
 
@@ -67,8 +68,8 @@ public abstract class IntegratedTestBase: IAsyncLifetime, IDisposable
     {
         if (AutoCreateUow)
         {
-            UnitOfWorkManager.Current?.CompleteAsync();
-            UnitOfWorkManager.Current?.Dispose();
+            UnitOfWorkManager?.Current?.CompleteAsync();
+            UnitOfWorkManager?.Current?.Dispose();
         }
     }
 }

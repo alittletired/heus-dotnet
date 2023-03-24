@@ -18,7 +18,7 @@ public class UnitOfWorkTest2
 }
 
 
-public class UnitOfWorkAttributeTests : IntegratedTestBase<CoreModuleInitializer>
+public class UnitOfWorkAttributeTests : IntegratedTestBase<DddTestModule>
 {
     [Theory]
     [InlineData(typeof(UnitOfWorkTest1), true)]
