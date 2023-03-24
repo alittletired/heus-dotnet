@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace Heus.Core.Uow;
+namespace Heus.Ddd.Uow;
 
 public class UnitOfWorkOptions : IUnitOfWorkOptions
 {

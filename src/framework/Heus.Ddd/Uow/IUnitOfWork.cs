@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 
-namespace Heus.Core.Uow;
+namespace Heus.Ddd.Uow;
 public interface IUnitOfWork :  IDisposable
 {
   

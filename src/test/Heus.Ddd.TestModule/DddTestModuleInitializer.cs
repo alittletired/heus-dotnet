@@ -4,6 +4,8 @@ using Heus.Ddd.Repositories;
 using Heus.Ddd.TestModule.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Heus.Ddd.TestModule.Domain;
+using Heus.Ddd.Uow;
+
 namespace Heus.Ddd.TestModule;
 [ModuleDependsOn<DddModuleInitializer>]
 public class DddTestModuleInitializer: ModuleInitializerBase

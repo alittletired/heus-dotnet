@@ -1,8 +1,8 @@
 using Heus.Core.DependencyInjection;
 
-namespace Heus.Core.Uow;
+namespace Heus.Ddd.Uow;
 
-public interface IUnitOfWorkManager : ISingletonDependency
+public interface IUnitOfWorkManager 
 {
     IUnitOfWork? Current { get; }
     IUnitOfWork Begin(IServiceProvider serviceProvider,UnitOfWorkOptions? options=default, bool requiresNew = false);

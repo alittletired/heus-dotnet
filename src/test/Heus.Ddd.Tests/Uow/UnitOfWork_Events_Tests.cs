@@ -1,13 +1,14 @@
-﻿using Heus.Core.Uow;
+﻿using Heus.Core;
+using Heus.Ddd.Uow;
 using Heus.TestBase;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Heus.Core.Tests.Uow;
+namespace Heus.Ddd.Tests.Uow;
 
-public class UnitOfWork_Events_Tests : IntegratedTestBase<CoreModuleInitializer>
+public class UnitOfWork_Events_Tests : IntegratedTestBase<DddTestModule>
 {
-    private readonly IUnitOfWorkManager _unitOfWorkManager;
+   
     protected override bool AutoCreateUow => false;
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
 
     public UnitOfWork_Events_Tests()
     {

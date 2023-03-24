@@ -1,9 +1,9 @@
 using System.Data.Common;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Heus.Core.Uow;
+namespace Heus.Ddd.Uow;
 internal class UnitOfWork : IUnitOfWork
 {
     private Exception? _exception;

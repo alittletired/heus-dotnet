@@ -4,6 +4,7 @@ using Heus.Auth.Dtos;
 using Heus.Ddd.Domain;
 using Heus.Ddd.Dtos;
 using Heus.Ddd.Repositories;
+using Heus.Ddd.Uow;
 using Heus.TestBase;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,6 @@
-﻿using Heus.Core.Uow;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace System;
+namespace Heus.Ddd.Uow;
 
 public static class UnitOfWorkExtensions
 {

@@ -1,7 +1,9 @@
 
 
-namespace Heus.Core.Uow;
-internal class UnitOfWorkManager : IUnitOfWorkManager
+using Heus.Core.DependencyInjection;
+
+namespace Heus.Ddd.Uow;
+internal class DefaultUnitOfWorkManager : IUnitOfWorkManager, ISingletonDependency
 {
     private readonly AsyncLocal<IUnitOfWork?> _currentUow = new();
     public IUnitOfWork? Current => _currentUow.Value;

@@ -1,9 +1,4 @@
-
-
-
-using Microsoft.EntityFrameworkCore;
-
-namespace Heus.Core.Uow;
+namespace Heus.Ddd.Uow;
 internal class ChildUnitOfWork : IUnitOfWork
 {
     private readonly IUnitOfWork _parent;

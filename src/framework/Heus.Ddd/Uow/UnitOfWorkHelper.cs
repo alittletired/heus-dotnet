@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace Heus.Core.Uow;
+namespace Heus.Ddd.Uow;
 
 public static class UnitOfWorkHelper
 {

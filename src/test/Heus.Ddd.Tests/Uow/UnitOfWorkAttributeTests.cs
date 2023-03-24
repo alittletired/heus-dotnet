@@ -1,8 +1,9 @@
 ﻿using System.Reflection;
-using Heus.Core.Uow;
+using Heus.Core;
+using Heus.Ddd.Uow;
 using Heus.TestBase;
 
-namespace Heus.Core.Tests.Uow;
+namespace Heus.Ddd.Tests.Uow;
 
 [UnitOfWork]
 public class UnitOfWorkTest1
@@ -17,7 +18,7 @@ public class UnitOfWorkTest2
 }
 
 
-public class UnitOfWorkAttributeTests : IntegratedTestBase<CoreModuleInitializer>
+public class UnitOfWorkAttributeTests : IntegratedTestBase<DddTestModule>
 {
     [Theory]
     [InlineData(typeof(UnitOfWorkTest1), true)]

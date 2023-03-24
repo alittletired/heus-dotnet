@@ -1,4 +1,4 @@
-﻿using Heus.Core.Uow;
+﻿using Heus.Ddd.Uow;
 
 namespace Heus.Auth.Domain.Internal;
 

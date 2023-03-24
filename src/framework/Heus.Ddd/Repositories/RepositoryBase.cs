@@ -1,12 +1,12 @@
 using System.Linq.Expressions;
 using Heus.Core.DependencyInjection;
 using Heus.Core.Security;
-using Heus.Core.Uow;
 using Heus.Data;
 using Heus.Ddd.Application;
 using Heus.Ddd.Entities;
 using Heus.Ddd.Internal;
 using Heus.Ddd.Repositories.Filtering;
+using Heus.Ddd.Uow;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
 

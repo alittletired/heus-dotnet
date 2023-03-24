@@ -4,6 +4,7 @@ using Heus.Data;
 using Heus.Data.Utils;
 using Heus.Ddd.Repositories;
 using Heus.Ddd.Repositories.Filtering;
+using Heus.Ddd.Uow;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heus.Ddd;
@@ -18,7 +19,18 @@ public class DddModuleInitializer : ModuleInitializerBase
         OnRepositoryRegistered(context);
         OnModuleInitialized(context);
     }
+    private static MethodInfo _registerDbContext = typeof(DddModuleInitializer)
+        .GetTypeInfo().DeclaredMethods.First(m => m.Name == nameof(RegisterDbContext));
 
+    private static void RegisterDbContext<TContext>(IServiceCollection services) where TContext : DbContext
+    {
+        services.AddScoped(sp =>
+        {
+            var uow = sp.GetRequiredService<IUnitOfWorkManager>().Current;
+            ArgumentNullException.ThrowIfNull(uow);
+            return (TContext)uow.GetDbContext(typeof(TContext));
+        });
+    }
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddSingleton(typeof(IDataFilter<>), typeof(DataFilter<>));
@@ -49,7 +61,8 @@ public class DddModuleInitializer : ModuleInitializerBase
             {
                 return;
             }
-
+            var registerDbContext = _registerDbContext.MakeGenericMethod(type);
+            registerDbContext.Invoke(null, new object[] { context.Services });
             var types = DbContextUtils.GetEntityTypes(type);
             foreach (var entityType in types)
             {
