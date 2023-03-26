@@ -23,18 +23,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Auth.Api", "src\module
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Auth.IntegratedTests", "src\modules\auth\Heus.Auth.IntegratedTests\Heus.Auth.IntegratedTests.csproj", "{595A7EC3-A8C1-43C2-BE14-E07FA2A134B8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "enroll", "enroll", "{88EC0649-C33F-4160-BAF3-7D5E2664AE1D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mall", "mall", "{88EC0649-C33F-4160-BAF3-7D5E2664AE1D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Enroll", "src\modules\enroll\Heus.Enroll\Heus.Enroll.csproj", "{4BB37977-24CB-41B7-B9B2-9B53F5E5EFB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Mall", "src\modules\mall\Heus.Mall\Heus.Mall.csproj", "{4BB37977-24CB-41B7-B9B2-9B53F5E5EFB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Enroll.Web", "src\modules\enroll\Heus.Enroll.Web\Heus.Enroll.Web.csproj", "{44D3E711-5558-4512-A674-F4908761B5AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Mall.Web", "src\modules\mall\Heus.Mall.Web\Heus.Mall.Web.csproj", "{44D3E711-5558-4512-A674-F4908761B5AA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{9D7137FB-1BF5-427F-BB5D-721D502D3F0B}"
 	ProjectSection(SolutionItems) = preProject
 		docs\env.md = docs\env.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Enroll.Migrations", "src\modules\enroll\Heus.Enroll.Migrations\Heus.Enroll.Migrations.csproj", "{88ABBBB6-EB62-4176-B49D-4FF8159C8F3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heus.Mall.Migrations", "src\modules\mall\Heus.Mall.Migrations\Heus.Mall.Migrations.csproj", "{88ABBBB6-EB62-4176-B49D-4FF8159C8F3B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1508B14F-9151-4608-8BE9-8F0833A705E6}"
 EndProject

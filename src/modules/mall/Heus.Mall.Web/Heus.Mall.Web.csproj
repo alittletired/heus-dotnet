@@ -6,7 +6,7 @@
 	  <ProjectReference Include="..\..\..\framework\Heus.AspNetCore\Heus.AspNetCore.csproj" />
 	  <ProjectReference Include="..\..\..\components\Heus.Data.Postgres\Heus.Data.Postgres.csproj" />
 	  <ProjectReference Include="..\..\..\components\Heus.Data.SqlServer\Heus.Data.SqlServer.csproj" />
-	  <ProjectReference Include="..\Heus.Enroll\Heus.Enroll.csproj" />
+	  <ProjectReference Include="..\Heus.Mall\Heus.Mall.csproj" />
 	</ItemGroup>
 	 <ItemGroup>
      <InternalsVisibleTo Include="Heus.Auth.IntegratedTests" />
