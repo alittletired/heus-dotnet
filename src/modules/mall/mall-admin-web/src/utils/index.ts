@@ -1,1 +1,2 @@
-export { default as useEmotionCss } from './use-emotion-css'
+export { default as useEmotionCss } from './useEmotionCss'
+export { useLocale } from './locales'
