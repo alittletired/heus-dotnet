@@ -2,9 +2,9 @@
 using Heus.Auth;
 using Heus.Core.DependencyInjection;
 
-namespace Heus.Enroll;
+namespace Heus.Mall;
 [ModuleDependsOn<AuthModuleInitializer>]
-public class EnrollModuleInitializer : ModuleInitializerBase
+public class MallModuleInitializer : ModuleInitializerBase
 {
    
 }
