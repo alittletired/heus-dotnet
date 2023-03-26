@@ -1,6 +1,5 @@
-import { Locale } from './Locale'
-const enUS: Locale = {
-  'navBar.lang': '',
+// eslint-disable-next-line import/no-anonymous-default-export
+export default {
   'pages.login.accountLogin.tab': 'Account Login',
   'pages.login.accountLogin.errorMessage': 'Incorrect username/password(admin/ant.design)',
   'pages.login.failure': 'Login failed, please try again!',
@@ -24,4 +23,3 @@ const enUS: Locale = {
   'pages.login.loginWith': 'Login with :',
   'pages.login.registerAccount': 'Register Account',
 }
-export default enUS
