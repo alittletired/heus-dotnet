@@ -1,4 +1,5 @@
 import { GlobalFooter } from '@/layouts'
+import { useIntl } from 'react-intl'
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -8,10 +9,10 @@ import {
   WeiboCircleOutlined,
 } from '@ant-design/icons'
 
-import { useEmotionCss } from '@ant-design/use-emotion-css'
 import { Alert, message, Tabs } from 'antd'
 import React, { useState } from 'react'
 import { flushSync } from 'react-dom'
+import { useEmotionCss } from '@/utils'
 
 const ActionIcons = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -73,12 +74,10 @@ const LoginMessage: React.FC<{
     />
   )
 }
-
+type LoginType = 'account' | 'mobile'
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({})
-  const [type, setType] = useState<string>('account')
-  const { initialState, setInitialState } = useModel('@@initialState')
-
+  const [type, setType] = useState<LoginType>('account')
+  const intl = useIntl()
   const containerClassName = useEmotionCss(() => {
     return {
       display: 'flex',
@@ -90,8 +89,6 @@ const Login: React.FC = () => {
       backgroundSize: '100% 100%',
     }
   })
-
-  const intl = useIntl()
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.()

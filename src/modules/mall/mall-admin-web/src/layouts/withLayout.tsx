@@ -13,7 +13,7 @@ function withLayout<P>(Component: ComponentType<P>) {
   const LayoutComponent: ComponentType<P> = (props) => {
     return (
       <ProtectedLayout>
-        <Component {...(props as any)} />
+        <Component {...props} />
       </ProtectedLayout>
     )
   }
