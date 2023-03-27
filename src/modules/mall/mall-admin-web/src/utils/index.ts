@@ -1,2 +1,1 @@
-export { default as useEmotionCss } from './useEmotionCss'
-export { useLocale } from './locales'
+export { isInBrowser } from './common'

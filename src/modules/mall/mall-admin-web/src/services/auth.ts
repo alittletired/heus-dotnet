@@ -3,7 +3,6 @@ import menus from '@/config/menus'
 import adminApi, { UserActionRight, ResourceDto, ActionDto } from '@/api/admin'
 import useRouter from './router'
 import { useCallback } from 'react'
-import { atom, useAtomValue } from 'jotai'
 
 const actionMap: Map<string, ActionDto[]> = new Map()
 function initActionMap(menuArr: ResourceDto[]) {

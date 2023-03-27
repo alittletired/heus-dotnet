@@ -2,7 +2,7 @@ import { getUser, logout } from './user'
 import { message } from 'antd'
 import { AxiosError, AxiosResponse } from 'axios'
 import axios from 'axios'
-import siteConfig from '@/config/siteConfig'
+import siteConfig from '@/config/siteSettings'
 
 export const axiosInstance = axios.create({
   timeout: 10000,

@@ -1,4 +1,4 @@
-import appConfig from '@/config/siteConfig'
+import appConfig from '@/config/siteSettings'
 import { atom, useAtom } from 'jotai'
 const appConfigState = atom({ ...appConfig, collapsed: false })
 

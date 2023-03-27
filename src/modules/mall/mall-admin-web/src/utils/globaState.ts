@@ -1,52 +1,26 @@
-import { atom, useAtom } from 'jotai'
+import { atom, PrimitiveAtom, useAtom, WritableAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
+import { getDefaultStore } from 'jotai/vanilla'
+const defaultStore = getDefaultStore()
 class GlobaState<T> {
-  private state: T
-  private setAotms = new Set()
+  private state: WritableAtom<T, any>
+  private currentState: T
   public constructor(public defaultState: T, public key?: string) {
-    this.state = defaultState
-    if (typeof window !== 'undefined') {
-      const value = this.key && localStorage?.getItem(this.key)
-      if (value) {
-        this.state = JSON.parse(value)
-      }
+    this.currentState = defaultState
+    if (key) {
+      this.state = atomWithStorage(key, defaultState)
+    } else {
+      this.state = atom(defaultState)
     }
-  }
-  public getState = () => this.state
-  public setState = (newValue: T) => {
-    this.state = newValue
-    this.key && localStorage.setItem(this.key, JSON.stringify(newValue))
-    this.setAotms.forEach((set: any) => {
-      set(this.state)
-    })
-  }
 
-  public onMount = (setAotm: any) => {
-    this.setAotms.add(setAotm)
-    return () => this.setAotms.delete(setAotm)
-  }
-  public resetState = () => {
-    this.state = this.defaultState
-    localStorage.removeItem(this.key)
-    this.setAotms.forEach((set: any) => {
-      set(this.state)
+    defaultStore.sub(this.state, () => {
+      this.currentState = defaultStore.get(this.state)
     })
   }
+  public useState = () => useAtom(this.state)
+  public getState = () => this.currentState
+  public setState = (value: T) => defaultStore.set(this.state, value)
 }
-
 export function withGlobaState<T>(defaultState: T, persistkey?: string) {
-  const myStorage = new GlobaState<T>(defaultState, persistkey)
-  const baseAtom = atom(myStorage.getState())
-
-  const state = atom(
-    (get) => get(baseAtom),
-    (get, set, newValue: T) => {
-      set(baseAtom, newValue)
-      myStorage.setState(newValue)
-    },
-  )
-  baseAtom.onMount = (setAtom) => {
-    return myStorage.onMount(setAtom)
-  }
-  const useState = () => useAtom(state)
-  return { ...myStorage, useState, state }
+  return new GlobaState(defaultState, persistkey)
 }
