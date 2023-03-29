@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, ComponentType } from 'react'
 import { Form, FormItemProps as AntFormItemProps } from 'antd'
 import { getRules } from './formItemRule'
-import { usePageContext } from '../PageContext'
+import { usePageContext } from '../../views/PageContext'
 import { useFormContext } from './FormContext'
 const AntFormItem = Form.Item
 const Empty: React.ForwardRefRenderFunction<any, any> = (props, ref) => {

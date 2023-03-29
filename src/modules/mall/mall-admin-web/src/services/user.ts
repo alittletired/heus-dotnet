@@ -7,13 +7,22 @@ export interface CurrentUser extends LoginResult {
 const defaultUser = { isLogin: false } as CurrentUser
 const userState = withGlobaState(defaultUser, 'auth')
 
-export const logout = () => userState.setState(defaultUser)
-export const login = async (token: LoginInput) => {
-  var result = await adminApi.accounts.login(token)
-  if (result.userId) {
-    userState.setState({ ...result, isLogin: true })
-  }
+const user = {
+  async login(token: LoginInput) {
+    var result = await adminApi.accounts.login(token)
+    if (result.userId) {
+      userState.setState({ ...result, isLogin: true })
+    }
+  },
+  logout() {
+    userState.setState(defaultUser)
+  },
+  //仅用在无法使用hook的场景
+  get state() {
+    return userState.getState()
+  },
+  useState() {
+    return userState.useState()
+  },
 }
-export const getUser = userState.getState
-export const useUser = userState.useState
-export default userState
+export default user

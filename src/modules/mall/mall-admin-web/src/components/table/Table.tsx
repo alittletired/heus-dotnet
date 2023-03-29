@@ -12,7 +12,7 @@ import { toSearchData, translateColumns } from './tableUtils'
 import { ColumnProps, TableProps } from './types'
 import SearchForm from './components/SearchForm'
 import ToolBar from './components/ToolBar'
-import { usePageContext } from '../PageContext'
+import { usePageContext } from '../../views/PageContext'
 // import './index.css'
 import { toTreeData, TreeEntity } from '../tree/treeUtils'
 export interface TableContext<T = any> {

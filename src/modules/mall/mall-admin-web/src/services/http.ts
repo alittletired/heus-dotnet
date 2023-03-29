@@ -1,12 +1,12 @@
-import { getUser, logout } from './user'
+import user from './user'
 import { message } from 'antd'
 import { AxiosError, AxiosResponse } from 'axios'
 import axios from 'axios'
-import siteConfig from '@/config/siteSettings'
+import globalConfig from '@/config/globalConfig'
 
 export const axiosInstance = axios.create({
   timeout: 10000,
-  baseURL: siteConfig.apiBaseUrl,
+  baseURL: globalConfig.apiBaseUrl,
 })
 const httpClient: HttpClient = {
   get: async function <D, R>(url: string, config?: RequestConfig<D>): Promise<R> {
@@ -33,19 +33,16 @@ const httpClient: HttpClient = {
 }
 
 export function getAuthHeaders(): Record<string, string> {
-  const auth = getUser()
-  if (!auth.isLogin) {
+  if (!user.state.isLogin) {
     return {}
   }
   return {
-    Authorization: 'Bearer ' + auth.accessToken,
-    userId: auth.userId,
+    Authorization: 'Bearer ' + user.state.accessToken,
+    userId: user.state.userId,
   }
 }
 axiosInstance.interceptors.request.use(async (config) => {
-  const auth = getUser()
-
-  if (auth.isLogin) {
+  if (user.state.isLogin) {
     config.headers = Object.assign({}, config.headers, getAuthHeaders())
   }
   return config
@@ -57,7 +54,7 @@ axiosInstance.interceptors.response.use(
     if (code) {
       console.warn('error', res)
       if ([405, 404, 403].includes(body.code)) {
-        logout()
+        user.logout()
       }
       return Promise.reject(res)
     }
@@ -66,10 +63,10 @@ axiosInstance.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response?.status == 401) {
-      logout()
-      if (location.pathname.startsWith(siteConfig.loginUrl)) return
+      user.logout()
+      if (location.pathname.startsWith(globalConfig.loginUrl)) return
       const redirect = encodeURIComponent(location.href.substring(location.origin.length))
-      location.href = location.origin + siteConfig.loginUrl + '?redirect=' + redirect
+      location.href = location.origin + globalConfig.loginUrl + '?redirect=' + redirect
     } else {
       // message.error('系统出错，请联系管理员')
       console.warn('http error', error, error.message)
