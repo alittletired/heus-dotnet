@@ -3,4 +3,4 @@ import { withGlobaState } from '@/utils/globaState'
 const globalConfigState = withGlobaState({ ...globalConfig, collapsed: false })
 
 export default globalConfigState
-export const useglobalConfig = () => globalConfigState.useState
+export const useGlobalConfig = globalConfigState.useState

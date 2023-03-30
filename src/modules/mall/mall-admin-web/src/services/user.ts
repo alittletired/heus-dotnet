@@ -25,4 +25,5 @@ const user = {
     return userState.useState()
   },
 }
+export const useUser = user.useState
 export default user

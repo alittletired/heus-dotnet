@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { Alert, Spin, Tabs } from 'antd'
 import { LoginInput } from '@/api/admin'
-import { useUser, login } from '@/services/user'
 import { Form, FormItem, Link } from '@/components'
 import { LockTwoTone, MobileOutlined, UserOutlined } from '@ant-design/icons'
 import useRouter from '@/services/router'
-import UserLayout from '@/layouts/UserLayout'
 import styles from './login.module.css'
 import { FormControlItem } from '@/components/form/Form'
 /*防止自动填充 */

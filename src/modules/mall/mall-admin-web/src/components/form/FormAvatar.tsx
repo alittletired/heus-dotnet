@@ -2,7 +2,9 @@ import React, { useState, useCallback } from 'react'
 import withFormItem from './withFormItem'
 import icons from '../icons'
 import { Upload, message, UploadProps, UploadFile } from 'antd'
-import { useAppConfig } from '@/layouts/appConfig'
+
+import { UploadChangeParam } from 'antd/lib/upload/interface'
+import { useGlobalConfig } from '@/services/globalConfig'
 interface AvatarProps extends Omit<UploadProps, 'onChange'> {
   value?: string
   onChange?: (value: string) => void
@@ -10,7 +12,7 @@ interface AvatarProps extends Omit<UploadProps, 'onChange'> {
 const FormAvatar = withFormItem((props: AvatarProps, ref: any) => {
   let { onChange, value, ...rest } = props
   const [loading, setLoading] = useState(false)
-  const [appConfig] = useAppConfig()
+  const [globalConfig] = useGlobalConfig()
   const uploadButton = (
     // @ts-expect-error
     <div>
@@ -24,7 +26,8 @@ const FormAvatar = withFormItem((props: AvatarProps, ref: any) => {
     if (!isJpgOrPng) {
       message.error('只允许上传图片文件!')
     }
-    const isLt2M = file.size / 1024 / 1024 < 2
+
+    const isLt2M = file.size! / 1024 / 1024 < 2
     if (!isLt2M) {
       message.error('图片大小必须小于2MB!')
     }
@@ -52,12 +55,16 @@ const FormAvatar = withFormItem((props: AvatarProps, ref: any) => {
       listType="picture-card"
       className="avatar-uploader"
       showUploadList={false}
-      action={`${appConfig.apiBaseUrl}/api/pb/file/upload-image`}
+      action={`${globalConfig.apiBaseUrl}/api/pb/file/upload-image`}
       beforeUpload={beforeUpload}
       {...rest}
       onChange={handleChange}>
       {props.value ? (
-        <img src={`${appConfig.apiBaseUrl}${props.value}`} alt="avatar" style={{ width: '100%' }} />
+        <img
+          src={`${globalConfig.apiBaseUrl}${props.value}`}
+          alt="avatar"
+          style={{ width: '100%' }}
+        />
       ) : (
         uploadButton
       )}

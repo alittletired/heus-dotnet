@@ -1,12 +1,11 @@
-import { useAppConfig } from '@/layouts/appConfig'
-import authState, { useAuth } from '@/services/auth'
+import { useGlobalConfig } from '@/services/globalConfig'
 import useRouter from '@/services/router'
-import { useUser } from '@/services/user'
+import user from '@/services/user'
 import { Spin } from 'antd'
 
 import React, { PropsWithChildren, useCallback } from 'react'
 export interface PageContext {
-  labels?: Record<string, string>
+  options: PageOptions
 }
 export interface PageProps<P = any> {
   pageProps: P
@@ -16,18 +15,19 @@ const PageContext = React.createContext({} as PageContext)
 export const usePageContext = () => React.useContext(PageContext)
 
 export const PageContextProvider: React.FC<PageProps & PropsWithChildren> = (props) => {
-  const labels = props.Component.options?.labels
   const router = useRouter()
-  const [user] = useUser()
-  const [appConfig] = useAppConfig()
-  const auth = useAuth()
-  if (!(user.isLogin && auth.hasRight('view')) && !router.asPath.startsWith(appConfig.loginUrl)) {
-    console.warn('redirect for login:', router, appConfig.loginUrl)
-
-    router.replace(appConfig.loginUrl + '?redirect=' + encodeURIComponent(router.asPath))
+  const [userState] = user.useState()
+  const [globalConfig] = useGlobalConfig()
+  if (!userState.isLogin && !router.asPath.startsWith(globalConfig.loginUrl)) {
+    console.warn('redirect for login:', router, globalConfig.loginUrl)
+    router.replace(globalConfig.loginUrl + '?redirect=' + encodeURIComponent(router.asPath))
     return <Spin />
   }
-  return <PageContext.Provider value={{ labels }}>{props.children}</PageContext.Provider>
+  return (
+    <PageContext.Provider value={{ options: props.Component.options || {} }}>
+      {props.children}
+    </PageContext.Provider>
+  )
 }
 
 export default PageContext

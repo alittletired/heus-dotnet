@@ -1,15 +1,8 @@
-import React, { useCallback, useMemo } from 'react'
-import adminApi, {
-  User,
-  UserCreateDto,
-  UserStatus,
-  userStatusOptions,
-  UserUpdateDto,
-} from '@/api/admin'
+import React, { useCallback } from 'react'
+import adminApi, { User, UserCreateDto, userStatusOptions } from '@/api/admin'
 
 import { ApiTable, Form, overlay } from '@/components'
 
-import AuthorizeRoles from './components/AuthorizeRoles'
 import ResetPassword from './components/ResetPassword'
 import { FormControlItem, FormProps } from '@/components/form/Form'
 
@@ -97,7 +90,7 @@ const UserPage: PageComponent = () => {
           width: 210,
           actions: [
             { title: '编辑', component: UserEditModal },
-            { title: '授权角色', actionName: 'authorizeRoles', component: AuthorizeRoles },
+            // { title: '授权角色', actionName: 'authorizeRoles', component: AuthorizeRoles },
             { title: '重置密码', component: ResetPassword },
             {
               onClick: disabledUser,
