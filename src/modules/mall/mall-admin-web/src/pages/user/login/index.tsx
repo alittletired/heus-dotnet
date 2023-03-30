@@ -1,5 +1,4 @@
 import { GlobalFooter } from '@/layouts'
-import { useIntl } from 'react-intl'
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -12,7 +11,7 @@ import {
 import { Alert, message, Tabs } from 'antd'
 import React, { useState } from 'react'
 import { flushSync } from 'react-dom'
-import { useEmotionCss } from '@/utils'
+import { useEmotionCss, useLocale } from '@/utils'
 
 const ActionIcons = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -77,7 +76,7 @@ const LoginMessage: React.FC<{
 type LoginType = 'account' | 'mobile'
 const Login: React.FC = () => {
   const [type, setType] = useState<LoginType>('account')
-  const intl = useIntl()
+  const intl = useLocale()
   const containerClassName = useEmotionCss(() => {
     return {
       display: 'flex',

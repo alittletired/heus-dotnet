@@ -1,4 +1,4 @@
-import userState, { useUser } from './user'
+import user from './user'
 import menus from '@/config/menus'
 import adminApi, { UserActionRight, ResourceDto, ActionDto } from '@/api/admin'
 import useRouter from './router'
@@ -8,20 +8,20 @@ const AuthContext = React.createContext(new Map<string, number>())
 
 export const AuthProvider: React.FC<PropsWithChildren> = (props) => {
   const [loaded, setLoaded] = useState(false)
-  const [user] = useUser()
+  const [userState] = user.useState()
   const [authMap, setAuthMap] = useState(new Map<string, number>())
   useEffect(() => {
-    if (!user.userId) {
+    if (!userState.userId) {
       setLoaded(true)
       return
     }
-    adminApi.resources.getUserActionRights(user.userId).then((userActionRights) => {
+    adminApi.resources.getUserActionRights(userState.userId).then((userActionRights) => {
       const authMap = new Map<string, number>()
       userActionRights.forEach((a) => authMap.set(a.resourcePath, a.flag))
       setAuthMap(authMap)
       setLoaded(true)
     })
-  }, [user.userId])
+  }, [userState.userId])
   return <AuthContext.Provider value={authMap}>{loaded && props.children}</AuthContext.Provider>
 }
 
