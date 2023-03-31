@@ -1,8 +1,7 @@
-import { ComponentType } from 'react'
+import { ComponentType, FC } from 'react'
 import ProtectedLayout from './ProtectedLayout'
 
-function withLayout<P>(Component: ComponentType<P>) {
-  var layout = (Component as PageComponent).options?.layout
+function withLayout<P>(Component: FC<P>, layout: Layout = 'empty') {
   if (layout === 'empty') {
     return Component
   }
@@ -10,7 +9,7 @@ function withLayout<P>(Component: ComponentType<P>) {
     return Component
   }
 
-  const LayoutComponent: ComponentType<P> = (props) => {
+  const LayoutComponent: FC<P> = (props) => {
     return (
       <ProtectedLayout>
         <Component {...props} />

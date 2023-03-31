@@ -12,6 +12,7 @@ import { Alert, message, Tabs } from 'antd'
 import React, { useState } from 'react'
 import { flushSync } from 'react-dom'
 import { useEmotionCss, useLocale } from '@/utils'
+import { useUser } from '@/services/user'
 
 const ActionIcons = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -76,6 +77,7 @@ const LoginMessage: React.FC<{
 type LoginType = 'account' | 'mobile'
 const Login: React.FC = () => {
   const [type, setType] = useState<LoginType>('account')
+  const [user] = useUser()
   const intl = useLocale()
   const containerClassName = useEmotionCss(() => {
     return {
@@ -83,23 +85,10 @@ const Login: React.FC = () => {
       flexDirection: 'column',
       height: '100vh',
       overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+      backgroundImage: "url('/images/login-bg.png')",
       backgroundSize: '100% 100%',
     }
   })
-
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.()
-    if (userInfo) {
-      flushSync(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-        }))
-      })
-    }
-  }
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {

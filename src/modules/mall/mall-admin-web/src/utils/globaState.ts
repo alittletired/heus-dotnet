@@ -2,6 +2,7 @@ import { atom, PrimitiveAtom, useAtom, WritableAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { getDefaultStore } from 'jotai/vanilla'
 const defaultStore = getDefaultStore()
+type SubFunc<T> = (state: T) => any
 class GlobaState<T> {
   private state: WritableAtom<T, any>
   private currentState: T
@@ -15,6 +16,11 @@ class GlobaState<T> {
 
     defaultStore.sub(this.state, () => {
       this.currentState = defaultStore.get(this.state)
+    })
+  }
+  public sub = (subFuc: SubFunc<T>) => {
+    defaultStore.sub(this.state, () => {
+      subFuc(defaultStore.get(this.state))
     })
   }
   public useState = () => useAtom(this.state)

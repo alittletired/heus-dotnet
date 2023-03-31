@@ -31,7 +31,6 @@ const LoginMessage: React.FC<{
 type LoginType = 'account' | 'mobile'
 
 const Login: PageComponent = () => {
-  const [user] = useUser()
   const router = useRouter()
   const [loginType, setLoginType] = useState<LoginType>('account')
   let model: LoginInput = {

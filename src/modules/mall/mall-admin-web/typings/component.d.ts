@@ -10,15 +10,16 @@ declare interface PageAction {
   title: string
   actionMask: long
 }
+declare type Layout = 'default' | 'empty' | 'public'
 declare interface PageOptions {
   //控制布局和权限 使用public将使用空布局，并不校验权限
-  layout?: 'default' | 'empty' | 'public'
+  layout?: Layout
   actions?: PageAction[]
   parent?: PageComponent
   code?: string
   name?: string
 }
-declare interface PageComponent<P = {}> extends React.FC<P> {
+declare type PageComponent<P> = React.FC<P> & {
   options?: PageOptions
 }
 
