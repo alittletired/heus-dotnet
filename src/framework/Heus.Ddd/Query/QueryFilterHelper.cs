@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Heus.Ddd.Query;
@@ -15,6 +16,10 @@ static internal class QueryFilterHelper
         .First(s => s.Name == nameof(Queryable.OrderByDescending) && s.GetParameters().Length == 2);
     public readonly static MethodInfo OrderByMethodInfo = typeof(Queryable).GetRuntimeMethods()
         .First(s => s.Name == nameof(Queryable.OrderBy) && s.GetParameters().Length == 2);
+
+    public readonly static MethodInfo CreateFilterParam = typeof(QueryFilterHelper).GetRuntimeMethods()
+        .First(s => s.Name == nameof(QueryFilterHelper.CreateFilterParamInternal) && s.GetParameters().Length == 2);
+
 
     public static List<string> OrderByMethodNames { get; } = new() {
         nameof(Queryable.Order),
@@ -61,6 +66,13 @@ static internal class QueryFilterHelper
 
             return mapping;
         });
+    }
+
+
+    private static Expression CreateFilterParamInternal<T>(T value)
+    {
+        Expression<Func<T>> parameterLambda = () => value;
+        return parameterLambda.Body;
     }
 
 }

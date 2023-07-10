@@ -54,6 +54,7 @@ public abstract class RepositoryBase<TEntity> :
     public IQueryable<TEntity> Query {
         get {
             var query = DbContext.Set<TEntity>().AsQueryable();
+            
             return ApplyDataFilter(query);
             //if (UnitOfWorkManager.Current?.Options.IsTransactional == true)
             //{

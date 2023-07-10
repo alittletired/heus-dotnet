@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using Heus.Core.Utils;
 using Heus.Ddd.Dtos;
@@ -10,6 +11,7 @@ public class QueryExpressionVisitor<TSource, TDto> :ExpressionVisitor
     private readonly IQueryable<TSource> _queryable;
     private readonly IPageRequest<TDto> _pageRequest;
     private bool _hasOrderClause;
+
     public QueryExpressionVisitor(IQueryable<TSource> queryable, IPageRequest<TDto> pageRequest)
     {
 
@@ -160,6 +162,10 @@ public class QueryExpressionVisitor<TSource, TDto> :ExpressionVisitor
         var memberInitExpr = Expression.MemberInit(Expression.New(mapping.DtoType), memberBindings);
         return Expression.Lambda(memberInitExpr, parameters);
     }
+
+    //todo:用常量节点通过表达式 API 动态生成表达式,会导致 EF 在每次使用不同的常量值调用查询时重新编译查询， (这通常还会导致数据库服务器) 的计划缓存污染
+    //https://learn.microsoft.com/zh-cn/ef/core/performance/advanced-performance-topics?tabs=with-di%2Cexpression-api-with-parameter
+    //后续需要改成带参数的表达式 
 
     private Expression GetFilterItemExpression(MemberExpression memberExpr
         , string propName, DynamicSearchFilter filter)

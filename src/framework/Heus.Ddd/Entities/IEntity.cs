@@ -1,8 +1,14 @@
 
+
+using System.Numerics;
+
 namespace Heus.Ddd.Entities;
 
-public interface IEntity
+public interface IEntity<TKey> where TKey : IEquatable<TKey>
 {
-    long Id { get; set; }
-   
+    TKey Id { get; set; }
+}
+public interface IEntity: IEntity<long>
+{
+      
 }
